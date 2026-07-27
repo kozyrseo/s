@@ -364,7 +364,15 @@ def build_content_eval_prompt(article: dict, topic: dict, markdown_body: str, la
     for key, (max_pts, desc) in CONTENT_RUBRIC.items():
         rubric_lines.append(f"  - {key} (max {max_pts}): {desc}")
     rubric_text = "\n".join(rubric_lines)
-    
+
+    _faq = article.get("faq", []) or []
+    if _faq:
+        _faq_text = "\n".join(
+            f"  Q: {e.get('question','')}\n  A: {e.get('answer','')}" for e in _faq
+        )
+    else:
+        _faq_text = "(FAQ отсутствует)"
+
     return f"""Ты — старший SEO-редактор, оцениваешь статью для блога KOZYR — это витрина рейкбек-сделок для покерных ИГРОКОВ (B2C). KOZYR показывает каталог румов и клубов с условиями и ведёт по партнёрской ссылке; сам рум/клуб начисляет и выплачивает рейкбек. Аудитория — игроки СНГ/Украины, от новичков до регуляров. Оценивай именно с этой позиции: НЕ штрафуй за отсутствие B2B-угла для владельцев клубов, НЕ требуй формулировок вида «клубы, которыми мы управляем» — KOZYR ничем не управляет. Упоминание ответственной игры уместно и не является минусом.
 
 ARTICLE CONTEXT:
