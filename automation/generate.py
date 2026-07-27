@@ -563,9 +563,10 @@ def escape_md(text: str) -> str:
     if not text:
         return ""
     s = str(text)
-    # Order matters slightly: backslash first to avoid double-escaping if any
-    # already-escaped sequences exist (defensive).
-    for ch in ("\\", "_", "*", "`", "[", "]", "(", ")"):
+    # MarkdownV1: экранируем только реально ломающие маркеры форматирования.
+    # Скобки ( ) [ ] в обычном тексте (вне ссылок) парсер не ломают, поэтому
+    # их НЕ экранируем — иначе в превью появляются некрасивые \( \) \[ \].
+    for ch in ("\\", "_", "*", "`"):
         s = s.replace(ch, "\\" + ch)
     return s
  

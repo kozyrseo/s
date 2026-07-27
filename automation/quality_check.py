@@ -340,7 +340,7 @@ def evaluate_technical(article: dict, topic: dict, markdown_body: str, lang: str
 
 CONTENT_RUBRIC = {
     "eeat": (4, "E-E-A-T: specific numbers, real cases, dates, expert depth"),
-    "sourcing": (4, "Sourcing honesty: Type A facts verified/linked to non-affiliate sources or stated without a link; every precise Type B number (rake, variance, ROI, %, case metrics) is framed as experience ('across the clubs we manage', 'in one club we manage') or kept qualitative — a precise operational number floating as an impersonal fact scores low; no fabricated stats, no fake experience attribution on invented numbers, no affiliate links"),
+    "sourcing": (4, "Честность фактов: конкретные числа партнёров (рейкбек %, лимиты, сроки вывода) поданы как условия рума/клуба, а не выдуманы; неизвестное помечено 'уточняется'; НЕТ ложных формулировок, что KOZYR сам платит рейкбек/ведёт расчёты; KOZYR — витрина и ссылка; без фабрикации статистики"),
     "depth": (4, "Depth: explains WHY not just WHAT, beyond surface-level"),
     "concreteness": (4, "Concreteness: specifics over vague claims (numbers, platforms, dates)"),
     "unique_angle": (4, "Unique angle: differentiated from competitor articles on the same topic"),
@@ -353,8 +353,8 @@ CONTENT_RUBRIC = {
     "faq_relevance": (3, "FAQ answers real questions a target reader would ask"),
     "h2_clickability": (3, "H2 titles promise concrete value, not 'Introduction'/'Conclusion'"),
     "no_filler": (3, "No filler phrases like 'in conclusion', 'fast-paced world'"),
-    "brand_voice": (3, "Tone fits PokerNet brand: operational, factual, not gambling-promo"),
-    "conversion_bridge": (3, "Logical bridge from article to room page or contact CTA"),
+    "brand_voice": (3, "Тон KOZYR: экспертный, честный, помогает игроку выбрать; не рекламное втюхивание; уместное упоминание ответственной игры — это плюс, а не минус"),
+    "conversion_bridge": (3, "Логичный переход к каталогу /ua/ или обзорам румов/клубов; естественный CTA с пользой для игрока"),
 }
 
 
@@ -365,7 +365,7 @@ def build_content_eval_prompt(article: dict, topic: dict, markdown_body: str, la
         rubric_lines.append(f"  - {key} (max {max_pts}): {desc}")
     rubric_text = "\n".join(rubric_lines)
     
-    return f"""You are a senior SEO content editor reviewing an article for pokernetai.com — a B2B managed AI poker bot service for poker club owners (not B2C for players).
+    return f"""Ты — старший SEO-редактор, оцениваешь статью для блога KOZYR — это витрина рейкбек-сделок для покерных ИГРОКОВ (B2C). KOZYR показывает каталог румов и клубов с условиями и ведёт по партнёрской ссылке; сам рум/клуб начисляет и выплачивает рейкбек. Аудитория — игроки СНГ/Украины, от новичков до регуляров. Оценивай именно с этой позиции: НЕ штрафуй за отсутствие B2B-угла для владельцев клубов, НЕ требуй формулировок вида «клубы, которыми мы управляем» — KOZYR ничем не управляет. Упоминание ответственной игры уместно и не является минусом.
 
 ARTICLE CONTEXT:
 - Language: {lang}
@@ -377,14 +377,17 @@ ARTICLE CONTEXT:
 ARTICLE TO EVALUATE (markdown body):
 {markdown_body[:18000]}
 
+FAQ (из JSON, рендерится отдельным блоком — оценивай faq_relevance по нему, НЕ ищи FAQ в теле статьи):
+{_faq_text}
+
 EVALUATE on these 16 dimensions. For each, give an integer score from 0 to the max points listed:
 
 {rubric_text}
 
 For each dimension, return:
 - score (integer 0..max)
-- evidence: a SHORT quote or specific reference from the article that justifies the score (max 100 chars)
-- fix: a SHORT, ACTIONABLE suggestion (only if score < max; max 100 chars)
+- evidence: короткая цитата/ссылка из статьи, обосновывающая балл НА РУССКОМ (макс 100 симв)
+- fix: короткая конкретная рекомендация НА РУССКОМ (только если score < max; макс 100 симв)
 
 Output strict JSON, no preamble, no code fences:
 
@@ -394,9 +397,9 @@ Output strict JSON, no preamble, no code fences:
     "depth": {{"score": 4, "evidence": "...", "fix": null}},
     ... (all 16 dimensions)
   }},
-  "top_3_strengths": ["...", "...", "..."],
-  "top_3_issues": ["...", "...", "..."],
-  "verdict_explanation": "one sentence summary"
+  "top_3_strengths": ["... (НА РУССКОМ)", "...", "..."],
+  "top_3_issues": ["... (НА РУССКОМ)", "...", "..."],
+  "verdict_explanation": "одно предложение НА РУССКОМ"
 }}
 """
 
@@ -570,8 +573,8 @@ def format_telegram_block(tech: dict, content: dict,
     content_pct = content.get("percent", 0)
     
     lines = [
-        f"🏆 *Quality: {total_percent}/100* {icon} {verdict}",
-        f"   📊 Technical: {tech_pct}/100 · 📝 Content: {content_pct}/100",
+        f"🏆 *Качество: {total_percent}/100* {icon} {verdict}",
+        f"   📊 Технически: {tech_pct}/100 · 📝 Контент: {content_pct}/100",
     ]
     
     if content.get("error"):
