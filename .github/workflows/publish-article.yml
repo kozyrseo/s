@@ -1,0 +1,58 @@
+name: Publish article
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: 'Slug статьи (имя папки в _pending/)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r automation/requirements.txt
+
+      - name: Validate slug exists
+        run: |
+          if [ ! -d "_pending/${{ inputs.slug }}" ]; then
+            echo "❌ _pending/${{ inputs.slug }} не найдена"; exit 1
+          fi
+          echo "✅ Нашёл _pending/${{ inputs.slug }}"
+
+      - name: Run publish script
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
+        run: python automation/publish.py --slug "${{ inputs.slug }}" --lang ru
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for path in ua/blog _pending sitemap.xml automation/taxonomy.json; do
+            if [ -e "$path" ]; then git add -A -f "$path" || true; fi
+          done
+          if git diff --staged --quiet; then
+            echo "Нет изменений для коммита."
+          else
+            git commit -m "Publish [ru]: ${{ inputs.slug }}"
+            git pull --rebase origin main || true
+            git push
+          fi
+          echo "✅ Запушено. Cloudflare Pages задеплоит автоматически."
