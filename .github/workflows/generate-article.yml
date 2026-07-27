@@ -1,0 +1,65 @@
+name: Generate article
+
+on:
+  workflow_dispatch:
+    inputs:
+      topic_file:
+        description: 'Путь к JSON-теме (напр. automation/topics/example-topic.json). Пусто = брать из Google Sheets.'
+        required: false
+        default: 'automation/topics/example-topic.json'
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: generate-article
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r automation/requirements.txt
+
+      - name: Run generator
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TOPIC_FILE: ${{ github.event.inputs.topic_file }}
+        run: |
+          if [ -n "$TOPIC_FILE" ]; then
+            echo "Локальный режим: $TOPIC_FILE"
+            python automation/generate.py --lang ru --topic-file "$TOPIC_FILE" --force
+          else
+            echo "Режим Google Sheets"
+            python automation/generate.py --lang ru
+          fi
+
+      - name: Commit generated article
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -d "_pending" ]; then git add -A -f _pending/ || true; fi
+          if git diff --staged --quiet; then
+            echo "Нет новой статьи для коммита."
+          else
+            git commit -m "Generate article [ru] (pending review)"
+            git pull --rebase origin main || true
+            git push
+          fi
