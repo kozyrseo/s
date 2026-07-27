@@ -1,0 +1,193 @@
+{
+  "technical": {
+    "tier": "technical",
+    "scores": {
+      "title_length": {
+        "max": 5,
+        "score": 5,
+        "detail": "54 chars (target: 30-65)"
+      },
+      "desc_length": {
+        "max": 5,
+        "score": 5,
+        "detail": "139 chars (target: 130-160)"
+      },
+      "word_count": {
+        "max": 5,
+        "score": 0,
+        "detail": "1112 words (target: 1800-3500)"
+      },
+      "h2_count": {
+        "max": 5,
+        "score": 3,
+        "detail": "6 H2 headings (target: 7-12)"
+      },
+      "h3_count": {
+        "max": 3,
+        "score": 0,
+        "detail": "0 H3 headings (target: ≥3)"
+      },
+      "internal_links_count": {
+        "max": 5,
+        "score": 5,
+        "detail": "5 internal links (target: 3-5)"
+      },
+      "internal_links_diversity": {
+        "max": 3,
+        "score": 3,
+        "detail": "5 unique link targets"
+      },
+      "target_page_link": {
+        "max": 3,
+        "score": 3,
+        "detail": "Target /ua/ ✓ found"
+      },
+      "primary_keyword": {
+        "max": 4,
+        "score": 2,
+        "detail": "title=False, first_para=True, h2=True"
+      },
+      "secondary_keywords": {
+        "max": 4,
+        "score": 1,
+        "detail": "1/3 secondaries found"
+      },
+      "faq_count": {
+        "max": 4,
+        "score": 4,
+        "detail": "6 FAQ items (target: ≥6)"
+      },
+      "no_cliches": {
+        "max": 4,
+        "score": 4,
+        "detail": "clean"
+      },
+      "table_format": {
+        "max": 4,
+        "score": 4,
+        "detail": "1 table(s), all well-formed"
+      }
+    },
+    "total": 39,
+    "max": 54,
+    "percent": 72
+  },
+  "content": {
+    "tier": "content",
+    "scores": {
+      "eeat": {
+        "max": 4,
+        "score": 2,
+        "evidence": "«несколько сотен гривен», «4 000 гривен» — specific numbers but no sources or dates",
+        "fix": "Add timestamps, specific room examples, or frame as 'in clubs we manage' per B2B context"
+      },
+      "sourcing": {
+        "max": 4,
+        "score": 1,
+        "evidence": "«5% от каждого банка», «10% от бай-ина», «40% еженедельно» — precise numbers as facts, not framed as experience",
+        "fix": "Reframe precise rake/RB numbers as 'typical in clubs we operate' or 'we observe' or make qualitative"
+      },
+      "depth": {
+        "max": 4,
+        "score": 3,
+        "evidence": "Explains WHY methods matter: «Weight-Contributed выгоден агрессивным игрокам»",
+        "fix": "Add WHY 5% rake hurts micro-stakes specifically, or WHY weekly > monthly for bankroll mgmt"
+      },
+      "concreteness": {
+        "max": 4,
+        "score": 3,
+        "evidence": "«10 000 гривен рейка в месяц», «40% рейкбека», platform names (PokerBet, KlubOk)",
+        "fix": "Add one concrete example with date: 'In Q1 2024 we saw...' to anchor claims"
+      },
+      "unique_angle": {
+        "max": 4,
+        "score": 1,
+        "evidence": "Generic rakeback explainer similar to competitor affiliate content, no B2B club-owner lens",
+        "fix": "Add section on why club owners should advertise RB structure to retain players (B2B angle)"
+      },
+      "intent_match": {
+        "max": 4,
+        "score": 3,
+        "evidence": "Informational intent well-served: explains what, how, comparison table",
+        "fix": "Stronger bridge to B2B service: 'If you run a club, transparent RB = retention'"
+      },
+      "structure": {
+        "max": 3,
+        "score": 3,
+        "evidence": "Logical flow: definition → calculation methods → selection criteria → comparison → mistakes",
+        "fix": ""
+      },
+      "readability": {
+        "max": 3,
+        "score": 3,
+        "evidence": "Short paragraphs, bullet lists, table, active voice: «Проверьте, есть ли нужные вам игры»",
+        "fix": ""
+      },
+      "primary_kw_natural": {
+        "max": 3,
+        "score": 3,
+        "evidence": "«рейкбек в покере» appears naturally in H1, intro, H2s, conclusion",
+        "fix": ""
+      },
+      "secondary_coverage": {
+        "max": 3,
+        "score": 3,
+        "evidence": "«покерный рум Украина» (2x), «высокий рейкбек» (3x), «вывод гривны» (contextual)",
+        "fix": ""
+      },
+      "link_context": {
+        "max": 3,
+        "score": 2,
+        "evidence": "Links present, but anchors generic: «материале [Что такое рейкбек...]»",
+        "fix": "Use more informative anchors: 'как приватные клубы начисляют рейкбек' instead of title"
+      },
+      "faq_relevance": {
+        "max": 3,
+        "score": 0,
+        "evidence": "No FAQ section present in the article",
+        "fix": "Add FAQ: 'Какой метод расчёта рейкбека самый выгодный?', 'Можно ли вывести рейкбек в гривнах?'"
+      },
+      "h2_clickability": {
+        "max": 3,
+        "score": 2,
+        "evidence": "H2s descriptive but some generic: «Что такое рейкбек в покере и почему он важен»",
+        "fix": "Make more specific: 'Почему 40% рейкбека даёт 4000 грн в месяц' vs generic 'почему важен'"
+      },
+      "no_filler": {
+        "max": 3,
+        "score": 2,
+        "evidence": "«Следующий шаг», «Помните: покер — это игра навыков...» — generic disclaimer filler",
+        "fix": "Remove 'Следующий шаг' heading, tighten responsible gaming to one sentence"
+      },
+      "brand_voice": {
+        "max": 3,
+        "score": 1,
+        "evidence": "Tone is B2C player-focused: «вам», «вашему банкроллу», not B2B club-owner operational",
+        "fix": "Shift pronouns to 'your players', 'club operators', add 'how RB impacts club retention'"
+      },
+      "conversion_bridge": {
+        "max": 3,
+        "score": 2,
+        "evidence": "CTA present: «каталоге рейкбек-сделок KOZYR» but weak B2B bridge to /ua/ service page",
+        "fix": "Add: 'Club owners: contact us to set up transparent RB tracking for your players at /ua/'"
+      }
+    },
+    "total": 34,
+    "max": 54,
+    "percent": 63,
+    "top_3_strengths": [
+      "Excellent structural clarity: rakeback definition → calculation methods → selection criteria → comparison table flows logically",
+      "Strong readability with short paragraphs, table, bullet points, and active voice throughout",
+      "Natural keyword integration without stuffing; secondary keywords woven into context organically"
+    ],
+    "top_3_issues": [
+      "Critical B2B brand voice mismatch: entire article speaks to players ('вам', 'вашему банкроллу') not club owners—misses target audience",
+      "Sourcing honesty failure: precise operational numbers (5% rake, 40% RB, 10K rake/month) presented as impersonal facts, not framed as 'we observe in clubs we manage'",
+      "Missing FAQ section and weak unique angle: reads like generic affiliate content, no differentiation via B2B club-operator lens or PokerNet operational insights"
+    ],
+    "verdict_explanation": "Well-structured, readable rakeback explainer with strong SEO fundamentals but fundamentally misaligned with B2B audience and lacking operational sourcing framing required for PokerNet brand credibility."
+  },
+  "total": 68,
+  "verdict": "NEEDS_REVISION",
+  "telegram_block": "🏆 *Quality: 68/100* 🟠 NEEDS_REVISION\n   📊 Technical: 72/100 · 📝 Content: 63/100\n\n✅ *Сильное:*\n   • Excellent structural clarity: rakeback definition → calculation methods → selection criteria → comparison table flows lo\n   • Strong readability with short paragraphs, table, bullet points, and active voice throughout\n   • Natural keyword integration without stuffing; secondary keywords woven into context organically\n\n⚠️ *Что улучшить:*\n   • Critical B2B brand voice mismatch: entire article speaks to players ('вам', 'вашему банкроллу') not club owners—misses t\n   • Sourcing honesty failure: precise operational numbers (5% rake, 40% RB, 10K rake/month) presented as impersonal facts, n\n   • Missing FAQ section and weak unique angle: reads like generic affiliate content, no differentiation via B2B club-operato\n   • word\\_count: 1112 words (target: 1800-3500)\n   • h2\\_count: 6 H2 headings (target: 7-12)"
+}
