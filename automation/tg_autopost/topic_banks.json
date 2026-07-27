@@ -1,0 +1,113 @@
+{
+  "_doc": "Pools used to seed Claude with a combinatorial angle. PokerNet AI sells AI bots — fillers (table seeding, off-peak coverage, peak amplification) and regs (configurable +EV play across formats). Revenue-share pricing. Topics MUST stay inside this scope. The 'forbidden_categories' list is hard-fenced — Claude must not draft posts about those topics even if they're poker-adjacent. Anti-repeat log filters exhausted angles.",
+
+  "operator_pains": [
+    "off-peak desertion — tables empty 02:00-08:00 UTC, rake collapses 60-80% from peak",
+    "table seeding — new format/limit tables never reach 4-handed because nobody wants to be the first sitter",
+    "peak loading still leaves 30-40% of theoretical seat capacity empty during prime hours",
+    "rake-per-table falls when bumhunters arrive — recreational players scatter, table dies in 12 minutes",
+    "session-length collapse — players sit, play 5-15 hands, leave; median session falls from 47 to 12 minutes",
+    "regulars-only stagnation — field hardens, recreationals stop coming back, rake plateaus",
+    "format launch gridlock — operator wants to add PLO5 or Short Deck but cannot get tables started",
+    "stake-shopping fragmentation — players split across too many limits, none of them stay alive",
+    "high-stakes tables nobody opens despite demand — rake left on the table at 5/10+",
+    "tournament late reg drying up — guarantees overlay because nobody late-regs into half-empty fields",
+    "competitive pressure — neighbouring club's tables look fuller, players migrate during off-hours",
+    "manager attention drain — staff spending hours pinging regulars to seat new tables manually",
+    "first-week cohort churn — new player opens lobby, sees 0/6 seated, never deposits again",
+    "weekend-vs-weekday rake delta wider than it should be — capacity exists, demand scatters",
+    "agent-tier players underperform during off-peak — agents cannot deliver volume promises",
+    "expansion to a new platform stalls because seeding from scratch on a fresh club is brutal"
+  ],
+
+  "operator_solutions_in_scope": [
+    "fillers seating off-peak tables to keep activity visible to lobby browsers",
+    "fillers amplifying peak loading — pushing 4-handed tables to 6-handed, 6-max to fully seated",
+    "fillers as table starters — first-mover problem solved, real players join once tables look alive",
+    "regs as +EV winrate bots configurable per stake and format",
+    "regs balancing field toughness — replacing departed humans without changing field difficulty perceptibly",
+    "format-specific bots — PLO bots that play PLO right, Short Deck bots that handle 6+ ranges",
+    "low-ban-rate behaviour patterns — natural timing, occasional misclicks, human-like leaks",
+    "fast deployment — new client club seeded with bots within days of contract",
+    "revenue-share economics — operator pays nothing until rake demonstrably grows",
+    "multi-tabling per bot identity — coverage breadth without proportional bot-account overhead",
+    "24/7 operational backstop — bots cover hours when manager and agents are asleep"
+  ],
+
+  "formats": [
+    "NLH 6max cash 0.10/0.25",
+    "NLH 6max cash 0.25/0.50",
+    "NLH 6max cash 1/2",
+    "NLH 6max cash 2/5",
+    "NLH 6max cash 5/10+",
+    "NLH heads-up cash",
+    "PLO 6max — small to mid stakes",
+    "PLO5",
+    "PLO Hi-Lo",
+    "Short Deck (6+) cash",
+    "OFC Pineapple cash",
+    "MTT — daily guarantees, low-mid buyin",
+    "MTT — weekly majors with overlay risk",
+    "Sit & Go — hyper turbo",
+    "Spin & Go style lottery"
+  ],
+
+  "platforms": [
+    "PPPoker",
+    "PokerBros",
+    "ClubGG",
+    "Suprema",
+    "X-Poker",
+    "Upoker",
+    "generic anonymous-club model"
+  ],
+
+  "operator_metrics": [
+    "rake delta — % uplift before/after bot deployment, typically measured at 30/60/90 days",
+    "off-peak loading — % of off-peak seats filled (with vs without fillers)",
+    "table-fill-time — minutes from new table open to 4-handed",
+    "session-length median — minutes player stays per sit-down",
+    "hands-per-month per bot account",
+    "winrate of regs in bb/100 — by stake, by format",
+    "ban-rate — bot accounts flagged per 1000 hands played",
+    "time-to-launch — days from contract signed to bots seating tables",
+    "first-week retention — % of new depositors who return for second session",
+    "cohort lifetime rake — average rake-per-player over first 30 days post-first-deposit",
+    "field-mix ratio — recreational vs regular density on cash tables",
+    "peak-amplification — % seat utilisation at peak with vs without bot top-up"
+  ],
+
+  "case_study_archetypes": [
+    "mid-sized 600-player NLH club struggling with 03:00-08:00 desertion — fillers added — rake delta +28% within 60 days",
+    "new club launching on PokerBros from zero — full bot seeding from day 1 — first 200 real players onboarded over 6 weeks",
+    "established PPPoker club expanding to PLO5 tables — bots provided format starter density — PLO line broke even in 5 weeks",
+    "club losing recreationals to neighbouring competitor — regs deployed at lower toughness setting to soften field — recreational retention up 19% over baseline",
+    "high-stakes 5/10 NLH never reached critical mass despite demand — fillers at off-peak created perceived activity — real demand consolidated within 4 weeks",
+    "tournament series with chronic overlay — late-reg fillers added to keep field looking healthy — overlay reduced 65% across the series",
+    "ClubGG club fighting bumhunting — fillers filled the seat after the bumhunter sat to prevent table death — average post-bumhunter session length doubled"
+  ],
+
+  "differentiators_to_emphasize": [
+    "revenue-share: clubs pay only when rake grows, no upfront fee, aligned incentives",
+    "low ban rate via human-like behaviour patterns (timing variance, natural leaks, occasional misclicks)",
+    "format-specific bots — PLO bots aren't NLH bots with different rules, they're trained for the format",
+    "fast launch: days from signed contract to deployed bots, not weeks",
+    "multi-tabling per identity — operational density without account-farm overhead",
+    "configurable winrate for regs — operator controls field toughness, not us",
+    "covers all major anonymous-club platforms in one operator relationship"
+  ],
+
+  "forbidden_categories": [
+    "payment processing, withdrawal SLA, USDT bridges, payout latency, KYC, AML compliance",
+    "licensing, regulation, jurisdictional risk, legal structure",
+    "anti-collusion detection or bot-detection methodology as our area of expertise (we make bots, we don't sell detection)",
+    "agent hierarchy economics, agent-vs-agent disputes, commission split mechanics",
+    "player marketing, traffic acquisition, social media for clubs",
+    "VPN setup, hosting infrastructure, hardware farming, account warming logistics",
+    "platform rake policy comparison as the main angle (mention rake as context, never as the post topic)",
+    "guaranteed rake outcomes — we never write 'guaranteed +25%'; ranges and case data only",
+    "named real clubs — every case is anonymized as 'a [size]-player club running [format] on [platform]'"
+  ],
+
+  "claude_invention_hint": "Pool entries are starting points, not a fence. Combine 1 pain + 1 format + 1 platform from the in-scope pools, OR pick a case_study_archetype and dramatize it with realistic numbers. NEVER touch forbidden_categories — if a natural angle would lead there, skip it and pick another. The goal is a post an experienced anonymous-club operator would forward to a colleague: specific to filler/reg use cases, grounded in our actual capability set, with at least one concrete metric or anonymized case detail."
+}

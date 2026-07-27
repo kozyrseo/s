@@ -1,0 +1,157 @@
+# ============================================================================
+# KOZYR — Nginx конфигурация
+# Гео-редиректы, кэширование, security headers
+# ============================================================================
+
+# Гео-маппинг: страна → путь
+# Требует geoip2 модуль или встроенный geoip
+map $geoip2_data_country_code $geo_redirect {
+    default    "";
+    UA         "/ua/";
+    # PL         "/pl/";   # когда добавишь Польшу
+    # DE         "/de/";   # когда добавишь Германию
+}
+
+# HTTP → HTTPS
+server {
+    listen 80;
+    listen [::]:80;
+    server_name kozyr.ua www.kozyr.ua;
+    return 301 https://kozyr.ua$request_uri;
+}
+
+# HTTPS с www → без www
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name www.kozyr.ua;
+
+    ssl_certificate /path/to/cert.pem;
+    ssl_certificate_key /path/to/privkey.pem;
+
+    return 301 https://kozyr.ua$request_uri;
+}
+
+# Основной сервер
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name kozyr.ua;
+
+    root /var/www/kozyr/site;
+    index index.html;
+
+    # SSL
+    ssl_certificate /path/to/cert.pem;
+    ssl_certificate_key /path/to/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+
+    # ----- Security headers -----
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+    # HSTS (раскомментировать после проверки)
+    # add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+
+    # ----- Гзип компрессия -----
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_types
+        text/plain
+        text/css
+        text/xml
+        text/javascript
+        application/javascript
+        application/xml+rss
+        application/json
+        application/xml
+        image/svg+xml
+        font/woff
+        font/woff2;
+
+    # ----- Brotli (если доступен модуль) -----
+    # brotli on;
+    # brotli_comp_level 6;
+    # brotli_types text/plain text/css application/javascript application/json image/svg+xml;
+
+    # ----- Гео-редирект с корня (опционально) -----
+    # Если хочешь автоматический редирект — раскомментируй
+    # Иначе гейт /index.html даст ручной выбор + JS-детекцию
+    #
+    # location = / {
+    #     if ($geo_redirect != "") {
+    #         return 302 $geo_redirect;
+    #     }
+    #     try_files /index.html =404;
+    # }
+
+    # ----- Trailing slash нормализация -----
+    # Все папки должны заканчиваться на /
+    location ~ ^/([^./]+)$ {
+        return 301 /$1/;
+    }
+
+    # ----- Кэширование HTML — короткое -----
+    location ~* \.html$ {
+        expires 1h;
+        add_header Cache-Control "public, must-revalidate";
+    }
+
+    # ----- Кэширование статики — длинное -----
+    location ~* \.(css|js|woff|woff2|ttf|eot|ico|svg|jpg|jpeg|png|gif|webp)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        access_log off;
+    }
+
+    # ----- Кэширование sitemap/robots — среднее -----
+    location ~* \.(xml|txt)$ {
+        expires 1d;
+        add_header Cache-Control "public";
+    }
+
+    # ----- Sitemap и robots -----
+    location = /sitemap.xml {
+        try_files $uri =404;
+    }
+
+    location = /robots.txt {
+        try_files $uri =404;
+    }
+
+    # ----- Блокировка доступа к системным файлам -----
+    location ~ /\.(ht|git|env|DS_Store) {
+        deny all;
+        return 404;
+    }
+
+    location ~ \.(bak|backup|swp|orig|save)$ {
+        deny all;
+        return 404;
+    }
+
+    # ----- Error pages -----
+    error_page 404 /404.html;
+    error_page 500 502 503 504 /500.html;
+
+    location = /404.html {
+        internal;
+    }
+
+    location = /500.html {
+        internal;
+    }
+
+    # ----- Основной роутинг -----
+    location / {
+        try_files $uri $uri/index.html $uri.html =404;
+    }
+}

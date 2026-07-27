@@ -1,0 +1,39 @@
+# ============================================================================
+# KOZYR — Cloudflare Pages: заголовки
+# Формат: путь, затем заголовки с отступом в 2 пробела.
+# Docs: https://developers.cloudflare.com/pages/configuration/headers/
+# ============================================================================
+
+# --- Глобальная безопасность для всех страниц ---
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+# --- Статика: агрессивный кэш (файлы неизменяемы / меняются редко) ---
+/analytics.js
+  Cache-Control: public, max-age=3600
+
+/*.css
+  Cache-Control: public, max-age=86400
+
+/*.js
+  Cache-Control: public, max-age=86400
+
+/*.png
+  Cache-Control: public, max-age=604800
+
+/*.svg
+  Cache-Control: public, max-age=604800
+
+/*.ico
+  Cache-Control: public, max-age=604800
+
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+
+# --- HTML: короткий кэш, чтобы правки быстро долетали ---
+/*.html
+  Cache-Control: public, max-age=300

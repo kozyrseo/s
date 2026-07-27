@@ -1,0 +1,84 @@
+{
+  "_comment": "Таксономия контента KOZYR. Теги управляют подбором похожих статей и генерацией внутренних ссылок. При публикации новой статьи publish.py добавляет запись под 'articles'. format_pages — целевые страницы сайта, на которые статьи ставят ссылки и вокруг которых строятся блоки 'Похожее'.",
+  "_tag_vocabulary": {
+    "format": [
+      "nlh",
+      "plo",
+      "short-deck",
+      "mtt",
+      "mixed"
+    ],
+    "topic": [
+      "rakeback",
+      "room-review",
+      "club-review",
+      "comparison",
+      "payments",
+      "withdrawal",
+      "bonuses",
+      "beginners",
+      "legality",
+      "soft-fields",
+      "bankroll"
+    ],
+    "platform": [
+      "pokerbet",
+      "klubok",
+      "clubgg"
+    ],
+    "audience": [
+      "beginner",
+      "regular",
+      "high-stakes"
+    ]
+  },
+  "format_pages": {
+    "/ua/": {
+      "title": "Каталог рейкбек-сделок KOZYR",
+      "description": "Каталог покерных румов и клубов с фильтрами по рейкбеку, лимитам, форматам и платёжкам. Подбор сделки за 15 секунд."
+    },
+    "/ua/rooms/pokerbet/": {
+      "title": "PokerBet — обзор украинского покер-рума",
+      "description": "Легальный украинский рум: гривна, Холдем и Омаха, депозит картой и криптой, форматы кэша и турниров."
+    },
+    "/ua/clubs/klubok/": {
+      "title": "KlubOk — обзор приватного клуба в ClubGG",
+      "description": "Приватный клуб в приложении ClubGG: рейкбек 40% еженедельно, мягкие поля, расчёты в гривне, быстрый вывод."
+    }
+  },
+  "articles": {
+    "chto-takoe-reykbek-v-pokere": {
+      "title": "Что такое рейкбек в покере и как на нём не потеряться",
+      "description": "Что такое рейкбек в покере простыми словами: как считается рейк, какие модели возврата бывают и на что смотреть при выборе рума.",
+      "tags": [
+        "format:mixed",
+        "topic:rakeback",
+        "topic:beginners",
+        "audience:beginner"
+      ],
+      "summary_for_related": "Что такое рейкбек в покере простыми словами: как считается рейк, какие модели возврата бывают и на что смотреть при выборе рума."
+    },
+    "pokerbet-ili-klubok-sravnenie": {
+      "title": "PokerBet или KlubOk: где играть в Украине",
+      "description": "Сравнение PokerBet и KlubOk: легальный украинский рум против приватного клуба в ClubGG. Рейкбек, поля, выводы, кому что подходит.",
+      "tags": [
+        "format:mixed",
+        "topic:comparison",
+        "topic:room-review",
+        "audience:regular"
+      ],
+      "summary_for_related": "Сравнение PokerBet и KlubOk: легальный украинский рум против приватного клуба в ClubGG. Рейкбек, поля, выводы, кому что подходит."
+    },
+    "kak-rabotayut-privatnye-pokerclubi": {
+      "title": "Как работают приватные покерные клубы в ClubGG",
+      "description": "Приватный покерный клуб в ClubGG простыми словами: доступ по инвайту, расчёты через хоста, мягкие поля, рейкбек и реальные риски.",
+      "tags": [
+        "format:mixed",
+        "topic:club-review",
+        "platform:clubgg",
+        "audience:beginner"
+      ],
+      "summary_for_related": "Приватный покерный клуб в ClubGG простыми словами: доступ по инвайту, расчёты через хоста, мягкие поля, рейкбек и реальные риски."
+    }
+  }
+}

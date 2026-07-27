@@ -1,0 +1,101 @@
+{
+  "_doc": "Edit this file to wire the bot up. Channel and manager handle are the two things that MUST be set before first run. Footers rotate — bot picks one not used in the last 3 posts.",
+  "manager_username": "@PokerNetAI",
+  "site_url": "https://pokernetai.com",
+  "languages": {
+    "_doc": "channel_lang = what gets posted to the channel (English for B2B poker B2B reach). preview_lang = what gets shown in your review chat (Russian, faster to skim and decide). Footer is always written in channel_lang — it's part of the actual post.",
+    "channel_lang": "en",
+    "preview_lang": "ru"
+  },
+  "post_schedule": {
+    "_doc": "Day-of-week → post type. Sunday=0, Monday=1, ..., Saturday=6. The 'pitch_post_every_n_days' overrides the day's normal type when N days have passed since last pitch — keeps explicit promo to one per ~10 days. Order is tuned so weekly variety is maximized: case_study (the most engaging) lands midweek when reading attention is highest; checklist on Saturday for slow weekend skims; news_take Friday because that's when industry news typically breaks.",
+    "0": "longform_link",
+    "1": "insight",
+    "2": "platform_compare",
+    "3": "case_study",
+    "4": "pain_point",
+    "5": "news_take",
+    "6": "checklist",
+    "pitch_post_every_n_days": 10
+  },
+  "post_time_utc": "09:00",
+  "longform_link_pool_doc": "URLs of EN blog articles eligible for Sunday longform_link tease. autopost.py picks one at random and passes it to Claude as ARTICLE_URL. Add new articles here when they go live; remove if URL changes. Keep 5+ entries to avoid feeling repetitive across weeks.",
+  "longform_link_pool": [
+    {
+      "url": "https://pokernetai.com/blog/off-peak-rake-growth/",
+      "title": "How to grow club rake during off-peak hours",
+      "summary": "Breakdown of the off-peak rake collapse problem and what fixes it operationally"
+    },
+    {
+      "url": "https://pokernetai.com/blog/managed-poker-bots-vs-scripts/",
+      "title": "Managed Poker Bots vs Scripts: Why DIY Activity Fails",
+      "summary": "Why DIY scripted bots create static patterns that collapse tables; what managed AI infrastructure does differently"
+    },
+    {
+      "url": "https://pokernetai.com/blog/poker-bot-roi-managed-ai-infrastructure/",
+      "title": "Poker Bot ROI: Managed AI Infrastructure for Private Clubs",
+      "summary": "ROI math for managed bot infrastructure: revenue share economics, payback windows, scaling"
+    },
+    {
+      "url": "https://pokernetai.com/blog/how-ai-table-activity-works/",
+      "title": "AI table activity: how it actually works",
+      "summary": "Three-layer infrastructure breakdown: orchestration, behavior models, monitoring"
+    },
+    {
+      "url": "https://pokernetai.com/blog/player-retention-guide/",
+      "title": "How to keep players from leaving for another club",
+      "summary": "Four key retention drivers: stable activity, action density, format variety, peak coverage"
+    },
+    {
+      "url": "https://pokernetai.com/blog/pppoker-vs-pokerbros-vs-clubgg-operational-comparison/",
+      "title": "PPPoker vs PokerBros vs ClubGG: Owner Operational Guide",
+      "summary": "Side-by-side operational comparison of the three main platforms from an operator's perspective"
+    },
+    {
+      "url": "https://pokernetai.com/blog/off-peak-action-case-study-nlh-club/",
+      "title": "How One NLH Club Doubled Off-Peak Action: Case Study",
+      "summary": "Anonymized case study of off-peak rake recovery on an NLH club"
+    },
+    {
+      "url": "https://pokernetai.com/blog/nlh-cash-game-operations-format-challenges-solutions/",
+      "title": "NLH Cash Game Operations: Challenges and Solutions",
+      "summary": "Operational challenges in NLH cash game management and what solves them"
+    },
+    {
+      "url": "https://pokernetai.com/blog/bot-detection-pppoker-anonymous-clubs/",
+      "title": "Bot Activity in PPPoker Anonymous Clubs: Operator's Guide",
+      "summary": "How bot activity works in PPPoker anonymous clubs from operator perspective"
+    },
+    {
+      "url": "https://pokernetai.com/blog/how-to-create-pppoker-club-2026-guide/",
+      "title": "How to Start a Poker Club on PPPoker: Complete 2026 Guide",
+      "summary": "Comprehensive guide to launching a PPPoker club in 2026"
+    }
+  ],
+  "footer_variants_doc": "Footers are CTAs, not signatures. Each starts with a verb, names a concrete next step, and ends with the manager handle. The bot picks one not used in the last 3 posts so consecutive posts don't repeat.",
+  "footer_variants": [
+    "→ DM {manager} to map this for your platform mix",
+    "→ Walk through this for your club: {manager}",
+    "→ Send your format setup to {manager} — get a deployment plan back same-day",
+    "→ {manager} runs ops walkthroughs for clubs in your size band — ping to schedule",
+    "→ Want this seeding model for your stakes? {manager}",
+    "→ Compare your numbers against operator benchmarks: {manager}",
+    "→ {manager}: 30-min call to scope filler density for your format"
+  ],
+  "anti_repeat": {
+    "_doc": "How many recent post angle hashes to feed back to Claude as 'do not repeat'. 60 = ~2 months of daily posts.",
+    "lookback_n": 60
+  },
+  "image_generation": {
+    "enabled": true,
+    "model": "gpt-image-1",
+    "size": "1536x1024",
+    "quality": "medium"
+  },
+  "telegram": {
+    "_doc": "channel_id is target for actual posts (e.g. -1001234567890 or @public_channel). review_chat_id is where the preview goes — your personal chat ID or a private group with you in it. Get IDs via @userinfobot or by sending /start to the bot then reading getUpdates.",
+    "channel_id_env": "TELEGRAM_CHANNEL_ID",
+    "review_chat_id_env": "TELEGRAM_AUTOPOST_REVIEW_CHAT_ID",
+    "bot_token_env": "TELEGRAM_AUTOPOST_BOT_TOKEN"
+  }
+}

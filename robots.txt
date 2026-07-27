@@ -1,0 +1,33 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://kozyr.ua/sitemap.xml
+
+# Не индексируем корневой gate — только страновые версии
+# (корень имеет noindex в meta, но дублируем в robots для надёжности)
+
+# Служебные / параметрические пути
+Disallow: /*?utm_*
+Disallow: /*?ref=*
+Disallow: /*?campaign=*
+
+# Отдельные боты
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# Задержка crawl-rate для агрессивных ботов
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 10

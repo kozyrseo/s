@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+  xmlns:image="http://www.sitemaps.org/schemas/sitemap-image/0.1">
+
+  <!-- ============ УКРАИНА — русский ============ -->
+  <url>
+    <loc>https://kozyr.ua/ua/</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA" href="https://kozyr.ua/ua/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA" href="https://kozyr.ua/ua/uk/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.ua/"/>
+    <image:image>
+      <image:loc>https://kozyr.ua/og-image.jpg</image:loc>
+      <image:title>KOZYR — Рейкбек для украинских игроков</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://kozyr.ua/ua/rooms/pokerbet/</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA" href="https://kozyr.ua/ua/rooms/pokerbet/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA" href="https://kozyr.ua/ua/uk/rooms/pokerbet/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.ua/"/>
+    <image:image>
+      <image:loc>https://kozyr.ua/og-rooms-pokerbet.jpg</image:loc>
+      <image:title>PokerBet — обзор украинского покер-рума</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://kozyr.ua/ua/clubs/klubok/</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA" href="https://kozyr.ua/ua/clubs/klubok/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA" href="https://kozyr.ua/ua/uk/clubs/klubok/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.ua/"/>
+    <image:image>
+      <image:loc>https://kozyr.ua/og-clubs-klubok.jpg</image:loc>
+      <image:title>KlubOk в ClubGG — обзор клуба</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://kozyr.ua/ua/legal/</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA" href="https://kozyr.ua/ua/legal/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA" href="https://kozyr.ua/ua/uk/legal/"/>
+  </url>
+
+  <!-- ============ УКРАИНА — украинский ============ -->
+  <!-- (когда переводы будут готовы, добавь эти URL) -->
+  <!--
+  <url>
+    <loc>https://kozyr.ua/ua/uk/</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="uk-UA" href="https://kozyr.ua/ua/uk/"/>
+    <xhtml:link rel="alternate" hreflang="ru-UA" href="https://kozyr.ua/ua/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.ua/"/>
+  </url>
+  -->
+
+  <!-- ============ INTERNATIONAL ============ -->
+  <url>
+    <loc>https://kozyr.ua/int/</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kozyr.ua/int/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.ua/"/>
+  </url>
+
+  <!-- ============ COUNTRIES INDEX ============ -->
+  <url>
+    <loc>https://kozyr.ua/countries/</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- ============ Готово под будущие страны (закомментировано) ============ -->
+  <!--
+  <url>
+    <loc>https://kozyr.ua/pl/</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="pl-PL" href="https://kozyr.ua/pl/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.ua/"/>
+  </url>
+
+  <url>
+    <loc>https://kozyr.ua/de/</loc>
+    <lastmod>2027-01-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="de-DE" href="https://kozyr.ua/de/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.ua/"/>
+  </url>
+  -->
+
+  <url>
+  </url>
+  <url>
+    <loc>https://kozyr.ua/ua/blog/chto-takoe-reykbek-v-pokere/</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://kozyr.ua/ua/blog/pokerbet-ili-klubok-sravnenie/</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://kozyr.ua/ua/blog/kak-rabotayut-privatnye-pokerclubi/</loc>
+    <lastmod>2026-07-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>

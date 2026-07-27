@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="{{HTML_LANG}}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="color-scheme" content="dark">
+<title>{{META_TITLE}}</title>
+<meta name="description" content="{{META_DESCRIPTION}}">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<link rel="canonical" href="{{CANONICAL_URL}}">
+{{HREFLANG_BLOCK}}
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{CANONICAL_URL}}">
+<meta property="og:title" content="{{H1_TITLE}}">
+<meta property="og:description" content="{{META_DESCRIPTION}}">
+<meta property="og:locale" content="{{OG_LOCALE}}">
+<meta property="og:locale:alternate" content="{{OG_LOCALE_ALT}}">
+<meta property="og:image" content="{{OG_IMAGE_URL}}">
+<meta property="og:image:width" content="{{OG_IMAGE_WIDTH}}">
+<meta property="og:image:height" content="{{OG_IMAGE_HEIGHT}}">
+<meta property="og:image:alt" content="{{OG_IMAGE_ALT}}">
+<meta property="article:published_time" content="{{DATE_PUBLISHED}}">
+<meta property="article:modified_time" content="{{DATE_MODIFIED}}">
+<meta property="article:section" content="{{ARTICLE_SECTION}}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{H1_TITLE}}">
+<meta name="twitter:description" content="{{META_DESCRIPTION}}">
+<meta name="twitter:image" content="{{OG_IMAGE_URL}}">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700&display=swap">
+<link rel="stylesheet" href="/ua/blog/kozyr-blog.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{H1_TITLE_JSON}}",
+  "description": "{{META_DESCRIPTION_JSON}}",
+  "datePublished": "{{DATE_PUBLISHED}}",
+  "dateModified": "{{DATE_MODIFIED}}",
+  "author": {
+    "@type": "Person",
+    "@id": "{{SITE_ORIGIN}}/ua/#about",
+    "name": "KOZYR",
+    "jobTitle": "Аналитик рейкбека",
+    "description": "Разбор условий покерных румов и клубов: рейкбек, лимиты, выводы.",
+    "url": "{{ABOUT_URL}}",
+    "knowsAbout": ["Покерный рейкбек", "Обзоры румов", "Обзоры клубов", "Лимиты и выводы"],
+    "worksFor": {
+      "@type": "Organization",
+      "name": "KOZYR",
+      "url": "{{SITE_ORIGIN}}/"
+    }
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "KOZYR",
+    "url": "{{SITE_ORIGIN}}/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{SITE_ORIGIN}}/og-image.png",
+      "width": 1200,
+      "height": 630
+    }
+  },
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "{{CANONICAL_URL}}"},
+  "image": "{{OG_IMAGE_URL}}",
+  "articleSection": "{{ARTICLE_SECTION}}",
+  "keywords": "{{KEYWORDS_JSON}}",
+  "inLanguage": "{{IN_LANGUAGE}}",
+  "isAccessibleForFree": true,
+  "wordCount": {{WORD_COUNT}}
+}
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "{{UI_BREADCRUMB_HOME}}", "item": "{{HOME_URL_FULL}}"}, {"@type": "ListItem", "position": 2, "name": "{{UI_BREADCRUMB_BLOG}}", "item": "{{BLOG_URL_FULL}}"}, {"@type": "ListItem", "position": 3, "name": "{{H1_TITLE_JSON}}"}]}</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [{{FAQ_JSONLD}}]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [".lede", ".key-takeaways"]
+  },
+  "url": "{{CANONICAL_URL}}"
+}
+</script>
+
+<script src="/analytics.js" defer></script>
+
+<style>
+/* Article-specific styles (kept minimal, leveraging kozyr-blog.css) */
+.key-takeaways {
+  background: rgba(212, 175, 55, 0.06);
+  border-left: 3px solid var(--gold);
+  padding: 22px 26px;
+  margin: 32px 0 40px;
+  border-radius: 4px;
+}
+.key-takeaways .takeaways-label {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+.key-takeaways ul {
+  margin: 0;
+  padding-left: 20px;
+}
+.key-takeaways li {
+  margin-bottom: 8px;
+  color: var(--fg);
+  font-size: 15.5px;
+  line-height: 1.6;
+}
+.key-takeaways li:last-child { margin-bottom: 0; }
+
+.toc {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--line);
+  padding: 20px 26px;
+  margin: 32px 0;
+  border-radius: 4px;
+}
+.toc-label {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+.toc ol {
+  margin: 0;
+  padding-left: 22px;
+  list-style: decimal;
+}
+.toc li { margin-bottom: 6px; font-size: 14.5px; }
+.toc a { color: var(--fg); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
+.toc a:hover { border-bottom-color: var(--gold); }
+
+.faq-section { margin: 56px 0 40px; }
+.faq-section h2 { margin-bottom: 24px; }
+details.faq-item {
+  border-bottom: 1px solid var(--line);
+  padding: 18px 0;
+}
+details.faq-item:first-of-type { border-top: 1px solid var(--line); }
+details.faq-item summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--fg);
+  list-style: none;
+  position: relative;
+  padding-right: 32px;
+  line-height: 1.5;
+}
+details.faq-item summary::-webkit-details-marker { display: none; }
+details.faq-item summary::after {
+  content: "+";
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 22px;
+  color: var(--gold);
+  font-weight: 300;
+  transition: transform 0.2s;
+  line-height: 1;
+}
+details.faq-item[open] summary::after {
+  content: "−";
+}
+details.faq-item .faq-answer {
+  margin-top: 14px;
+  color: var(--fg-mute);
+  font-size: 15.5px;
+  line-height: 1.7;
+}
+
+.article-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--fg-mute);
+  margin-bottom: 40px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+.article-meta .updated { color: var(--gold); }
+
+.article-hero {
+  margin: 28px 0 32px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--bg-2, #0a0a0f);
+}
+.article-hero img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+.article-hero figcaption {
+  font-size: 12.5px;
+  color: var(--fg-mute);
+  padding: 10px 14px;
+  border-top: 1px solid var(--line);
+  font-style: italic;
+}
+
+/* ── Article body typography ─────────────────────────
+   Local overrides for .post-body only. The global kozyr-blog.css
+   sets `h2 { margin: 0 0 20px }`, which works on landing pages
+   where each H2 sits in its own padded section — but inside a
+   single flowing blog article it makes section headers crash
+   into the previous paragraph. These rules add breathing room
+   between sections, paragraphs, and list items without touching
+   the global stylesheet. */
+.post-body p {
+  margin: 0 0 1.2em;
+}
+.post-body h2 {
+  margin: 56px 0 18px;
+  scroll-margin-top: 24px;
+}
+.post-body h2:first-child {
+  margin-top: 0;
+}
+.post-body h3 {
+  margin: 32px 0 12px;
+  scroll-margin-top: 24px;
+}
+.post-body ul,
+.post-body ol {
+  margin: 0 0 1.2em;
+  padding-left: 1.4em;
+}
+.post-body li {
+  margin-bottom: 8px;
+}
+.post-body li:last-child {
+  margin-bottom: 0;
+}
+.post-body li > p {
+  margin-bottom: 0.4em;
+}
+.post-body strong {
+  color: var(--fg);
+}
+.post-body blockquote {
+  margin: 28px 0;
+  padding: 4px 0 4px 20px;
+  border-left: 3px solid var(--gold);
+  color: var(--fg-mute);
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">{{UI_SKIP_LINK}}</a>
+
+<div class="ambient" aria-hidden="true"></div>
+<div class="suit-pattern" aria-hidden="true"></div>
+<header class="header" role="banner">
+  <div class="container header-inner">
+    <a href="{{HOME_URL}}" class="logo" aria-label="KOZYR — на главную">
+      <span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M32 6 C32 6, 12 22, 12 38 C12 46, 18 51, 24 51 C28 51, 31 49, 32 47 L30 58 L34 58 L32 47 C33 49, 36 51, 40 51 C46 51, 52 46, 52 38 C52 22, 32 6, 32 6 Z" fill="#c9a349"/><text x="32" y="40" font-family="Cormorant Garamond, Manrope, sans-serif" font-size="22" font-weight="700" fill="#1a1208" text-anchor="middle">K</text></svg></span>
+      <span class="logo-text">KOZYR</span>
+    </a>
+    <!-- Mobile navigation toggle (CSS-only, no JS) -->
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-hidden="true">
+    <label for="nav-toggle" class="nav-burger" aria-label="{{UI_BURGER_ARIA}}" role="button" tabindex="0">
+      <span class="nav-burger-line" aria-hidden="true"></span>
+      <span class="nav-burger-line" aria-hidden="true"></span>
+      <span class="nav-burger-line" aria-hidden="true"></span>
+    </label>
+    <label for="nav-toggle" class="nav-backdrop" aria-hidden="true"></label>
+
+    <nav class="nav" aria-label="{{UI_NAV_ARIA}}">
+      <a href="{{HOME_URL}}">{{UI_NAV_AI_BOT}}</a>
+      <a href="{{HOME_URL}}#how">{{UI_NAV_HOW}}</a>
+      <a href="{{HOME_URL}}#rakeback">{{UI_NAV_FEATURES}}</a>
+      <a href="{{HOME_URL}}#compare">{{UI_NAV_COMPARE}}</a>
+      <a href="{{NLH_URL}}">{{UI_NAV_CASES}}</a>
+      <a href="{{PLO_URL}}">{{UI_NAV_REVIEWS}}</a>
+      <a href="{{HOME_URL}}#faq">{{UI_NAV_PRICING}}</a>
+    </nav>
+    <a href="{{HOME_URL}}" class="header-cta">{{UI_HEADER_CTA}}</a>
+  </div>
+</header>
+<nav class="breadcrumbs" aria-label="Breadcrumbs"><div class="container"><ol itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a itemprop="item" href="{{HOME_URL}}"><span itemprop="name">{{UI_BREADCRUMB_HOME}}</span></a><meta itemprop="position" content="1"></li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem"><a itemprop="item" href="{{BLOG_URL}}"><span itemprop="name">{{UI_BREADCRUMB_BLOG}}</span></a><meta itemprop="position" content="2"></li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" aria-current="page"><span itemprop="name">{{H1_TITLE}}</span><meta itemprop="position" content="3"></li></ol></div></nav>
+<main id="main">
+
+<article class="blog-post">
+  <section>
+    <div class="container" style="max-width:760px">
+      <div class="eyebrow">{{UI_ARTICLE_EYEBROW}}</div>
+      <h1>{{H1_TITLE}}</h1>
+      {{HERO_IMAGE_BLOCK}}
+      <p class="lede">{{LEDE}}</p>
+      <div class="article-meta">
+        <span>{{DATE_PUBLISHED_DISPLAY}}</span>
+        <span>·</span>
+        <span>{{READING_TIME}} {{UI_MIN_READ}}</span>
+        <span>·</span>
+        <span>{{UI_BY_AUTHOR}}</span>
+        {{LAST_UPDATED_BLOCK}}
+      </div>
+
+      {{KEY_TAKEAWAYS_BLOCK}}
+
+      {{TOC_BLOCK}}
+
+      <div class="post-body" style="font-size:16.5px;line-height:1.85;color:var(--fg);">
+
+{{ARTICLE_BODY_HTML}}
+
+      </div>
+
+      <aside class="author-box" data-author-box="kozyr" style="max-width:760px;margin:48px auto;padding:24px;border:1px solid rgba(201,163,73,.25);border-radius:14px;background:rgba(255,255,255,.02);display:flex;gap:18px;align-items:flex-start;">
+        <div aria-hidden="true" style="flex:0 0 56px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#c9a349,#8a6d1f);color:#1a1208;font:700 20px/56px 'Manrope',sans-serif;text-align:center;letter-spacing:.5px;">K</div>
+        <div style="flex:1;min-width:0;">
+          <p style="margin:0 0 4px;font-weight:700;">{{UI_AUTHOR_WRITTEN_BY}} <a href="{{ABOUT_URL}}" rel="author" style="color:inherit;">команда KOZYR</a></p>
+          <p style="margin:0 0 6px;font-size:.85em;opacity:.7;">{{UI_AUTHOR_ROLE}}</p>
+          <p style="margin:0;font-size:.92em;opacity:.85;">{{UI_AUTHOR_BIO}}</p>
+        </div>
+      </aside>
+
+      {{FAQ_BLOCK}}
+    </div>
+  </section>
+  <section>
+    <div class="container" style="max-width:760px">
+      <div class="final-cta">
+        <h2>{{UI_CTA_HEADING_PREFIX}}<em>{{CTA_KEYWORD}}</em>{{UI_CTA_HEADING_SUFFIX}}</h2>
+        <p>{{UI_CTA_PARAGRAPH}}</p>
+        <a href="{{HOME_URL}}" class="btn btn-primary">{{UI_CTA_BUTTON}} <span>→</span></a>
+      </div>
+    </div>
+  </section>
+</article>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">{{UI_RELATED_EYEBROW}}</div>
+      <h2>{{UI_RELATED_HEADING_PREFIX}}<em>{{UI_RELATED_HEADING_EM}}</em></h2>
+    </div>
+    <div class="grid-3">
+      {{RELATED_ARTICLES_HTML}}
+    </div>
+  </div>
+</section>
+
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="logo" style="margin-bottom:14px">
+          <span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M32 6 C32 6, 12 22, 12 38 C12 46, 18 51, 24 51 C28 51, 31 49, 32 47 L30 58 L34 58 L32 47 C33 49, 36 51, 40 51 C46 51, 52 46, 52 38 C52 22, 32 6, 32 6 Z" fill="#c9a349"/><text x="32" y="40" font-family="Cormorant Garamond, Manrope, sans-serif" font-size="22" font-weight="700" fill="#1a1208" text-anchor="middle">K</text></svg></span>
+          <span class="logo-text">KOZYR</span>
+        </div>
+        <p>{{UI_FOOTER_TAGLINE}}</p>
+      </div>
+      <div>
+        <h4>{{UI_FOOTER_PRODUCT_H}}</h4>
+        <p><a href="{{HOME_URL}}#bot">{{UI_FOOTER_LINK_AI_BOT}}</a></p>
+        <p><a href="{{NLH_URL}}">{{UI_FOOTER_LINK_NLH}}</a></p>
+        <p><a href="{{PLO_URL}}">{{UI_FOOTER_LINK_PLO}}</a></p>
+        <p><a href="{{SHORT_DECK_URL}}">{{UI_FOOTER_LINK_SHORT_DECK}}</a></p>
+        <p><a href="{{HOME_URL}}#compare">{{UI_FOOTER_LINK_COMPARE}}</a></p>
+      </div>
+      <div>
+        <h4>{{UI_FOOTER_COMPANY_H}}</h4>
+        <p><a href="{{HOME_URL}}#cases">{{UI_FOOTER_LINK_CASES}}</a></p>
+        <p><a href="{{HOME_URL}}#reviews">{{UI_FOOTER_LINK_REVIEWS}}</a></p>
+        <p><a href="{{HOME_URL}}#pricing">{{UI_FOOTER_LINK_PRICING}}</a></p>
+        <p><a href="{{HOME_URL}}legal/">Правовая информация</a></p>
+      </div>
+    </div>
+    <div class="footer-bottom">{{UI_FOOTER_COPYRIGHT}}</div>
+  </div>
+</footer>
+
+<!-- Telegram-канал заложен, но пока выключен. Блок i18n безвреден. -->
+{{POKERNET_I18N_BLOCK}}
+</body>
+</html>

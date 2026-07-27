@@ -1,0 +1,15 @@
+# Existing core dependencies (do not remove — required by generate.py, publish.py, image_gen.py)
+anthropic>=0.40.0
+openai>=1.59.0
+httpx>=0.27.0
+Pillow>=10.0.0
+numpy>=2.0.0
+gspread>=6.0.0
+google-auth>=2.0.0
+google-auth-oauthlib>=1.0.0
+requests>=2.32.0
+python-slugify>=8.0.0
+markdown>=3.7
+
+# New (for Search Console API in stats.py)
+google-api-python-client>=2.100.0
