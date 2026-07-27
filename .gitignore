@@ -1,0 +1,19 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Секреты — НИКОГДА не коммитить
+.env
+.env.*
+*service-account*.json
+secrets/
+
+# Логи и временное
+*.log
+.cache/
+node_modules/
+__pycache__/
+*.pyc
