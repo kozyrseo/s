@@ -1,0 +1,193 @@
+{
+  "technical": {
+    "tier": "technical",
+    "scores": {
+      "title_length": {
+        "max": 5,
+        "score": 5,
+        "detail": "54 chars (target: 30-65)"
+      },
+      "desc_length": {
+        "max": 5,
+        "score": 5,
+        "detail": "134 chars (target: 130-160)"
+      },
+      "word_count": {
+        "max": 5,
+        "score": 0,
+        "detail": "1119 words (target: 1800-3500)"
+      },
+      "h2_count": {
+        "max": 5,
+        "score": 3,
+        "detail": "6 H2 headings (target: 7-12)"
+      },
+      "h3_count": {
+        "max": 3,
+        "score": 0,
+        "detail": "0 H3 headings (target: ≥3)"
+      },
+      "internal_links_count": {
+        "max": 5,
+        "score": 5,
+        "detail": "4 internal links (target: 3-5)"
+      },
+      "internal_links_diversity": {
+        "max": 3,
+        "score": 3,
+        "detail": "4 unique link targets"
+      },
+      "target_page_link": {
+        "max": 3,
+        "score": 3,
+        "detail": "Target /ua/ ✓ found"
+      },
+      "primary_keyword": {
+        "max": 4,
+        "score": 2,
+        "detail": "title=False, first_para=True, h2=True"
+      },
+      "secondary_keywords": {
+        "max": 4,
+        "score": 4,
+        "detail": "3/3 secondaries found"
+      },
+      "faq_count": {
+        "max": 4,
+        "score": 4,
+        "detail": "6 FAQ items (target: ≥6)"
+      },
+      "no_cliches": {
+        "max": 4,
+        "score": 4,
+        "detail": "clean"
+      },
+      "table_format": {
+        "max": 4,
+        "score": 4,
+        "detail": "2 table(s), all well-formed"
+      }
+    },
+    "total": 42,
+    "max": 54,
+    "percent": 78
+  },
+  "content": {
+    "tier": "content",
+    "scores": {
+      "eeat": {
+        "max": 4,
+        "score": 3,
+        "evidence": "«500 × 0,40 = 200 гривен» concrete calculation; «40% еженедельно» specific KlubOk data",
+        "fix": "Add dates (e.g., 'as of Q1 2025') and cite КРАИЛ licensing source for PokerBet"
+      },
+      "sourcing": {
+        "max": 4,
+        "score": 2,
+        "evidence": "«40%» for KlubOk stated as fact without 'we manage' framing; no external verification links",
+        "fix": "Frame KlubOk 40% as 'across clubs we manage' or 'our partner offers'; link КРАИЛ externally"
+      },
+      "depth": {
+        "max": 4,
+        "score": 4,
+        "evidence": "Explains WHY rake matters: «на дистанции рейк — серьёзная статья расходов»; compares types",
+        "fix": ""
+      },
+      "concreteness": {
+        "max": 4,
+        "score": 4,
+        "evidence": "«10 000 раздач на NL50, 500 гривен рейка, 200 гривен возврат»; table with 6 criteria",
+        "fix": ""
+      },
+      "unique_angle": {
+        "max": 4,
+        "score": 3,
+        "evidence": "B2B angle implicit; legal vs private club comparison table; UA-specific (grivna, KРAИЛ)",
+        "fix": "Add one sentence on 'why club owners care about rakeback transparency for retention'"
+      },
+      "intent_match": {
+        "max": 4,
+        "score": 4,
+        "evidence": "Informational: defines rakeback, explains calculation, compares options; no hard sell",
+        "fix": ""
+      },
+      "structure": {
+        "max": 3,
+        "score": 3,
+        "evidence": "Logical flow: definition → calculation → selection criteria → legal vs private → checklist → CTA",
+        "fix": ""
+      },
+      "readability": {
+        "max": 3,
+        "score": 3,
+        "evidence": "Short paragraphs, active voice: «вы получите обратно», scannable tables and bullet checklist",
+        "fix": ""
+      },
+      "primary_kw_natural": {
+        "max": 3,
+        "score": 3,
+        "evidence": "«рейкбек в покере» in intro, H2 title, mid-article; not stuffed, flows naturally",
+        "fix": ""
+      },
+      "secondary_coverage": {
+        "max": 3,
+        "score": 3,
+        "evidence": "«покерный рум Украина», «высокий рейкбек», «вывод гривны» all present meaningfully",
+        "fix": ""
+      },
+      "link_context": {
+        "max": 3,
+        "score": 3,
+        "evidence": "Internal links with descriptive anchors: «Как работают приватные покерные клубы в ClubGG»",
+        "fix": ""
+      },
+      "faq_relevance": {
+        "max": 3,
+        "score": 0,
+        "evidence": "No FAQ section present in article body",
+        "fix": "Add FAQ: 'Как часто выплачивается рейкбек?', 'Что лучше: 40% или низкий рейк?'"
+      },
+      "h2_clickability": {
+        "max": 3,
+        "score": 3,
+        "evidence": "H2s promise value: «На что смотреть при выборе», «Чек-лист: как выбрать рум»",
+        "fix": ""
+      },
+      "no_filler": {
+        "max": 3,
+        "score": 2,
+        "evidence": "«Всё — без воды и выдуманных цифр» meta-commentary; «Вывод и следующий шаг» is filler H2",
+        "fix": "Remove 'без воды' self-reference; rename conclusion H2 to actionable title"
+      },
+      "brand_voice": {
+        "max": 3,
+        "score": 2,
+        "evidence": "Mostly factual but «Играйте ответственно» is B2C gambling-promo tone; lacks B2B framing",
+        "fix": "Add 1 sentence on club operator perspective: 'For club owners, transparent rakeback…'"
+      },
+      "conversion_bridge": {
+        "max": 3,
+        "score": 3,
+        "evidence": "Strong CTA: «каталог рейкбек-сделок KOZYR /ua/» with clear value prop and action verb",
+        "fix": ""
+      }
+    },
+    "total": 45,
+    "max": 54,
+    "percent": 83,
+    "top_3_strengths": [
+      "Excellent depth: explains WHY rakeback matters on distance, compares legal vs private clubs with tables",
+      "High concreteness: real calculation example (500₴ rake × 40% = 200₴), 6-criteria comparison table",
+      "Strong conversion bridge: natural CTA to /ua/ catalog with clear user benefit ('проверенные офферы')"
+    ],
+    "top_3_issues": [
+      "Missing FAQ section entirely (0/3 points) — critical for informational intent and featured snippets",
+      "Sourcing honesty weak: 40% KlubOk number stated as impersonal fact, not 'we manage' framing (2/4)",
+      "Brand voice too B2C: 'Играйте ответственно' gambling-promo tone; lacks B2B club-owner angle (2/3)"
+    ],
+    "verdict_explanation": "Solid informational article with strong depth and concreteness, but needs FAQ, B2B framing, and sourcing transparency to align with PokerNet's managed-service positioning."
+  },
+  "total": 81,
+  "verdict": "GOOD",
+  "telegram_block": "🏆 *Quality: 81/100* 🟡 GOOD\n   📊 Technical: 78/100 · 📝 Content: 83/100\n\n✅ *Сильное:*\n   • Excellent depth: explains WHY rakeback matters on distance, compares legal vs private clubs with tables\n   • High concreteness: real calculation example (500₴ rake × 40% = 200₴), 6-criteria comparison table\n   • Strong conversion bridge: natural CTA to /ua/ catalog with clear user benefit ('проверенные офферы')\n\n⚠️ *Что улучшить:*\n   • Missing FAQ section entirely (0/3 points) — critical for informational intent and featured snippets\n   • Sourcing honesty weak: 40% KlubOk number stated as impersonal fact, not 'we manage' framing (2/4)\n   • Brand voice too B2C: 'Играйте ответственно' gambling-promo tone; lacks B2B club-owner angle (2/3)\n   • word\\_count: 1119 words (target: 1800-3500)\n   • h2\\_count: 6 H2 headings (target: 7-12)"
+}
