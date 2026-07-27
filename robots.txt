@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://kozyr.ua/sitemap.xml
+Sitemap: https://kozyr.club/sitemap.xml
 
 # Не индексируем корневой gate — только страновые версии
 # (корень имеет noindex в meta, но дублируем в robots для надёжности)
