@@ -91,13 +91,13 @@ class LangCfg(TypedDict):
 
 
 # ВАЖНО: замени на реальный домен после покупки (см. DEPLOY.md шаг 5).
-# Держим kozyr.ua как плейсхолдер, совпадающий с остальным кодом сайта,
+# Держим kozyr.club как плейсхолдер, совпадающий с остальным кодом сайта,
 # чтобы единая замена sed сработала и здесь.
-SITE_URL = "https://kozyr.ua"
+SITE_URL = "https://kozyr.club"
 
 # Telegram-автопостинг статей в канал проекта. Заложен, но ВЫКЛЮЧЕН.
 # Включишь позже: TELEGRAM_ENABLED=true в переменных окружения workflow.
-TELEGRAM_ENABLED = False
+TELEGRAM_ENABLED = True
 
 
 LANG_CONFIG: dict[str, LangCfg] = {
