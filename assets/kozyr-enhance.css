@@ -409,6 +409,72 @@ a.card:hover,
   flex: 0 0 44px !important;
 }
 
+/* ============================================================
+   ДЕСКТОП/ПЛАНШЕТ: сжатие таблицы финдера + карточки статистики
+   на всех ширинах (spec-grid не имел стилей выше 640px)
+   ============================================================ */
+
+/* --- Карточки статистики на ВСЕХ ширинах (auto-fit) --- */
+.spec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+.spec-box {
+  background: var(--surface-alt, #F5F7FB);
+  border: 1px solid var(--border, #E6E8EF);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 78px;
+  text-align: left;
+}
+.spec-box .spec-box-num,
+.spec-box-num {
+  font-family: var(--f-display, 'Space Grotesk', sans-serif);
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--ink, #0A1128);
+  letter-spacing: -0.01em;
+}
+.spec-box .spec-box-cap,
+.spec-box-cap {
+  font-size: 12px;
+  color: var(--ink-2, #5C6580);
+  margin-top: 4px;
+  line-height: 1.3;
+}
+
+/* --- Сжатие таблицы финдера, чтобы влезала на десктопе/планшете --- */
+@media (min-width: 641px) {
+  .kf-table tbody td { padding: 10px 6px !important; font-size: 12.5px !important; }
+  .kf-col { padding: 12px 6px !important; font-size: 9px !important; letter-spacing: 0.06em !important; gap: 4px !important; }
+  .kf-th-plain { padding: 12px 6px !important; }
+  .kf-tags { max-width: 118px !important; gap: 4px !important; }
+  .kf-tag { font-size: 11px !important; padding: 3px 6px !important; }
+  .kf-pay { gap: 4px !important; }
+  .kf-pay-badge { font-size: 11px !important; padding: 3px 6px !important; }
+  .kf-logo { width: 32px !important; height: 32px !important; font-size: 11px !important; }
+  .kf-room { gap: 8px !important; }
+  .kf-room-name { font-size: 13.5px !important; }
+  .kf-room-meta { font-size: 10px !important; }
+  .kf-score-num { font-size: 14px !important; }
+  .kf-go { padding: 7px 10px !important; font-size: 12.5px !important; }
+  .kf-check { width: 30px !important; height: 30px !important; }
+  .kf-actions { gap: 6px !important; }
+}
+
+/* --- Планшет (≤900px): бургер вместо десктопного меню, чтобы не торчало --- */
+@media (max-width: 900px) {
+  .nav-links { display: none !important; }
+  .nav-actions .btn-primary { display: none !important; }
+  .nav-burger { display: inline-flex !important; }
+  .kf-compare-bar { max-width: calc(100vw - 24px) !important; }
+}
+
 /* ---------- 6. Уважение к reduced motion --------------------------- */@media (prefers-reduced-motion: reduce) {
   .kf-card, .card, .kf-table tbody tr, .kf-rake, .kf-score-num,
   .btn-dark, .btn-primary, .btn-xl {
