@@ -155,13 +155,22 @@ a.card:hover,
     letter-spacing: 0.04em !important;
   }
 
-  /* --- широкие таблицы: прокрутка вместо разъезда страницы --- */
-  .compare-table, .post-body table, .blog-post table,
-  .article-body table, .kf-spec table {
-    display: block;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    max-width: 100%;
+  /* --- Таблицы в статьях: вписываем переносом, без прокрутки --- */
+  .post-body table, .blog-post table, .article-body table {
+    display: table !important;
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
+  }
+  .post-body table th, .post-body table td,
+  .blog-post table th, .blog-post table td,
+  .article-body table th, .article-body table td {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+    font-size: 12.5px !important;
+    padding: 9px 8px !important;
+    vertical-align: top !important;
   }
 
   /* --- удобные пункты в выезжающем меню --- */
@@ -183,11 +192,13 @@ a.card:hover,
 
   /* --- ФИКС: плашка сравнения румов не влезала / вылезала за край --- */
   #kf-compare-bar, .kf-compare-bar {
+    position: fixed !important;
     left: 10px !important;
     right: 10px !important;
     bottom: 10px !important;
     width: auto !important;
-    max-width: none !important;
+    max-width: calc(100vw - 20px) !important;
+    min-width: 0 !important;
     flex-wrap: wrap !important;
     border-radius: 16px !important;
     padding: 12px 14px !important;
@@ -242,7 +253,9 @@ a.card:hover,
   }
 
   /* --- Таблица сравнения: складные строки «параметр → 2 значения» --- */
-  .compare-table { display: block !important; width: 100% !important; }
+  /* КЛЮЧЕВОЕ: сбрасываем min-width:680px и прокрутку обёртки из родного CSS */
+  .compare-wrap { overflow-x: visible !important; }
+  .compare-table { display: block !important; width: 100% !important; min-width: 0 !important; }
   .compare-table thead { display: block !important; }
   .compare-table thead tr {
     display: grid !important;
@@ -281,14 +294,119 @@ a.card:hover,
   .compare-table .compare-name { font-size: 14px !important; }
   .compare-table .compare-sub { font-size: 11px !important; }
 
-  /* --- Таблицы форматов/данных: аккуратная прокрутка --- */
+  /* --- Таблицы данных: вписываем переносом, без горизонтальной прокрутки --- */
   .data-table {
-    display: block !important;
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-    white-space: nowrap !important;
-    max-width: 100% !important;
+    display: table !important;
+    width: 100% !important;
+    table-layout: fixed !important;
+    border-collapse: collapse !important;
   }
+  .data-table th,
+  .data-table td {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+    font-size: 12.5px !important;
+    padding: 9px 8px !important;
+    vertical-align: top !important;
+  }
+  /* первый столбец (параметр/формат) чуть у́же, значение шире */
+  .data-table th:first-child,
+  .data-table td:first-child { width: 42% !important; }
+}
+
+/* ---------- 5c. Финдер на мобилке: карточки вписываются в экран ------ */
+@media (max-width: 640px) {
+  /* minmax(0,1fr) не даёт колонке растянуться под контент шире экрана */
+  .kf-cards { grid-template-columns: minmax(0, 1fr) !important; gap: 12px !important; }
+  .kf-card {
+    width: auto !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    padding: 16px !important;
+  }
+  /* даём всем детям сжиматься и переносить содержимое */
+  .kf-card *,
+  .kf-card-head, .kf-card-rake, .kf-card-spec, .kf-spec-row,
+  .kf-pay, .kf-tags, .kf-card-foot { min-width: 0 !important; }
+  .kf-spec-row, .kf-pay, .kf-tags, .kf-limits { flex-wrap: wrap !important; }
+  .kf-card-head { flex-wrap: nowrap !important; gap: 10px !important; }
+  .kf-check { flex: 0 0 auto !important; }
+
+  /* --- Корневая защита: ничто не выходит за край экрана --- */
+  html, body { overflow-x: clip !important; max-width: 100% !important; }
+  /* десктопное меню всегда скрыто на мобилке (страховка) */
+  .nav-links { display: none !important; }
+}
+
+/* ============================================================
+   ФИНДЕР — редизайн карточки рума (применяется на всех ширинах)
+   ============================================================ */
+
+/* --- Рейкбек: золотой блок-герой --- */
+.kf-card-rake {
+  background: #FBF6EC !important;
+  border: 1px solid #F0E4C8 !important;
+  border-radius: 12px !important;
+  padding: 13px 15px !important;
+  margin-bottom: 6px !important;
+  align-items: center !important;
+}
+.kf-card-rake .kf-rake { color: var(--kz-gold-deep) !important; font-size: 30px !important; line-height: 1 !important; }
+.kf-card-rake .kf-rake em { font-size: 19px !important; }
+/* подпись «Возврат рейка» над числом (только для реального %) */
+.kf-card-rake .kf-rake:not(.kf-rake--pending)::before {
+  content: "Возврат рейка";
+  display: block;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--kz-gold-deep); font-weight: 600; margin-bottom: 3px;
+}
+.kf-card-rake .kf-rake-note { color: var(--kz-gold-deep) !important; opacity: 0.8; }
+/* ФИКС: «Уточняется» больше не гигантское и не наезжает */
+.kf-card-rake .kf-rake--pending {
+  font-size: 18px !important;
+  color: var(--ink-3, #8B90A5) !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+}
+
+/* --- Score: кольцо вместо числа с полоской --- */
+.kf-card .kf-score { flex-direction: column !important; align-items: center !important; gap: 4px !important; }
+.kf-card .kf-score-num {
+  width: 42px !important; height: 42px !important;
+  border: 2px solid var(--accent, #2668FF) !important;
+  border-radius: 50% !important;
+  display: flex !important; align-items: center !important; justify-content: center !important;
+  font-size: 15px !important;
+  box-sizing: border-box !important;
+}
+.kf-card .kf-score-num::after { display: none !important; }
+.kf-card .kf-score-bar { display: none !important; }
+.kf-card .kf-score::after {
+  content: "Score";
+  font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-3, #8B90A5);
+}
+
+/* --- Читаемые метки спеков (были 9.5px) --- */
+.kf-card .kf-spec-key { font-size: 11px !important; letter-spacing: 0.04em !important; padding-top: 4px !important; }
+
+/* --- Полировка футера: широкая CTA + крупная кнопка сравнения --- */
+.kf-card .kf-card-foot { gap: 10px !important; align-items: stretch !important; }
+.kf-card .kf-go {
+  flex: 1 !important;
+  justify-content: center !important;
+  padding: 12px 0 !important;
+  border-radius: 11px !important;
+  font-weight: 600 !important;
+}
+.kf-card .kf-check {
+  width: 44px !important; height: 44px !important;
+  border-radius: 11px !important;
+  flex: 0 0 44px !important;
 }
 
 /* ---------- 6. Уважение к reduced motion --------------------------- */@media (prefers-reduced-motion: reduce) {
