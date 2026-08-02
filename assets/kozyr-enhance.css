@@ -173,6 +173,34 @@ a.card:hover,
 
   /* компенсируем «чёлку» на iPhone (safe-area) */
   .nav, .footer { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+
+  /* --- ФИКС: тёмная кнопка в выезжающем меню (был тёмный текст на тёмном) --- */
+  .nav-drawer a.btn-dark, .nav-drawer .btn-dark,
+  .nav-drawer a.btn-primary, .nav-drawer .btn-primary {
+    color: #fff !important;
+    justify-content: center !important;
+  }
+
+  /* --- ФИКС: плашка сравнения румов не влезала / вылезала за край --- */
+  #kf-compare-bar, .kf-compare-bar {
+    left: 10px !important;
+    right: 10px !important;
+    bottom: 10px !important;
+    width: auto !important;
+    max-width: none !important;
+    flex-wrap: wrap !important;
+    border-radius: 16px !important;
+    padding: 12px 14px !important;
+    gap: 10px 12px !important;
+    box-sizing: border-box !important;
+  }
+  .kf-compare-bar .kf-compare-hint {
+    width: 100%;
+    order: -1;
+    text-align: left;
+  }
+  .kf-compare-bar .kf-compare-list { flex-wrap: wrap; flex: 1 1 auto; }
+  .kf-compare-bar .btn { flex: 1 1 140px; }
 }
 
 /* совсем узкие экраны — режем гигантский hero-заголовок мягче */

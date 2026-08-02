@@ -3100,11 +3100,29 @@ body::before {
 
 <script>
 // Kozyr Match calculator — Ukraine focus (PokerBet + KlubOk)
-// Значения помечены как ориентировочные до подтверждения партнёрами
-const rooms = [
-  { code: 'PB', name: 'PokerBet', score: 8.2, pct: 0.50 },
-  { code: 'KO', name: 'KlubOk',   score: 7.9, pct: 0.45 },
-];
+// Единый источник данных: реальные партнёры берутся из финдера (window.KOZYR_PARTNERS).
+// Заполни поле rake у партнёра в LIVE_ROOMS — калькулятор подхватит % автоматически.
+// Пока % не подтверждён (rake:null), используется запасной ориентир ниже.
+function getCalcRooms() {
+  var src = (window.KOZYR_PARTNERS || []).filter(function (r) {
+    return typeof r.rake === 'number' && r.rake > 0;
+  });
+  if (src.length) {
+    return src.map(function (r) {
+      return {
+        code: (r.logo && r.logo.text) || (r.name || '').slice(0, 2).toUpperCase(),
+        name: r.name,
+        score: r.score,
+        pct: r.rake / 100
+      };
+    });
+  }
+  // Запасной ориентир, пока партнёры не подтвердили процент возврата
+  return [
+    { code: 'PB', name: 'PokerBet', score: 8.2, pct: 0.50 },
+    { code: 'KO', name: 'KlubOk',   score: 7.9, pct: 0.45 },
+  ];
+}
 
 const limitRake = { NL10: 1.4, NL25: 3.5, NL50: 7, NL100: 14, NL200: 28, NL500: 62 };
 let state = { limit: 'NL50', hours: 20 };
@@ -3112,7 +3130,7 @@ let state = { limit: 'NL50', hours: 20 };
 function calc() {
   const monthlyHours = state.hours * 4.33;
   const monthlyRake = monthlyHours * limitRake[state.limit];
-  return rooms.map(r => ({
+  return getCalcRooms().map(r => ({
     ...r,
     monthlyReturn: Math.round(monthlyRake * r.pct)
   })).sort((a,b) => b.monthlyReturn - a.monthlyReturn);
@@ -3172,6 +3190,8 @@ document.querySelectorAll('.faq-item').forEach(item => {
 });
 
 render();
+// Перерисовываем после загрузки финдера — чтобы подхватить реальных партнёров
+window.addEventListener('load', function () { try { render(); } catch (e) {} });
 </script>
 
 
@@ -3301,6 +3321,9 @@ render();
       url: '/clubs/klubok/'
     }
   ];
+
+  /* Единый источник данных для калькулятора Kozyr Match */
+  try { window.KOZYR_PARTNERS = LIVE_ROOMS; } catch (e) {}
 
   /* ---------- Демо-набор (чтобы увидеть фильтры в работе) ---------- */
 
