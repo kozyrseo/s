@@ -138,6 +138,41 @@ a.card:hover,
   }
   /* масть меньше на телефоне */
   .kz-suit { font-size: 108px; opacity: 0.032; top: 18px; }
+
+  /* --- читаемые размеры мелких меток (были 9.5–11.5px) --- */
+  .kf-rake-note, .kf-tag, .kf-qp-group-label, .kf-readout-label,
+  .kf-compare-hint, .trump-eyebrow, .trump-access, .trump-label,
+  .compare-sub, .accent-text, .result-room-label, .result-note,
+  .room-facts-sub, .room-score-of, .room-verdict-label,
+  .side-cta-label, .side-related-title, .article-toc-label,
+  .toc-label, .takeaways-label, .eyebrow, .geo-banner-btn,
+  .kf-slider-cap, .kf-opt-label, .kf-spec-key, .kf-th-plain,
+  .kf-tagline, .pending, .kf-table th {
+    font-size: 12px !important;
+  }
+  /* компактный межбуквенный интервал, чтобы увеличенные капсы не переносились */
+  .trump-eyebrow, .trump-access, .kf-qp-group-label, .kf-readout-label {
+    letter-spacing: 0.04em !important;
+  }
+
+  /* --- широкие таблицы: прокрутка вместо разъезда страницы --- */
+  .compare-table, .post-body table, .blog-post table,
+  .article-body table, .kf-spec table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+
+  /* --- удобные пункты в выезжающем меню --- */
+  .nav-drawer a {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* компенсируем «чёлку» на iPhone (safe-area) */
+  .nav, .footer { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
 }
 
 /* совсем узкие экраны — режем гигантский hero-заголовок мягче */

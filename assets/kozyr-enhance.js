@@ -114,9 +114,24 @@
     });
   }
 
+  /* ---- на мобилке показываем карточки вместо широкой таблицы ------- */
+  function mobileDefaults() {
+    if (window.innerWidth > 640) return;
+    /* уважаем явный выбор в URL (?view=table) */
+    try {
+      var params = new URLSearchParams(location.search);
+      if (params.has('view')) return;
+    } catch (e) {}
+    var cardsBtn = document.getElementById('kf-view-cards');
+    if (cardsBtn && cardsBtn.getAttribute('aria-pressed') !== 'true') {
+      cardsBtn.click();
+    }
+  }
+
   /* ---- запуск ------------------------------------------------------ */
   function init() {
     injectSuits();
+    mobileDefaults();
     /* даём странице отрисовать таблицу/карточки, затем анимируем цифры */
     watch('.kf-score-num', animScore);
     watch('.room-score-num, .club-score-num', animScore);
