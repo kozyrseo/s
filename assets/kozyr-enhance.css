@@ -208,8 +208,90 @@ a.card:hover,
   .kz-suit { font-size: 84px; }
 }
 
-/* ---------- 6. Уважение к reduced motion --------------------------- */
-@media (prefers-reduced-motion: reduce) {
+/* ---------- 5b. Мобильная презентация данных ------------------------ */
+@media (max-width: 640px) {
+  /* --- Блоки статистики: карточки в 2 колонки (число + подпись) --- */
+  .spec-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+  .spec-box {
+    background: var(--surface-alt, #F5F7FB) !important;
+    border: 1px solid var(--border, #E6E8EF) !important;
+    border-radius: 12px !important;
+    padding: 13px 14px !important;
+    text-align: left !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    min-height: 74px !important;
+  }
+  .spec-box-num {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    line-height: 1.15 !important;
+    color: var(--ink, #0A1128) !important;
+    letter-spacing: -0.01em !important;
+  }
+  .spec-box-cap {
+    font-size: 11.5px !important;
+    color: var(--ink-2, #5C6580) !important;
+    margin-top: 4px !important;
+    line-height: 1.25 !important;
+  }
+
+  /* --- Таблица сравнения: складные строки «параметр → 2 значения» --- */
+  .compare-table { display: block !important; width: 100% !important; }
+  .compare-table thead { display: block !important; }
+  .compare-table thead tr {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    padding: 12px 14px !important;
+  }
+  .compare-table thead th.compare-param { display: none !important; }
+  .compare-table thead th { padding: 0 !important; text-align: left !important; }
+  .compare-table tbody { display: block !important; }
+  .compare-table tbody tr {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 3px 10px !important;
+    padding: 12px 14px !important;
+    border-bottom: 1px solid var(--border, #E6E8EF) !important;
+  }
+  .compare-table tbody th[scope="row"] {
+    grid-column: 1 / -1 !important;
+    text-align: left !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: var(--ink-3, #8B90A5) !important;
+    padding: 0 0 2px !important;
+    border: none !important;
+  }
+  .compare-table tbody td {
+    font-size: 14px !important;
+    padding: 0 !important;
+    text-align: left !important;
+    border: none !important;
+  }
+  .compare-table .compare-logo { width: 30px !important; height: 30px !important; font-size: 11px !important; }
+  .compare-table .compare-name { font-size: 14px !important; }
+  .compare-table .compare-sub { font-size: 11px !important; }
+
+  /* --- Таблицы форматов/данных: аккуратная прокрутка --- */
+  .data-table {
+    display: block !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    white-space: nowrap !important;
+    max-width: 100% !important;
+  }
+}
+
+/* ---------- 6. Уважение к reduced motion --------------------------- */@media (prefers-reduced-motion: reduce) {
   .kf-card, .card, .kf-table tbody tr, .kf-rake, .kf-score-num,
   .btn-dark, .btn-primary, .btn-xl {
     transition: none !important;
