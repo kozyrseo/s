@@ -1,0 +1,158 @@
+/* ========================================================================
+   KOZYR — enhancement layer (v1)
+   Дополняет существующую дизайн-систему: покерная айдентика,
+   анимация цифр рейкбека/Score, hover-полировка, мобильные улучшения.
+   Всё намеренно намного мягче существующих стилей и уважает
+   prefers-reduced-motion. Ничего не ломает — только накладывается сверху.
+   ======================================================================== */
+
+:root {
+  --kz-gold: #B8841C;
+  --kz-gold-deep: #8A6212;
+  --kz-lift: 0 16px 36px rgba(10, 17, 40, 0.10);
+  --kz-lift-dark: 0 18px 44px rgba(0, 0, 0, 0.28);
+}
+
+/* ---------- 1. Покерная айдентика: масть-водяной знак в секциях ------- */
+.kz-suit {
+  position: absolute;
+  top: 26px;
+  right: 3%;
+  z-index: 0;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 200px;
+  line-height: 1;
+  color: currentColor;
+  opacity: 0.055;
+  pointer-events: none;
+  user-select: none;
+  transform: rotate(-8deg);
+}
+/* герой — чуть выразительнее, задаёт тон бренду */
+.hero .kz-suit { opacity: 0.07; }
+/* на тёмных секциях белым и заметнее */
+.compare .kz-suit,
+.match-sec .kz-suit,
+.final .kz-suit {
+  opacity: 0.08;
+}
+/* контент секций держим над водяным знаком */
+section > .wrap,
+section > .container,
+section > *:not(.kz-suit) {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- 2. Масть-акцент у ярлыков секций ------------------------- */
+.section-tag { position: relative; }
+.section-tag::after {
+  content: "\2660"; /* ♠ */
+  margin-left: 9px;
+  color: var(--kz-gold);
+  font-size: 0.85em;
+  opacity: 0.75;
+  vertical-align: baseline;
+}
+
+/* ---------- 3. Анимация цифр: подсветка во время счёта --------------- */
+.kf-rake { transition: color 0.35s ease; }
+.kf-rake.kz-counting > *,
+.kf-rake.kz-counting { color: var(--kz-gold-deep); }
+.kf-score-num { transition: color 0.35s ease; }
+.kf-score-num.kz-counting { color: var(--kz-gold-deep); }
+
+/* тонкая золотая черта под Kozyr Score — фирменный штрих */
+.kf-score-num::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--kz-gold), transparent);
+  border-radius: 2px;
+  opacity: 0;
+  transform: scaleX(0.3);
+  transform-origin: left;
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.kf-score-num { position: relative; display: inline-block; }
+.kf-score-num.kz-lined::after { opacity: 0.9; transform: scaleX(1); }
+
+/* ---------- 4. Hover-полировка карточек и строк --------------------- */
+.kf-card {
+  transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.3, 1),
+              box-shadow 0.22s ease, border-color 0.22s ease;
+  will-change: transform;
+}
+.kf-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--kz-lift);
+}
+.kf-table tbody tr { transition: background 0.18s ease; }
+.kf-table tbody tr:hover { background: rgba(46, 107, 255, 0.035); }
+
+/* room / club карточки-обзоры и блоговые карточки */
+.card {
+  transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.3, 1),
+              box-shadow 0.22s ease, border-color 0.22s ease;
+}
+a.card:hover,
+.card.kz-hoverable:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--kz-lift);
+}
+
+/* CTA-кнопки: лёгкий подъём */
+.btn-dark, .btn-primary, .btn-xl {
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.btn-dark:hover, .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(10, 17, 40, 0.22);
+}
+
+/* ---------- 5. Мобильные улучшения ---------------------------------- */
+@media (max-width: 640px) {
+  /* липкая панель переключения вида (Таблица/Карточки/Фильтры) */
+  .kf-bar {
+    position: sticky;
+    top: 0;
+    z-index: 45;
+    background: var(--bg, #F6F7FB);
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 4px;
+  }
+  /* крупнее тач-зоны */
+  .btn, .btn-xl, .limit-btn, .kf-seg > *, .kf-pill, .kf-chip, .chip {
+    min-height: 44px;
+  }
+  .kf-seg > * { display: flex; align-items: center; justify-content: center; }
+  /* горизонтальный скролл таблицы вместо ломки вёрстки */
+  .kf-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  /* масть меньше на телефоне */
+  .kz-suit { font-size: 108px; opacity: 0.032; top: 18px; }
+}
+
+/* совсем узкие экраны — режем гигантский hero-заголовок мягче */
+@media (max-width: 380px) {
+  .kz-suit { font-size: 84px; }
+}
+
+/* ---------- 6. Уважение к reduced motion --------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .kf-card, .card, .kf-table tbody tr, .kf-rake, .kf-score-num,
+  .btn-dark, .btn-primary, .btn-xl {
+    transition: none !important;
+  }
+  .kf-card:hover, a.card:hover, .btn-dark:hover, .btn-primary:hover {
+    transform: none !important;
+  }
+  .kf-score-num::after { transition: none !important; }
+}
