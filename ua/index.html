@@ -2556,7 +2556,7 @@ body::before {
 
 </style>
 <script src="/analytics.js" defer></script>
-  <link rel="stylesheet" href="/assets/kozyr-enhance.css?v=5">
+  <link rel="stylesheet" href="/assets/kozyr-enhance.css?v=6">
 </head>
 <body>
 
@@ -2729,7 +2729,7 @@ body::before {
 
     <!-- Быстрый подбор: три вопроса, которые сразу выставляют фильтры -->
     <div class="kf-quickpick" role="group" aria-label="Быстрый подбор сделки">
-      <div class="kf-qp-title">Подбор<br>за 15 секунд</div>
+      <div class="kf-qp-title">Подбор за 15 секунд</div>
 
       <div>
         <div class="kf-qp-group-label" id="kf-qp-game-label">Что играешь</div>
@@ -3216,7 +3216,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
 
   // Демо-данные: показывают, как каталог работает на 10 румах.
   // ПЕРЕД ДЕПЛОЕМ ПОСТАВЬ false.
-  var KOZYR_DEMO = true;
+  var KOZYR_DEMO = false;
 
   /* ---------- Словари значений ---------- */
 
@@ -3226,7 +3226,6 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       pl:  { label: 'Польша',      flag: 'pl' },
       de:  { label: 'Германия',    flag: 'de' },
       cz:  { label: 'Чехия',       flag: 'cz' },
-      kz:  { label: 'Казахстан',   flag: 'kz' },
       int: { label: 'International', flag: null }
     },
     games: {
@@ -3297,7 +3296,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       currency: 'UAH',
       license: 'Лицензия КРАИЛ',
       note: 'Единственный полностью легальный украинский рум. Налоги удерживаются автоматически.',
-      url: '/rooms/pokerbet/'
+      url: '/ua/rooms/pokerbet/'
     },
     {
       id: 'klubok',
@@ -3318,7 +3317,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       currency: 'UAH',
       license: 'Офшорная юрисдикция',
       note: 'Приватный клуб в ClubGG. Мягкие поля, расчёты в гривне через Telegram.',
-      url: '/clubs/klubok/'
+      url: '/ua/clubs/klubok/'
     }
   ];
 
@@ -3520,7 +3519,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     if (state.view !== 'table') p.set('view', state.view);
     var q = p.toString();
     try {
-      history.replaceState(null, '', location.pathname + (q ? '?' + q : '') + '#partners');
+      history.replaceState(null, '', location.pathname + (q ? '?' + q : ''));
     } catch (e) {}
   }
 
@@ -4263,6 +4262,6 @@ document.getElementById('geo-banner-close').addEventListener('click', () => {
 });
 </script>
 
-  <script defer src="/assets/kozyr-enhance.js?v=5"></script>
+  <script defer src="/assets/kozyr-enhance.js?v=6"></script>
 </body>
 </html>

@@ -312,7 +312,9 @@ a.card:hover,
   }
   /* первый столбец (параметр/формат) чуть у́же, значение шире */
   .data-table th:first-child,
-  .data-table td:first-child { width: 42% !important; }
+  .data-table td:first-child { width: 34% !important; }
+  /* #11: заголовки короче по интервалу, чтобы «Доступность» не переносилась */
+  .data-table thead th { font-size: 9px !important; letter-spacing: 0.01em !important; padding: 8px 5px !important; line-height: 1.25 !important; white-space: nowrap !important; overflow-wrap: normal !important; word-break: keep-all !important; }
 }
 
 /* ---------- 5c. Финдер на мобилке: карточки вписываются в экран ------ */
@@ -473,6 +475,135 @@ a.card:hover,
   .nav-actions .btn-primary { display: none !important; }
   .nav-burger { display: inline-flex !important; }
   .kf-compare-bar { max-width: calc(100vw - 24px) !important; }
+}
+
+/* ============================================================
+   ВИЗУАЛЬНЫЕ ДОРАБОТКИ (пакет)
+   ============================================================ */
+
+/* --- #4 «Подбор за 15 секунд» — заметный блок-фича --- */
+.kf-quickpick {
+  background: linear-gradient(135deg, #FBF6EC 0%, #FFFFFF 55%) !important;
+  border: 1px solid #EAD9B0 !important;
+  box-shadow: 0 10px 30px rgba(184, 132, 28, 0.10) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+.kf-quickpick::before {
+  content: "";
+  position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+  background: linear-gradient(180deg, var(--kz-gold), var(--kz-gold-deep));
+}
+.kf-qp-title {
+  font-family: var(--f-display, 'Space Grotesk', sans-serif) !important;
+  font-size: 19px !important;
+  letter-spacing: -0.01em !important;
+  text-transform: none !important;
+  color: var(--ink, #0A1128) !important;
+  max-width: none !important;
+  font-weight: 700 !important;
+  line-height: 1.15 !important;
+}
+.kf-qp-title::before {
+  content: "\26A1"; /* ⚡ */
+  display: inline-block;
+  margin-right: 7px;
+  color: var(--kz-gold);
+  font-size: 0.95em;
+}
+.kf-qp-title br { display: none; }
+.kf-qp-group-label { color: var(--kz-gold-deep) !important; font-weight: 600 !important; }
+.kf-qp-opt[aria-pressed="true"] {
+  background: var(--ink, #0A1128) !important;
+  border-color: var(--ink, #0A1128) !important;
+  color: #fff !important;
+}
+#kf-qp-apply {
+  background: linear-gradient(135deg, var(--kz-gold), var(--kz-gold-deep)) !important;
+  border: none !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 6px 18px rgba(184, 132, 28, 0.30) !important;
+}
+#kf-qp-apply:hover { transform: translateY(-2px) !important; }
+
+/* --- #10 Таблицы данных: чище, с чередованием строк --- */
+.data-table tbody tr:nth-child(even) { background: rgba(46, 107, 255, 0.025); }
+.data-table tbody tr:hover { background: rgba(46, 107, 255, 0.05); }
+.data-table td:first-child { color: var(--ink, #0A1128) !important; font-weight: 600 !important; }
+.data-table th { color: var(--ink-3, #8B90A5) !important; }
+
+/* --- #9 Липкая кнопка «Начать игру» (следует за пользователем) --- */
+.kozyr-sticky-cta {
+  position: fixed;
+  right: 20px; bottom: 20px;
+  z-index: 90;
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, var(--kz-gold), var(--kz-gold-deep));
+  color: #fff !important;
+  padding: 14px 24px;
+  border-radius: 999px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 700; font-size: 15px;
+  text-decoration: none !important;
+  box-shadow: 0 10px 28px rgba(184, 132, 28, 0.40);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  animation: kzCtaIn 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+.kozyr-sticky-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 34px rgba(184, 132, 28, 0.5);
+}
+.kozyr-sticky-cta svg { width: 16px; height: 16px; }
+@keyframes kzCtaIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+@media (max-width: 640px) {
+  .kozyr-sticky-cta {
+    left: 12px; right: 12px; bottom: 12px;
+    justify-content: center;
+    padding: 15px 20px;
+    font-size: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kozyr-sticky-cta { animation: none; }
+  .kozyr-sticky-cta:hover { transform: none; }
+}
+
+/* --- #6 Таблица сравнения PokerBet/KlubOk на телефоне: красивее --- */
+@media (max-width: 640px) {
+  .compare-table {
+    border: 1px solid var(--border, #E6E8EF) !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+    background: var(--surface, #fff) !important;
+  }
+  /* шапка с румами — залипает и выделена */
+  .compare-table thead tr {
+    background: var(--ink, #0A1128) !important;
+    padding: 14px 14px !important;
+    position: sticky; top: 56px; z-index: 5;
+  }
+  .compare-table thead th { color: #fff !important; }
+  .compare-table .compare-name { color: #fff !important; font-weight: 700 !important; }
+  .compare-table .compare-sub { color: rgba(255,255,255,0.6) !important; }
+  /* строки: чередование + акцент параметра */
+  .compare-table tbody tr:nth-child(even) { background: var(--surface-alt, #F5F7FB) !important; }
+  .compare-table tbody th[scope="row"] {
+    color: var(--kz-gold-deep, #8A6212) !important;
+    font-weight: 700 !important;
+    padding-bottom: 4px !important;
+  }
+  .compare-table tbody td { font-weight: 500 !important; }
+  /* «лучшее» значение — зелёная плашка */
+  .compare-table .compare-best {
+    color: #1D9E75 !important;
+    font-weight: 700 !important;
+  }
+  .compare-table .compare-logo { border-radius: 9px !important; }
+  /* нижние кнопки обзоров — в столбик, полноширинные */
+  .compare-table tbody tr:last-child { display: block !important; padding: 12px 14px !important; }
+  .compare-table tbody tr:last-child td { display: block !important; margin-top: 8px; }
+  .compare-table .compare-cta { width: 100% !important; justify-content: center !important; display: flex !important; }
 }
 
 /* ---------- 6. Уважение к reduced motion --------------------------- */@media (prefers-reduced-motion: reduce) {
