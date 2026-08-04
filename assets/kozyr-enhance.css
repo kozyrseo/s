@@ -765,13 +765,69 @@ a.card:hover,
   }
 }
 
-/* ---------- 9. Уважение к reduced motion --------------------------- */
+/* ============================================================
+   10. Боковой блок «Рейкбек» на обзорах рума/клуба
+   ------------------------------------------------------------
+   Раньше `.side-cta` на `ua/clubs/klubok/` и `ua/rooms/pokerbet/`
+   был тёмным (ink-фон, синяя кнопка). Тёмный блок конкурировал
+   за внимание с самим контентом статьи и не рифмовался
+   с золотой айдентикой рейкбека, которая уже везде используется
+   (финдер-карточка, выделенные плашки).
+
+   Переводим блок в золотой стиль-эталон карточки финдера:
+   светло-золотой фон `#FBF6EC`, тёмно-золотое число, синяя кнопка
+   меняется на золотую. Дизайн становится «одним голосом»
+   с рейкбек-акцентом по всему сайту.
+   ============================================================ */
+.side-cta {
+  background: linear-gradient(180deg, #FBF6EC 0%, #F7EFDA 100%) !important;
+  border: 1px solid #F0E4C8 !important;
+  color: var(--kz-gold-deep) !important;
+  box-shadow: 0 8px 24px rgba(184, 132, 28, 0.10) !important;
+}
+.side-cta-label {
+  color: var(--kz-gold-deep) !important;
+  opacity: 0.72;
+}
+.side-cta-value {
+  color: var(--kz-gold-deep) !important;
+}
+.side-cta-value em {
+  color: var(--kz-gold) !important;
+  opacity: 0.9;
+}
+.side-cta-desc {
+  color: var(--kz-gold-deep) !important;
+  opacity: 0.78;
+}
+
+/* Кнопка: золотая вместо синей, чтобы рифмовалась с фоном
+   и оставалась главным CTA блока */
+.side-cta-btn {
+  background: linear-gradient(180deg, var(--kz-gold) 0%, var(--kz-gold-deep) 100%) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(138, 98, 18, 0.28) !important;
+}
+.side-cta-btn:hover {
+  background: linear-gradient(180deg, var(--kz-gold-deep) 0%, #6E4E0E 100%) !important;
+  box-shadow: 0 6px 18px rgba(138, 98, 18, 0.36) !important;
+  transform: translateY(-2px);
+}
+.side-cta-btn svg {
+  color: #FFFFFF !important;
+  stroke: #FFFFFF !important;
+}
+
+
+/* ---------- 11. Уважение к reduced motion --------------------------- */
 @media (prefers-reduced-motion: reduce) {
   .kf-card, .card, .kf-table tbody tr, .kf-rake, .kf-score-num,
-  .btn-dark, .btn-primary, .btn-xl {
+  .btn-dark, .btn-primary, .btn-xl, .side-cta-btn {
     transition: none !important;
   }
-  .kf-card:hover, a.card:hover, .btn-dark:hover, .btn-primary:hover {
+  .kf-card:hover, a.card:hover, .btn-dark:hover, .btn-primary:hover,
+  .side-cta-btn:hover {
     transform: none !important;
   }
   .kf-score-num::after { transition: none !important; }

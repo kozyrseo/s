@@ -2556,7 +2556,7 @@ body::before {
 
 </style>
 <script src="/analytics.js" defer></script>
-  <link rel="stylesheet" href="/assets/kozyr-enhance.css?v=7">
+  <link rel="stylesheet" href="/assets/kozyr-enhance.css?v=8">
 </head>
 <body>
 
@@ -3120,7 +3120,7 @@ function getCalcRooms() {
   // Запасной ориентир, пока партнёры не подтвердили процент возврата
   return [
     { code: 'PB', name: 'PokerBet', score: 8.2, pct: 0.50 },
-    { code: 'KO', name: 'KlubOk',   score: 7.9, pct: 0.45 },
+    { code: 'KO', name: 'KlubOk',   score: 7.9, pct: 0.40 },
   ];
 }
 
@@ -3303,7 +3303,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       name: 'KlubOk',
       logo: { text: 'KO', from: '#229ED9', to: '#1a89bd' },
       score: 7.9,
-      rake: null,                       // TODO: подтвердить % у клуба
+      rake: 40,                         // 40% еженедельно (подтверждено на /ua/clubs/klubok/)
       access: 'club',
       countries: ['ua'],
       limits: ['NL10', 'NL25', 'NL50', 'NL100'],
@@ -4262,6 +4262,6 @@ document.getElementById('geo-banner-close').addEventListener('click', () => {
 });
 </script>
 
-  <script defer src="/assets/kozyr-enhance.js?v=7"></script>
+  <script defer src="/assets/kozyr-enhance.js?v=8"></script>
 </body>
 </html>
