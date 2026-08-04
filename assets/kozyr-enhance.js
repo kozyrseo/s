@@ -128,10 +128,93 @@
     }
   }
 
+  /* ---- Мобильное оглавление статей: аккордеон ---------------------- */
+  /* Работает на страницах обзоров (ua/clubs/*, ua/rooms/*),
+     где есть блок .article-toc. На широких экранах ничего не меняет —
+     всё поведение внутри @media (max-width: 720px) в CSS.               */
+  function mobileTOC() {
+    var toc = document.querySelector('.article-toc');
+    if (!toc) return;
+    var label = toc.querySelector('.article-toc-label');
+    if (!label) return;
+
+    /* добавляем «превью» активного пункта в шапке — показывается
+       только на мобилке (стили в CSS), обновляется при смене активного */
+    var current = document.createElement('span');
+    current.className = 'kz-toc-current';
+    current.setAttribute('aria-hidden', 'true');
+    label.appendChild(current);
+
+    function activeLinkText() {
+      var a = toc.querySelector('a.active') || toc.querySelector('a');
+      return a ? (a.textContent || '').trim() : '';
+    }
+    function syncCurrent() { current.textContent = activeLinkText(); }
+    syncCurrent();
+
+    /* активный пункт в этом проекте меняется скриптом на самой странице
+       (ScrollSpy). Отслеживаем изменения атрибута class у ссылок. */
+    var mo = new MutationObserver(syncCurrent);
+    toc.querySelectorAll('a').forEach(function (a) {
+      mo.observe(a, { attributes: true, attributeFilter: ['class'] });
+    });
+
+    /* доступность: делаем шапку кнопкой */
+    label.setAttribute('role', 'button');
+    label.setAttribute('tabindex', '0');
+    label.setAttribute('aria-expanded', 'false');
+    label.setAttribute('aria-controls', 'kz-toc-list');
+    var list = toc.querySelector('ul');
+    if (list) list.setAttribute('id', 'kz-toc-list');
+
+    function isMobile() { return window.innerWidth <= 720; }
+    function setOpen(open) {
+      if (!isMobile()) {                     /* на десктопе всегда открыт */
+        toc.removeAttribute('data-open');
+        label.setAttribute('aria-expanded', 'true');
+        return;
+      }
+      toc.setAttribute('data-open', open ? 'true' : 'false');
+      label.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    setOpen(false);
+
+    label.addEventListener('click', function (e) {
+      if (!isMobile()) return;
+      /* игнорируем клики по самому «current»-подтексту (там нечего кликать) */
+      var isOpen = toc.getAttribute('data-open') === 'true';
+      setOpen(!isOpen);
+    });
+    label.addEventListener('keydown', function (e) {
+      if (!isMobile()) return;
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        var isOpen = toc.getAttribute('data-open') === 'true';
+        setOpen(!isOpen);
+      }
+      if (e.key === 'Escape') setOpen(false);
+    });
+    /* по тапу на пункт — сворачиваем аккордеон (переход по якорю) */
+    toc.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        if (isMobile()) setOpen(false);
+      });
+    });
+    /* пересинхронизация при повороте экрана */
+    window.addEventListener('resize', function () {
+      if (!isMobile()) {
+        toc.removeAttribute('data-open');
+      } else if (!toc.hasAttribute('data-open')) {
+        setOpen(false);
+      }
+    });
+  }
+
   /* ---- запуск ------------------------------------------------------ */
   function init() {
     injectSuits();
     mobileDefaults();
+    mobileTOC();
     /* даём странице отрисовать таблицу/карточки, затем анимируем цифры */
     watch('.kf-score-num', animScore);
     watch('.room-score-num, .club-score-num', animScore);
