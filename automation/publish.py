@@ -1289,13 +1289,18 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     )
 
     # ----- Format-page URLs for footer (per language) -----
-    # Derive the language URL prefix from config so zh gets /zh/... too.
-    _lang_prefix = {"ru": "/ua"}.get(lang, "/ua")
+    # v2 multilang: prefix берётся из lang_cfg.home_url, который правильно
+    # настроен для каждого языка ("/ua/" для ru, "/ua/uk/" для uk и т.д.).
+    # Убираем trailing slash чтобы конкатенация была корректной.
+    _lang_prefix = lang_cfg["home_url"].rstrip("/") or "/ua"
     # KOZYR: футерные ссылки ведут на реальные страницы сайта.
     # Имена плейсхолдеров исторические (NLH/PLO/SHORT_DECK), значения — KOZYR.
-    nlh_url = f"{_lang_prefix}/rooms/pokerbet/"   # PokerBet
-    plo_url = f"{_lang_prefix}/clubs/klubok/"     # KlubOk
-    short_deck_url = f"{_lang_prefix}/#compare"   # Сравнение
+    # Для uk-версии пока показываем те же страницы (главная страна одна),
+    # это нормально: свитчер и hreflang правильно расставят.
+    _rooms_prefix = "/ua"  # каталог/rooms/clubs пока живёт только на /ua
+    nlh_url = f"{_rooms_prefix}/rooms/pokerbet/"   # PokerBet
+    plo_url = f"{_rooms_prefix}/clubs/klubok/"     # KlubOk
+    short_deck_url = f"{_rooms_prefix}/#compare"   # Сравнение
 
     # ----- in-language full URLs for breadcrumb JSON-LD -----
     home_url_full = f"{SITE_URL}{lang_cfg['home_url']}"
@@ -1307,6 +1312,22 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     in_language = {"ru": "ru-UA"}.get(lang, "ru-UA")
 
     ui = lang_cfg["ui"]
+
+    # v2 multilang: если у этой статьи есть перевод — переключатель ведёт
+    # на конкретную статью-перевод, а не на дефолтную главную из UI.
+    # Порядок: любой первый переведённый язык (обычно один — противоположный).
+    lang_switch_url = ui["lang_switcher_target_url"]
+    lang_switch_hreflang = lang_cfg["hreflang_alt"]
+    if isinstance(translation_of, dict) and translation_of:
+        # Берём первый доступный перевод (для стран с двумя языками — тот и есть)
+        other_lang, other_slug = next(iter(translation_of.items()))
+        try:
+            other_cfg = get_cfg(other_lang)
+            lang_switch_url = f"{other_cfg['url_prefix']}/{other_slug}/"
+            lang_switch_hreflang = other_cfg["hreflang_self"]
+        except (ValueError, KeyError):
+            # если lang неизвестен — оставляем дефолт из UI
+            pass
 
     # Build the inline i18n block for pokernet-fab.js. PT pages declare
     # window.PokerNetI18n with localized strings; EN pages emit nothing
@@ -1374,8 +1395,10 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         "{{NLH_URL}}": nlh_url,
         "{{PLO_URL}}": plo_url,
         "{{SHORT_DECK_URL}}": short_deck_url,
-        "{{LANG_SWITCH_URL}}": ui["lang_switcher_target_url"],
-        "{{LANG_SWITCH_HREFLANG}}": lang_cfg["hreflang_alt"],
+        # v2 multilang: подставляем реальный URL перевода если он есть,
+        # иначе дефолт из UI (главная соседнего языка).
+        "{{LANG_SWITCH_URL}}": lang_switch_url,
+        "{{LANG_SWITCH_HREFLANG}}": lang_switch_hreflang,
         # UI strings (localized chrome — header, footer, breadcrumb, CTA, related)
         "{{UI_BREADCRUMB_HOME}}": ui["breadcrumb_home"],
         "{{UI_BREADCRUMB_BLOG}}": ui["breadcrumb_blog"],
@@ -1466,11 +1489,33 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     sheets_topic = meta.get("topic_row_data", {}).get("topic")
     update_sheet_status(publish_slug, canonical_url, topic=sheets_topic)
 
+    # Bot v2: если тема пришла из строки Sheets через generate-from-row.yml,
+    # проставляем status=done по номеру строки (более надёжно, чем поиск по topic).
+    _mark_source_row_done(meta)
+
     # Note: IndexNow ping happens AFTER Netlify deploy in the workflow,
     # not here. We only update files here.
 
     print(f"\n✅ Article ready for commit: {canonical_url}")
     return 0
+
+
+def _mark_source_row_done(meta: dict) -> None:
+    """Bot v2: если в meta.json есть source_row (положено generate.py, когда
+    тема пришла из строки Sheets через generate-from-row.yml), после
+    успешной публикации проставляем этой строке status=done.
+    Отдельная функция потому, что update_sheet_status ищет по slug/topic —
+    в этом сценарии надёжнее прямо по row_index."""
+    row = meta.get("source_row")
+    if not row:
+        return
+    try:
+        from bot_v2.suggested_topics import update_status
+        update_status(int(row), "done")
+        print(f"✅ Строка {row} в Google Sheets → status=done")
+    except Exception as e:
+        # Не валим публикацию, если Sheets недоступен — статья уже вышла.
+        print(f"⚠️  Не удалось перевести строку {row} в done: {type(e).__name__}: {e}")
 
 
 # ==== Post-deploy steps (called separately after Netlify deploy) ====

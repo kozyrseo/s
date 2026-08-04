@@ -465,6 +465,9 @@ def save_article(article: dict, topic: dict, lang_cfg, lang: str) -> tuple[Path,
         "has_hero_image": has_hero,
         "hero_filename": HERO_FILENAME if has_hero else "",
         "topic_row_data": topic,
+        # Bot v2: если тема пришла из строки Sheets — сохраняем номер, чтобы
+        # publish.py потом перевёл её в status=done автоматически.
+        "source_row": topic.get("_source_row"),
         "generated_at": datetime.now(timezone.utc).isoformat(),
     }
     (target_dir / "meta.json").write_text(
@@ -515,12 +518,16 @@ def build_telegram_preview(article: dict, topic: dict, slug: str, lang_cfg, lang
     if quality_block:
         quality_prefix = f"\n{quality_block}\n"
 
+    # Bot v2: если тема пришла из строки Google Sheets — показываем её номер.
+    source_row = topic.get("_source_row")
+    row_hint = f"\n📊 Источник: строка *{source_row}* в Sheets" if source_row else ""
+
     text = f"""📝 *Новая статья на ревью* {lang_flag} `{lang}`
 {quality_prefix}
 *{escape_md(title_ru)}*
  
 📊 {word_count} слов · {escape_md(intent)} · `{escape_md(target_page)}`
-🎯 Primary: {escape_md(primary_kw)}
+🎯 Primary: {escape_md(primary_kw)}{row_hint}
  
 *О чём статья:*
 {escape_md(summary_ru)}
@@ -530,11 +537,18 @@ def build_telegram_preview(article: dict, topic: dict, slug: str, lang_cfg, lang
  
 🔗 [Полный текст]({body_md_link}) · [Превью]({preview_md_link})"""
  
-    # Inline keyboard: 2 rows × 2 buttons
+    # Bot v2: расширенная клавиатура (3×2)
+    #  ✅ Опубликовать · 📄 Полный текст
+    #  🧾 Исходники   · ✏️ Правка
+    #  🔄 Перегенерить · ❌ Отклонить
     keyboard = [
         [
             {"text": "✅ Опубликовать", "callback_data": f"publish:{slug}"},
             {"text": "📄 Полный текст", "callback_data": f"fulltext:{slug}"},
+        ],
+        [
+            {"text": "🧾 Исходники", "callback_data": f"sources:{slug}"},
+            {"text": "✏️ Правка",   "callback_data": f"edit_menu:{slug}"},
         ],
         [
             {"text": "🔄 Перегенерить", "callback_data": f"regenerate:{slug}"},

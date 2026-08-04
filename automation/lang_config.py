@@ -101,6 +101,10 @@ TELEGRAM_ENABLED = True
 
 
 LANG_CONFIG: dict[str, LangCfg] = {
+    # Ключ "ru" исторический (первый язык проекта) — сейчас это
+    # "украинская русскоязычная" версия. При переходе на мульти-страны
+    # роль языка определяется в country_config.py, а этот ключ остаётся
+    # для обратной совместимости с taxonomy.json и старыми статьями.
     "ru": {
         "pending_dir": Path("_pending"),
         "blog_dir": Path("ua/blog"),
@@ -175,6 +179,81 @@ LANG_CONFIG: dict[str, LangCfg] = {
             "nav_aria": "Основная навигация",
         },
     },
+    # Украиноязычная версия для украинской страны (ua). Стать-и живут
+    # в /ua/uk/blog/{slug}/, генерируются как перевод русской через
+    # translator.py. Тот же slug, что у русской пары (translation_of).
+    "uk": {
+        "pending_dir": Path("_pending_uk"),
+        "blog_dir": Path("ua/uk/blog"),
+        "blog_index": Path("ua/uk/blog/index.html"),
+        "url_prefix": "/ua/uk/blog",
+        "canonical_base": f"{SITE_URL}/ua/uk/blog",
+        "html_lang": "uk",
+        "og_locale": "uk_UA",
+        "og_locale_alt": "ru_RU",
+        "hreflang_self": "uk-UA",
+        "hreflang_alt": "ru-UA",
+        "home_url": "/ua/uk/",
+        "blog_url": "/ua/uk/blog/",
+        # Промпт для перевода отдельный: translator.py прогоняет русскую
+        # статью через Claude с этим system_prompt.
+        "system_prompt": Path("automation/prompts/system_prompt.uk.md"),
+        "taxonomy": Path("automation/taxonomy.uk.json"),
+        "article_section_map": {
+            "/ua/rooms/pokerbet/": "Огляди румів",
+            "/ua/clubs/klubok/": "Огляди клубів",
+            "/ua/": "Рейкбек та угоди",
+        },
+        "ui": {
+            "breadcrumb_home": "Головна",
+            "breadcrumb_blog": "Блог",
+            "article_eyebrow": "Блог KOZYR",
+            "min_read": "хв читання",
+            "by_author": "Автор: команда KOZYR",
+            "author_written_by": "Автор",
+            "author_role": "Аналітик рейкбеку · KOZYR",
+            "author_bio": "Розбираємо умови покерних румів та клубів: рейкбек, ліміти, виводи, чесність полів. Пишемо на основі реальних даних партнерів, які оновлюються по мірі надходження.",
+            "last_updated": "Оновлено",
+            "cta_heading_prefix": "Шукаєш ",
+            "cta_heading_suffix": " з максимальним рейкбеком?",
+            "cta_paragraph": "Обери угоду під свій формат і ліміти за 15 секунд — у каталозі KOZYR лише перевірені руми та клуби.",
+            "cta_button": "Відкрити каталог",
+            "related_eyebrow": "Читати далі",
+            "related_heading_prefix": "Схожі матеріали про ",
+            "related_heading_em": "рейкбек та руми",
+            "nav_ai_bot": "Каталог",
+            "nav_how": "Як це працює",
+            "nav_features": "Рейкбек",
+            "nav_compare": "Порівняння",
+            "nav_cases": "Руми",
+            "nav_reviews": "Клуби",
+            "nav_pricing": "FAQ",
+            "header_cta": "Відкрити каталог",
+            "footer_tagline": "KOZYR — вітрина рейкбек-угод для покерних гравців. Каталог румів та клубів, чесні умови, прямі партнерські посилання. Рейкбек нараховує та виплачує сам рум/клуб.",
+            "footer_product_h": "Розділи",
+            "footer_company_h": "Проект",
+            "footer_link_ai_bot": "Каталог угод",
+            "footer_link_nlh": "PokerBet",
+            "footer_link_plo": "KlubOk",
+            "footer_link_short_deck": "Порівняння",
+            "footer_link_compare": "Порівняння",
+            "footer_link_cases": "Блог",
+            "footer_link_reviews": "FAQ",
+            "footer_link_pricing": "Правова інформація",
+            "footer_copyright": "© 2026 KOZYR · Вітрина рейкбек-угод",
+            # Свитчер на этой странице ведёт на русскую версию
+            "lang_switcher_label": "RU",
+            "lang_switcher_aria": "Перейти на російську версію",
+            "lang_switcher_target_url": "/ua/",
+            "fab_label": "Ми в Telegram",
+            "fab_aria": "Відкрити Telegram-канал KOZYR",
+            "fab_toast": "Відкриваємо Telegram...",
+            "fab_tg_msg": "Привіт! Прийшов з блогу KOZYR — розкажіть про актуальні рейкбек-угоди.",
+            "skip_link": "Перейти до основного змісту",
+            "burger_aria": "Відкрити меню",
+            "nav_aria": "Основна навігація",
+        },
+    },
 }
 
 
@@ -241,7 +320,14 @@ def normalize_translation_map(*, lang, slug, translation_of):
     return result
 
 
-def build_hreflang_block(*, lang, slug, translation_of):
+def build_hreflang_block(*, lang, slug, translation_of, country_code=None):
+    """
+    Собирает <link rel="alternate" hreflang="..."> для всех переводов.
+
+    country_code — если задан, x-default будет указывать на primary_language
+    этой страны. Если не задан — пытается определить страну по языку через
+    country_of_lang(). Если и это не сработало — x-default = текущий язык.
+    """
     versions = normalize_translation_map(
         lang=lang, slug=slug, translation_of=translation_of
     )
@@ -255,9 +341,23 @@ def build_hreflang_block(*, lang, slug, translation_of):
         lines.append(
             f'<link rel="alternate" hreflang="{cfg["hreflang_self"]}" href="{url}">'
         )
-    if "ru" in versions:
-        xdefault_url = canonical_url_for("ru", versions["ru"])
-    else:
-        xdefault_url = canonical_url_for(lang, versions[lang])
+
+    # x-default: primary язык страны, если он есть в переводах.
+    # Fallback-цепочка: явный country_code → country_of_lang(lang) → "ru" → lang
+    xdefault_lang = None
+    try:
+        from country_config import get_country, country_of_lang
+        if country_code:
+            xdefault_lang = get_country(country_code)["primary_language"]
+        else:
+            c = country_of_lang(lang)
+            if c:
+                xdefault_lang = get_country(c)["primary_language"]
+    except Exception:
+        pass
+    if not xdefault_lang or xdefault_lang not in versions:
+        xdefault_lang = "ru" if "ru" in versions else lang
+
+    xdefault_url = canonical_url_for(xdefault_lang, versions[xdefault_lang])
     lines.append(f'<link rel="alternate" hreflang="x-default" href="{xdefault_url}">')
     return "\n".join(lines)
