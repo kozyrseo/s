@@ -1,0 +1,82 @@
+name: Refresh suggested/queue snapshots
+
+# Читает Google Sheets и сохраняет snapshot-ы в .bot_state/cache/:
+#   - suggested_snapshot.json — все строки со status=suggested
+#   - queue_snapshot.json     — все строки со status=queued
+# Бот в TG читает эти snapshot-ы через GitHub Contents API — это на порядок
+# быстрее, чем каждый раз ходить в Sheets. Обновление — по кнопке (/suggested,
+# /queue) или после каждого изменения через approve/reject workflows.
+
+on:
+  workflow_dispatch:
+  # Раз в час — на случай если оператор что-то поправил в таблице вручную
+  schedule:
+    - cron: '15 * * * *'
+  # После апрува/реджекта через отдельные workflows (workflow_run)
+  workflow_run:
+    workflows: ["Approve topic (row → queued)", "Reject topic row"]
+    types: [completed]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-snapshots
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r automation/requirements.txt
+
+      - name: Dump snapshots
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
+        working-directory: automation
+        run: |
+          python -c "
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from bot_v2.suggested_topics import list_by_status
+
+          root = Path('..').resolve()
+          cache = root / '.bot_state' / 'cache'
+          cache.mkdir(parents=True, exist_ok=True)
+
+          for status, filename in [
+              ('suggested', 'suggested_snapshot.json'),
+              ('queued',    'queue_snapshot.json'),
+          ]:
+              rows = list_by_status(status=status, lang='ru', limit=100)
+              out = {'collected_at': datetime.now(timezone.utc).isoformat(),
+                     'status': status, 'rows': rows}
+              (cache / filename).write_text(json.dumps(out, indent=2, ensure_ascii=False), encoding='utf-8')
+              print(f'{filename}: {len(rows)} rows')
+          "
+
+      - name: Commit snapshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -f .bot_state/cache/ || true
+          if git diff --staged --quiet; then
+            echo "No snapshot changes."
+          else
+            git commit -m "bot: refresh Sheets snapshots"
+            git pull --rebase origin main || true
+            git push
+          fi

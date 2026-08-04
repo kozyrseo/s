@@ -1,0 +1,76 @@
+name: Publish multilang article
+
+# Публикует статью на всех языках одновременно. Ищет _pending*/{slug}/
+# для каждого известного языка, cross-links translation_of, публикует
+# каждую через publish.publish_article.
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: 'Слуг статьи (общий для всех языков)'
+        required: true
+        type: string
+      langs:
+        description: 'Опционально: только эти языки, через запятую. Пусто = все найденные версии.'
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-multilang
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r automation/requirements.txt
+
+      - name: Run multilang publisher
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+        working-directory: automation
+        run: |
+          ARGS="--slug ${{ inputs.slug }}"
+          if [ -n "${{ inputs.langs }}" ]; then ARGS="$ARGS --langs ${{ inputs.langs }}"; fi
+          python multilang_publisher.py $ARGS
+
+      - name: Commit published sites
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Site directories для всех языков (ua/blog/, ua/uk/blog/ и т.д.)
+          for d in ua ua/uk ru en pl kz; do
+            if [ -d "$d" ]; then git add -A -f "$d" || true; fi
+          done
+          # Sitemaps и taxonomy
+          git add -A -f sitemap.xml automation/taxonomy*.json 2>/dev/null || true
+          # Удалённые pending
+          git add -A -u _pending _pending_* 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Nothing to commit."
+          else
+            git commit -m "Publish multilang article: ${{ inputs.slug }}"
+            git pull --rebase origin main || true
+            git push
+          fi

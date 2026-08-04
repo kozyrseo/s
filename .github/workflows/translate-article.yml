@@ -1,0 +1,105 @@
+name: Translate article to another language
+
+# По команде /translate slug lang в TG.
+# Ищет _pending/{slug}/ или ua/blog/{slug}/, переводит на target_lang
+# через translator.py. Сохраняет в _pending_{target_lang}/{slug}/.
+# После завершения — коммитит, публиковать надо отдельно (/publish slug).
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: 'Слуг исходной статьи'
+        required: true
+        type: string
+      target_lang:
+        description: 'Целевой язык (uk/pl/kk…)'
+        required: true
+        type: string
+      source_lang:
+        description: 'Исходный язык (по умолчанию ru)'
+        required: false
+        type: string
+        default: 'ru'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: translate-${{ inputs.slug }}-${{ inputs.target_lang }}
+  cancel-in-progress: false
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r automation/requirements.txt
+
+      - name: Locate source article
+        id: locate
+        run: |
+          # Ищем сначала в _pending/, потом в ua/blog/
+          if [ -d "_pending/${{ inputs.slug }}" ]; then
+            echo "source_dir=_pending/${{ inputs.slug }}" >> $GITHUB_OUTPUT
+            echo "source_type=pending" >> $GITHUB_OUTPUT
+          elif [ -d "ua/blog/${{ inputs.slug }}" ]; then
+            echo "source_dir=ua/blog/${{ inputs.slug }}" >> $GITHUB_OUTPUT
+            echo "source_type=published" >> $GITHUB_OUTPUT
+            echo "⚠️  Статья опубликована; translator.py прочитает body.md" 
+          else
+            echo "❌ Не найдено ни _pending/${{ inputs.slug }}/, ни ua/blog/${{ inputs.slug }}/"
+            exit 1
+          fi
+
+      - name: Run translator
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        working-directory: automation
+        run: |
+          python translator.py \
+            --source-slug "${{ inputs.slug }}" \
+            --source-lang "${{ inputs.source_lang }}" \
+            --target-lang "${{ inputs.target_lang }}"
+
+      - name: Commit translation
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for d in _pending _pending_uk _pending_pl _pending_kk; do
+            if [ -d "$d" ]; then git add -A -f "$d" || true; fi
+          done
+          if git diff --staged --quiet; then
+            echo "Nothing to commit."
+          else
+            git commit -m "Translate ${{ inputs.slug }} → ${{ inputs.target_lang }}"
+            git pull --rebase origin main || true
+            git push
+          fi
+
+      - name: Notify Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python -c "
+          import os, json, urllib.request
+          token = os.environ['TELEGRAM_BOT_TOKEN']
+          chat = os.environ['TELEGRAM_CHAT_ID']
+          text = '🌐 Перевод готов: \`${{ inputs.slug }}\` → \`${{ inputs.target_lang }}\`. Проверь \`_pending_${{ inputs.target_lang }}/\`.'
+          payload = {'chat_id': chat, 'text': text, 'parse_mode': 'Markdown'}
+          req = urllib.request.Request(f'https://api.telegram.org/bot{token}/sendMessage', data=json.dumps(payload).encode(), headers={'Content-Type':'application/json'})
+          urllib.request.urlopen(req, timeout=10)
+          " || true

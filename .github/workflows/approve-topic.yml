@@ -1,0 +1,46 @@
+name: Approve topic (row → queued)
+
+# По кнопке в TG или через /approve N переводит строку в таблице
+# из status=suggested в status=queued, чтобы генератор её подхватил.
+
+on:
+  workflow_dispatch:
+    inputs:
+      row:
+        description: 'Номер строки в Google Sheets (2-based)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  approve:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install deps
+        run: pip install -r automation/requirements.txt
+      - name: Approve row
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        working-directory: automation
+        run: |
+          python -m bot_v2.suggested_topics approve "${{ inputs.row }}"
+          # Отправляем короткое подтверждение в TG
+          python -c "
+          import os, json, urllib.request
+          token = os.environ['TELEGRAM_BOT_TOKEN']
+          chat = os.environ['TELEGRAM_CHAT_ID']
+          payload = {'chat_id': chat, 'text': '✅ Строка ${{ inputs.row }} → queued. Запусти /generate чтобы взять её в работу.', 'parse_mode': 'Markdown'}
+          req = urllib.request.Request(f'https://api.telegram.org/bot{token}/sendMessage', data=json.dumps(payload).encode(), headers={'Content-Type':'application/json'})
+          urllib.request.urlopen(req, timeout=10)
+          " || true

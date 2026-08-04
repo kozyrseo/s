@@ -1,0 +1,89 @@
+name: Generate multilang article
+
+# Мульти-языковая генерация одной темы: primary + переводы.
+# Запускается вместо старого generate-article.yml для стран с несколькими
+# языками. Читает первую queued строку из Sheets с колонкой country,
+# определяет все языки этой страны, генерит primary + переводит остальные.
+
+on:
+  workflow_dispatch:
+    inputs:
+      country:
+        description: 'Код страны (ua/pl/kz…). Оставь пустым для первой в очереди.'
+        required: false
+        type: string
+        default: ''
+      langs:
+        description: 'Override языков через запятую (например "ru" или "ru,uk"). Пусто = все языки страны.'
+        required: false
+        type: string
+        default: ''
+      topic_file:
+        description: 'Локальный режим: путь к JSON-теме. Если задан — Sheets не используется.'
+        required: false
+        type: string
+        default: ''
+      force:
+        description: 'Генерировать даже если сегодня уже была статья'
+        required: false
+        type: choice
+        options: ['false', 'true']
+        default: 'false'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: generate-multilang
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r automation/requirements.txt
+
+      - name: Run multilang generator
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        working-directory: automation
+        run: |
+          ARGS=""
+          if [ -n "${{ inputs.country }}" ]; then ARGS="$ARGS --country ${{ inputs.country }}"; fi
+          if [ -n "${{ inputs.langs }}" ]; then ARGS="$ARGS --langs ${{ inputs.langs }}"; fi
+          if [ -n "${{ inputs.topic_file }}" ]; then ARGS="$ARGS --topic-file ../${{ inputs.topic_file }}"; fi
+          if [ "${{ inputs.force }}" = "true" ]; then ARGS="$ARGS --force"; fi
+          python multilang_generator.py $ARGS
+
+      - name: Commit pending articles
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Все _pending_* каталоги
+          for d in _pending _pending_*; do
+            if [ -d "$d" ]; then git add -A -f "$d" || true; fi
+          done
+          if [ -d "automation/topics" ]; then git add -A -f automation/topics/ || true; fi
+          if git diff --staged --quiet; then
+            echo "Nothing to commit."
+          else
+            git commit -m "Generate multilang article (pending review)"
+            git pull --rebase origin main || true
+            git push
+          fi

@@ -1,0 +1,93 @@
+name: Generate from row
+
+# По кнопке ⚡ Генерить в TG или через /generate N.
+# 1. Читает строку N в Google Sheets → выгружает тему в automation/topics/{row-N}.json
+# 2. Переводит строку в status=processing
+# 3. Запускает generate.py --topic-file → создаёт _pending/{slug}/
+# 4. Коммитит + пушит (тогда придёт превью в TG от самого generate.py)
+
+on:
+  workflow_dispatch:
+    inputs:
+      row:
+        description: 'Номер строки в Google Sheets (2-based)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: generate-article
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r automation/requirements.txt
+
+      - name: Dump topic file from row
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
+        working-directory: automation
+        run: |
+          # Помечаем строку как processing и сохраняем JSON темы
+          python -m bot_v2.suggested_topics dump "${{ inputs.row }}" \
+            "topics/row-${{ inputs.row }}.json"
+
+      - name: Run multilang generator with dumped topic
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        working-directory: automation
+        run: |
+          # multilang_generator.py прочитает country/langs из JSON-темы
+          # (dump сохранил их из строки Sheets). Если country не задан —
+          # fallback к legacy generate.py.
+          if python -c "
+          import json, sys
+          t = json.load(open('topics/row-${{ inputs.row }}.json'))
+          sys.exit(0 if t.get('country') else 1)
+          "; then
+            echo "→ Multilang pipeline"
+            python multilang_generator.py \
+              --topic-file "topics/row-${{ inputs.row }}.json" --force
+          else
+            echo "→ Legacy pipeline (no country)"
+            python generate.py --lang ru \
+              --topic-file "topics/row-${{ inputs.row }}.json" --force
+          fi
+
+      - name: Commit generated articles
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Все возможные _pending_* каталоги
+          for d in _pending _pending_uk _pending_pl _pending_kk; do
+            if [ -d "$d" ]; then git add -A -f "$d" || true; fi
+          done
+          if [ -d "automation/topics" ]; then git add -A -f automation/topics/ || true; fi
+          if git diff --staged --quiet; then
+            echo "Nothing to commit."
+          else
+            git commit -m "Generate article (row ${{ inputs.row }}, pending review)"
+            git pull --rebase origin main || true
+            git push
+          fi

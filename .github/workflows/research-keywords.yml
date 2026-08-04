@@ -1,0 +1,73 @@
+name: Research keywords
+
+# Собирает новые темы из Google Search Console + web_search и пополняет
+# Google Sheets со статусом suggested. Запуск: по расписанию (пн 09:00 UTC)
+# или вручную (кнопка Run workflow / /research из TG-бота).
+
+on:
+  workflow_dispatch:
+    inputs:
+      skip_gsc:
+        description: 'Пропустить Google Search Console (быстрее, только web_search)'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
+      skip_web:
+        description: 'Пропустить web_search (только GSC, быстрее и дешевле)'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
+      dry_run:
+        description: 'Не писать в таблицу, только показать что нашлось'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
+  schedule:
+    # Понедельник 09:00 UTC — раз в неделю ищем свежие темы
+    - cron: '0 9 * * 1'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: research-keywords
+  cancel-in-progress: false
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: |
+          pip install -r automation/requirements.txt
+          # google-api-python-client для GSC (если не установлен через requirements)
+          pip install google-api-python-client
+
+      - name: Run keyword researcher
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
+          GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        working-directory: automation
+        run: |
+          ARGS="--lang ru"
+          if [ "${{ inputs.skip_gsc }}" = "true" ]; then ARGS="$ARGS --skip-gsc"; fi
+          if [ "${{ inputs.skip_web }}" = "true" ]; then ARGS="$ARGS --skip-web"; fi
+          if [ "${{ inputs.dry_run }}" = "true" ]; then ARGS="$ARGS --dry-run"; fi
+          python keyword_researcher.py $ARGS
