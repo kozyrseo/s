@@ -577,13 +577,22 @@ a.card:hover,
     overflow: hidden !important;
     background: var(--surface, #fff) !important;
   }
-  /* шапка с румами — залипает и выделена */
+  /* шапка с румами — тёмная, БЕЗ sticky:
+     на мобилке nav-бар имеет высоту ~77px и перекрывал шапку
+     (top: 56px оказывался под навигацией) — sticky здесь скорее
+     мешает. Плюс исходный стиль `.compare-table thead th`
+     ставил белый фон на сами <th>, из-за чего белые названия
+     "PokerBet"/"KlubOk" были невидны на белом. Переопределяем. */
   .compare-table thead tr {
     background: var(--ink, #0A1128) !important;
-    padding: 14px 14px !important;
-    position: sticky; top: 56px; z-index: 5;
+    padding: 16px 14px !important;
+    position: static !important;
   }
-  .compare-table thead th { color: #fff !important; }
+  .compare-table thead th {
+    background: transparent !important;      /* убираем белый фон из строки 2494 */
+    color: #fff !important;
+    border-bottom: none !important;          /* и рамку, чтобы не резала тёмный фон */
+  }
   .compare-table .compare-name { color: #fff !important; font-weight: 700 !important; }
   .compare-table .compare-sub { color: rgba(255,255,255,0.6) !important; }
   /* строки: чередование + акцент параметра */
