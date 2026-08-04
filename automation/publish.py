@@ -903,8 +903,11 @@ def ping_indexnow(slug: str, lang_cfg) -> None:
         return
 
     url = canonical_url_for_slug(lang_cfg, slug)
+    # host must match SITE_URL's domain (kozyr.club), not a hardcoded value —
+    # IndexNow rejects pings whose host doesn't own the submitted URLs.
+    host = SITE_URL.split("://", 1)[-1].strip("/")
     payload = {
-        "host": "pokernetai.com",
+        "host": host,
         "key": key,
         "keyLocation": f"{SITE_URL}/{key}.txt",
         "urlList": [url],
@@ -1329,19 +1332,19 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
             # если lang неизвестен — оставляем дефолт из UI
             pass
 
-    # Build the inline i18n block for pokernet-fab.js. PT pages declare
-    # window.PokerNetI18n with localized strings; EN pages emit nothing
+    # Build the inline i18n block for kozyr-fab.js. PT pages declare
+    # window.KozyrI18n with localized strings; EN pages emit nothing
     # (the FAB script's English defaults take over).
     #
     # We do this inline rather than via a separate JS file so the strings
     # land in the HTML <body> at parse time — no extra round-trip, no FOUC
     # where the FAB briefly flashes English on a PT page before localization.
-    # Non-English pages (pt, zh) declare window.PokerNetI18n with localized
+    # Non-English pages (pt, zh) declare window.KozyrI18n with localized
     # FAB strings; English pages emit nothing (the FAB script's English
     # defaults take over).
     if lang in ("ru",) and TELEGRAM_ENABLED:
-        pokernet_i18n_block = (
-            '<script>window.PokerNetI18n = {'
+        kozyr_i18n_block = (
+            '<script>window.KozyrI18n = {'
             f'"fabLabel":"{escape_json_string(ui["fab_label"])}",'
             f'"fabAria":"{escape_json_string(ui["fab_aria"])}",'
             f'"toastMsg":"{escape_json_string(ui["fab_toast"])}",'
@@ -1349,7 +1352,7 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
             '};</script>'
         )
     else:
-        pokernet_i18n_block = ""
+        kozyr_i18n_block = ""
 
     replacements = {
         # Core content
@@ -1442,7 +1445,7 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         "{{UI_BURGER_ARIA}}": ui["burger_aria"],
         "{{UI_NAV_ARIA}}": ui["nav_aria"],
         # ----- FAB i18n block (PT only; EN gets empty string) -----
-        "{{POKERNET_I18N_BLOCK}}": pokernet_i18n_block,
+        "{{KOZYR_I18N_BLOCK}}": kozyr_i18n_block,
     }
 
     rendered = template

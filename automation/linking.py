@@ -1,5 +1,5 @@
 """
-Internal linking engine for PokerNet content.
+Internal linking engine for KOZYR content.
 
 Responsibilities:
 - Load taxonomy (format pages + articles, each with tags)
