@@ -5,6 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="index, follow">
 <meta name="theme-color" content="#2668FF">
+<!-- Favicon и иконки KOZYR -->
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="KOZYR">
+<meta property="og:title" content="KOZYR International — Poker Rakeback Deals | Coming Soon">
+<meta property="og:description" content="International poker rakeback platform. Launching Q4 2026 with global poker rooms.">
+<meta property="og:image" content="https://kozyr.club/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://kozyr.club/int/">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="KOZYR International — Poker Rakeback Deals | Coming Soon">
+<meta name="twitter:description" content="International poker rakeback platform. Launching Q4 2026 with global poker rooms.">
+<meta name="twitter:image" content="https://kozyr.club/og-image.png">
 
 <title>KOZYR International — Poker Rakeback Deals | Coming Soon</title>
 <meta name="description" content="International poker rakeback platform. Launching Q4 2026 with global poker rooms.">
@@ -44,7 +64,8 @@ body { font-family: var(--f-body); background: var(--bg); color: var(--ink); min
 .container { max-width: 640px; width: 100%; text-align: center; }
 
 .logo { display: inline-flex; align-items: center; gap: 12px; font-family: var(--f-display); font-weight: 700; font-size: 22px; letter-spacing: -0.02em; margin-bottom: 48px; text-decoration: none; color: inherit; }
-.logo-mark { width: 36px; height: 36px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-family: var(--f-display); font-weight: 700; font-size: 24px; letter-spacing: -0.05em; }
+.logo-mark { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; }
+.logo-mark svg { width: 100%; height: 100%; display: block; }
 
 .eyebrow {
   display: inline-flex; align-items: center; gap: 10px;
@@ -118,7 +139,26 @@ h1 em { font-family: var(--f-serif); font-style: italic; font-weight: 400; color
 
 <div class="container">
   <a href="/" class="logo">
-    <span class="logo-mark">K</span>
+    <span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="ki1" x1="505" y1="628" x2="596" y2="628" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#14358F"/><stop offset="1" stop-color="#2A6BFF"/></linearGradient></defs><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 587 1 1071 0 1076 -3 16
+-32 42 583 -519 198 -180 547 -499 775 -709 228 -209 547 -501 708 -649 l294
+-267 905 0 c497 0 904 2 904 4 0 5 18 -12 -530 502 -228 214 -562 526 -740
+694 -425 398 -844 786 -1006 931 -71 63 -228 203 -349 310 -376 334 -500 446
+-581 524 l-79 75 66 63 c339 322 703 669 789 752 58 55 197 188 310 295 113
+107 311 296 440 420 129 124 368 351 530 505 162 154 389 370 505 481 115 110
+308 292 428 404 119 113 217 208 217 212 0 4 -405 8 -901 8 l-901 0 -132 -128
+c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36
+-66 -58 -66 -51 1 8 0 517 0 1132 l-2 1117 -650 0 -650 0 0 -3090z" fill="#2668FF"/></g><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59 c39 -33 78 -61 88 -63
+18 -2 41 33 41 63 0 22 39 74 55 74 7 0 16 7 19 16 10 25 47 72 99 125 26 27
+47 55 47 63 0 21 49 76 67 76 17 0 93 79 93 96 0 7 17 27 38 46 21 19 42 42
+45 52 4 9 15 20 24 23 21 8 52 43 53 59 0 6 18 32 40 57 31 35 40 53 40 82 0
+31 7 44 42 76 23 21 47 35 52 32 6 -3 -3 9 -21 27 -32 34 -32 34 -268 -196
+-490 -475 -535 -517 -551 -504 -19 16 -19 192 0 315 8 50 17 126 20 170 9 121
+16 187 23 215 6 25 7 33 17 120 2 25 7 61 11 80 4 19 8 51 10 70 2 19 7 53 10
+75 3 22 8 76 10 120 3 44 8 91 11 105 15 55 22 109 29 220 2 41 9 104 15 140
+6 36 13 77 15 91 2 14 -1 31 -6 36 -7 7 -4 16 11 26 12 8 19 20 15 27 -4 6 -1
+17 5 25 28 34 -2 8 -132 -113z" fill="#14358F"/></g></g></svg></span>
     <span>KOZYR</span>
   </a>
 
