@@ -67,9 +67,8 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        working-directory: automation
         run: |
-          python translator.py \
+          python automation/translator.py \
             --source-slug "${{ inputs.slug }}" \
             --source-lang "${{ inputs.source_lang }}" \
             --target-lang "${{ inputs.target_lang }}"
