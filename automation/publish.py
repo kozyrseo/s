@@ -47,7 +47,8 @@ from linking import (
 
 
 # ==== Configuration ====
-TEMPLATE_PATH = Path("automation/templates/article.html")
+# Шаблон рядом с этим файлом → устойчиво к рабочей директории запуска
+TEMPLATE_PATH = Path(__file__).resolve().parent / "templates" / "article.html"
 SITEMAP_PATH = Path("sitemap.xml")
 INDEXNOW_KEY_FILE_PATTERN = "*.indexnow.txt"  # the key file lives in repo root
 

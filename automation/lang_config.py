@@ -21,6 +21,16 @@ import re
 from pathlib import Path
 from typing import TypedDict
 
+# --- Базовые пути (устойчивы к рабочей директории запуска) ---
+# AUTOMATION_DIR = папка automation/ (где лежат промпты, таксономия, шаблоны).
+# REPO_ROOT      = корень репозитория (где лежат _pending, ua/blog — контент сайта).
+# Пути к КОДУ (промпты/таксономия/шаблон) строятся от AUTOMATION_DIR — они всегда
+# рядом с этим файлом. Пути к КОНТЕНТУ (_pending, ua/blog) — от REPO_ROOT, потому
+# что их читает сайт из корня. Это чинит запуск и из корня, и из working-directory:
+# automation (иначе получалось automation/automation/prompts/...).
+AUTOMATION_DIR = Path(__file__).resolve().parent
+REPO_ROOT = AUTOMATION_DIR.parent
+
 
 class UIStrings(TypedDict):
     breadcrumb_home: str
@@ -106,9 +116,9 @@ LANG_CONFIG: dict[str, LangCfg] = {
     # роль языка определяется в country_config.py, а этот ключ остаётся
     # для обратной совместимости с taxonomy.json и старыми статьями.
     "ru": {
-        "pending_dir": Path("_pending"),
-        "blog_dir": Path("ua/blog"),
-        "blog_index": Path("ua/blog/index.html"),
+        "pending_dir": REPO_ROOT / "_pending",
+        "blog_dir": REPO_ROOT / "ua" / "blog",
+        "blog_index": REPO_ROOT / "ua" / "blog" / "index.html",
         "url_prefix": "/ua/blog",
         "canonical_base": f"{SITE_URL}/ua/blog",
         "html_lang": "ru",
@@ -118,8 +128,8 @@ LANG_CONFIG: dict[str, LangCfg] = {
         "hreflang_alt": "uk-UA",
         "home_url": "/ua/",
         "blog_url": "/ua/blog/",
-        "system_prompt": Path("automation/prompts/system_prompt.md"),
-        "taxonomy": Path("automation/taxonomy.json"),
+        "system_prompt": AUTOMATION_DIR / "prompts" / "system_prompt.md",
+        "taxonomy": AUTOMATION_DIR / "taxonomy.json",
         # Секции сайта, на которые статьи ставят внутренние ссылки.
         # Ключ = путь целевой страницы, значение = раздел (article:section).
         "article_section_map": {
@@ -183,9 +193,9 @@ LANG_CONFIG: dict[str, LangCfg] = {
     # в /ua/uk/blog/{slug}/, генерируются как перевод русской через
     # translator.py. Тот же slug, что у русской пары (translation_of).
     "uk": {
-        "pending_dir": Path("_pending_uk"),
-        "blog_dir": Path("ua/uk/blog"),
-        "blog_index": Path("ua/uk/blog/index.html"),
+        "pending_dir": REPO_ROOT / "_pending_uk",
+        "blog_dir": REPO_ROOT / "ua" / "uk" / "blog",
+        "blog_index": REPO_ROOT / "ua" / "uk" / "blog" / "index.html",
         "url_prefix": "/ua/uk/blog",
         "canonical_base": f"{SITE_URL}/ua/uk/blog",
         "html_lang": "uk",
@@ -197,8 +207,8 @@ LANG_CONFIG: dict[str, LangCfg] = {
         "blog_url": "/ua/uk/blog/",
         # Промпт для перевода отдельный: translator.py прогоняет русскую
         # статью через Claude с этим system_prompt.
-        "system_prompt": Path("automation/prompts/system_prompt.uk.md"),
-        "taxonomy": Path("automation/taxonomy.uk.json"),
+        "system_prompt": AUTOMATION_DIR / "prompts" / "system_prompt.uk.md",
+        "taxonomy": AUTOMATION_DIR / "taxonomy.uk.json",
         "article_section_map": {
             "/ua/rooms/pokerbet/": "Огляди румів",
             "/ua/clubs/klubok/": "Огляди клубів",
