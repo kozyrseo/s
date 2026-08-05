@@ -45,6 +45,7 @@ jobs:
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
+          PYTHONPATH: automation
         run: |
           python -c "
           import json, os
@@ -52,7 +53,7 @@ jobs:
           from pathlib import Path
           from bot_v2.suggested_topics import list_by_status
 
-          root = Path('..').resolve()
+          root = Path('.').resolve()
           cache = root / '.bot_state' / 'cache'
           cache.mkdir(parents=True, exist_ok=True)
 
