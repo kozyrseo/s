@@ -12,17 +12,93 @@ Disallow: /*?utm_*
 Disallow: /*?ref=*
 Disallow: /*?campaign=*
 
-# Отдельные боты
+# ═══════════════════════════════════════════════
+#  ИИ-боты — полный доступ (обучение и цитирование)
+# ═══════════════════════════════════════════════
+
+# OpenAI
 User-agent: GPTBot
 Allow: /
 
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# Anthropic (Claude)
 User-agent: ClaudeBot
 Allow: /
 
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Google (Gemini / Vertex AI)
+User-agent: Google-Extended
+Allow: /
+
+# Perplexity
 User-agent: PerplexityBot
 Allow: /
 
-# Задержка crawl-rate для агрессивных ботов
+User-agent: Perplexity-User
+Allow: /
+
+# Common Crawl (датасет для многих моделей)
+User-agent: CCBot
+Allow: /
+
+# Apple Intelligence
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Amazon
+User-agent: Amazonbot
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+# Meta (Llama)
+User-agent: FacebookBot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+# ByteDance
+User-agent: Bytespider
+Allow: /
+
+# Прочие ИИ / краулеры датасетов
+User-agent: YouBot
+Allow: /
+
+User-agent: Diffbot
+Allow: /
+
+User-agent: ImagesiftBot
+Allow: /
+
+User-agent: Omgilibot
+Allow: /
+
+User-agent: Timpibot
+Allow: /
+
+User-agent: PetalBot
+Allow: /
+
+# ═══════════════════════════════════════════════
+#  SEO-краулеры — задержка crawl-rate
+# ═══════════════════════════════════════════════
 User-agent: SemrushBot
 Crawl-delay: 10
 
