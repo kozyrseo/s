@@ -1,29 +1,7 @@
 {
-  "collected_at": "2026-08-05T08:03:13.141821+00:00",
+  "collected_at": "2026-08-05T20:45:12.825226+00:00",
   "status": "queued",
   "rows": [
-    {
-      "status": "queued",
-      "lang": "ru",
-      "topic": "Short Deck покер: правила и где играть в Украине",
-      "primary_keyword": "short deck покер",
-      "secondary_keywords": "шорт дек правила;6+ холдем;где играть short deck",
-      "intent": "informational",
-      "target_page": "/ua/rooms/pokerbet/",
-      "notes": "Кластер: форматы. Правила Short Deck, отличия от NLH, где доступен. PokerBet поддерживает.",
-      "_row": 5
-    },
-    {
-      "status": "queued",
-      "lang": "ru",
-      "topic": "Омаха для начинающих: чем отличается от холдема",
-      "primary_keyword": "омаха покер для начинающих",
-      "secondary_keywords": "plo правила;омаха vs холдем;как играть омаху",
-      "intent": "informational",
-      "target_page": "/ua/",
-      "notes": "Кластер: форматы/новички. Базовые правила PLO, отличия, почему поля мягче.",
-      "_row": 6
-    },
     {
       "status": "queued",
       "lang": "ru",
