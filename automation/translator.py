@@ -182,8 +182,10 @@ def translate_article_json(article: dict, source_lang: str, target_lang: str) ->
             f"Первые 500 символов:\n{raw[first:first + 500]}"
         )
 
-    # Sanity check: базовые ключи должны быть на месте
-    for required in ("title", "h1_title", "meta_title", "meta_description"):
+    # Sanity check: базовые ключи должны быть на месте.
+    # ВАЖНО: поля "title" в структуре из generate.py НЕТ (есть h1_title).
+    # Раньше валидатор требовал "title" и падал на каждом переводе.
+    for required in ("h1_title", "meta_title", "meta_description"):
         if required not in translated or not translated[required]:
             raise ValueError(f"В переводе отсутствует поле {required!r}")
 
