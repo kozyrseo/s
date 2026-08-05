@@ -42,6 +42,7 @@ jobs:
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
+          PYTHONPATH: automation
         run: |
           # Помечаем строку как processing и сохраняем JSON темы
           python -m bot_v2.suggested_topics dump "${{ inputs.row }}" \
@@ -55,6 +56,7 @@ jobs:
           GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          PYTHONPATH: automation
         run: |
           # multilang_generator.py прочитает country/langs из JSON-темы
           # (dump сохранил их из строки Sheets). Если country не задан —
