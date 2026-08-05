@@ -516,7 +516,14 @@ def main() -> int:
         topic = json.loads(Path(args.topic_file).read_text(encoding="utf-8"))
         country = args.country or topic.get("country")
         if not country:
-            print("❌ --topic-file без поля country и без --country", file=sys.stderr)
+            # Обратная совместимость: старые темы без country, но с lang=ru —
+            # трактуем как Украину (тот же fallback, что в get_next_multilang_topic).
+            legacy_lang = str(topic.get("lang", "")).strip().lower()
+            if legacy_lang == "ru":
+                country = "ua"
+        if not country:
+            print("❌ --topic-file без поля country и без --country "
+                  "(и нет legacy lang=ru)", file=sys.stderr)
             return 1
         langs_override = args.langs or topic.get("langs", "")
         if isinstance(langs_override, list):
