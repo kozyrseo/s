@@ -150,13 +150,9 @@ img, svg { display: block; }
 
 .nav-actions { display: flex; align-items: center; gap: 24px; }
 
-.lang {
-  display: flex; gap: 2px; font-family: var(--f-mono);
-  font-size: 11px; font-weight: 500; color: var(--ink-3);
-  letter-spacing: 0.1em;
-}
-.lang span { padding: 4px 6px; cursor: pointer; transition: color 0.15s; }
-.lang span.active, .lang span:hover { color: var(--ink); }
+
+
+
 
 .btn {
   display: inline-flex; align-items: center; gap: 8px;
@@ -2572,6 +2568,11 @@ body::before {
   .compare-logo { width: 36px; height: 36px; font-size: 13px; }
 }
 
+
+.lang { display: inline-flex; align-items: center; gap: 0; padding: 2px; background: var(--surface-2, rgba(128,128,128,0.08)); border: 1px solid var(--line); border-radius: 999px; font-family: var(--f-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.06em; }
+.lang a { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; padding: 5px 10px; border-radius: 999px; color: var(--ink-3); text-decoration: none; transition: color 0.15s, background 0.15s; }
+.lang a:hover { color: var(--ink); }
+.lang a[aria-current="page"] { color: var(--ink); background: var(--bg, #fff); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
 </style>
 <script src="/analytics.js" defer></script>
   <link rel="stylesheet" href="/assets/kozyr-enhance.css?v=10">
@@ -2671,8 +2672,8 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     </div>
     <div class="nav-actions">
       <div class="lang" role="group" aria-label="Вибір мови">
-        <span>RU</span>
-        <span class="active">UA</span>
+        <a href="/ua/" hreflang="ru-UA" lang="ru">RU</a>
+        <a href="/ua/uk/" hreflang="uk-UA" lang="uk" aria-current="page">UA</a>
       </div>
       <a href="#partners" class="btn btn-primary">Дивитися партнерів</a>
       <button class="nav-burger" id="nav-burger" aria-expanded="false" aria-controls="nav-drawer" aria-label="Меню">
