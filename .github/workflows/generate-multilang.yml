@@ -1,50 +1,38 @@
-name: Generate multilang article
+name: Publish multilang article
 
-# Мульти-языковая генерация одной темы: primary + переводы.
-# Запускается вместо старого generate-article.yml для стран с несколькими
-# языками. Читает первую queued строку из Sheets с колонкой country,
-# определяет все языки этой страны, генерит primary + переводит остальные.
+# Публикует статью на всех языках одновременно. Ищет _pending*/{slug}/
+# для каждого известного языка, cross-links translation_of, публикует
+# каждую через publish.publish_article.
 
 on:
   workflow_dispatch:
     inputs:
-      country:
-        description: 'Код страны (ua/pl/kz…). Оставь пустым для первой в очереди.'
-        required: false
+      slug:
+        description: 'Слуг статьи (общий для всех языков)'
+        required: true
         type: string
-        default: ''
       langs:
-        description: 'Override языков через запятую (например "ru" или "ru,uk"). Пусто = все языки страны.'
+        description: 'Опционально: только эти языки, через запятую. Пусто = все найденные версии.'
         required: false
         type: string
         default: ''
-      topic_file:
-        description: 'Локальный режим: путь к JSON-теме. Если задан — Sheets не используется.'
-        required: false
-        type: string
-        default: ''
-      force:
-        description: 'Генерировать даже если сегодня уже была статья'
-        required: false
-        type: choice
-        options: ['false', 'true']
-        default: 'false'
 
 permissions:
   contents: write
 
 concurrency:
-  group: generate-multilang
+  group: publish-multilang
   cancel-in-progress: false
 
 jobs:
-  generate:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -54,35 +42,34 @@ jobs:
       - name: Install deps
         run: pip install -r automation/requirements.txt
 
-      - name: Run multilang generator
+      - name: Run multilang publisher
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
         run: |
-          ARGS=""
-          if [ -n "${{ inputs.country }}" ]; then ARGS="$ARGS --country ${{ inputs.country }}"; fi
+          ARGS="--slug ${{ inputs.slug }}"
           if [ -n "${{ inputs.langs }}" ]; then ARGS="$ARGS --langs ${{ inputs.langs }}"; fi
-          if [ -n "${{ inputs.topic_file }}" ]; then ARGS="$ARGS --topic-file ${{ inputs.topic_file }}"; fi
-          if [ "${{ inputs.force }}" = "true" ]; then ARGS="$ARGS --force"; fi
-          python automation/multilang_generator.py $ARGS
+          python automation/multilang_publisher.py $ARGS
 
-      - name: Commit pending articles
+      - name: Commit published sites
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # Все _pending_* каталоги
-          for d in _pending _pending_*; do
+          # Site directories для всех языков (ua/blog/, ua/uk/blog/ и т.д.)
+          for d in ua ua/uk ru en pl kz; do
             if [ -d "$d" ]; then git add -A -f "$d" || true; fi
           done
-          if [ -d "automation/topics" ]; then git add -A -f automation/topics/ || true; fi
+          # Sitemaps и taxonomy
+          git add -A -f sitemap.xml automation/taxonomy*.json 2>/dev/null || true
+          # Удалённые pending
+          git add -A -u _pending _pending_* 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Nothing to commit."
           else
-            git commit -m "Generate multilang article (pending review)"
+            git commit -m "Publish multilang article: ${{ inputs.slug }}"
             git pull --rebase origin main || true
             git push
           fi
