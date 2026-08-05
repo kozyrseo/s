@@ -577,10 +577,13 @@ def escape_md(text: str) -> str:
     if not text:
         return ""
     s = str(text)
-    # MarkdownV1: экранируем только реально ломающие маркеры форматирования.
-    # Скобки ( ) [ ] в обычном тексте (вне ссылок) парсер не ломают, поэтому
-    # их НЕ экранируем — иначе в превью появляются некрасивые \( \) \[ \].
-    for ch in ("\\", "_", "*", "`"):
+    # MarkdownV1 breaks on unbalanced: _ italic, * bold, ` code, and [ which
+    # starts an inline link [text](url). A stray "[" in user content (e.g.
+    # "[6+ холдем]" in a poker article) makes Telegram hunt for the link's end
+    # and fail with "can't find end of the entity". escape_md is only applied to
+    # user content (titles, summaries) — never to our own intentional links —
+    # so escaping "[" here is safe and fixes the sendPhoto/​sendMessage 400.
+    for ch in ("\\", "_", "*", "`", "["):
         s = s.replace(ch, "\\" + ch)
     return s
  
@@ -637,8 +640,14 @@ def _send_telegram_message(token: str, chat_id: str, text: str, keyboard: list,
 
 
 def _send_telegram_photo(token: str, chat_id: str, photo_path: Path,
-                         caption: str, keyboard: list) -> None:
-    """sendPhoto with multipart/form-data. Caption capped at 1024 chars by Telegram."""
+                         caption: str, keyboard: list,
+                         parse_mode: str | None = "Markdown") -> None:
+    """sendPhoto with multipart/form-data. Caption capped at 1024 chars by Telegram.
+
+    parse_mode=None sends the caption as plain text. If Markdown parsing fails
+    (Telegram 400 "can't parse entities"), we retry sendPhoto ONCE with
+    parse_mode=None so the PHOTO still gets delivered (previously we fell back to
+    a text-only message and the operator lost the hero image)."""
     # Telegram caption limit is 1024 chars for sendPhoto
     if len(caption) > 1020:
         caption = caption[:1017] + "..."
@@ -651,9 +660,10 @@ def _send_telegram_photo(token: str, chat_id: str, photo_path: Path,
     fields = {
         "chat_id": chat_id,
         "caption": caption,
-        "parse_mode": "Markdown",
         "reply_markup": json.dumps({"inline_keyboard": keyboard}),
     }
+    if parse_mode:
+        fields["parse_mode"] = parse_mode
     body = bytearray()
     for name, value in fields.items():
         body.extend(f"--{boundary}{crlf}".encode())
@@ -684,9 +694,17 @@ def _send_telegram_photo(token: str, chat_id: str, photo_path: Path,
     except urllib.error.HTTPError as e:
         err_body = e.read().decode("utf-8", errors="ignore")
         print(f"⚠️  Telegram sendPhoto returned {e.code}: {err_body[:500]}")
-        # Fall back to plain text so the operator still gets the preview
-        print("    → falling back to text-only preview")
-        _send_telegram_message(token, chat_id, caption, keyboard)
+        # If Markdown parsing broke the caption, retry the PHOTO once without
+        # parse_mode — this keeps the hero image in the preview (plain caption).
+        if e.code == 400 and parse_mode and "parse entities" in err_body.lower():
+            print("    → retrying sendPhoto as plain caption (keeps the image)")
+            _send_telegram_photo(token, chat_id, photo_path, caption, keyboard,
+                                 parse_mode=None)
+        else:
+            # Non-Markdown error (e.g. photo too large) — fall back to text so the
+            # operator at least sees the preview content.
+            print("    → falling back to text-only preview")
+            _send_telegram_message(token, chat_id, caption, keyboard)
     except Exception as e:
         print(f"⚠️  Telegram sendPhoto failed: {type(e).__name__}: {e}")
         _send_telegram_message(token, chat_id, caption, keyboard)
