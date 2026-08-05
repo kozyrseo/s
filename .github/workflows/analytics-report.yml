@@ -45,9 +45,8 @@ jobs:
           GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        working-directory: automation
         run: |
-          python analytics.py --lang ru --telegram --update-taxonomy
+          python automation/analytics.py --lang ru --telegram --update-taxonomy
 
       - name: Commit analytics + taxonomy update
         run: |
