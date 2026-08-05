@@ -42,7 +42,6 @@ jobs:
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
-        working-directory: automation
         run: |
           # Помечаем строку как processing и сохраняем JSON темы
           python -m bot_v2.suggested_topics dump "${{ inputs.row }}" \
@@ -56,7 +55,6 @@ jobs:
           GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        working-directory: automation
         run: |
           # multilang_generator.py прочитает country/langs из JSON-темы
           # (dump сохранил их из строки Sheets). Если country не задан —
@@ -67,11 +65,11 @@ jobs:
           sys.exit(0 if t.get('country') else 1)
           "; then
             echo "→ Multilang pipeline"
-            python multilang_generator.py \
+            python automation/multilang_generator.py \
               --topic-file "topics/row-${{ inputs.row }}.json" --force
           else
             echo "→ Legacy pipeline (no country)"
-            python generate.py --lang ru \
+            python automation/generate.py --lang ru \
               --topic-file "topics/row-${{ inputs.row }}.json" --force
           fi
 
