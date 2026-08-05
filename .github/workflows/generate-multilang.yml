@@ -62,14 +62,13 @@ jobs:
           GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        working-directory: automation
         run: |
           ARGS=""
           if [ -n "${{ inputs.country }}" ]; then ARGS="$ARGS --country ${{ inputs.country }}"; fi
           if [ -n "${{ inputs.langs }}" ]; then ARGS="$ARGS --langs ${{ inputs.langs }}"; fi
-          if [ -n "${{ inputs.topic_file }}" ]; then ARGS="$ARGS --topic-file ../${{ inputs.topic_file }}"; fi
+          if [ -n "${{ inputs.topic_file }}" ]; then ARGS="$ARGS --topic-file ${{ inputs.topic_file }}"; fi
           if [ "${{ inputs.force }}" = "true" ]; then ARGS="$ARGS --force"; fi
-          python multilang_generator.py $ARGS
+          python automation/multilang_generator.py $ARGS
 
       - name: Commit pending articles
         run: |
