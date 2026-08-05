@@ -62,7 +62,12 @@ jobs:
           if python -c "
           import json, sys
           t = json.load(open('topics/row-${{ inputs.row }}.json'))
-          sys.exit(0 if t.get('country') else 1)
+          # Мультиязычный путь если задан country ЛИБО legacy lang=ru
+          # (старые темы без country трактуем как Украину — так же делает
+          # get_next_multilang_topic).
+          has_country = bool(t.get('country'))
+          legacy_ru = str(t.get('lang','')).strip().lower() == 'ru'
+          sys.exit(0 if (has_country or legacy_ru) else 1)
           "; then
             echo "→ Multilang pipeline"
             python automation/multilang_generator.py \
