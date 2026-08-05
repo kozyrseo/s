@@ -49,11 +49,10 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
-        working-directory: automation
         run: |
           ARGS="--slug ${{ inputs.slug }}"
           if [ -n "${{ inputs.langs }}" ]; then ARGS="$ARGS --langs ${{ inputs.langs }}"; fi
-          python multilang_publisher.py $ARGS
+          python automation/multilang_publisher.py $ARGS
 
       - name: Commit published sites
         run: |
