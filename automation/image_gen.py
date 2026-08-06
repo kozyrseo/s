@@ -44,7 +44,7 @@ from pathlib import Path
 # ==== Output ====
 IMAGE_MODEL = "gpt-image-1"
 IMAGE_SIZE = "1536x1024"
-IMAGE_QUALITY = "medium"
+IMAGE_QUALITY = "high"
 WEBP_QUALITY = 82
 HERO_FILENAME = "hero.webp"
 
@@ -81,10 +81,18 @@ PALETTE_NATURAL = (
 
 # Shared constraints appended to every prompt regardless of palette.
 STYLE_COMMON = (
-    "Full-frame composition, the subject can sit anywhere in the frame — this "
-    "image is used edge-to-edge with no cropping. "
+    # Realism/quality cues — tuned to match the approved KOZYR hero look:
+    # ultra-realistic editorial photography, shallow depth of field, cinematic
+    # lighting. Keeps auto-generated heroes at the same bar as hand-picked ones.
+    "Ultra-realistic editorial photograph, cinematic lighting, shallow depth of "
+    "field with the key subject in crisp focus and a soft creamy bokeh "
+    "background. High detail, natural volumetric shadows, premium and "
+    "trustworthy mood — not flashy, not cartoonish, not 3D-rendered. "
+    "Full-frame landscape composition, the subject can sit anywhere in the "
+    "frame — this image is used edge-to-edge with no cropping. "
     "ABSOLUTELY NO TEXT of any kind anywhere in the image — no letters, no "
-    "numbers, no signage, no UI labels, no watermarks. "
+    "numbers, no chip denominations, no card faces, no signage, no UI labels, "
+    "no watermarks; any phone or screen UI must be plain and blurred. "
     "NO HUMAN FACES, no recognizable people, no photographs of identifiable "
     "individuals. Hands are acceptable. "
     "NO real-room or platform logos — no PPPoker, PokerBros, ClubGG, WSOP, "

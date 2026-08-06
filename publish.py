@@ -45,6 +45,8 @@ from linking import (
     count_internal_links,
 )
 
+from body_enhance import enhance_body_html
+
 
 # ==== Configuration ====
 TEMPLATE_PATH = Path("automation/templates/article.html")
@@ -229,12 +231,36 @@ def render_key_takeaways(meta: dict, md_text: str) -> str:
         answer = item.get("answer", "").strip()
         if not answer:
             continue
-        # First sentence as the takeaway
-        first_sentence = re.split(r"(?<=[.!?])\s+", answer, maxsplit=1)[0].strip()
-        if len(first_sentence) > 200:
-            first_sentence = first_sentence[:197] + "..."
-        if first_sentence:
-            takeaways.append(first_sentence)
+        # Take the first sentence as the takeaway. But many FAQ answers open
+        # with a bare "Да."/"Нет."/"Ні." — a standalone yes/no is useless as a
+        # key takeaway (bug: rendered as `<li>Нет.</li>`). In that case pull in
+        # the following sentence(s) so the takeaway actually carries meaning,
+        # and drop the item entirely if nothing substantive follows.
+        sentences = re.split(r"(?<=[.!?])\s+", answer)
+        SHORT_STARTERS = {
+            "да", "нет", "ні", "нет.", "да.", "ні.",
+            "так", "так.", "ниже", "ниже.",
+        }
+        parts = []
+        for s in sentences:
+            s = s.strip()
+            if not s:
+                continue
+            parts.append(s)
+            joined = " ".join(parts)
+            # Keep extending while what we have is just a bare yes/no (<= 3
+            # words or a known short starter) — we want a meaningful clause.
+            bare = joined.rstrip(".!?").strip().lower()
+            if bare in SHORT_STARTERS or len(joined.split()) <= 3:
+                continue
+            break
+        takeaway = " ".join(parts).strip()
+        # Still nothing substantive (answer was only a yes/no)? skip it.
+        if not takeaway or takeaway.rstrip(".!?").strip().lower() in SHORT_STARTERS:
+            continue
+        if len(takeaway) > 200:
+            takeaway = takeaway[:197] + "..."
+        takeaways.append(takeaway)
 
     if len(takeaways) < 3:
         # Fallback: skip the block if we don't have enough material
@@ -1190,6 +1216,9 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     # Render markdown body to HTML
     body_html = render_markdown(body_md_without_lede)
     body_html = add_h2_anchor_ids(body_html, headings)
+    # Auto-upgrade structural patterns (comparison tables, step lists) into
+    # branded infographics so every published article looks polished.
+    body_html = enhance_body_html(body_html, lang)
 
     # Reading time
     word_count = meta.get("word_count") or len(md_text.split())
