@@ -182,6 +182,15 @@ def main():
     reps["{{UI_LANG_SWITCH_LABEL}}"] = {"ru": "UA", "uk": "RU"}.get(lang, "UA")
     reps["{{UI_LANG_SWITCH_ARIA}}"] = "Выбор языка" if lang == "ru" else "Вибір мови"
 
+    # SEO: hreflang alternate-теги в <head> (взаимные RU↔UK + x-default)
+    ru_url = "https://kozyr.club/ua/blog/%s/" % slug
+    uk_url = "https://kozyr.club/ua/uk/blog/%s/" % slug
+    reps["{{HREFLANG_BLOCK}}"] = (
+        '<link rel="alternate" hreflang="ru-UA" href="%s">\n'
+        '<link rel="alternate" hreflang="uk-UA" href="%s">\n'
+        '<link rel="alternate" hreflang="x-default" href="%s">'
+    ) % (ru_url, uk_url, ru_url)
+
     out = tpl
     for k, v in reps.items():
         out = out.replace(k, v)
