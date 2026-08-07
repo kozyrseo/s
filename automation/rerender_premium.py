@@ -165,6 +165,22 @@ def main():
     reps["{{HOME_URL}}"] = cfg["home_url"]
     reps["{{BLOG_URL}}"] = cfg["blog_url"]
     reps["{{SITE_ORIGIN}}"] = site
+    # переключатель языка RU/UA (кросс-ссылка на статью-перевод того же слага)
+    other = "uk" if lang == "ru" else "ru"
+    try:
+        ocfg = get_cfg(other)
+        reps["{{LANG_SWITCH_URL}}"] = "%s%s/" % (ocfg["blog_url"], slug)
+        reps["{{LANG_SWITCH_HREFLANG}}"] = ocfg["hreflang_self"]
+    except Exception:
+        reps["{{LANG_SWITCH_URL}}"] = cfg["home_url"]
+        reps["{{LANG_SWITCH_HREFLANG}}"] = other
+    reps["{{LANG_SELF_URL}}"] = site + canonical
+    reps["{{HREFLANG_SELF}}"] = cfg["hreflang_self"]
+    reps["{{LANG_SELF}}"] = "ru" if lang == "ru" else "uk"
+    reps["{{LANG_SWITCH_LANG}}"] = other
+    reps["{{UI_LANG_SELF_LABEL}}"] = {"ru": "RU", "uk": "UA"}.get(lang, "RU")
+    reps["{{UI_LANG_SWITCH_LABEL}}"] = {"ru": "UA", "uk": "RU"}.get(lang, "UA")
+    reps["{{UI_LANG_SWITCH_ARIA}}"] = "Выбор языка" if lang == "ru" else "Вибір мови"
 
     out = tpl
     for k, v in reps.items():

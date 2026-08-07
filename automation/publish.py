@@ -1418,6 +1418,12 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
             # если lang неизвестен — оставляем дефолт из UI
             pass
 
+    # Значения для «текущего» языка (активная кнопка переключателя).
+    _lang_self_label = {"ru": "RU", "uk": "UA"}.get(lang, "RU")
+    _lang_switch_label = {"ru": "UA", "uk": "RU"}.get(lang, "UA")
+    _lang_self_url = canonical_url  # сама себя
+    _lang_self_code = "ru" if lang == "ru" else "uk"
+    _lang_switch_code = "uk" if lang == "ru" else "ru"
     # Build the inline i18n block for kozyr-fab.js. PT pages declare
     # window.KozyrI18n with localized strings; EN pages emit nothing
     # (the FAB script's English defaults take over).
@@ -1489,6 +1495,11 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         # иначе дефолт из UI (главная соседнего языка).
         "{{LANG_SWITCH_URL}}": lang_switch_url,
         "{{LANG_SWITCH_HREFLANG}}": lang_switch_hreflang,
+        "{{LANG_SELF_URL}}": _lang_self_url,
+        "{{HREFLANG_SELF}}": lang_cfg["hreflang_self"],
+        "{{LANG_SELF}}": _lang_self_code,
+        "{{LANG_SWITCH_LANG}}": _lang_switch_code,
+        "{{UI_LANG_SELF_LABEL}}": _lang_self_label,
         # UI strings (localized chrome — header, footer, breadcrumb, CTA, related)
         "{{UI_BREADCRUMB_HOME}}": ui["breadcrumb_home"],
         "{{UI_BREADCRUMB_BLOG}}": ui["breadcrumb_blog"],
@@ -1514,7 +1525,7 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         "{{UI_NAV_REVIEWS}}": ui["nav_reviews"],
         "{{UI_NAV_PRICING}}": ui["nav_pricing"],
         "{{UI_HEADER_CTA}}": ui["header_cta"],
-        "{{UI_LANG_SWITCH_LABEL}}": ui["lang_switcher_label"],
+        "{{UI_LANG_SWITCH_LABEL}}": _lang_switch_label,
         "{{UI_LANG_SWITCH_ARIA}}": ui["lang_switcher_aria"],
         "{{UI_FOOTER_TAGLINE}}": ui["footer_tagline"],
         "{{UI_FOOTER_PRODUCT_H}}": ui["footer_product_h"],

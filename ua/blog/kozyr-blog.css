@@ -647,3 +647,12 @@ body{position:relative}
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.3,1)}
 .reveal.in{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+/* ---------- переключатель языка RU/UA в шапке статьи ---------- */
+.lang{display:inline-flex;align-items:center;gap:0;padding:2px;background:rgba(128,128,128,0.08);
+  border:1px solid var(--border);border-radius:999px;font-family:var(--f-mono);font-size:11px;
+  font-weight:600;letter-spacing:0.06em}
+.lang a{display:inline-flex;align-items:center;justify-content:center;min-width:34px;padding:5px 10px;
+  border-radius:999px;color:var(--ink-3);text-decoration:none;transition:color .15s,background .15s}
+.lang a:hover{color:var(--ink)}
+.lang a[aria-current="page"]{color:var(--ink);background:#fff;box-shadow:0 1px 2px rgba(0,0,0,0.08)}
