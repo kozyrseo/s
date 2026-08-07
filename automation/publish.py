@@ -821,6 +821,7 @@ def update_blog_index(
     reading_time: int,
     lang_cfg,
     article_tag: str = "Блог",
+    article_has_hero: bool = False,
 ) -> None:
     """Add a card for the new article into the blog index for this language.
 
@@ -906,12 +907,19 @@ def update_blog_index(
     # Style C: премиум-редизайн — <div class="post-grid"> с <a class="post-card">
     grid_marker_post = '<div class="post-grid">'
     if grid_marker_post in content:
-        try:
-            import covers as _covers
-            motif = _covers.pick_motif(slug, h1_title)
-            cover_svg = _covers.cover_svg(motif)
-        except Exception:
-            cover_svg = ""
+        # Обложка: реальное hero-фото, если есть; иначе — SVG-мотив covers.py
+        hero_rel = f"{lang_cfg['url_prefix']}/{slug}/hero.webp"
+        hero_file = (SITEMAP_PATH.parent / lang_cfg['url_prefix'].strip('/') / slug / "hero.webp")
+        if article_has_hero:
+            cover_svg = (f'<img src="{hero_rel}" alt="" width="1600" height="900" '
+                         f'loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block">')
+        else:
+            try:
+                import covers as _covers
+                motif = _covers.pick_motif(slug, h1_title)
+                cover_svg = _covers.cover_svg(motif)
+            except Exception:
+                cover_svg = ""
         # короткий тег — передан из publish_article
         card_tag = article_tag or "Блог"
         arrow = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
@@ -1571,7 +1579,7 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     # Update sitemap (with hreflang pair if translation_of is set) and blog index.
     # Both write URLs, so they need publish_slug.
     update_sitemap(publish_slug, today_iso, lang_cfg, translation_of=translation_of)
-    update_blog_index(publish_slug, h1_title, meta_description, date_published, reading_time, lang_cfg, article_tag)
+    update_blog_index(publish_slug, h1_title, meta_description, date_published, reading_time, lang_cfg, article_tag, has_hero)
 
     # Refresh Related blocks on this language's format pages
     refreshed_posts = get_existing_blog_posts(lang_cfg["blog_dir"], lang_cfg["taxonomy"])
