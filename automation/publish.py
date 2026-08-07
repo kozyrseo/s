@@ -378,15 +378,24 @@ def escape_json_string(text: str) -> str:
 
 # ==== Date helpers ====
 
-def format_date_human(iso_date: str) -> str:
-    """Convert YYYY-MM-DD or ISO datetime to 'Month D, YYYY'."""
+_MONTHS = {
+    "ru": ["", "января", "февраля", "марта", "апреля", "мая", "июня",
+           "июля", "августа", "сентября", "октября", "ноября", "декабря"],
+    "uk": ["", "січня", "лютого", "березня", "квітня", "травня", "червня",
+           "липня", "серпня", "вересня", "жовтня", "листопада", "грудня"],
+}
+
+
+def format_date_human(iso_date: str, lang: str = "ru") -> str:
+    """Convert YYYY-MM-DD to a localized 'D month YYYY' string."""
     try:
         if "T" in iso_date:
             dt = datetime.fromisoformat(iso_date.replace("Z", "+00:00"))
         else:
             dt = datetime.strptime(iso_date, "%Y-%m-%d")
-        return dt.strftime("%B %-d, %Y")
-    except (ValueError, AttributeError):
+        months = _MONTHS.get("uk" if str(lang).startswith("uk") else "ru", _MONTHS["ru"])
+        return f"{dt.day} {months[dt.month]} {dt.year}"
+    except (ValueError, AttributeError, IndexError):
         return iso_date
 
 
@@ -811,6 +820,7 @@ def update_blog_index(
     date_iso: str,
     reading_time: int,
     lang_cfg,
+    article_tag: str = "Блог",
 ) -> None:
     """Add a card for the new article into the blog index for this language.
 
@@ -851,7 +861,7 @@ def update_blog_index(
 
     # Localized "min read" suffix for the card's date row
     min_read_label = lang_cfg["ui"]["min_read"]
-    date_human = format_date_human(date_iso)
+    date_human = format_date_human(date_iso, lang_cfg.get("hreflang_self","ru")[:2])
 
     # Style A: EN — inline-styled grid with <a class="card">
     grid_marker_inline = '<div style="display:grid;gap:20px;margin-top:40px">'
@@ -891,6 +901,42 @@ def update_blog_index(
         content = content.replace(grid_marker_classed, grid_marker_classed + "\n" + new_card, 1)
         blog_index_path.write_text(content, encoding="utf-8")
         print(f"✅ Updated {blog_index_path} with new card (class-based grid style)")
+        return
+
+    # Style C: премиум-редизайн — <div class="post-grid"> с <a class="post-card">
+    grid_marker_post = '<div class="post-grid">'
+    if grid_marker_post in content:
+        try:
+            import covers as _covers
+            motif = _covers.pick_motif(slug, h1_title)
+            cover_svg = _covers.cover_svg(motif)
+        except Exception:
+            cover_svg = ""
+        # короткий тег — передан из publish_article
+        card_tag = article_tag or "Блог"
+        arrow = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+                 'stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">'
+                 '<path d="M5 12h14M13 6l6 6-6 6"/></svg>')
+        read_word = min_read_label
+        more_word = {"ru": "Читать", "uk": "Читати"}.get(lang_cfg.get("hreflang_self", "")[:2], "Читать")
+        new_card = (
+            f'      <a href="{new_card_url}" class="post-card">\n'
+            f'        <div class="post-card__cover">\n'
+            f'          <span class="post-card__tag">{escape_html(card_tag)}</span>\n'
+            f'          {cover_svg}\n'
+            f'        </div>\n'
+            f'        <div class="post-card__body">\n'
+            f'          <div class="post-card__meta"><time datetime="{date_iso}">{date_human}</time>'
+            f'<span class="dot"></span><span>{reading_time} {read_word}</span></div>\n'
+            f'          <h2 class="post-card__title">{escape_html(h1_title)}</h2>\n'
+            f'          <p class="post-card__excerpt">{escape_html(meta_description)}</p>\n'
+            f'          <span class="post-card__more">{more_word} {arrow}</span>\n'
+            f'        </div>\n'
+            f'      </a>\n'
+        )
+        content = content.replace(grid_marker_post, grid_marker_post + "\n" + new_card, 1)
+        blog_index_path.write_text(content, encoding="utf-8")
+        print(f"✅ Updated {blog_index_path} with new card (post-grid style)")
         return
 
     # Neither marker found — log loudly so the next publish doesn't silently fail
@@ -1242,7 +1288,7 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         last_updated_label = lang_cfg["ui"]["last_updated"]
         last_updated_block = (
             f'<span>·</span><span class="updated">'
-            f'{last_updated_label} {format_date_human(date_modified)}</span>'
+            f'{last_updated_label} {format_date_human(date_modified, lang)}</span>'
         )
 
     # CTA keyword (extract from meta_title or topic_row_data primary_keyword)
@@ -1256,6 +1302,16 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     target_page = topic_data.get("target_page", "")
     default_section = {"ru": "Рейкбек и сделки"}.get(lang, "Рейкбек и сделки")
     article_section = lang_cfg["article_section_map"].get(target_page, default_section)
+
+    # Короткий тег для пилюли в hero (из topic-тега, иначе — раздел).
+    _tags = meta.get("tags", []) or []
+    _topic = next((t.split(":", 1)[1] for t in _tags if t.startswith("topic:")), "")
+    _tag_labels = {
+        "rakeback": "Рейкбек", "clubs": "Клубы", "rooms": "Румы",
+        "comparison": "Сравнение", "bankroll": "Банкролл", "strategy": "Стратегия",
+        "payments": "Платежи", "legal": "Легальность",
+    }
+    article_tag = _tag_labels.get(_topic, article_section.split()[0] if article_section else "Блог")
 
     # Keywords for schema
     secondary_kw = topic_data.get("secondary_keywords", "")
@@ -1294,11 +1350,11 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         # Localized alt text
         alt_prefix = {"ru": "Иллюстрация к статье:"}.get(lang, "Иллюстрация к статье:")
         og_image_alt = f"{alt_prefix} {h1_title}"
-        hero_block = (
-            f'<figure class="article-hero">'
+        hero_media_block = (
+            f'<div class="post-hero__media">'
             f'<img src="{pending_hero.name}" alt="{escape_html(og_image_alt)}" '
             f'width="1536" height="1024" loading="eager" fetchpriority="high">'
-            f'</figure>'
+            f'</div>'
         )
         print(f"✅ Hero image copied: {published_hero}")
     else:
@@ -1306,8 +1362,8 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         og_image_width = "1200"
         og_image_height = "630"
         og_image_alt = h1_title
-        hero_block = ""
-        print("ℹ️  No hero image — using site default og-image.png")
+        hero_media_block = ""
+        print("ℹ️  No hero image — dark hero with suit pattern only")
 
     # ----- hreflang block (only if this article has a paired translation) -----
     # Uses publish_slug so alternates point at the actual on-site URL.
@@ -1395,14 +1451,13 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         "{{LEDE}}": escape_html(lede_plain),
         "{{DATE_PUBLISHED}}": date_published,
         "{{DATE_MODIFIED}}": date_modified,
-        "{{DATE_PUBLISHED_DISPLAY}}": format_date_human(date_published),
+        "{{DATE_PUBLISHED_DISPLAY}}": format_date_human(date_published, lang),
         "{{LAST_UPDATED_BLOCK}}": last_updated_block,
         "{{READING_TIME}}": str(reading_time),
         "{{WORD_COUNT}}": str(word_count),
         "{{ARTICLE_SECTION}}": article_section,
         "{{KEYWORDS_JSON}}": escape_json_string(all_keywords),
         "{{KEY_TAKEAWAYS_BLOCK}}": key_takeaways_html,
-        "{{TOC_BLOCK}}": toc_html,
         "{{ARTICLE_BODY_HTML}}": body_html,
         "{{FAQ_BLOCK}}": faq_html,
         "{{FAQ_JSONLD}}": faq_jsonld,
@@ -1412,7 +1467,9 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         "{{OG_IMAGE_WIDTH}}": og_image_width,
         "{{OG_IMAGE_HEIGHT}}": og_image_height,
         "{{OG_IMAGE_ALT}}": escape_html(og_image_alt),
-        "{{HERO_IMAGE_BLOCK}}": hero_block,
+        "{{HERO_MEDIA_BLOCK}}": hero_media_block,
+        "{{ARTICLE_TAG}}": escape_html(article_tag),
+        "{{UI_IN_THIS_ARTICLE}}": ui.get("in_this_article", "В этой статье"),
         # ----- Stage 3 i18n placeholders -----
         "{{HTML_LANG}}": lang_cfg["html_lang"],
         "{{OG_LOCALE}}": lang_cfg["og_locale"],
@@ -1441,6 +1498,7 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         "{{UI_AUTHOR_WRITTEN_BY}}": ui["author_written_by"],
         "{{UI_AUTHOR_ROLE}}": ui["author_role"],
         "{{UI_AUTHOR_BIO}}": ui["author_bio"],
+        "{{UI_AUTHOR_NAME}}": ui.get("author_name", "Никита Волошин"),
         "{{UI_CTA_HEADING_PREFIX}}": ui["cta_heading_prefix"],
         "{{UI_CTA_HEADING_SUFFIX}}": ui["cta_heading_suffix"],
         "{{UI_CTA_PARAGRAPH}}": ui["cta_paragraph"],
@@ -1502,7 +1560,7 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     # Update sitemap (with hreflang pair if translation_of is set) and blog index.
     # Both write URLs, so they need publish_slug.
     update_sitemap(publish_slug, today_iso, lang_cfg, translation_of=translation_of)
-    update_blog_index(publish_slug, h1_title, meta_description, date_published, reading_time, lang_cfg)
+    update_blog_index(publish_slug, h1_title, meta_description, date_published, reading_time, lang_cfg, article_tag)
 
     # Refresh Related blocks on this language's format pages
     refreshed_posts = get_existing_blog_posts(lang_cfg["blog_dir"], lang_cfg["taxonomy"])

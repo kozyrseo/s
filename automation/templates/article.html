@@ -277,6 +277,9 @@ details.faq-item .faq-answer {
 </head>
 <body>
 
+<div class="kf-progress" id="kf-progress"></div>
+<div class="suit-bg" aria-hidden="true"></div>
+
 <a class="skip-link" href="#main">{{UI_SKIP_LINK}}</a>
 
 <div class="suit-pattern" aria-hidden="true"></div>
@@ -332,37 +335,46 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 <article class="blog-post">
   <section>
     <div class="container" style="max-width:760px">
-      <div class="eyebrow">{{UI_ARTICLE_EYEBROW}}</div>
-      <h1>{{H1_TITLE}}</h1>
-      {{HERO_IMAGE_BLOCK}}
-      <p class="lede">{{LEDE}}</p>
-      <div class="article-meta">
-        <time datetime="{{DATE_PUBLISHED}}">{{DATE_PUBLISHED_DISPLAY}}</time>
-        <span>·</span>
-        <span>{{READING_TIME}} {{UI_MIN_READ}}</span>
-        <span>·</span>
-        <span>{{UI_BY_AUTHOR}}</span>
-        {{LAST_UPDATED_BLOCK}}
+      <div class="post-hero reveal">
+        {{HERO_MEDIA_BLOCK}}
+        <div class="post-hero__suit" aria-hidden="true">&#9824;</div>
+        <div class="post-hero__in">
+          <div class="post-hero__eyebrow"><span class="dotp"></span>{{UI_ARTICLE_EYEBROW}}</div>
+          <h1>{{H1_TITLE}}</h1>
+          <p class="post-hero__lede">{{LEDE}}</p>
+          <div class="post-hero__meta">
+            <span class="tag">{{ARTICLE_TAG}}</span><span class="dot"></span>
+            <time datetime="{{DATE_PUBLISHED}}">{{DATE_PUBLISHED_DISPLAY}}</time><span class="dot"></span>
+            <span>{{READING_TIME}} {{UI_MIN_READ}}</span>
+            {{LAST_UPDATED_BLOCK}}
+          </div>
+        </div>
       </div>
 
-      {{KEY_TAKEAWAYS_BLOCK}}
+      <div class="article-shell">
+        <div>
+          {{KEY_TAKEAWAYS_BLOCK}}
 
-      {{TOC_BLOCK}}
-
-      <div class="post-body" style="font-size:16.5px;line-height:1.85;color:var(--fg);">
+          <div class="post-body">
 
 {{ARTICLE_BODY_HTML}}
 
+          </div>
+        </div>
+        <aside class="toc-side" aria-label="{{UI_BREADCRUMB_BLOG}}">
+          <div class="toc-side__label">{{UI_IN_THIS_ARTICLE}}</div>
+          <ul class="toc-side__list" id="toc-list"></ul>
+        </aside>
       </div>
 
-      <aside class="author-box" data-author-box="kozyr" style="max-width:760px;margin:48px auto;padding:24px;border:1px solid var(--border);border-radius:14px;background:var(--surface);display:flex;gap:18px;align-items:flex-start;">
-        <div aria-hidden="true" style="flex:0 0 56px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#2A6BFF,#14358F);color:#fff;font:700 20px/56px 'Space Grotesk',sans-serif;text-align:center;letter-spacing:.5px;">K</div>
-        <div style="flex:1;min-width:0;">
-          <p style="margin:0 0 4px;font-weight:700;">{{UI_AUTHOR_WRITTEN_BY}} <a href="{{ABOUT_URL}}" rel="author" style="color:inherit;">команда KOZYR</a></p>
-          <p style="margin:0 0 6px;font-size:.85em;opacity:.7;">{{UI_AUTHOR_ROLE}}</p>
-          <p style="margin:0;font-size:.92em;opacity:.85;">{{UI_AUTHOR_BIO}}</p>
+      <div class="author-premium reveal">
+        <div class="author-premium__ava"><img src="{{BLOG_URL}}authors/nikita.webp" alt="{{UI_AUTHOR_NAME}}" width="72" height="72" loading="lazy"></div>
+        <div>
+          <div class="author-premium__name">{{UI_AUTHOR_NAME}}</div>
+          <div class="author-premium__role">{{UI_AUTHOR_ROLE}}</div>
+          <p class="author-premium__bio">{{UI_AUTHOR_BIO}}</p>
         </div>
-      </aside>
+      </div>
 
       {{FAQ_BLOCK}}
     </div>
@@ -442,5 +454,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 
 <!-- Telegram-канал заложен, но пока выключен. Блок i18n безвреден. -->
 {{KOZYR_I18N_BLOCK}}
+<script src="{{SITE_ORIGIN}}/partners.js" defer></script>
+<script src="{{BLOG_URL}}blog-enhance.js" defer></script>
 </body>
 </html>

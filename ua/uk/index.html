@@ -2668,6 +2668,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <a href="/ua/uk/rooms/pokerbet/">PokerBet</a>
       <a href="/ua/uk/clubs/klubok/">KlubOk</a>
       <a href="#compare">Порівняння</a>
+      <a href="/ua/uk/blog/">Блог</a>
       <a href="#faq">FAQ</a>
     </div>
     <div class="nav-actions">
@@ -3160,6 +3161,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <div class="footer-col">
         <h4>Допомога</h4>
         <ul>
+          <li><a href="/ua/uk/blog/">Блог</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li><a href="https://t.me/kozyr_support">Telegram-підтримка</a></li>
           <li><a href="mailto:support@kozyr.club">support@kozyr.club</a></li>
@@ -3184,6 +3186,9 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     </div>
   </div>
 </footer>
+
+<!-- Єдине джерело даних про партнерів -->
+<script src="/partners.js"></script>
 
 <script>
 // Kozyr Match calculator — Ukraine focus (PokerBet + KlubOk)
@@ -3409,7 +3414,13 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
   ];
 
   /* Единый источник данных для калькулятора Kozyr Match */
-  try { window.KOZYR_PARTNERS = LIVE_ROOMS; } catch (e) {}
+  /* Єдине джерело даних: якщо завантажено /partners.js — беремо його,
+     інакше — інлайновий LIVE_ROOMS як fallback. */
+  if (window.KOZYR_PARTNERS && window.KOZYR_PARTNERS.length) {
+    LIVE_ROOMS = window.KOZYR_PARTNERS;
+  } else {
+    try { window.KOZYR_PARTNERS = LIVE_ROOMS; } catch (e) {}
+  }
 
   /* ---------- Демо-набор (чтобы увидеть фильтры в работе) ---------- */
 

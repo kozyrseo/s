@@ -195,13 +195,64 @@ def _ol_to_flow(section_html: str) -> str:
 # ─────────────────────────────────────────────────────────────────────────
 # Точка входа
 # ─────────────────────────────────────────────────────────────────────────
+def _add_dropcap(html: str) -> str:
+    """Дать первому абзацу класс lede-lead (буквица)."""
+    if "lede-lead" in html:
+        return html
+    return re.sub(r"<p>", '<p class="lede-lead">', html, count=1)
+
+
+def _wrap_tables(html: str) -> str:
+    """Обернуть каждую таблицу в .kf-tablewrap (горизонтальный скролл + рамка)."""
+    def repl(m):
+        return '<div class="kf-tablewrap reveal">' + m.group(0) + "</div>"
+    # не оборачивать повторно
+    html = re.sub(r"<table\b.*?</table>", repl, html, flags=re.DOTALL)
+    return html
+
+
+# Маркер партнёр-блока: генератор ставит [[PARTNERS]] или [[PARTNERS:ids=a,b]]
+_PARTNERS_RE = re.compile(r"<p>\s*\[\[PARTNERS(?::([^\]]+))?\]\]\s*</p>|\[\[PARTNERS(?::([^\]]+))?\]\]")
+
+
+def _insert_partners(html: str, lang: str) -> str:
+    """Заменить маркер [[PARTNERS]] на самозаполняемый партнёр-блок."""
+    label = {"ru": "Проверенные площадки KOZYR", "uk": "Перевірені майданчики KOZYR"}.get(lang, "Проверенные площадки KOZYR")
+    alllbl = {"ru": "Весь каталог →", "uk": "Весь каталог →"}.get(lang, "Весь каталог →")
+    note = {"ru": "Список обновляется автоматически из каталога KOZYR — здесь всегда актуальные партнёры и условия.",
+            "uk": "Список оновлюється автоматично з каталогу KOZYR — тут завжди актуальні партнери та умови."}.get(lang, "")
+
+    def repl(m):
+        opts = m.group(1) or m.group(2) or ""
+        ids_attr = ""
+        limit_attr = ' data-limit="2"'
+        for part in opts.split(","):
+            part = part.strip()
+            if part.startswith("ids="):
+                ids_attr = f' data-ids="{part[4:]}"'
+            elif part.startswith("limit="):
+                limit_attr = f' data-limit="{part[6:]}"'
+        return (
+            '<div class="partners-wrap reveal">'
+            f'<div class="partners-head"><span class="partners-head__label">{label}</span>'
+            f'<a href="/ua/" class="partners-head__all">{alllbl}</a></div>'
+            f'<div class="partners" data-partners{limit_attr}{ids_attr}></div>'
+            f'<p class="partners-note">{note}</p>'
+            '</div>'
+        )
+    return _PARTNERS_RE.sub(repl, html)
+
+
 def enhance_body_html(html: str, lang: str = "ru") -> str:
     """Применить все безопасные улучшения к телу статьи."""
     if not html:
         return html
     lang = "uk" if str(lang).lower().startswith("uk") else "ru"
-    html = _enhance_tables(html)
-    html = _enhance_step_flows(html, lang)
+    html = _insert_partners(html, lang)   # маркер → партнёр-блок
+    html = _enhance_tables(html)          # да/нет подсветка, колонки
+    html = _enhance_step_flows(html, lang)  # списки-по-шагам → схема
+    html = _wrap_tables(html)             # обёртка таблиц в .kf-tablewrap
+    html = _add_dropcap(html)             # буквица первого абзаца
     return html
 
 

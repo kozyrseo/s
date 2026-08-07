@@ -1253,6 +1253,16 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     default_section = {"ru": "Рейкбек и сделки"}.get(lang, "Рейкбек и сделки")
     article_section = lang_cfg["article_section_map"].get(target_page, default_section)
 
+    # Короткий тег для пилюли в hero (из topic-тега, иначе — раздел).
+    _tags = meta.get("tags", []) or []
+    _topic = next((t.split(":", 1)[1] for t in _tags if t.startswith("topic:")), "")
+    _tag_labels = {
+        "rakeback": "Рейкбек", "clubs": "Клубы", "rooms": "Румы",
+        "comparison": "Сравнение", "bankroll": "Банкролл", "strategy": "Стратегия",
+        "payments": "Платежи", "legal": "Легальность",
+    }
+    article_tag = _tag_labels.get(_topic, article_section.split()[0] if article_section else "Блог")
+
     # Keywords for schema
     secondary_kw = topic_data.get("secondary_keywords", "")
     all_keywords = ", ".join(filter(None, [primary_kw, secondary_kw]))
@@ -1290,11 +1300,12 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         # Localized alt text
         alt_prefix = {"ru": "Иллюстрация к статье:"}.get(lang, "Иллюстрация к статье:")
         og_image_alt = f"{alt_prefix} {h1_title}"
-        hero_block = (
-            f'<figure class="article-hero">'
+        # Премиум-hero: фото уходит фоном в тёмный блок (см. .post-hero__media).
+        hero_media_block = (
+            f'<div class="post-hero__media">'
             f'<img src="{pending_hero.name}" alt="{escape_html(og_image_alt)}" '
             f'width="1536" height="1024" loading="eager" fetchpriority="high">'
-            f'</figure>'
+            f'</div>'
         )
         print(f"✅ Hero image copied: {published_hero}")
     else:
@@ -1302,8 +1313,9 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         og_image_width = "1200"
         og_image_height = "630"
         og_image_alt = h1_title
-        hero_block = ""
-        print("ℹ️  No hero image — using site default og-image.png")
+        # Без фото тёмный hero всё равно премиален — только масть-паттерн.
+        hero_media_block = ""
+        print("ℹ️  No hero image — dark hero with suit pattern only")
 
     # ----- hreflang block (only if this article has a paired translation) -----
     # Uses publish_slug so alternates point at the actual on-site URL.
@@ -1398,7 +1410,6 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         "{{ARTICLE_SECTION}}": article_section,
         "{{KEYWORDS_JSON}}": escape_json_string(all_keywords),
         "{{KEY_TAKEAWAYS_BLOCK}}": key_takeaways_html,
-        "{{TOC_BLOCK}}": toc_html,
         "{{ARTICLE_BODY_HTML}}": body_html,
         "{{FAQ_BLOCK}}": faq_html,
         "{{FAQ_JSONLD}}": faq_jsonld,
@@ -1408,7 +1419,9 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         "{{OG_IMAGE_WIDTH}}": og_image_width,
         "{{OG_IMAGE_HEIGHT}}": og_image_height,
         "{{OG_IMAGE_ALT}}": escape_html(og_image_alt),
-        "{{HERO_IMAGE_BLOCK}}": hero_block,
+        "{{HERO_MEDIA_BLOCK}}": hero_media_block,
+        "{{ARTICLE_TAG}}": escape_html(article_tag),
+        "{{UI_IN_THIS_ARTICLE}}": ui.get("in_this_article", "В этой статье"),
         # ----- Stage 3 i18n placeholders -----
         "{{HTML_LANG}}": lang_cfg["html_lang"],
         "{{OG_LOCALE}}": lang_cfg["og_locale"],
