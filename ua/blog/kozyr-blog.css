@@ -214,20 +214,49 @@ a:hover { color: var(--accent-deep); text-decoration: underline; }
 .author-box p:first-child { color: var(--ink); }
 
 /* ---------- FAQ ---------- */
-.faq-section { margin: 48px 0 8px; }
+.faq-section { margin: 56px 0 8px; }
 .faq-section h2 {
-  font-family: var(--f-display); font-size: clamp(22px,3vw,28px); margin-bottom: 18px;
+  font-family: var(--f-display); font-size: clamp(24px,3.2vw,30px);
+  margin-bottom: 22px; letter-spacing: -.02em;
 }
-details.faq-item { border-bottom: 1px solid var(--border); padding: 16px 0; }
-details.faq-item:first-of-type { border-top: 1px solid var(--border); }
-details.faq-item summary {
-  cursor: pointer; font-weight: 600; font-size: 16.5px; color: var(--ink);
-  list-style: none; display: flex; justify-content: space-between; gap: 12px;
+/* премиум-аккордеон: работает и с .faq-item, и с обычными <details> */
+.faq-section details {
+  background: var(--surface, #fff); border: 1px solid var(--border);
+  border-radius: var(--r-lg, 16px); margin-bottom: 12px; overflow: hidden;
+  transition: border-color .2s, box-shadow .2s;
 }
-details.faq-item summary::-webkit-details-marker { display: none; }
-details.faq-item summary::after { content: "+"; color: var(--accent); font-size: 20px; }
-details.faq-item[open] summary::after { content: "–"; }
-details.faq-item p { margin: 12px 0 0; color: var(--ink-2); }
+.faq-section details:hover { border-color: var(--border-2, #C9D0E0); }
+.faq-section details[open] {
+  border-color: rgba(46,107,255,.28);
+  box-shadow: 0 12px 30px rgba(10,17,40,.07);
+}
+.faq-section summary {
+  cursor: pointer; list-style: none; position: relative;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 20px 24px; font-family: var(--f-display); font-weight: 600;
+  font-size: 17px; color: var(--ink); line-height: 1.4;
+  transition: color .15s;
+}
+.faq-section summary:hover { color: var(--accent, #2E6BFF); }
+.faq-section summary::-webkit-details-marker { display: none; }
+/* иконка + в круге, поворачивается при открытии */
+.faq-section summary::after {
+  content: ""; flex: 0 0 28px; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--accent-tint, #E7EEFF);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M7 1v12M1 7h12' stroke='%232E6BFF' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: center;
+  transition: transform .25s ease, background .2s;
+}
+.faq-section details[open] summary::after {
+  transform: rotate(135deg); background-color: var(--accent, #2E6BFF);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath d='M7 1v12M1 7h12' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+.faq-section details > p,
+.faq-section details > div {
+  margin: 0; padding: 0 24px 22px; color: var(--ink-2); line-height: 1.65; font-size: 15.5px;
+}
+.faq-section details[open] > p { animation: faqReveal .3s ease; }
+@keyframes faqReveal { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
 
 /* ---------- Финальный CTA ---------- */
 .final-cta {
