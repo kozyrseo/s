@@ -2516,6 +2516,8 @@ body::before {
   display: flex; align-items: center; justify-content: center;
   box-shadow: var(--shadow-sm); flex-shrink: 0;
 }
+.compare-logo--img { background: none !important; overflow: hidden; border: 1px solid var(--line); }
+.compare-logo--img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .compare-name { font-family: var(--f-display); font-weight: 700; font-size: 19px; letter-spacing: -0.02em; }
 .compare-sub { font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin-top: 3px; }
 
@@ -2931,13 +2933,13 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
             <th class="compare-param"></th>
             <th>
               <div class="compare-room">
-                <div class="compare-logo" style="background:linear-gradient(135deg,#2668FF,#1E52D9)">PB</div>
+                <div class="compare-logo compare-logo--img"><img src="/ua/blog/logos/pokerbet.webp" alt="PokerBet" width="44" height="44"></div>
                 <div><div class="compare-name">PokerBet</div><div class="compare-sub">Лицензия КРАИЛ</div></div>
               </div>
             </th>
             <th>
               <div class="compare-room">
-                <div class="compare-logo" style="background:linear-gradient(135deg,#229ED9,#1a89bd)">KO</div>
+                <div class="compare-logo compare-logo--img"><img src="/ua/blog/logos/klubok.webp" alt="KlubOk" width="44" height="44"></div>
                 <div><div class="compare-name">KlubOk</div><div class="compare-sub">Клуб в ClubGG</div></div>
               </div>
             </th>

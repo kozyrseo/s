@@ -872,6 +872,8 @@ img, svg { display: block; }
   font-family: var(--f-display); font-weight: 700; font-size: 14px;
   color: #fff; letter-spacing: -0.02em; flex-shrink: 0;
 }
+.kf-logo--img { background: none !important; overflow: hidden; border: 1px solid var(--line, #E3E7F1); }
+.kf-logo--img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .kf-room-name {
   font-family: var(--f-display);
   font-weight: 700; font-size: 16px;
@@ -2516,6 +2518,8 @@ body::before {
   display: flex; align-items: center; justify-content: center;
   box-shadow: var(--shadow-sm); flex-shrink: 0;
 }
+.compare-logo--img { background: none !important; overflow: hidden; border: 1px solid var(--line); }
+.compare-logo--img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .compare-name { font-family: var(--f-display); font-weight: 700; font-size: 19px; letter-spacing: -0.02em; }
 .compare-sub { font-family: var(--f-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin-top: 3px; }
 
@@ -2931,13 +2935,13 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
             <th class="compare-param"></th>
             <th>
               <div class="compare-room">
-                <div class="compare-logo" style="background:linear-gradient(135deg,#2668FF,#1E52D9)">PB</div>
+                <div class="compare-logo compare-logo--img"><img src="/ua/blog/logos/pokerbet.webp" alt="PokerBet" width="44" height="44"></div>
                 <div><div class="compare-name">PokerBet</div><div class="compare-sub">Ліцензія КРАІЛ</div></div>
               </div>
             </th>
             <th>
               <div class="compare-room">
-                <div class="compare-logo" style="background:linear-gradient(135deg,#229ED9,#1a89bd)">KO</div>
+                <div class="compare-logo compare-logo--img"><img src="/ua/blog/logos/klubok.webp" alt="KlubOk" width="44" height="44"></div>
                 <div><div class="compare-name">KlubOk</div><div class="compare-sub">Клуб у ClubGG</div></div>
               </div>
             </th>
@@ -2952,7 +2956,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
           <tr><th scope="row">Платіжки</th><td>картка / крипта</td><td>переказ / крипта</td></tr>
           <tr><th scope="row">Мін. депозит</th><td>300 ₴</td><td class="compare-best">100 ₴</td></tr>
           <tr><th scope="row">Термін виведення</th><td class="pending">уточнюється</td><td class="compare-best">до 1 години</td></tr>
-          <tr><th scope="row">Верификация</th><td>обов'язкова (паспорт + ІПН)</td><td>не потрібна*</td></tr>
+          <tr><th scope="row">Верифікація</th><td>обов'язкова (паспорт + ІПН)</td><td>не потрібна*</td></tr>
           <tr><th scope="row">Поля</th><td>фішові, слабкі опоненти</td><td>фішові, слабкі опоненти</td></tr>
           <tr><th scope="row">Валюта</th><td>гривня (UAH)</td><td>гривня (1 фішка = 1 ₴)</td></tr>
           <tr>
@@ -3408,7 +3412,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       payoutLabel: '15–60 хвилин',
       currency: 'UAH',
       license: 'Офшорна юрисдикція',
-      note: 'Приватний клуб у ClubGG. М'які поля, розрахунки в гривні через Telegram.',
+      note: 'Приватний клуб у ClubGG. М’які поля, розрахунки в гривні через Telegram.',
       url: '/ua/clubs/klubok/'
     }
   ];
@@ -3678,6 +3682,11 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
   }
 
   function logoHtml(room) {
+    var img = (room.card && room.card.logoImg) || room.logoImg;
+    if (img) {
+      return '<div class="kf-logo kf-logo--img" aria-hidden="true"><img src="' + img +
+        '" alt="" width="44" height="44" loading="lazy"></div>';
+    }
     return '<div class="kf-logo" style="background:linear-gradient(135deg,' + room.logo.from + ',' + room.logo.to + ')" aria-hidden="true">' + esc(room.logo.text) + '</div>';
   }
 
