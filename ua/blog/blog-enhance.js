@@ -90,3 +90,27 @@
     setTimeout(function () { revEls.forEach(function (el) { el.classList.add("in"); }); }, 1500);
   });
 })();
+
+/* ---------- авто-статистика блога (статьи / партнёры / год) ---------- */
+(function () {
+  function updateBlogStats() {
+    var box = document.querySelector('.blog-stats');
+    if (!box) return;
+    // статьи = число карточек в индексе
+    var articles = document.querySelectorAll('.post-grid .post-card').length;
+    var elA = box.querySelector('[data-stat="articles"]');
+    if (elA && articles > 0) elA.textContent = articles;
+    // партнёры = из единого источника KOZYR_PARTNERS
+    var partners = (window.KOZYR_PARTNERS && window.KOZYR_PARTNERS.length) || 0;
+    var elP = box.querySelector('[data-stat="partners"]');
+    if (elP && partners > 0) elP.textContent = partners;
+    // год = текущий
+    var elY = box.querySelector('[data-stat="year"]');
+    if (elY) elY.textContent = new Date().getFullYear();
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function(){ setTimeout(updateBlogStats, 60); });
+  } else {
+    setTimeout(updateBlogStats, 60);
+  }
+})();
