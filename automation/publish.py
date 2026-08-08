@@ -458,12 +458,23 @@ def get_existing_blog_posts(blog_dir: Path, taxonomy_path: Path) -> list[dict]:
         # Tags from taxonomy — empty list if untracked
         tags = list(tax_entry.get("tags", []))
 
+        # hero-фото для премиум-карточки related + короткий тег
+        has_hero = (child / "hero.webp").exists()
+        _topic = next((t.split(":", 1)[1] for t in tags if t.startswith("topic:")), "")
+        _tag_labels = {"rakeback": "Рейкбек", "clubs": "Клубы", "club-review": "Клубы",
+                       "rooms": "Румы", "room-review": "Обзор", "comparison": "Сравнение",
+                       "bankroll": "Банкролл", "strategy": "Стратегия", "beginners": "Новичкам",
+                       "payments": "Платежи", "legal": "Легальность"}
+        tag_label = _tag_labels.get(_topic, "Блог")
+
         posts.append({
             "slug": slug,
             "title": title,
             "description": description,
             "date": date,
             "tags": tags,
+            "has_hero": has_hero,
+            "tag_label": tag_label,
         })
     return posts
 
@@ -504,11 +515,24 @@ def render_related(
         chosen = others[:3]
 
     url_prefix = lang_cfg["url_prefix"]
+    read_word = "Читать" if not url_prefix.strip("/").endswith("uk/blog") and "/uk/" not in url_prefix else "Читати"
+    if "/uk/" in url_prefix:
+        read_word = "Читати"
     cards = []
     for p in chosen:
+        cover = ""
+        if p.get("has_hero"):
+            cover = (f'<img src="{url_prefix}/{p["slug"]}/hero.webp" alt="" loading="lazy" '
+                     f'style="width:100%;height:100%;object-fit:cover;display:block">')
+        tag_label = escape_html(p.get("tag_label", "Блог"))
         cards.append(
-            f'''<article class="card"><h3><a href="{url_prefix}/{p["slug"]}/">'''
-            f'''{escape_html(p["title"])}</a></h3><p>{escape_html(p["description"])}</p></article>'''
+            f'''<a href="{url_prefix}/{p["slug"]}/" class="post-card">'''
+            f'''<div class="post-card__cover"><span class="post-card__tag">{tag_label}</span>{cover}</div>'''
+            f'''<div class="post-card__body">'''
+            f'''<h3 class="post-card__title">{escape_html(p["title"])}</h3>'''
+            f'''<p class="post-card__excerpt">{escape_html(p["description"])}</p>'''
+            f'''<span class="post-card__more">{read_word} →</span>'''
+            f'''</div></a>'''
         )
 
     # If we have fewer than 3, fill with format-page cards. Diversity-aware: prefer
