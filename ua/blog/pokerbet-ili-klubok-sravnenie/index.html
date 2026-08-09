@@ -278,6 +278,24 @@ details.faq-item .faq-answer {
   color: var(--fg-mute);
   font-style: italic;
 }
+
+/* Автор в шапке статьи (компактный чип для E-E-A-T сигнала) */
+.post-hero__author {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--fg);
+  font-weight: 500;
+}
+.post-hero__author img {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+@media (max-width: 480px) {
+  .post-hero__author img { width: 20px; height: 20px; }
+}
 </style>
 </head>
 <body>
@@ -353,6 +371,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
           <p class="post-hero__lede">Выбор между PokerBet или KlubOk — это на самом деле выбор между двумя разными моделями онлайн-покера в Украине: легальным открытым румом и приватным клубом. У каждой свои сильные стороны, и «лучше» здесь зависит от того, что важнее именно тебе — прозрачность и легальность или высокий рейкбек и мягкие поля.</p>
           <div class="post-hero__meta">
             <span class="tag">Рейкбек</span><span class="dot"></span>
+            <span class="post-hero__author"><img src="/ua/blog/authors/nikita.webp" alt="Никита Волошин" width="24" height="24" loading="lazy"><span>Никита Волошин</span></span><span class="dot"></span>
             <time datetime="2026-07-27">27 июля 2026</time><span class="dot"></span>
             <span>10 мин чтения</span>
             

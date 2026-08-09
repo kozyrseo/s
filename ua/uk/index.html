@@ -902,6 +902,47 @@ img, svg { display: block; }
 .kf-tagline--demo { background: var(--hot-tint); color: var(--hot); }
 .kf-tagline--top  { background: var(--accent-tint); color: var(--accent-deep); }
 
+/* «Приймає / не приймає вашу країну» — поруч із прапорами в мета-рядку.
+   Компактний чіп, що підхоплює поточне гео (через KozyrGeo). */
+.kf-accept {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px 2px 5px;
+  border-radius: 999px;
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+.kf-accept .fi { width: 11px; height: 8px; border-radius: 2px; margin-left: 2px; }
+.kf-accept-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 12px; height: 12px; border-radius: 50%;
+  font-size: 9px; line-height: 1;
+  font-family: var(--f-body); font-weight: 700;
+}
+.kf-accept--yes {
+  background: rgba(38, 166, 91, 0.10);
+  color: #1B7A44;
+  border-color: rgba(38, 166, 91, 0.20);
+}
+.kf-accept--yes .kf-accept-icon { background: #26A65B; color: #fff; }
+.kf-accept--no {
+  background: var(--surface-alt);
+  color: var(--ink-3);
+  border-color: var(--border);
+}
+.kf-accept--no .kf-accept-icon { background: var(--ink-3); color: #fff; }
+
+@media (max-width: 640px) {
+  .kf-accept-text { display: none; }
+  .kf-accept { padding: 2px 5px; }
+}
+
 /* score */
 .kf-score {
   display: inline-flex;
@@ -2463,6 +2504,94 @@ body::before {
 }
 
 
+/* ===== TOPICS (тематические подборки — гео-лендинги) ===== */
+
+.topics {
+  padding: 90px 0;
+  background: var(--surface);
+}
+.topics-head { max-width: 640px; margin-bottom: 32px; }
+.topics-title {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 12px 0 0;
+}
+.topics-title em {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+.topics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.topic-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px 22px;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.18s ease, background 0.18s, border-color 0.18s, box-shadow 0.18s;
+}
+.topic-card:hover {
+  transform: translateY(-3px);
+  background: var(--surface);
+  border-color: var(--accent);
+  box-shadow: 0 12px 30px rgba(38, 104, 255, 0.10);
+}
+.topic-card-icon {
+  flex-shrink: 0;
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  background: var(--accent-tint);
+  color: var(--accent-deep);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Instrument Serif', serif;
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1;
+}
+.topic-card-body { flex: 1; min-width: 0; }
+.topic-card-body h3 {
+  font-family: var(--f-display);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0 0 4px;
+  color: var(--ink);
+}
+.topic-card-body p {
+  font-family: var(--f-body);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--ink-2);
+  margin: 0;
+}
+.topic-card-arrow {
+  flex-shrink: 0;
+  color: var(--ink-3);
+  font-size: 20px;
+  transition: color 0.18s, transform 0.18s;
+}
+.topic-card:hover .topic-card-arrow {
+  color: var(--accent);
+  transform: translateX(4px);
+}
+@media (max-width: 900px) {
+  .topics-grid { grid-template-columns: 1fr; gap: 12px; }
+  .topics { padding: 64px 0; }
+  .topic-card { padding: 18px; }
+}
+
 /* ===== ROOM COMPARISON (main page) ===== */
 
 .compare {
@@ -2922,6 +3051,42 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
   </div>
 </section>
 
+<!-- Тематичні добірки — компактні посилання на гео-лендинги -->
+<section class="topics" aria-labelledby="topics-title">
+  <div class="wrap">
+    <div class="topics-head">
+      <div class="section-tag"><span>Добірки під задачу</span></div>
+      <h2 id="topics-title" class="topics-title">Тематичні <em>гайди</em></h2>
+    </div>
+    <div class="topics-grid">
+      <a href="/ua/uk/rooms/na-grivnu/" class="topic-card">
+        <div class="topic-card-icon" aria-hidden="true">₴</div>
+        <div class="topic-card-body">
+          <h3>Гра в гривні</h3>
+          <p>Руми та клуби з UAH-депозитом без обмінників і крипти</p>
+        </div>
+        <span class="topic-card-arrow" aria-hidden="true">→</span>
+      </a>
+      <a href="/ua/uk/rooms/dlya-novichkov/" class="topic-card">
+        <div class="topic-card-icon" aria-hidden="true">◆</div>
+        <div class="topic-card-body">
+          <h3>Для новачків</h3>
+          <p>Мікро-ліміти від NL2, легкий вхід, проста верифікація</p>
+        </div>
+        <span class="topic-card-arrow" aria-hidden="true">→</span>
+      </a>
+      <a href="/ua/uk/rooms/mobilnye/" class="topic-card">
+        <div class="topic-card-icon" aria-hidden="true">▢</div>
+        <div class="topic-card-body">
+          <h3>Мобільні застосунки</h3>
+          <p>iOS і Android з прямою підтримкою українських карток</p>
+        </div>
+        <span class="topic-card-arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
 <section class="compare" aria-labelledby="compare-title" id="compare">
   <div class="wrap">
     <div class="compare-head">
@@ -3143,9 +3308,9 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
         </a>
         <p>Платформа угод у покер-румах. Повертаємо гравцям до 75% рейка через прозорий калькулятор.</p>
         <div class="footer-social">
-          <a href="https://t.me/kozyr_club" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.5 4.5L2.5 12l6 2 2 6 3-4 5 4 3-15z"/></svg></a>
-          <a href="https://t.me/kozyr_club" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 4H21l-6.6 7.5L22 20h-6.3l-4.9-6.4L5 20H3l7.1-8.1L2 4h6.4l4.5 5.9L18.9 4z"/></svg></a>
-          <a href="https://t.me/kozyr_club" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12s0-3.5-.5-5c-.3-1-1-1.7-2-2-1.5-.5-7.5-.5-7.5-.5s-6 0-7.5.5c-1 .3-1.7 1-2 2C2 8.5 2 12 2 12s0 3.5.5 5c.3 1 1 1.7 2 2 1.5.5 7.5.5 7.5.5s6 0 7.5-.5c1-.3 1.7-1 2-2 .5-1.5.5-5 .5-5zM10 9l5 3-5 3V9z"/></svg></a>
+          <a href="https://t.me/kozyr_support" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.5 4.5L2.5 12l6 2 2 6 3-4 5 4 3-15z"/></svg></a>
+          <a href="https://t.me/kozyr_support" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 4H21l-6.6 7.5L22 20h-6.3l-4.9-6.4L5 20H3l7.1-8.1L2 4h6.4l4.5 5.9L18.9 4z"/></svg></a>
+          <a href="https://t.me/kozyr_support" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12s0-3.5-.5-5c-.3-1-1-1.7-2-2-1.5-.5-7.5-.5-7.5-.5s-6 0-7.5.5c-1 .3-1.7 1-2 2C2 8.5 2 12 2 12s0 3.5.5 5c.3 1 1 1.7 2 2 1.5.5 7.5.5 7.5.5s6 0 7.5-.5c1-.3 1.7-1 2-2 .5-1.5.5-5 .5-5zM10 9l5 3-5 3V9z"/></svg></a>
         </div>
       </div>
       <div class="footer-col">
@@ -3169,9 +3334,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
         <ul>
           <li><a href="/ua/uk/blog/">Блог</a></li>
           <li><a href="#faq">FAQ</a></li>
-          <li><a href="https://t.me/kozyr_support">Telegram-підтримка</a></li>
-          <li><a href="mailto:support@kozyr.club">support@kozyr.club</a></li>
-        </ul>
+          <li><a href="https://t.me/kozyr_support">Telegram-підтримка</a></li>        </ul>
       </div>
       <div class="footer-col">
         <h4>Юридичне</h4>
@@ -3320,11 +3483,41 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
 
   var DICT = {
     countries: {
-      ua:  { label: 'Україна',     flag: 'ua' },
-      pl:  { label: 'Польща',      flag: 'pl' },
-      de:  { label: 'Німеччина',    flag: 'de' },
-      cz:  { label: 'Чехія',       flag: 'cz' },
-      int: { label: 'International', flag: null }
+      /* активні та в розробці — вже були */
+      ua:  { label: 'Україна',       flag: 'ua' },
+      pl:  { label: 'Польща',        flag: 'pl' },
+      de:  { label: 'Німеччина',     flag: 'de' },
+      cz:  { label: 'Чехія',         flag: 'cz' },
+      int: { label: 'International', flag: null },
+      /* СНД — для коректної роботи плашки acceptance */
+      ru:  { label: 'Росія',         flag: 'ru' },
+      by:  { label: 'Білорусь',      flag: 'by' },
+      kz:  { label: 'Казахстан',     flag: 'kz' },
+      md:  { label: 'Молдова',       flag: 'md' },
+      ge:  { label: 'Грузія',        flag: 'ge' },
+      am:  { label: 'Вірменія',      flag: 'am' },
+      az:  { label: 'Азербайджан',   flag: 'az' },
+      /* Балтія */
+      lt:  { label: 'Литва',         flag: 'lt' },
+      lv:  { label: 'Латвія',        flag: 'lv' },
+      ee:  { label: 'Естонія',       flag: 'ee' },
+      /* Інші типові EU */
+      sk:  { label: 'Словаччина',    flag: 'sk' },
+      hu:  { label: 'Угорщина',      flag: 'hu' },
+      ro:  { label: 'Румунія',       flag: 'ro' },
+      bg:  { label: 'Болгарія',      flag: 'bg' },
+      at:  { label: 'Австрія',       flag: 'at' },
+      it:  { label: 'Італія',        flag: 'it' },
+      es:  { label: 'Іспанія',       flag: 'es' },
+      pt:  { label: 'Португалія',    flag: 'pt' },
+      fr:  { label: 'Франція',       flag: 'fr' },
+      nl:  { label: 'Нідерланди',    flag: 'nl' },
+      be:  { label: 'Бельгія',       flag: 'be' },
+      gb:  { label: 'Велика Британія', flag: 'gb' },
+      ie:  { label: 'Ірландія',      flag: 'ie' },
+      tr:  { label: 'Туреччина',     flag: 'tr' },
+      il:  { label: 'Ізраїль',       flag: 'il' },
+      cy:  { label: 'Кіпр',          flag: 'cy' }
     },
     games: {
       cash:  { label: 'Кеш' },
@@ -3544,6 +3737,26 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     return '<span aria-hidden="true" style="font-size:11px;color:var(--ink-3)">◈</span>';
   }
 
+  /* Плашка "Приймає вашу країну / Не приймає" — поруч із прапорами.
+     Повертає порожній рядок, якщо гео ще не прийшло — картка перемалюється
+     за подією kozyr:geo (див. слухач нижче). */
+  function acceptanceBadge(room) {
+    var geo = (window.KozyrGeo && window.KozyrGeo.get) ? window.KozyrGeo.get() : null;
+    if (!geo) return '';
+    var d = DICT.countries[geo];
+    if (!d) return '';
+    var accepted = (room.countries || []).indexOf(geo) !== -1;
+    var flag = d.flag ? '<span class="fi fi-' + d.flag + '"></span>' : '';
+    return '<span class="kf-accept ' + (accepted ? 'kf-accept--yes' : 'kf-accept--no') +
+      '" title="' + (accepted
+        ? 'Партнер працює з гравцями з регіону: ' + esc(d.label)
+        : 'Партнер не обслуговує гравців з регіону: ' + esc(d.label)) + '">' +
+      '<span class="kf-accept-icon" aria-hidden="true">' + (accepted ? '✓' : '✕') + '</span>' +
+      '<span class="kf-accept-text">' + (accepted ? 'приймає' : 'не приймає') + '</span>' +
+      flag +
+    '</span>';
+  }
+
   function checkSvg() {
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2"><path d="M20 6L9 17l-5-5"/></svg>';
   }
@@ -3699,7 +3912,9 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
          rank === 0 ? ' <span class="kf-tagline kf-tagline--top">топ</span>' : '') +
       '</div>' +
       '<div class="kf-room-meta">' + room.countries.map(flagHtml).join('') +
-        '<span>' + esc(labelOf('access', room.access)) + ' · ' + esc(room.currency) + '</span></div>' +
+        '<span>' + esc(labelOf('access', room.access)) + ' · ' + esc(room.currency) + '</span>' +
+        acceptanceBadge(room) +
+      '</div>' +
       '</div></div>';
   }
 
@@ -4137,6 +4352,15 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     renderQuickpick();
     draw();
 
+    /* Плашка "Приймає вашу країну" на картках може бути порожньою при
+       першому рендері — якщо гео ще не прийшло. Перемалюємо, коли прийде. */
+    if (window.KozyrGeo) {
+      window.KozyrGeo.onReady(function (c) {
+        if (c) draw();
+      });
+    }
+    window.addEventListener('kozyr:geo', function () { draw(); });
+
     // клики по заголовкам колонок
     $('kf-thead').addEventListener('click', function (e) {
       var b = e.target.closest('.kf-col');
@@ -4371,6 +4595,7 @@ document.getElementById('geo-banner-close').addEventListener('click', () => {
 });
 </script>
 
+  <script defer src="/assets/kozyr-geo.js?v=1"></script>
   <script defer src="/assets/kozyr-enhance.js?v=10"></script>
 </body>
 </html>

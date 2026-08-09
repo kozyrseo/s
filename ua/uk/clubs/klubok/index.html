@@ -810,6 +810,10 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
         </div>
       </div>
 
+      <div class="ka-block" data-accept-countries="ua"></div>
+
+      <div class="room-facts-reviews" data-reviews-summary="klubok"></div>
+
       <dl>
         <div class="fact">
           <dt>Рейкбек</dt>
@@ -872,6 +876,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <li><a href="#bonus">Бонуси та промо</a></li>
       <li><a href="#legality">Легальний статус</a></li>
       <li><a href="#pros-cons">Плюси та мінуси</a></li>
+      <li><a href="#reviews">Відгуки</a></li>
       <li><a href="#faq">FAQ</a></li>
     </ul>
   </aside>
@@ -1120,6 +1125,12 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
         </div>
       </div>
     </section>
+    <section id="reviews" style="margin-top: 64px;">
+      <h2>Що кажуть <em>гравці</em></h2>
+      <p>Реальні відгуки гравців, які пройшли через KOZYR. Всі "перевірено" підтверджені скріншотом депозиту або виводу — модеруються вручну.</p>
+      <div data-reviews="klubok" data-reviews-limit="3"></div>
+    </section>
+
 
     <section id="cta" style="margin-top: 64px;">
       <h2>Готовий увійти в <em>клуб</em>?</h2>
@@ -1268,10 +1279,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <div class="footer-col">
         <h4>Допомога</h4>
         <ul>
-          <li><a href="/ua/uk/#faq">FAQ</a></li>
-          <li><a href="mailto:support@kozyr.club">support@kozyr.club</a></li>
-          <li><a href="mailto:support@kozyr.club">support@kozyr.club</a></li>
-        </ul>
+          <li><a href="/ua/uk/#faq">FAQ</a></li>        </ul>
       </div>
       <div class="footer-col">
         <h4>Юридичне</h4>
@@ -1436,6 +1444,8 @@ document.querySelectorAll('.article-faq-item').forEach(item => {
   });
 })();
 </script>
+  <script defer src="/assets/kozyr-geo.js?v=1"></script>
+  <script defer src="/assets/kozyr-reviews.js?v=1"></script>
   <script defer src="/assets/kozyr-enhance.js?v=10"></script>
 </body>
 </html>

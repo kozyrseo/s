@@ -210,11 +210,133 @@
     });
   }
 
+  /* ---- Плашка «Принимает / не принимает вашу страну» --------------- */
+  /* Ищет на странице любой элемент с атрибутом data-accept-countries,
+     читает список кодов через запятую и рендерит внутрь него плашку,
+     привязанную к текущему гео из KozyrGeo. Перерендер по событию.
+
+     Пример разметки:
+       <div class="room-accept" data-accept-countries="ua"></div>
+     После инициализации внутри появится плашка со статусом и флагом. */
+  var COUNTRY_LABELS = {
+    ua: 'Украина', pl: 'Польша', de: 'Германия', cz: 'Чехия',
+    ru: 'Россия', by: 'Беларусь', kz: 'Казахстан', md: 'Молдова',
+    ge: 'Грузия', am: 'Армения', az: 'Азербайджан',
+    lt: 'Литва', lv: 'Латвия', ee: 'Эстония',
+    sk: 'Словакия', hu: 'Венгрия', ro: 'Румыния', bg: 'Болгария',
+    at: 'Австрия', it: 'Италия', es: 'Испания', pt: 'Португалия',
+    fr: 'Франция', nl: 'Нидерланды', be: 'Бельгия',
+    gb: 'Великобритания', ie: 'Ирландия',
+    tr: 'Турция', il: 'Израиль', cy: 'Кипр'
+  };
+
+  function acceptMarkerHtml(list) {
+    var geo = (window.KozyrGeo && window.KozyrGeo.get) ? window.KozyrGeo.get() : null;
+    if (!geo) return '';
+    var label = COUNTRY_LABELS[geo];
+    if (!label) return '';   /* не знаем страну — не мешаем */
+    var accepted = list.indexOf(geo) !== -1;
+    var flag = '<span class="fi fi-' + geo + '" aria-hidden="true"></span>';
+    var text = accepted
+      ? 'Принимает игроков из региона: ' + label
+      : 'Не принимает игроков из региона: ' + label;
+    return '<span class="ka ' + (accepted ? 'ka--yes' : 'ka--no') + '" title="' + text + '">' +
+      '<span class="ka__icon" aria-hidden="true">' + (accepted ? '✓' : '✕') + '</span>' +
+      '<span class="ka__text">' + (accepted ? 'Принимает вашу страну' : 'Не принимает вашу страну') + '</span>' +
+      flag +
+    '</span>';
+  }
+
+  function renderAcceptanceMarkers() {
+    var nodes = document.querySelectorAll('[data-accept-countries]');
+    if (!nodes.length) return;
+    nodes.forEach(function (el) {
+      var raw = el.getAttribute('data-accept-countries') || '';
+      var list = raw.split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+      var html = acceptMarkerHtml(list);
+      el.innerHTML = html;
+      /* если плашка пустая (гео не определилось) — прячем контейнер,
+         чтобы не оставалось «дырки» в вёрстке */
+      el.style.display = html ? '' : 'none';
+    });
+  }
+
+  /* ---- Плавающая Telegram-кнопка ---------------------------------- */
+  /* Появляется через 2 секунды после загрузки, ведёт в @kozyr_support.
+     Если пользователь закрыл через ×, скрываем на 24 часа.
+     На страницах с .kozyr-sticky-cta смещаем выше (на десктопе);
+     на мобилке при наличии sticky-cta вовсе не показываем — там
+     контакт-путь уже даётся другими средствами (FAQ, футер). */
+
+  var TG_URL = 'https://t.me/kozyr_support';
+  var TG_STORAGE_KEY = 'kozyr_tg_dismissed_until';
+  var TG_HIDE_MS = 24 * 60 * 60 * 1000;  /* 24 часа */
+
+  function tgDismissed() {
+    try {
+      var until = parseInt(localStorage.getItem(TG_STORAGE_KEY) || '0', 10);
+      return until > Date.now();
+    } catch (e) { return false; }
+  }
+
+  function tgSetDismissed() {
+    try {
+      localStorage.setItem(TG_STORAGE_KEY, String(Date.now() + TG_HIDE_MS));
+    } catch (e) {}
+  }
+
+  function initTelegramWidget() {
+    if (tgDismissed()) return;
+    /* если элемент уже существует — не дублируем */
+    if (document.querySelector('.kz-tg')) return;
+
+    var hasStickyCta = !!document.querySelector('.kozyr-sticky-cta');
+    var isMobile = window.innerWidth <= 640;
+    /* на мобилке при sticky-cta не показываем — нижняя полоса и так занята */
+    if (isMobile && hasStickyCta) return;
+
+    var wrap = document.createElement('div');
+    wrap.className = 'kz-tg' + (hasStickyCta ? ' kz-tg--shifted' : '');
+    wrap.setAttribute('aria-live', 'polite');
+    wrap.innerHTML =
+      '<a class="kz-tg__btn" href="' + TG_URL + '" target="_blank" rel="noopener"' +
+        ' aria-label="Написать в Telegram @kozyr_support">' +
+        '<svg class="kz-tg__icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">' +
+          '<path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.002 0-.003 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>' +
+        '</svg>' +
+        '<span class="kz-tg__label">Вопрос? Напишите нам</span>' +
+      '</a>' +
+      '<button class="kz-tg__close" type="button" aria-label="Скрыть на 24 часа">×</button>';
+
+    document.body.appendChild(wrap);
+
+    /* небольшая пауза, чтобы CSS transition сработал (mount → visible) */
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { wrap.classList.add('is-visible'); });
+    });
+
+    wrap.querySelector('.kz-tg__close').addEventListener('click', function (e) {
+      e.preventDefault();
+      wrap.classList.remove('is-visible');
+      tgSetDismissed();
+      /* удаляем после завершения анимации */
+      setTimeout(function () { if (wrap.parentNode) wrap.parentNode.removeChild(wrap); }, 240);
+    });
+  }
+
   /* ---- запуск ------------------------------------------------------ */
   function init() {
     injectSuits();
     mobileDefaults();
     mobileTOC();
+    renderAcceptanceMarkers();
+    /* Если гео ещё не пришло — перерендерим по приходу */
+    if (window.KozyrGeo) {
+      window.KozyrGeo.onReady(function () { renderAcceptanceMarkers(); });
+    }
+    window.addEventListener('kozyr:geo', renderAcceptanceMarkers);
+    /* Telegram-widget показываем с задержкой, чтобы не спамить сразу */
+    setTimeout(initTelegramWidget, 2000);
     /* даём странице отрисовать таблицу/карточки, затем анимируем цифры */
     watch('.kf-score-num', animScore);
     watch('.room-score-num, .club-score-num', animScore);
