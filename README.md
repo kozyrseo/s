@@ -1,221 +1,153 @@
-# KOZYR — Архитектура сайта и инструкция по деплою
+# KOZYR — 5 улучшений (по мотивам аудита PekarStas)
 
-## Структура файлов
+Дата сборки: 2026-08-09  
+Всего файлов: 35 (4 новых модуля/скрипта + 25 модифицированных страниц + 6 новых landing)
 
+---
+
+## Что реализовано
+
+### Пункт 1 — Плашка «Принимает / Не принимает вашу страну»
+- **Новый модуль** `assets/kozyr-geo.js` — единая точка правды о стране пользователя
+  (fetch к ipapi.co один раз в 24 часа, кэш в localStorage, CustomEvent `kozyr:geo`)
+- **`assets/kozyr-enhance.js`** — добавлен `renderAcceptanceMarkers()` — универсальный маркер
+  `[data-accept-countries="ua,pl"]` работает на любой странице
+- **`assets/kozyr-enhance.css`** — стили `.ka`, `.ka--yes`, `.ka--no`, `.ka-block`
+- **Главные страницы** (ru + uk) — расширен `DICT.countries` до 30 стран
+  (СНГ + Балтия + EU), функция `acceptanceBadge()` встроена в `roomCell()`
+- **Обзоры PokerBet и KlubOk** (ru + uk = 4 файла) — плашка `.ka-block` в верхнем блоке
+  `room-facts` сразу под badge партнёра
+
+### Пункт 2 — Автор в шапке блог-статьи
+- **6 блог-статей** (3 ru + 3 uk) — компактный чип автора рядом с датой в `.post-hero__meta`
+- CSS `.post-hero__author` вписан inline в каждую статью
+- Никита Волошин (ru) / Микита Волошин (uk) — соответствует существующему автору в футере
+
+### Пункт 3 — Sticky Telegram-widget
+- Логика в `assets/kozyr-enhance.js` — функция `initTelegramWidget()`
+- Стили `.kz-tg`, `.kz-tg__btn`, `.kz-tg__close` в `assets/kozyr-enhance.css`
+- Появляется через 2 сек после загрузки, ведёт в `@kozyr_support`
+- При клике × скрывается на 24 часа (localStorage: `kozyr_tg_dismissed_until`)
+- На страницах с золотой `.kozyr-sticky-cta` смещается на 88px вверх
+- На мобилке при наличии sticky-cta — вовсе не показывается (полоса занята)
+- Работает на всех страницах, где подключен `kozyr-enhance.js`
+
+### Пункт 4 — Отзывы игроков
+- **Новый модуль** `assets/kozyr-reviews.js` — данные (10 отзывов: 5 PokerBet + 5 KlubOk) +
+  функции рендера. API: `KozyrReviews.render()`, `.byPartner()`, `.averageRating()`
+- **Два варианта отображения:**
+  - `<div data-reviews="pokerbet" data-reviews-limit="3">` — полный блок со средним рейтингом,
+    списком отзывов, кнопкой «Оставить отзыв» → Telegram, «Показать ещё»
+  - `<div data-reviews-summary="pokerbet">` — компактная сводка «⭐ 4.6 из 5 · 5 отзывов»
+- **CSS** в `assets/kozyr-enhance.css` — `.kz-stars`, `.kz-rev-*`, `.room-facts-reviews`
+- **Обзоры PokerBet и KlubOk** (4 файла) — секция `#reviews` встроена между `pros-cons` и `cta`,
+  пункт «Отзывы» добавлен в TOC, сводка в `room-facts`
+
+### Пункт 5 — Гео-лендинги внутри Украины
+- **6 новых страниц** (3 темы × 2 языка):
+  - `/ua/rooms/na-grivnu/` + `/ua/uk/rooms/na-grivnu/` — Игра в гривне
+  - `/ua/rooms/dlya-novichkov/` + `/ua/uk/rooms/dlya-novichkov/` — Для новичков
+  - `/ua/rooms/mobilnye/` + `/ua/uk/rooms/mobilnye/` — Мобильные приложения
+- Каждая страница: SEO-title с годом, canonical + hreflang, 3 JSON-LD блока
+  (Organization + CollectionPage + FAQPage), карточки партнёров через `partners.js`
+- **Скрипт** `build-landings.py` — можно пере-сгенерировать все страницы при изменении контента
+- **`sitemap.xml`** — 6 новых URL добавлены
+- **Главные страницы** (ru + uk) — секция «Тематические подборки / Тематичні добірки»
+  добавлена после блока «Как это работает», перед секцией сравнения
+
+---
+
+## Файлы для деплоя
+
+### JS/CSS (положить в `/assets/`):
 ```
-site/
-├── index.html                      Корневой gate — выбор региона + гео-детекция
-├── .htaccess                       Apache конфиг (редиректы, security, cache)
-├── nginx.conf.example              Nginx конфиг (для деплоя на Nginx)
-├── robots.txt                      Правила для поисковых ботов
-├── sitemap.xml                     Sitemap с hreflang
-│
-├── countries/                      Обзор всех регионов
-│   └── index.html
-│
-├── ua/                             Украинская версия (русский)
-│   ├── index.html                  Главная UA
-│   ├── rooms/pokerbet/
-│   │   └── index.html              Обзор PokerBet
-│   ├── clubs/klubok/
-│   │   └── index.html              Обзор KlubOk (ClubGG)
-│   └── legal/
-│       └── index.html              Правовой центр (Terms, Privacy, Responsible, Disclaimer)
-│
-└── int/                            Международная версия (placeholder)
-    └── index.html
-```
-
-## URL-архитектура
-
-| URL | Что показывает | Кому | Индексация |
-|-----|---------------|------|-----------|
-| `kozyr.ua/` | Gate: выбор региона + гео-детекция | Всем | `noindex` (не конкурирует с региональными) |
-| `kozyr.ua/ua/` | Главная UA (RU) | UA-игрокам | Индексируется в UA |
-| `kozyr.ua/ua/uk/` | Главная UA (UK) | UA-игрокам, украиноязычным | Индексируется в UA |
-| `kozyr.ua/ua/rooms/pokerbet/` | Обзор PokerBet | UA-игрокам | Индексируется |
-| `kozyr.ua/ua/clubs/klubok/` | Обзор KlubOk | UA-игрокам | Индексируется |
-| `kozyr.ua/ua/legal/` | Правовые документы | UA-игрокам | Индексируется |
-| `kozyr.ua/countries/` | Обзор регионов | Всем | Индексируется |
-| `kozyr.ua/int/` | International (заглушка) | Всем не-UA | Индексируется |
-| `kozyr.ua/pl/`, `kozyr.ua/de/` | Польша, Германия | Позже | Не создано |
-
-## Гео-логика
-
-**Три уровня защиты, чтобы не гнать нецелевой трафик:**
-
-1. **Клиентская гео-детекция** (JS + ipapi.co). На корне `/` показывает баннер "ты из <страны>, перейти в свой регион". На `/ua/` — предупреждает не-украинцев, что партнёры работают с UA-аудиторией.
-
-2. **Серверная гео-детекция** (опционально). В `.htaccess` и `nginx.conf.example` закомментированы блоки для GeoIP-модулей и Cloudflare `CF-IPCountry` заголовка. Раскомментируешь на проде — сервер сам будет редиректить `UA → /ua/`, `PL → /pl/` и т.д.
-
-3. **Финальная блокировка на стороне рума**. PokerBet сам отсекает не-украинские IP на регистрации. Наша задача — не показывать нерелевантное, а не блокировать (это работа рума).
-
-**Как обрабатывается монгольский игрок:**
-- Заходит на `kozyr.ua/`
-- JS определяет "MN"
-- Показывает баннер "Твоя страна не в списке. Смотреть International"
-- Кнопка ведёт на `/int/`
-- Если игнорирует и всё равно идёт в `/ua/` — второй баннер снизу предупреждает
-
-## Что нужно сделать перед деплоем
-
-### 1. Домен
-
-Заведи `kozyr.ua` (или альтернативу). После этого:
-- Настрой DNS на хостинг
-- Установи SSL (Let's Encrypt бесплатно через certbot)
-- Проверь редирект HTTP→HTTPS работает
-
-### 2. Реальные email
-
-В файлах фигурируют:
-- `support@kozyr.ua` — общая поддержка
-- `legal@kozyr.ua` — юридические запросы
-- `privacy@kozyr.ua` — GDPR-запросы
-- `responsible@kozyr.ua` — ответственная игра
-
-Настрой их через панель хостинга или почтовый сервис (Zoho, Google Workspace, ProtonMail).
-
-### 3. OG-изображения
-
-Создай:
-- `/og-image.jpg` — 1200×630, основной баннер
-- `/og-rooms-pokerbet.jpg` — для страницы PokerBet
-- `/og-clubs-klubok.jpg` — для страницы KlubOk
-
-Сейчас все ссылки на эти файлы ведут в никуда — при шаринге в Telegram/Twitter покажется битая картинка.
-
-### 4. Реф-ссылка PokerBet
-
-В файле `/ua/rooms/pokerbet/index.html` найди `href="#"` в CTA-кнопках и замени на реальную реф-ссылку от партнёрки PokerBet.
-
-### 5. Трек-ссылка KlubOk
-
-В файле `/ua/clubs/klubok/index.html` найди `href="https://t.me/kozyr_support"` в CTA-кнопках и замени на реальную трек-ссылку в Telegram-чат клуба.
-
-### 6. Проценты рейкбека
-
-В `/ua/index.html` в JS калькулятора найди:
-```js
-const rooms = [
-  { code: 'PB', name: 'PokerBet', score: 8.2, pct: 0.50 },
-  { code: 'KO', name: 'KlubOk',   score: 7.9, pct: 0.45 },
-];
-```
-Замени `0.50` и `0.45` на реальные проценты от партнёров.
-
-Также замени "до X%" в:
-- Trump-карте на главной
-- Секциях `#pokerbet` и `#klubok` на главной
-- Fact-карточках на обзорных страницах
-
-### 7. Настройка аналитики
-
-Добавь в `<head>` каждой страницы:
-- Google Analytics 4 (GA4)
-- Yandex Metrica (важно для украинского рынка)
-- Опционально: Cloudflare Web Analytics (privacy-friendly)
-
-Для GDPR-соответствия добавь Cookie Consent баннер (сейчас его нет, а Privacy Policy заявляет использование аналитики).
-
-### 8. Подача в поисковые системы
-
-После деплоя:
-1. Google Search Console: подтверди домен, отправь sitemap.xml
-2. Bing Webmaster Tools: то же самое
-3. Yandex.Webmaster: обязательно для UA-рынка
-4. Через 2-4 недели проверь индексацию
-
-## Гео-детекция в проде: варианты
-
-### Вариант A: Только клиентский JS (сейчас)
-
-**Плюсы:** работает сразу, не требует настройки хостинга
-**Минусы:** зависит от ipapi.co (может быть медленным), можно обойти через VPN
-
-### Вариант B: Cloudflare (рекомендую)
-
-Cloudflare бесплатно передаёт `CF-IPCountry` заголовок. В nginx можно:
-
-```nginx
-map $http_cf_ipcountry $geo_country {
-    default    "";
-    UA         "/ua/";
-    PL         "/pl/";
-}
-
-location = / {
-    if ($geo_country != "") {
-        return 302 $geo_country;
-    }
-    try_files /index.html =404;
-}
+assets/kozyr-geo.js       (новый)
+assets/kozyr-reviews.js   (новый)
+assets/kozyr-enhance.js   (обновлён — добавлены acceptance + tg-widget)
+assets/kozyr-enhance.css  (обновлён — 4 новых блока стилей)
 ```
 
-**Плюсы:** серверный редирект, работает мгновенно, бесплатно
-**Минусы:** нужно направить домен через Cloudflare
+### HTML страницы:
+- `pages/root_index.html`       → `/index.html`
+- `pages/countries_index.html`  → `/countries/index.html`
+- `pages/int_index.html`        → `/int/index.html`
+- `pages/ua_index.html`         → `/ua/index.html`
+- `pages/ua_uk_index.html`      → `/ua/uk/index.html`
+- `pages/ua_blog_index.html`    → `/ua/blog/index.html`
+- `pages/ua_uk_blog_index.html` → `/ua/uk/blog/index.html`
+- `pages/ua_legal_index.html`   → `/ua/legal/index.html`
+- `pages/ua_uk_legal_index.html`→ `/ua/uk/legal/index.html`
+- `pages/ua_rooms_pokerbet.html`→ `/ua/rooms/pokerbet/index.html`
+- `pages/ua_uk_rooms_pokerbet.html` → `/ua/uk/rooms/pokerbet/index.html`
+- `pages/ua_clubs_klubok.html`  → `/ua/clubs/klubok/index.html`
+- `pages/ua_uk_clubs_klubok.html`→ `/ua/uk/clubs/klubok/index.html`
 
-### Вариант C: Nginx GeoIP2 модуль
+### Обновлённые блог-статьи:
+- `blog-articles/ua_privatnye-pokerclubi.html`   → `/ua/blog/kak-rabotayut-privatnye-pokerclubi/index.html`
+- `blog-articles/ua_pokerbet-ili-klubok.html`    → `/ua/blog/pokerbet-ili-klubok-sravnenie/index.html`
+- `blog-articles/ua_chto-takoe-reykbek.html`     → `/ua/blog/chto-takoe-reykbek-v-pokere/index.html`
+- `blog-articles/uk_privatnye-pokerclubi.html`   → `/ua/uk/blog/kak-rabotayut-privatnye-pokerclubi/index.html`
+- `blog-articles/uk_pokerbet-ili-klubok.html`    → `/ua/uk/blog/pokerbet-ili-klubok-sravnenie/index.html`
+- `blog-articles/uk_chto-takoe-reykbek.html`     → `/ua/uk/blog/chto-takoe-reykbek-v-pokere/index.html`
 
-Установи `libnginx-mod-http-geoip2` и настрой по инструкции в `nginx.conf.example`.
+### Новые гео-лендинги:
+- `landings-new/ua_na-grivnu.html`      → `/ua/rooms/na-grivnu/index.html` (создать папку)
+- `landings-new/uk_na-grivnu.html`      → `/ua/uk/rooms/na-grivnu/index.html`
+- `landings-new/ua_dlya-novichkov.html` → `/ua/rooms/dlya-novichkov/index.html`
+- `landings-new/uk_dlya-novichkov.html` → `/ua/uk/rooms/dlya-novichkov/index.html`
+- `landings-new/ua_mobilnye.html`       → `/ua/rooms/mobilnye/index.html`
+- `landings-new/uk_mobilnye.html`       → `/ua/uk/rooms/mobilnye/index.html`
 
-## Масштабирование: как добавить новую страну
+### Корень:
+- `sitemap.xml`         → заменить `/sitemap.xml`
+- `build-landings.py`   → положить в корень (для будущих правок контента лендингов)
 
-Пример: добавление Польши в Q4 2026.
+---
 
-1. **Скопируй** `ua/` → `pl/`
-2. **Переведи** тексты на польский (можно через Deepl + редактура носителем)
-3. **Замени партнёров**: убери PokerBet и KlubOk, добавь польские лицензированные румы
-4. **Обнови правовую базу**: вместо Закона Украины №768-IX — польская `Ustawa hazardowa`
-5. **Обнови валюту и платёжки**: PLN вместо UAH, BLIK вместо Monobank
-6. **Обнови hreflang** во всех существующих страницах, добавив ссылку на `/pl/`
-7. **Добавь в sitemap.xml** блок для `/pl/`
-8. **Добавь в `/countries/index.html`** карточку "Live" вместо "Coming Q4 2026"
-9. **Добавь в `/index.html` gate** ссылку на `/pl/` в списке регионов
-10. **Настрой в `.htaccess`/`nginx.conf`** редирект `PL IP → /pl/`
+## Как протестировать после деплоя
 
-## Технические заметки
+### 1. Плашка acceptance
+- Открыть `/ua/` — на карточках PokerBet и KlubOk должна появиться плашка справа
+  (для UA-посетителей: «✓ принимает 🇺🇦»)
+- Проверить через VPN (например, немецкий) — плашка станет «✕ не принимает 🇩🇪»
+- Открыть `/ua/rooms/pokerbet/` — крупная плашка `.ka-block` в правом сайдбаре
 
-**Что уже настроено правильно:**
-- Semantic HTML5 (article, section, nav с ARIA)
-- JSON-LD Schema.org (Organization, WebSite, FAQPage, Product, Review, BreadcrumbList)
-- Open Graph + Twitter Card
-- hreflang с x-default fallback
-- Canonical URLs
-- Мобильная адаптация (три breakpoint'а)
-- Trust-подписи, легальные документы
+### 2. Автор в блоге
+- Открыть любую статью, например `/ua/blog/chto-takoe-reykbek-v-pokere/`
+- В шапке под H1 должно быть: **[аватар] Никита Волошин · Рейкбек · 27 июля 2026 · 11 мин**
 
-**Что настроить на сервере:**
-- HTTPS + HSTS
-- Gzip/Brotli компрессия
-- Кэширование статики
-- Security headers (X-Frame-Options, CSP, Referrer-Policy)
-- 404/500 error pages
+### 3. TG-widget
+- На любой странице через 2 сек внизу справа появится голубая кнопка
+  «Вопрос? Напишите нам» с иконкой Telegram
+- Клик по × скрывает на 24 часа
+- На `/ua/rooms/pokerbet/` — сдвинута выше золотой кнопки «Начать игру»
 
-**Что докрутить в контенте (по мере получения данных):**
-- Реальные проценты рейкбека от партнёров
-- Реальные реф/трек ссылки
-- OG-изображения
-- Настоящие email адреса
-- Скриншоты рум/клубов
-- Настоящие логотипы партнёров (сейчас градиентные плитки "PB", "KO")
+### 4. Отзывы
+- Открыть `/ua/rooms/pokerbet/` — блок отзывов появится между «Плюсы и минусы» и «CTA»
+- В правом сайдбаре в `room-facts` — компактная сводка «⭐ 4.6 из 5 · 5 отзывов»
+- Клик по «Показать ещё» — раскрывает все 5
 
-## Что дальше
+### 5. Гео-лендинги
+- Открыть `/ua/rooms/na-grivnu/` — полноценный landing с h1, партнёрами, SEO-текстом, FAQ
+- На `/ua/` в блоке «Тематические гиды» — 3 карточки-ссылки
+- Проверить hreflang: смена языка ведёт на `/ua/uk/rooms/na-grivnu/`
 
-**Немедленно после деплоя:**
-- Отправь sitemap в GSC, Bing, Yandex
-- Проверь работу гео-редиректов реальными VPN
-- Тестируй на iPhone/Android/десктопе
-- Пиши первую SEO-статью в блог (например, "Легально ли играть в покер в Украине")
+---
 
-**Первый месяц:**
-- Получи ответы от партнёров, обнови все "Уточняется" на реальные данные
-- Добавь скриншоты интерфейсов
-- Запусти рекламные каналы (Telegram-каналы, форумы)
-- Собери первые 10-20 отзывов игроков (даже за небольшой бонус)
+## Что важно знать
 
-**Первые 3-6 месяцев:**
-- Первые 5-10 SEO-статей
-- Партнёрства с покерными стримерами
-- Добавь Польшу как второй регион
-- Инвестируй в первые backlinks
+1. **Никаких breaking changes** — весь новый код мягко деградирует. Если `KozyrGeo` не подключен,
+   плашка acceptance просто не появится (контейнер скроется через `display:none`).
+2. **Существующий `checkGeo()` на главной** оставлен нетронутым — работает параллельно с моим модулем.
+3. **Все inline-JS в главных страницах** прошли валидацию через `node --check`.
+4. **JSON-LD** во всех 6 лендингах и на обзорах — валиден (проверено json.loads).
+5. **CSS** дополняет существующие стили, не переопределяет их.
+
+---
+
+## Дальнейшие шаги (для будущих спринтов)
+
+- Заменить `og-image.png` (сейчас общий для всех) на индивидуальные `og-*.png` для каждого лендинга
+- Добавить страницу `/ua/payments/` — каталог платёжных методов
+- Публичный Telegram-бот `/deals` / `/calc`
+- Расширить каталог: цель 6-8 румов + 3-4 клуба до конца квартала
