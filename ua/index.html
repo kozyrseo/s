@@ -4125,26 +4125,60 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
   /* ---------- Главный рендер ---------- */
 
   function draw() {
-    var list = results();
-    renderHead();
-    renderActive();
-    renderReadout(list);
+    var list;
+    try { list = results(); }
+    catch (e) { list = ROOMS.slice(); }   /* если фильтр упал — показываем все румы */
+
+    /* Вспомогательные блоки оборачиваем по отдельности:
+       ошибка в шапке/табло НЕ должна прятать саму таблицу с румами. */
+    try { renderHead(); } catch (e) {}
+    try { renderActive(); } catch (e) {}
+    try { renderReadout(list); } catch (e) {}
 
     var empty = list.length === 0;
-    $('kf-empty').hidden = !empty;
-    $('kf-table-wrap').hidden = empty || state.view !== 'table';
-    $('kf-cards').hidden = empty || state.view !== 'cards';
+    try { $('kf-empty').hidden = !empty; } catch (e) {}
+    try { $('kf-table-wrap').hidden = empty || state.view !== 'table'; } catch (e) {}
+    try { $('kf-cards').hidden = empty || state.view !== 'cards'; } catch (e) {}
 
     if (!empty) {
-      if (state.view === 'table') renderRows(list); else renderCards(list);
+      try {
+        if (state.view === 'table') renderRows(list); else renderCards(list);
+      } catch (e) {
+        /* последний рубеж: если основной рендер упал — рисуем простую таблицу,
+           чтобы румы ВСЕГДА были видны */
+        try { renderRowsFallback(list); } catch (e2) {}
+      }
     }
 
-    $('kf-view-table').setAttribute('aria-pressed', state.view === 'table');
-    $('kf-view-cards').setAttribute('aria-pressed', state.view === 'cards');
-    $('kf-sort').value = state.sort;
+    try {
+      $('kf-view-table').setAttribute('aria-pressed', state.view === 'table');
+      $('kf-view-cards').setAttribute('aria-pressed', state.view === 'cards');
+      $('kf-sort').value = state.sort;
+    } catch (e) {}
 
-    renderCompareBar();
-    pushUrl();
+    try { renderCompareBar(); } catch (e) {}
+    try { pushUrl(); } catch (e) {}
+  }
+
+  /* Аварийный рендер строк — минимум разметки, без плашек и доп-ячеек,
+     срабатывает только если основной renderRows бросил исключение. */
+  function renderRowsFallback(list) {
+    var tb = $('kf-tbody');
+    if (!tb) return;
+    tb.innerHTML = list.map(function (r) {
+      return '<tr class="kf-row-in">' +
+        '<td><div class="kf-room"><div class="kf-room-main"><span class="kf-room-name">' + esc(r.name) + '</span></div></div></td>' +
+        '<td><div class="kf-score"><span class="kf-score-num">' + (r.score != null ? r.score.toFixed(1) : '—') + '</span></div></td>' +
+        '<td>' + (r.rake != null ? 'до ' + r.rake + '%' : 'Уточняется') + '</td>' +
+        '<td>' + (r.countries || []).slice(0, 2).map(function (c) { return labelOf('countries', c); }).join(', ') + '</td>' +
+        '<td>' + (r.limits || []).slice(0, 3).join(', ') + '</td>' +
+        '<td class="kf-col-hide-lg">' + (r.games || []).map(function (g) { return labelOf('games', g); }).join(', ') + '</td>' +
+        '<td class="kf-col-hide-md">' + (r.payments || []).join(', ') + '</td>' +
+        '<td class="kf-col-hide-md">' + esc(r.payoutLabel || '') + '</td>' +
+        '<td>' + labelOf('network', r.network) + '</td>' +
+        '<td><a class="kf-go" href="' + esc(r.url || '#') + '">Открыть</a></td>' +
+      '</tr>';
+    }).join('');
   }
 
   /* ---------- Поповер фильтра ---------- */
@@ -4445,10 +4479,12 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
 
   function init() {
     if (!$('kf-tbody')) return;
-    $('kf-demo-flag').hidden = !KOZYR_DEMO;
+    try { $('kf-demo-flag').hidden = !KOZYR_DEMO; } catch (e) {}
 
-    readUrl();
-    renderQuickpick();
+    /* Каждый шаг инициализации изолирован: сбой в одном не должен
+       помешать отрисовке каталога. draw() вызываем в любом случае. */
+    try { readUrl(); } catch (e) {}
+    try { renderQuickpick(); } catch (e) {}
     draw();
 
     /* Плашка "Принимает вашу страну" на карточках может быть пустой при

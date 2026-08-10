@@ -138,12 +138,13 @@ body::after {
   text-align: center;
 }
 
-/* Логотип */
+/* Логотип — отдельная строка, по центру */
 .gate-logo {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
-  margin-bottom: 40px;
+  margin: 0 auto 36px;
   font-family: var(--f-display);
   font-weight: 700;
   font-size: 19px;
@@ -153,13 +154,15 @@ body::after {
 .gate-logo-mark {
   width: 32px; height: 32px;
   display: inline-block;
+  flex-shrink: 0;
 }
 .gate-logo-mark svg { width: 100%; height: 100%; }
 
-/* Eyebrow с точкой — как на главной */
+/* Eyebrow с точкой — отдельная строка, по центру */
 .gate-eyebrow {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   font-family: var(--f-mono);
   font-size: 11px;
@@ -167,7 +170,7 @@ body::after {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 24px;
+  margin: 0 auto 24px;
 }
 .gate-eyebrow::before {
   content: '';
