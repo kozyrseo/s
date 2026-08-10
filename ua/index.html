@@ -900,46 +900,45 @@ img, svg { display: block; }
 .kf-tagline--demo { background: var(--hot-tint); color: var(--hot); }
 .kf-tagline--top  { background: var(--accent-tint); color: var(--accent-deep); }
 
-/* «Принимает / не принимает вашу страну» — рядом с флагами в мета-строке.
-   Компактный чип, подхватывающий текущий гео (через KozyrGeo). */
+/* «Доступен / Недоступен для страны» — рядом с флагами в мета-рядку.
+   Компактный чип с SVG-иконкой + текст + флаг. */
 .kf-accept {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 7px 2px 5px;
+  gap: 6px;
+  padding: 3px 9px 3px 4px;
   border-radius: 999px;
-  font-family: var(--f-mono);
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  line-height: 1;
+  font-family: var(--f-body, 'Inter', system-ui, sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.005em;
   white-space: nowrap;
   border: 1px solid transparent;
+  text-transform: none;
 }
-.kf-accept .fi { width: 11px; height: 8px; border-radius: 2px; margin-left: 2px; }
+.kf-accept .fi { width: 12px; height: 9px; border-radius: 2px; margin-left: 2px; flex-shrink: 0; }
 .kf-accept-icon {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 12px; height: 12px; border-radius: 50%;
-  font-size: 9px; line-height: 1;
-  font-family: var(--f-body); font-weight: 700;
+  width: 16px; height: 16px; border-radius: 50%;
+  flex-shrink: 0;
 }
+.kf-accept-icon svg { width: 10px; height: 10px; display: block; }
 .kf-accept--yes {
   background: rgba(38, 166, 91, 0.10);
   color: #1B7A44;
-  border-color: rgba(38, 166, 91, 0.20);
+  border-color: rgba(38, 166, 91, 0.22);
 }
 .kf-accept--yes .kf-accept-icon { background: #26A65B; color: #fff; }
 .kf-accept--no {
-  background: var(--surface-alt);
-  color: var(--ink-3);
-  border-color: var(--border);
+  background: rgba(224, 141, 40, 0.10);
+  color: #8A5210;
+  border-color: rgba(224, 141, 40, 0.26);
 }
-.kf-accept--no .kf-accept-icon { background: var(--ink-3); color: #fff; }
-
-/* На мобилке уплотняем: скрываем словесную часть, оставляем иконку + флаг */
+.kf-accept--no .kf-accept-icon { background: #E08D28; color: #fff; }
 @media (max-width: 640px) {
   .kf-accept-text { display: none; }
-  .kf-accept { padding: 2px 5px; }
+  .kf-accept { padding: 3px 5px; }
 }
 
 /* score */
@@ -1399,10 +1398,17 @@ img, svg { display: block; }
 .kf-note {
   margin-top: 32px;
   padding-top: 26px;
+  padding-bottom: 8px;
   border-top: 1px solid var(--border);
   text-align: center;
   font-size: 14px;
   color: var(--ink-2);
+}
+/* Когда compare-bar видима — добавляем нижнее пространство,
+   чтобы плавающая полоса не налипала на текст-примечание */
+body.kf-has-compare .finder { padding-bottom: 120px; }
+@media (max-width: 640px) {
+  body.kf-has-compare .finder { padding-bottom: 140px; }
 }
 .kf-note a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; font-weight: 500; }
 
@@ -2506,89 +2512,167 @@ body::before {
 /* ===== TOPICS (тематические подборки — гео-лендинги) ===== */
 
 .topics {
-  padding: 90px 0;
+  padding: 120px 0;
   background: var(--surface);
+  position: relative;
+  overflow: hidden;
 }
-.topics-head { max-width: 640px; margin-bottom: 32px; }
+.topics-head { max-width: 720px; margin-bottom: 56px; }
 .topics-title {
   font-family: var(--f-display);
   font-weight: 700;
-  font-size: clamp(28px, 3vw, 38px);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  margin: 12px 0 0;
+  font-size: clamp(40px, 5vw, 68px);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  margin: 16px 0 0;
+  color: var(--ink);
 }
 .topics-title em {
-  font-family: 'Instrument Serif', serif;
+  font-family: var(--f-serif);
   font-style: italic;
   font-weight: 400;
   color: var(--accent);
 }
+.topics-lede {
+  margin-top: 20px;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 620px;
+}
 .topics-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 20px;
 }
+/* Карточка «premium»: масти сверху, крупный заголовок, счётчик партнёров */
 .topic-card {
   display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 22px 22px;
-  background: var(--surface-alt);
+  flex-direction: column;
+  min-height: 340px;
+  padding: 32px 32px 28px;
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 20px;
   text-decoration: none;
   color: inherit;
-  transition: transform 0.18s ease, background 0.18s, border-color 0.18s, box-shadow 0.18s;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.24s cubic-bezier(0.2, 0.7, 0.3, 1),
+              box-shadow 0.24s ease,
+              border-color 0.24s;
 }
+.topic-card::before {
+  /* Тонкая полоса-акцент сверху */
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent);
+  opacity: 0.9;
+}
+.topic-card--gold::before { background: var(--gold, #B8841C); }
+.topic-card--blue::before { background: var(--accent); }
+.topic-card--dark::before { background: var(--ink); }
 .topic-card:hover {
-  transform: translateY(-3px);
-  background: var(--surface);
-  border-color: var(--accent);
-  box-shadow: 0 12px 30px rgba(38, 104, 255, 0.10);
+  transform: translateY(-6px);
+  box-shadow: 0 30px 60px rgba(10, 17, 40, 0.10);
+  border-color: transparent;
 }
-.topic-card-icon {
-  flex-shrink: 0;
-  width: 48px; height: 48px;
-  border-radius: 12px;
-  background: var(--accent-tint);
-  color: var(--accent-deep);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Instrument Serif', serif;
-  font-size: 26px;
-  font-weight: 400;
-  line-height: 1;
+/* Масть в углу карточки — большая, полупрозрачная, декоративная */
+.topic-card-suit {
+  position: absolute;
+  top: 20px; right: 20px;
+  width: 56px; height: 56px;
+  opacity: 0.10;
+  transition: opacity 0.3s, transform 0.4s;
 }
-.topic-card-body { flex: 1; min-width: 0; }
-.topic-card-body h3 {
+.topic-card-suit svg { width: 100%; height: 100%; }
+.topic-card--gold .topic-card-suit { color: var(--gold, #B8841C); }
+.topic-card--blue .topic-card-suit { color: var(--accent); }
+.topic-card--dark .topic-card-suit { color: var(--ink); }
+.topic-card:hover .topic-card-suit {
+  opacity: 0.18;
+  transform: scale(1.15) rotate(-8deg);
+}
+/* Eyebrow (mono, uppercase) */
+.topic-card-eyebrow {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+}
+/* Заголовок с сериф-акцентом */
+.topic-card-title {
   font-family: var(--f-display);
-  font-size: 17px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  margin: 0 0 4px;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   color: var(--ink);
+  margin: 0 0 14px;
+  position: relative;
+  z-index: 1;
 }
-.topic-card-body p {
+.topic-card-title em {
+  font-family: var(--f-serif);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+.topic-card--gold .topic-card-title em { color: var(--gold, #B8841C); }
+.topic-card--dark .topic-card-title em { color: var(--ink); }
+/* Описание */
+.topic-card-desc {
   font-family: var(--f-body);
-  font-size: 13px;
-  line-height: 1.45;
+  font-size: 14px;
+  line-height: 1.55;
   color: var(--ink-2);
-  margin: 0;
+  margin: 0 0 auto;
+  padding-bottom: 24px;
+  position: relative;
+  z-index: 1;
+}
+/* Нижняя полоса: счётчик + стрелка */
+.topic-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+.topic-card-count {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
 }
 .topic-card-arrow {
-  flex-shrink: 0;
-  color: var(--ink-3);
-  font-size: 20px;
-  transition: color 0.18s, transform 0.18s;
-}
-.topic-card:hover .topic-card-arrow {
+  font-family: var(--f-body);
+  font-weight: 600;
+  font-size: 13px;
   color: var(--accent);
-  transform: translateX(4px);
+  transition: transform 0.2s;
 }
+.topic-card--gold .topic-card-arrow { color: var(--gold, #B8841C); }
+.topic-card--dark .topic-card-arrow { color: var(--ink); }
+.topic-card:hover .topic-card-arrow { transform: translateX(4px); }
+
 @media (max-width: 900px) {
-  .topics-grid { grid-template-columns: 1fr; gap: 12px; }
-  .topics { padding: 64px 0; }
-  .topic-card { padding: 18px; }
+  .topics-grid { grid-template-columns: 1fr; gap: 14px; }
+  .topics { padding: 72px 0; }
+  .topic-card { min-height: auto; padding: 26px; }
+  .topic-card-title { font-size: 24px; }
+  .topic-card-suit { width: 42px; height: 42px; top: 16px; right: 16px; }
 }
 
 /* ===== ROOM COMPARISON (main page) ===== */
@@ -2709,7 +2793,7 @@ body::before {
 .lang a[aria-current="page"] { color: var(--ink); background: var(--bg, #fff); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
 </style>
 <script src="/analytics.js" defer></script>
-  <link rel="stylesheet" href="/assets/kozyr-enhance.css?v=10">
+  <link rel="stylesheet" href="/assets/kozyr-enhance.css?v=12">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -3051,36 +3135,49 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 </section>
 
 <!-- Тематические подборки — компактные ссылки на гео-лендинги -->
-<section class="topics" aria-labelledby="topics-title">
+<section class="topics" aria-labelledby="topics-title" id="topics">
   <div class="wrap">
     <div class="topics-head">
-      <div class="section-tag"><span>Подборки под задачу</span></div>
+      <div class="section-tag"><span>◆ Подборки под задачу</span></div>
       <h2 id="topics-title" class="topics-title">Тематические <em>гиды</em></h2>
+      <p class="topics-lede">Быстрый переход к партнёрам, отобранным под конкретный запрос — гривня, старт с нуля, мобилка.</p>
     </div>
     <div class="topics-grid">
-      <a href="/ua/rooms/na-grivnu/" class="topic-card">
-        <div class="topic-card-icon" aria-hidden="true">₴</div>
-        <div class="topic-card-body">
-          <h3>Игра в гривне</h3>
-          <p>Румы и клубы с UAH-депозитом без обменников и крипты</p>
+      <a href="/ua/rooms/na-grivnu/" class="topic-card topic-card--gold">
+        <div class="topic-card-suit" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="currentColor"><path d="M20 4L28 20L20 36L12 20Z" opacity="0.9"/><circle cx="20" cy="20" r="3.5" fill="#fff"/></svg>
         </div>
-        <span class="topic-card-arrow" aria-hidden="true">→</span>
+        <div class="topic-card-eyebrow">Валюта</div>
+        <h3 class="topic-card-title">Игра в <em>гривне</em></h3>
+        <p class="topic-card-desc">Румы и клубы с прямым UAH-депозитом через Monobank и ПриватБанк. Без обменников, крипты и P2P.</p>
+        <div class="topic-card-meta">
+          <span class="topic-card-count">2 партнёра</span>
+          <span class="topic-card-arrow" aria-hidden="true">Открыть →</span>
+        </div>
       </a>
-      <a href="/ua/rooms/dlya-novichkov/" class="topic-card">
-        <div class="topic-card-icon" aria-hidden="true">◆</div>
-        <div class="topic-card-body">
-          <h3>Для новичков</h3>
-          <p>Микро-лимиты от NL2, лёгкий вход, простая верификация</p>
+      <a href="/ua/rooms/dlya-novichkov/" class="topic-card topic-card--blue">
+        <div class="topic-card-suit" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="currentColor"><path d="M20 4C14 4 10 8 10 13c0 6 10 8 10 16 0-8 10-10 10-16 0-5-4-9-10-9zm-2 32h4l1 2h-6l1-2z"/></svg>
         </div>
-        <span class="topic-card-arrow" aria-hidden="true">→</span>
+        <div class="topic-card-eyebrow">Первый рум</div>
+        <h3 class="topic-card-title">Для <em>новичков</em></h3>
+        <p class="topic-card-desc">Микро-лимиты от NL2, депозит от 200 ₴, простая верификация. Место где комфортно учиться без страха слить.</p>
+        <div class="topic-card-meta">
+          <span class="topic-card-count">2 партнёра</span>
+          <span class="topic-card-arrow" aria-hidden="true">Открыть →</span>
+        </div>
       </a>
-      <a href="/ua/rooms/mobilnye/" class="topic-card">
-        <div class="topic-card-icon" aria-hidden="true">▢</div>
-        <div class="topic-card-body">
-          <h3>Мобильные приложения</h3>
-          <p>iOS и Android с прямой поддержкой украинских карт</p>
+      <a href="/ua/rooms/mobilnye/" class="topic-card topic-card--dark">
+        <div class="topic-card-suit" aria-hidden="true">
+          <svg viewBox="0 0 40 40" fill="currentColor"><path d="M20 4c-2 6-8 8-8 14 0 5 4 8 8 8s8-3 8-8c0-6-6-8-8-14zm-2 26v6h4v-6h-4z"/></svg>
         </div>
-        <span class="topic-card-arrow" aria-hidden="true">→</span>
+        <div class="topic-card-eyebrow">Мобильные</div>
+        <h3 class="topic-card-title">С <em>телефона</em></h3>
+        <p class="topic-card-desc">Партнёры с полноценными приложениями iOS и Android. Все проверены, поддерживают украинские карты.</p>
+        <div class="topic-card-meta">
+          <span class="topic-card-count">2 партнёра</span>
+          <span class="topic-card-arrow" aria-hidden="true">Открыть →</span>
+        </div>
       </a>
     </div>
   </div>
@@ -3741,17 +3838,19 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
   function acceptanceBadge(room) {
     var geo = (window.KozyrGeo && window.KozyrGeo.get) ? window.KozyrGeo.get() : null;
     if (!geo) return '';
-    /* если у страны нет флага/названия в словаре — не показываем (чтобы не запутать) */
     var d = DICT.countries[geo];
     if (!d) return '';
     var accepted = (room.countries || []).indexOf(geo) !== -1;
     var flag = d.flag ? '<span class="fi fi-' + d.flag + '"></span>' : '';
+    var mainText = accepted ? 'Доступен для ' + esc(d.label) : 'Недоступен для ' + esc(d.label);
+    var iconYes = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>';
+    var iconNo  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg>';
     return '<span class="kf-accept ' + (accepted ? 'kf-accept--yes' : 'kf-accept--no') +
       '" title="' + (accepted
         ? 'Партнёр работает с игроками из региона: ' + esc(d.label)
         : 'Партнёр не обслуживает игроков из региона: ' + esc(d.label)) + '">' +
-      '<span class="kf-accept-icon" aria-hidden="true">' + (accepted ? '✓' : '✕') + '</span>' +
-      '<span class="kf-accept-text">' + (accepted ? 'принимает' : 'не принимает') + '</span>' +
+      '<span class="kf-accept-icon" aria-hidden="true">' + (accepted ? iconYes : iconNo) + '</span>' +
+      '<span class="kf-accept-text">' + mainText + '</span>' +
       flag +
     '</span>';
   }
@@ -4152,6 +4251,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
         '<button data-uncmp="' + id + '" aria-label="Убрать ' + esc(r.name) + '">×</button></span>';
     }).join('');
     bar.classList.toggle('is-up', state.compare.length > 0);
+    document.body.classList.toggle('kf-has-compare', state.compare.length > 0);
     $('kf-compare-go').disabled = state.compare.length < 2;
     $('kf-compare-go').textContent = state.compare.length < 2 ? 'Выбери ещё один' : 'Сравнить';
   }
@@ -4594,7 +4694,7 @@ document.getElementById('geo-banner-close').addEventListener('click', () => {
 });
 </script>
 
-  <script defer src="/assets/kozyr-geo.js?v=1"></script>
-  <script defer src="/assets/kozyr-enhance.js?v=10"></script>
+  <script defer src="/assets/kozyr-geo.js?v=12"></script>
+  <script defer src="/assets/kozyr-enhance.js?v=12"></script>
 </body>
 </html>

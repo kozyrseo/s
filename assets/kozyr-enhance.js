@@ -237,12 +237,26 @@
     if (!label) return '';   /* не знаем страну — не мешаем */
     var accepted = list.indexOf(geo) !== -1;
     var flag = '<span class="fi fi-' + geo + '" aria-hidden="true"></span>';
-    var text = accepted
-      ? 'Принимает игроков из региона: ' + label
-      : 'Не принимает игроков из региона: ' + label;
-    return '<span class="ka ' + (accepted ? 'ka--yes' : 'ka--no') + '" title="' + text + '">' +
-      '<span class="ka__icon" aria-hidden="true">' + (accepted ? '✓' : '✕') + '</span>' +
-      '<span class="ka__text">' + (accepted ? 'Принимает вашу страну' : 'Не принимает вашу страну') + '</span>' +
+    var title = accepted
+      ? 'Партнёр работает с игроками из региона: ' + label
+      : 'Партнёр не обслуживает игроков из региона: ' + label + '. Возможно потребуется VPN или проверка условий рума.';
+    var mainText = accepted
+      ? 'Доступен для ' + label
+      : 'Недоступен для ' + label;
+    var subText = accepted
+      ? 'Регистрация и игра из вашего региона поддерживаются'
+      : 'Партнёр не обслуживает игроков из этого региона';
+    return '<span class="ka ' + (accepted ? 'ka--yes' : 'ka--no') + '" title="' + title + '">' +
+      '<span class="ka__icon" aria-hidden="true">' +
+        (accepted
+          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>'
+          : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg>'
+        ) +
+      '</span>' +
+      '<span class="ka__body">' +
+        '<span class="ka__main">' + mainText + '</span>' +
+        '<span class="ka__sub">' + subText + '</span>' +
+      '</span>' +
       flag +
     '</span>';
   }
@@ -287,6 +301,9 @@
 
   function initTelegramWidget() {
     if (tgDismissed()) return;
+    /* Отключаем на страницах где цель — реф-регистрация (лендинги),
+       чтобы TG-виджет не отвлекал от главной задачи */
+    if (document.body.hasAttribute('data-no-tg-widget')) return;
     /* если элемент уже существует — не дублируем */
     if (document.querySelector('.kz-tg')) return;
 

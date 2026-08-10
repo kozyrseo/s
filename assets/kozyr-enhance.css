@@ -845,69 +845,97 @@ a.card:hover,
 }
 
 
-/* ---------- 12. Плашка «Принимает / не принимает вашу страну» ------- */
+/* ---------- 12. Плашка «Доступен / Недоступен для страны» ---------- */
 /* Универсальный чип, рендерится JS через [data-accept-countries="ua,pl,..."].
-   Основной вариант — компактный inline-чип. На страницах обзоров можно
-   обернуть в .ka-block (крупная плашка со своим фоном). */
+   Два варианта: inline (в карточке finder — только main-текст) и .ka-block
+   (крупная плашка на страницах обзоров — main + подпись). */
 
 .ka {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px 4px 6px;
+  gap: 10px;
+  padding: 6px 12px 6px 6px;
   border-radius: 999px;
-  font-family: var(--f-mono, ui-monospace, monospace);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-family: var(--f-body, 'Inter', system-ui, sans-serif);
   line-height: 1.1;
   white-space: nowrap;
   border: 1px solid transparent;
   vertical-align: middle;
 }
 .ka .fi {
-  width: 14px; height: 10px; border-radius: 2px;
-  margin-left: 2px;
+  width: 18px; height: 13px; border-radius: 2px;
   flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
 }
 .ka__icon {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 14px; height: 14px; border-radius: 50%;
-  font-size: 10px; line-height: 1;
-  font-family: var(--f-body, system-ui, sans-serif);
-  font-weight: 800;
+  width: 20px; height: 20px; border-radius: 50%;
   flex-shrink: 0;
 }
+.ka__icon svg { width: 12px; height: 12px; display: block; }
+.ka__body {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  min-width: 0;
+}
+.ka__main {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1.2;
+}
+.ka__sub {
+  display: none;   /* в inline варианте прячем */
+}
+
+/* Зелёный: рум доступен */
 .ka--yes {
-  background: rgba(38, 166, 91, 0.10);
+  background: rgba(38, 166, 91, 0.09);
   color: #1B7A44;
   border-color: rgba(38, 166, 91, 0.22);
 }
 .ka--yes .ka__icon { background: #26A65B; color: #fff; }
-.ka--no {
-  background: var(--surface-alt, #F5F7FB);
-  color: var(--ink-3, #7A8299);
-  border-color: var(--border, #E2E7F0);
-}
-.ka--no .ka__icon { background: var(--ink-3, #7A8299); color: #fff; }
 
-/* Крупный вариант — для страниц обзоров, где плашка стоит отдельным блоком */
-.ka-block { display: block; margin: 0 0 14px; }
+/* Оранжевый (не серый!): рум не доступен — это ВАЖНАЯ информация, не «выключено» */
+.ka--no {
+  background: rgba(224, 141, 40, 0.10);
+  color: #8A5210;
+  border-color: rgba(224, 141, 40, 0.28);
+}
+.ka--no .ka__icon { background: #E08D28; color: #fff; }
+
+/* Крупный вариант — для страниц обзоров */
+.ka-block { display: block; margin: 14px 0 18px; }
 .ka-block .ka {
   width: 100%;
   justify-content: flex-start;
-  padding: 10px 14px;
-  font-size: 11px;
-  border-radius: 10px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
 }
-.ka-block .ka .fi { width: 16px; height: 12px; margin-left: auto; }
-.ka-block .ka__icon { width: 18px; height: 18px; font-size: 12px; }
+.ka-block .ka .fi { width: 22px; height: 16px; margin-left: auto; }
+.ka-block .ka__icon { width: 28px; height: 28px; }
+.ka-block .ka__icon svg { width: 16px; height: 16px; }
+.ka-block .ka__main { font-size: 14px; font-weight: 700; }
+.ka-block .ka__sub {
+  display: block;   /* показываем в block-варианте */
+  font-size: 12px;
+  font-weight: 400;
+  color: currentColor;
+  opacity: 0.72;
+  letter-spacing: 0;
+  margin-top: 2px;
+  white-space: normal;
+  line-height: 1.35;
+}
 
 @media (max-width: 640px) {
-  .ka__text { display: none; }
-  .ka { padding: 4px 6px; }
-  .ka-block .ka { padding: 8px 12px; }
-  .ka-block .ka__text { display: inline; }
+  .ka { gap: 8px; padding: 5px 10px 5px 5px; }
+  .ka__main { font-size: 12px; }
+  .ka .fi { width: 16px; height: 12px; }
 }
 
 
@@ -1040,11 +1068,13 @@ a.card:hover,
   font-family: var(--f-body, system-ui, sans-serif);
   font-size: 13px;
   color: var(--ink-2, #5C6580);
+  flex-wrap: wrap;
 }
 .kz-rev-sum__num strong { color: var(--ink, #0A1128); font-weight: 700; }
-.kz-rev-sum__dot {
-  width: 3px; height: 3px; border-radius: 50%;
-  background: var(--ink-4, #C7CBD7);
+.kz-rev-sum__sep {
+  color: var(--ink-4, #C7CBD7);
+  font-weight: 700;
+  user-select: none;
 }
 .kz-rev-sum__cnt { color: var(--ink-3, #7A8299); }
 .kz-rev-sum--empty {
