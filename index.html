@@ -15,7 +15,6 @@
 
 <meta name="robots" content="noindex, follow">
 <meta name="theme-color" content="#2668FF">
-<!-- Favicon и иконки KOZYR -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
@@ -23,7 +22,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
-<!-- Open Graph -->
+
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="KOZYR">
 <meta property="og:title" content="KOZYR — Poker Rakeback Platform">
@@ -32,7 +31,6 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://kozyr.club/">
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="KOZYR — Poker Rakeback Platform">
 <meta name="twitter:description" content="Transparent rakeback deals for poker players. Choose your region.">
@@ -47,12 +45,7 @@
       "@id": "https://kozyr.club/#organization",
       "name": "KOZYR",
       "url": "https://kozyr.club/",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://kozyr.club/icon-512.png",
-        "width": 512,
-        "height": 512
-      },
+      "logo": {"@type": "ImageObject", "url": "https://kozyr.club/icon-512.png", "width": 512, "height": 512},
       "description": "Poker rakeback platform: curated rooms and clubs with transparent terms and direct partner links.",
       "sameAs": ["https://t.me/kozyr_support"]
     },
@@ -71,7 +64,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.11.0/css/flag-icons.min.css">
 
 <style>
@@ -82,57 +75,116 @@
   --ink: #0A1128;
   --ink-2: #5C6580;
   --ink-3: #8B90A5;
+  --ink-4: #C7CBD7;
   --accent: #2668FF;
   --accent-deep: #1E52D9;
   --accent-tint: #EBF1FF;
   --border: #E5E7EE;
-  --border-2: #D0D5E0;
   --f-display: 'Space Grotesk', system-ui, sans-serif;
   --f-body: 'Inter', system-ui, sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, monospace;
   --f-serif: 'Instrument Serif', Georgia, serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 body {
   font-family: var(--f-body);
   background: var(--bg);
   color: var(--ink);
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px 20px;
+  font-size: 16px;
   line-height: 1.55;
+  overflow-x: hidden;
+  position: relative;
+}
+a { color: inherit; text-decoration: none; }
+img, svg { display: block; }
+::selection { background: var(--accent); color: #fff; }
+
+/* Мастевые водяные знаки на фоне для покерной айдентики */
+body::before,
+body::after {
+  content: '♠';
+  position: fixed;
+  font-family: Georgia, serif;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  color: rgba(10, 17, 40, 0.025);
+}
+body::before {
+  top: -80px; right: -80px;
+  font-size: 480px;
+  transform: rotate(12deg);
+}
+body::after {
+  content: '♦';
+  bottom: -100px; left: -80px;
+  font-size: 380px;
+  color: rgba(38, 104, 255, 0.03);
+  transform: rotate(-15deg);
 }
 
+/* ======================================================================
+   GATE — центрированный контент, всё поверх фоновых мастей
+   ==================================================================== */
 .gate {
-  max-width: 640px;
-  width: 100%;
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 80px 32px 64px;
   text-align: center;
 }
 
+/* Логотип */
 .gate-logo {
   display: inline-flex;
   align-items: center;
   gap: 12px;
+  margin-bottom: 40px;
   font-family: var(--f-display);
   font-weight: 700;
-  font-size: 22px;
-  letter-spacing: -0.02em;
-  margin-bottom: 48px;
+  font-size: 19px;
+  letter-spacing: 0.03em;
+  color: var(--ink);
 }
 .gate-logo-mark {
-  width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px;
+  display: inline-block;
 }
 .gate-logo-mark svg { width: 100%; height: 100%; }
 
+/* Eyebrow с точкой — как на главной */
+.gate-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 24px;
+}
+.gate-eyebrow::before {
+  content: '';
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* H1 */
 .gate h1 {
   font-family: var(--f-display);
   font-weight: 700;
-  font-size: clamp(36px, 5vw, 52px);
-  line-height: 1.05;
+  font-size: clamp(40px, 5.5vw, 64px);
+  line-height: 1.02;
   letter-spacing: -0.03em;
-  margin-bottom: 20px;
+  color: var(--ink);
+  margin: 0 0 24px;
 }
 .gate h1 em {
   font-family: var(--f-serif);
@@ -141,47 +193,63 @@ body {
   color: var(--accent);
 }
 
+/* Лид */
 .gate-lead {
   font-size: 17px;
+  line-height: 1.55;
   color: var(--ink-2);
-  margin-bottom: 48px;
-  max-width: 480px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 560px;
+  margin: 0 auto 40px;
 }
 
-.gate-eyebrow {
-  display: inline-flex;
+/* Гео-баннер */
+.detected-banner {
+  display: none;
   align-items: center;
-  gap: 8px;
-  font-family: var(--f-body);
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--ink-3);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 6px 12px;
+  gap: 14px;
+  padding: 14px 20px;
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  margin-bottom: 28px;
+  border: 1px solid var(--accent-tint);
+  border-left: 4px solid var(--accent);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(38, 104, 255, 0.06);
+  margin: 0 auto 40px;
+  max-width: 640px;
+  text-align: left;
 }
-.gate-eyebrow-dot {
-  width: 6px; height: 6px;
-  background: #05A661;
-  border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
+.detected-banner.visible { display: flex; }
+.detected-banner-flag {
+  width: 28px; height: 20px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.05);
 }
-@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+.detected-banner-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.detected-banner-text strong { color: var(--ink); font-weight: 600; }
+.detected-banner a {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+.detected-banner a:hover { color: var(--accent-deep); }
 
+/* Регионы — сетка 2×2 */
 .regions {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 32px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 40px;
 }
 
 .region {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -189,167 +257,131 @@ body {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
-  transition: all 0.2s;
-  text-decoration: none;
-  color: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.region:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(10,17,40,0.06);
-}
-
-.region.coming {
-  opacity: 0.55;
-  cursor: default;
-  pointer-events: none;
-}
-
-.region-flag {
-  width: 40px;
-  height: 30px;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  flex-shrink: 0;
   overflow: hidden;
+  text-align: left;
+  transition: transform 0.2s cubic-bezier(0.2, 0.7, 0.3, 1),
+              box-shadow 0.2s, border-color 0.2s;
 }
-
+.region::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent);
+}
+.region:not(.coming):hover {
+  transform: translateY(-3px);
+  border-color: transparent;
+  box-shadow: 0 12px 28px rgba(10, 17, 40, 0.08);
+}
+.region-flag {
+  width: 40px; height: 30px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.06);
+}
 .region-flag.intl {
-  background: linear-gradient(135deg, var(--accent-tint), var(--surface-alt));
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent);
+  color: #fff;
   font-family: var(--f-serif);
-  font-size: 18px;
+  font-size: 16px;
+  font-style: italic;
+  box-shadow: 0 0 0 1px var(--accent);
 }
-
 .region-info { flex: 1; min-width: 0; }
-
 .region-name {
   font-family: var(--f-display);
   font-weight: 700;
-  font-size: 17px;
-  letter-spacing: -0.01em;
-  line-height: 1.2;
+  font-size: 18px;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  line-height: 1.15;
   margin-bottom: 3px;
 }
-
 .region-meta {
-  font-family: var(--f-body);
-  font-size: 12px;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--ink-3);
-  letter-spacing: 0.02em;
 }
-
 .region-arrow {
   color: var(--ink-3);
-  transition: transform 0.15s, color 0.15s;
+  transition: color 0.2s, transform 0.2s;
   flex-shrink: 0;
 }
-
 .region:hover .region-arrow {
   color: var(--accent);
   transform: translate(3px, -3px);
 }
 
+/* Регион "Coming Soon" */
+.region.coming {
+  opacity: 0.6;
+  cursor: default;
+}
+.region.coming::before { background: var(--ink-4); }
+.region.coming .region-arrow { display: none; }
+
+/* Note снизу */
 .gate-note {
-  font-family: var(--f-body);
-  font-size: 12px;
-  color: var(--ink-3);
+  font-size: 12.5px;
   line-height: 1.6;
-  padding-top: 32px;
-  border-top: 1px solid var(--border);
+  color: var(--ink-3);
+  max-width: 640px;
+  margin: 0 auto;
 }
 .gate-note a {
   color: var(--ink-2);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  border-bottom: 1px solid var(--ink-4);
+  transition: color 0.15s, border-color 0.15s;
 }
-
-.detected-banner {
-  display: none;
-  padding: 14px 18px;
-  background: var(--accent-tint);
-  border: 1px solid rgba(38, 104, 255, 0.2);
-  border-radius: 10px;
-  margin-bottom: 24px;
-  font-size: 13px;
-  color: var(--ink);
-  align-items: center;
-  gap: 12px;
-  text-align: left;
-}
-.detected-banner.visible { display: flex; }
-
-.detected-banner-icon {
-  width: 16px; height: 16px;
+.gate-note a:hover {
   color: var(--accent);
-  flex-shrink: 0;
-}
-
-.detected-banner strong { color: var(--ink); }
-
-.detected-banner a {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  font-weight: 500;
-  white-space: nowrap;
-  margin-left: auto;
+  border-bottom-color: var(--accent);
 }
 
 @media (max-width: 600px) {
-  .regions { grid-template-columns: 1fr; }
+  .gate { padding: 48px 20px 40px; }
   .gate-logo { margin-bottom: 32px; }
-  .gate h1 { font-size: 32px; }
+  .gate h1 { font-size: 36px; }
   .gate-lead { font-size: 15px; margin-bottom: 32px; }
+  .regions { grid-template-columns: 1fr; }
+  .detected-banner {
+    flex-wrap: wrap;
+    padding: 14px 16px;
+  }
+  .detected-banner a {
+    width: 100%;
+    text-align: center;
+    margin-top: 4px;
+  }
+  body::before { font-size: 320px; top: -60px; right: -60px; }
+  body::after { font-size: 260px; }
 }
 </style>
 <script src="/analytics.js" defer></script>
-  <link rel="stylesheet" href="/assets/kozyr-enhance.css?v=12">
 </head>
 <body>
 
 <div class="gate">
   <div class="gate-logo">
-    <span class="gate-logo-mark"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="ki1" x1="505" y1="628" x2="596" y2="628" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#14358F"/><stop offset="1" stop-color="#2A6BFF"/></linearGradient></defs><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 587 1 1071 0 1076 -3 16
--32 42 583 -519 198 -180 547 -499 775 -709 228 -209 547 -501 708 -649 l294
--267 905 0 c497 0 904 2 904 4 0 5 18 -12 -530 502 -228 214 -562 526 -740
-694 -425 398 -844 786 -1006 931 -71 63 -228 203 -349 310 -376 334 -500 446
--581 524 l-79 75 66 63 c339 322 703 669 789 752 58 55 197 188 310 295 113
-107 311 296 440 420 129 124 368 351 530 505 162 154 389 370 505 481 115 110
-308 292 428 404 119 113 217 208 217 212 0 4 -405 8 -901 8 l-901 0 -132 -128
-c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36
--66 -58 -66 -51 1 8 0 517 0 1132 l-2 1117 -650 0 -650 0 0 -3090z" fill="#2668FF"/></g><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59 c39 -33 78 -61 88 -63
-18 -2 41 33 41 63 0 22 39 74 55 74 7 0 16 7 19 16 10 25 47 72 99 125 26 27
-47 55 47 63 0 21 49 76 67 76 17 0 93 79 93 96 0 7 17 27 38 46 21 19 42 42
-45 52 4 9 15 20 24 23 21 8 52 43 53 59 0 6 18 32 40 57 31 35 40 53 40 82 0
-31 7 44 42 76 23 21 47 35 52 32 6 -3 -3 9 -21 27 -32 34 -32 34 -268 -196
--490 -475 -535 -517 -551 -504 -19 16 -19 192 0 315 8 50 17 126 20 170 9 121
-16 187 23 215 6 25 7 33 17 120 2 25 7 61 11 80 4 19 8 51 10 70 2 19 7 53 10
-75 3 22 8 76 10 120 3 44 8 91 11 105 15 55 22 109 29 220 2 41 9 104 15 140
-6 36 13 77 15 91 2 14 -1 31 -6 36 -7 7 -4 16 11 26 12 8 19 20 15 27 -4 6 -1
-17 5 25 28 34 -2 8 -132 -113z" fill="#14358F"/></g></g></svg></span>
+    <span class="gate-logo-mark"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 587 1 1071 0 1076 -3 16 -32 42 583 -519 198 -180 547 -499 775 -709 228 -209 547 -501 708 -649 l294 -267 905 0 c497 0 904 2 904 4 0 5 18 -12 -530 502 -228 214 -562 526 -740 694 -425 398 -844 786 -1006 931 -71 63 -228 203 -349 310 -376 334 -500 446 -581 524 l-79 75 66 63 c339 322 703 669 789 752 58 55 197 188 310 295 113 107 311 296 440 420 129 124 368 351 530 505 162 154 389 370 505 481 115 110 308 292 428 404 119 113 217 208 217 212 0 4 -405 8 -901 8 l-901 0 -132 -128 c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36 -66 -58 -66 -51 1 8 0 517 0 1132 l-2 1117 -650 0 -650 0 0 -3090z" fill="#2668FF"/></g></g></svg></span>
     <span>KOZYR</span>
   </div>
 
-  <div class="gate-eyebrow">
-    <span class="gate-eyebrow-dot"></span>
-    <span>Poker rakeback platform</span>
-  </div>
+  <div class="gate-eyebrow">Poker rakeback platform</div>
 
-  <h1>Выбери свой <em>регион</em>.</h1>
+  <h1>Выбери свой <em>регион</em></h1>
   <p class="gate-lead">Условия рейкбека, доступные покер-румы и правовая база отличаются от страны к стране. Выбери свой регион, чтобы увидеть релевантные партнёрские сделки.</p>
 
   <div class="detected-banner" id="detected-banner">
-    <svg class="detected-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-    <span>Похоже, ты из <strong id="detected-country">неизвестной страны</strong>.</span>
+    <span class="detected-banner-flag" id="detected-flag"></span>
+    <span class="detected-banner-text">Похоже, ты из <strong id="detected-country">неизвестной страны</strong></span>
     <a href="#" id="detected-link">Перейти →</a>
   </div>
 
@@ -358,9 +390,9 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <span class="region-flag fi fi-ua"></span>
       <div class="region-info">
         <div class="region-name">Украина</div>
-        <div class="region-meta">2 партнёра · Русский / Українська</div>
+        <div class="region-meta">2 партнёра · RU / UA</div>
       </div>
-      <svg class="region-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="region-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
 
     <a href="/int/" class="region" data-country="INT">
@@ -369,7 +401,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
         <div class="region-name">International</div>
         <div class="region-meta">Global rooms · English</div>
       </div>
-      <svg class="region-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg class="region-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
 
     <div class="region coming">
@@ -378,7 +410,6 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
         <div class="region-name">Polska</div>
         <div class="region-meta">Coming Q4 2026</div>
       </div>
-      <svg class="region-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
 
     <div class="region coming">
@@ -387,7 +418,6 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
         <div class="region-name">Deutschland</div>
         <div class="region-meta">Coming Q1 2027</div>
       </div>
-      <svg class="region-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
   </div>
 
@@ -397,64 +427,51 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 </div>
 
 <script>
-// Гео-детекция для рекомендации региона
-// Работает через бесплатный ipapi.co (не требует ключа для базовых запросов)
-// Fallback: если гео недоступно, просто показываем выбор регионов
-
+/* Гео-детекция — оригинальная логика:
+   если страна в supportedRegions → предложить прямой переход, иначе → International.
+*/
 (async function detectGeo() {
   const supportedRegions = {
-    'UA': { name: 'Украины', path: '/ua/' },
-    // Когда добавишь Польшу/Германию:
-    // 'PL': { name: 'Польши', path: '/pl/' },
-    // 'DE': { name: 'Германии', path: '/de/' },
+    'UA': { name: 'Украины', path: '/ua/', label: 'Украина' },
+    // Когда добавишь Польшу/Германию — раскомментируй:
+    // 'PL': { name: 'Польши', path: '/pl/', label: 'Polska' },
+    // 'DE': { name: 'Германии', path: '/de/', label: 'Deutschland' },
   };
 
   try {
-    // Попытка 1: cloudflare header (если хостится через Cloudflare)
-    // На проде можно получить страну через CF-IPCountry заголовок
-    // Здесь используем публичный API как fallback
-
     const response = await fetch('https://ipapi.co/json/', {
       method: 'GET',
       headers: { 'Accept': 'application/json' }
     });
-
     if (!response.ok) return;
     const data = await response.json();
-    const countryCode = data.country_code;
-
-    if (!countryCode) return;
+    const cc = (data.country_code || '').toUpperCase();
+    if (!cc) return;
 
     const banner = document.getElementById('detected-banner');
+    const flagEl = document.getElementById('detected-flag');
     const nameEl = document.getElementById('detected-country');
     const linkEl = document.getElementById('detected-link');
 
-    if (supportedRegions[countryCode]) {
-      // Гео совпадает с поддерживаемым регионом — предлагаем прямой переход
-      nameEl.textContent = supportedRegions[countryCode].name;
-      linkEl.href = supportedRegions[countryCode].path;
-      linkEl.textContent = 'Перейти →';
-      banner.classList.add('visible');
+    flagEl.className = 'detected-banner-flag fi fi-' + cc.toLowerCase();
 
-      // Опционально: автоматический редирект через 3 секунды
-      // Можно раскомментировать после тестирования
-      // setTimeout(() => window.location.href = supportedRegions[countryCode].path, 3000);
+    if (supportedRegions[cc]) {
+      nameEl.textContent = supportedRegions[cc].label;
+      linkEl.href = supportedRegions[cc].path;
+      linkEl.textContent = 'Перейти →';
     } else {
-      // Гео не в списке поддерживаемых — предлагаем International
       const countryName = data.country_name || 'вашей страны';
       nameEl.textContent = countryName;
       linkEl.href = '/int/';
       linkEl.textContent = 'Смотреть International →';
-      banner.classList.add('visible');
     }
+    banner.classList.add('visible');
   } catch (e) {
-    // Если гео недоступно — просто ничего не показываем
+    // Гео недоступно — молча пропускаем, регионы всегда можно выбрать вручную
     console.log('Geo detection unavailable');
   }
 })();
 </script>
 
-  <script defer src="/assets/kozyr-geo.js?v=12"></script>
-  <script defer src="/assets/kozyr-enhance.js?v=12"></script>
 </body>
 </html>
