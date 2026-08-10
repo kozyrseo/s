@@ -888,6 +888,7 @@ img, svg { display: block; }
   color: var(--ink-3); text-transform: uppercase;
   margin-top: 3px;
   display: flex; align-items: center; gap: 6px;
+  flex-wrap: wrap;
 }
 .kf-room-meta .fi { width: 13px; height: 9px; border-radius: 2px; }
 
@@ -939,8 +940,24 @@ img, svg { display: block; }
 }
 .kf-accept--no .kf-accept-icon { background: #E08D28; color: #fff; }
 @media (max-width: 640px) {
-  .kf-accept-text { display: none; }
-  .kf-accept { padding: 3px 5px; }
+  .kf-accept {
+    font-size: 11px;
+    padding: 4px 10px 4px 4px;
+    gap: 6px;
+    max-width: 100%;
+  }
+  .kf-accept-text {
+    display: inline;
+    white-space: normal;
+    line-height: 1.2;
+  }
+  .kf-accept-icon { width: 18px; height: 18px; }
+  .kf-accept-icon svg { width: 11px; height: 11px; }
+  .kf-accept .fi { width: 14px; height: 10px; }
+  .kf-room-meta .kf-accept {
+    margin-top: 4px;
+    flex-basis: 100%;
+  }
 }
 
 /* score */
@@ -2795,7 +2812,7 @@ body::before {
 .lang a[aria-current="page"] { color: var(--ink); background: var(--bg, #fff); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
 </style>
 <script src="/analytics.js" defer></script>
-  <link rel="stylesheet" href="/assets/kozyr-enhance.css?v=12">
+  <link rel="stylesheet" href="/assets/kozyr-enhance.css?v=14">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

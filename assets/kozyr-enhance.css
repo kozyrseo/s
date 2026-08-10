@@ -936,6 +936,31 @@ a.card:hover,
   .ka { gap: 8px; padding: 5px 10px 5px 5px; }
   .ka__main { font-size: 12px; }
   .ka .fi { width: 16px; height: 12px; }
+
+  /* Крупная плашка на страницах обзоров — остаётся читаемой на телефоне */
+  .ka-block .ka {
+    padding: 12px 14px;
+    gap: 10px;
+    align-items: flex-start;
+    white-space: normal;      /* разрешаем перенос (базовый .ka имеет nowrap) */
+  }
+  .ka-block .ka__icon {
+    width: 26px; height: 26px;
+    margin-top: 1px;
+  }
+  .ka-block .ka__main { font-size: 13.5px; line-height: 1.25; }
+  .ka-block .ka__sub { font-size: 11.5px; line-height: 1.3; }
+  .ka-block .ka .fi {
+    width: 20px; height: 14px;
+    margin-left: 8px;
+    align-self: center;
+  }
+}
+@media (max-width: 380px) {
+  /* Совсем узкие экраны — флаг под текст, чтобы ничего не обрезалось */
+  .ka-block .ka { flex-wrap: wrap; }
+  .ka-block .ka__body { flex: 1 1 auto; min-width: 0; }
+  .ka-block .ka .fi { order: 3; margin-left: 0; margin-top: 6px; flex-basis: 100%; }
 }
 
 
