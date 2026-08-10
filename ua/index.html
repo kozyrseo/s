@@ -1025,6 +1025,8 @@ img, svg { display: block; }
 .kf-tag--more { background: transparent; border-style: dashed; color: var(--ink-3); }
 
 .kf-payout { display: flex; align-items: center; gap: 7px; font-weight: 500; }
+/* Выплата как spec-строка в карточке — совпадает по размеру с остальными значениями */
+.kf-spec-row .kf-payout { font-size: 13px; color: var(--ink); font-family: var(--f-body); padding-top: 1px; }
 .kf-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 .kf-dot--fast { background: var(--success); }
 .kf-dot--mid  { background: #E8A317; }
@@ -1092,10 +1094,20 @@ img, svg { display: block; }
   padding-bottom: 16px; border-bottom: 1px solid var(--border);
 }
 .kf-card-rake {
-  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 16px 0;
+  margin: 4px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 .kf-card-rake .kf-rake { font-size: 40px; }
 .kf-card-rake .kf-rake em { font-size: 26px; }
+/* «Уточняется» — не раздуваем до 40px, оставляем читаемый размер */
+.kf-card-rake .kf-rake--pending { font-size: 20px; font-weight: 600; color: var(--ink-2); }
+.kf-card-rake .kf-rake-note { font-size: 10px; margin-top: 4px; }
 
 .kf-card-spec { display: flex; flex-direction: column; gap: 10px; }
 .kf-spec-row {
@@ -2494,6 +2506,8 @@ body::before {
 .kf-card:hover::after { opacity: 1; }
 .kf-card-rake .kf-rake { font-size: 44px; color: var(--gold-deep); }
 .kf-card-rake .kf-rake em { font-size: 28px; color: var(--gold); }
+/* «Уточняется» (pending) — читаемый размер, перебивает крупный gold-рейк выше */
+.kf-card-rake .kf-rake--pending { font-size: 20px; font-weight: 600; color: var(--ink-2); }
 
 /* активные пилюли фильтров — крупнее, читаемее */
 .kf-pill { font-size: 13px; padding: 8px 9px 8px 14px; }
@@ -4085,11 +4099,12 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
           '<div class="kf-score" style="align-items:flex-end"><span class="kf-score-num">' + r.score.toFixed(1) + '</span>' +
           '<span class="kf-score-bar" style="width:52px"><span class="kf-score-fill" style="width:' + (r.score * 10) + '%"></span></span></div>' +
         '</div>' +
-        '<div class="kf-card-rake">' + rakeHtml(r, true) + payoutCell(r) + '</div>' +
+        '<div class="kf-card-rake">' + rakeHtml(r, true) + '</div>' +
         '<div class="kf-card-spec">' +
           '<div class="kf-spec-row"><span class="kf-spec-key">Лимиты</span>' + tagList(r, 'limits', 4) + '</div>' +
           '<div class="kf-spec-row"><span class="kf-spec-key">Формат</span>' + tagList(r, 'games', 4) + '</div>' +
           '<div class="kf-spec-row"><span class="kf-spec-key">Платёжки</span>' + paymentsCell(r) + '</div>' +
+          '<div class="kf-spec-row"><span class="kf-spec-key">Выплата</span>' + payoutCell(r) + '</div>' +
           '<div class="kf-spec-row"><span class="kf-spec-key">Сеть</span>' + tagList(r, 'network', 1) + '</div>' +
         '</div>' +
         '<div class="kf-card-foot">' +
