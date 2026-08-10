@@ -20,7 +20,11 @@
       license: "Лицензия КРАИЛ",
       url: "/ua/rooms/pokerbet/",
       access: "direct",
-      countries: ["ua", "pl", "de", "cz", "sk", "hu", "ro", "bg", "at", "it", "es", "pt", "fr", "nl", "be", "gb", "ie", "lt", "lv", "ee", "md", "ge", "am", "az", "il", "cy", "tr"],
+      /* countries — страны для фильтра каталога (где партнёр представлен).
+         acceptedCountries — страны, откуда партнёр ПРИНИМАЕТ игроков (для плашки
+         «Доступен / Недоступен»). Для нового клуба достаточно задать эти два поля. */
+      countries: ["ua"],
+      acceptedCountries: ["ua"],
       limits: ["NL10", "NL25", "NL50", "NL100", "NL200"],
       games: ["cash", "mtt", "spins"],
       network: "pokerbet",
@@ -54,7 +58,10 @@
       license: "Офшорная юрисдикция",
       url: "/ua/clubs/klubok/",
       access: "club",
-      countries: ["ua", "pl", "de", "cz", "sk", "hu", "ro", "bg", "at", "it", "es", "pt", "fr", "nl", "be", "gb", "ie", "lt", "lv", "ee", "md", "ge", "am", "az", "il", "cy", "tr"],
+      /* Клуб принимает Украину + украиноязычную диаспору Европы (топ по численности).
+         countries — для фильтра каталога; acceptedCountries — для плашки доступности. */
+      countries: ["ua"],
+      acceptedCountries: ["ua", "pl", "de", "cz", "it", "es", "ro", "sk", "md", "at", "fr", "gb", "nl", "pt", "hu", "be", "lt", "lv", "ee"],
       limits: ["NL10", "NL25", "NL50", "NL100"],
       games: ["cash", "mtt"],
       network: "clubgg",

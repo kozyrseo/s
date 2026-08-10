@@ -3843,7 +3843,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     if (!geo) return '';
     var d = DICT.countries[geo];
     if (!d) return '';
-    var accepted = (room.countries || []).indexOf(geo) !== -1;
+    var accepted = (room.acceptedCountries || room.countries || []).indexOf(geo) !== -1;
     var flag = d.flag ? '<span class="fi fi-' + d.flag + '"></span>' : '';
     var mainText = accepted ? 'Доступний для ' + esc(d.label) : 'Недоступний для ' + esc(d.label);
     var iconYes = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>';
