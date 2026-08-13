@@ -4340,7 +4340,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
 
     var rows = [
       { key:'Kozyr Score', cell:function (r) { return r.score.toFixed(1); }, best:function (r) { return r.score === bestScore; } },
-      { key:'Рейкбек', cell:function (r) { return r.rake === null ? 'уточняется' : 'до ' + r.rake + '%'; }, best:function (r) { return r.rake !== null && r.rake === bestRake; } },
+      { key:'Рейкбек', cell:function (r) { return r.rake === null ? 'нет' : 'до ' + r.rake + '%'; }, best:function (r) { return r.rake !== null && r.rake === bestRake; } },
       { key:'Доступ', cell:function (r) { return labelOf('access', r.access); } },
       { key:'Страны', cell:function (r) { return r.countries.map(function (c) { return labelOf('countries', c); }).join(', '); } },
       { key:'Лимиты', cell:function (r) { return r.limits.join(' · '); } },
