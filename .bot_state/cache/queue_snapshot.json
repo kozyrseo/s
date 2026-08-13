@@ -1,29 +1,7 @@
 {
-  "collected_at": "2026-08-13T18:13:15.938287+00:00",
+  "collected_at": "2026-08-13T20:07:27.077792+00:00",
   "status": "queued",
   "rows": [
-    {
-      "status": "queued",
-      "lang": "ru",
-      "topic": "Что такое бэдбит джекпот и как его выиграть",
-      "primary_keyword": "бэдбит джекпот покер",
-      "secondary_keywords": "bad beat jackpot;джекпот покер;как сработает бэдбит",
-      "intent": "informational",
-      "target_page": "/ua/clubs/klubok/",
-      "notes": "Кластер: клубы/фишки. KlubOk имеет Bad Beat джекпот. Объяснить механику.",
-      "_row": 7
-    },
-    {
-      "status": "queued",
-      "lang": "ru",
-      "topic": "Лимиты в покере: с каких начинать новичку",
-      "primary_keyword": "лимиты покер для новичка",
-      "secondary_keywords": "микролимиты;NL2 NL5;с чего начать покер",
-      "intent": "informational",
-      "target_page": "/ua/",
-      "notes": "Кластер: новички. Разбор лимитов, с каких стартовать, когда повышать.",
-      "_row": 8
-    },
     {
       "status": "queued",
       "lang": "ru",
