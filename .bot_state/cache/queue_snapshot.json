@@ -1,17 +1,5 @@
 {
-  "collected_at": "2026-08-13T20:07:27.077792+00:00",
+  "collected_at": "2026-08-13T22:26:03.967314+00:00",
   "status": "queued",
-  "rows": [
-    {
-      "status": "queued",
-      "lang": "ru",
-      "topic": "Легальный покер в Украине: что нужно знать игроку",
-      "primary_keyword": "легальный покер украина",
-      "secondary_keywords": "лицензия покер украина;налоги покер;легальные румы",
-      "intent": "informational",
-      "target_page": "/ua/rooms/pokerbet/",
-      "notes": "Кластер: легальность. Статус онлайн-покера в Украине, легальные румы. PokerBet — легальный.",
-      "_row": 9
-    }
-  ]
+  "rows": []
 }
