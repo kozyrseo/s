@@ -1235,12 +1235,20 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
 
     md_text = body_md_path.read_text(encoding="utf-8")
 
-    # Validate required fields
-    required = {"slug", "meta_title", "meta_description", "h1_title", "faq"}
+    # Validate required fields. `faq` is NOT hard-required: an article without
+    # FAQ still produces valid HTML (render_faq_html / render_faq_jsonld both
+    # no-op on empty faq). Failing the whole run over a missing FAQ is too
+    # brittle — it aborts the entire multilang publish (and blocks the git
+    # commit) even after the other language already succeeded. So we require
+    # only the truly essential fields and warn (not fail) when faq is absent.
+    required = {"slug", "meta_title", "meta_description", "h1_title"}
     missing = required - meta.keys()
     if missing:
         print(f"❌ meta.json missing required fields: {missing}", file=sys.stderr)
         return 1
+    if not meta.get("faq"):
+        print("⚠️  meta.json has no 'faq' — publishing without FAQ block/FAQPage schema. "
+              "Add faq to restore FAQ rich-snippets for this article.", file=sys.stderr)
 
     # ==== Slug split (July 2026): decouple pending-dir slug from URL slug ====
     #

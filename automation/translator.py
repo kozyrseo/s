@@ -125,6 +125,7 @@ def load_article_json(pending_dir: Path) -> dict:
         "meta_description": meta.get("meta_description", ""),
         "h1_title": meta.get("h1_title", ""),
         "tags": meta.get("tags", []),
+        "faq": meta.get("faq", []),
         "image_prompt": meta.get("image_prompt", ""),
         "russian_preview": meta.get("russian_preview", {}),
         "markdown_body": body_md,
@@ -345,6 +346,7 @@ def translate_article(
         "image_prompt": source_meta.get("image_prompt", ""),  # тот же промпт
         "has_hero_image": source_meta.get("has_hero_image", False),
         "word_count": _word_count(translated),
+        "faq": translated.get("faq", source_meta.get("faq", [])),
         "russian_preview": translated.get("russian_preview", {}),
         # Ссылка на оригинал — используется для hreflang и переключателя
         "translation_of": {source_lang: source_slug},
