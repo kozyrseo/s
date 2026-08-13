@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#2668FF">
-<link rel="canonical" href="https://kozyr.club/ua/">
+<link rel="canonical" href="https://kozyr.club/ua/uk/">
 <link rel="alternate" hreflang="ru-UA" href="https://kozyr.club/ua/">
 <link rel="alternate" hreflang="uk-UA" href="https://kozyr.club/ua/uk/">
-<link rel="alternate" hreflang="x-default" href="https://kozyr.club/">
+<link rel="alternate" hreflang="x-default" href="https://kozyr.club/ua/">
 <!-- Favicon и иконки KOZYR -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
@@ -20,19 +20,21 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="KOZYR">
-<meta property="og:title" content="KOZYR — рейкбек и сравнение покер-румов и клубов">
-<meta property="og:description" content="KOZYR — сравнение проверенных покер-румов и клубов по рейкбеку, лимитам и условиям выплат. Собери сделку под свою игру и возвращай часть рейка.">
+<meta property="og:title" content="KOZYR — рейкбек і порівняння покер-румів і клубів">
+<meta property="og:description" content="KOZYR — порівняння перевірених покер-румів і клубів по рейкбеку, лимитам и условиям выплат. Збери угоду під свою гру и возвращай часть рейка.">
 <meta property="og:image" content="https://kozyr.club/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:url" content="https://kozyr.club/ua/">
+<meta property="og:url" content="https://kozyr.club/ua/uk/">
+<meta property="og:locale" content="uk_UA">
+<meta property="og:locale:alternate" content="ru_UA">
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="KOZYR — рейкбек и сравнение покер-румов и клубов">
-<meta name="twitter:description" content="KOZYR — сравнение проверенных покер-румов и клубов по рейкбеку, лимитам и условиям выплат. Собери сделку под свою игру и возвращай часть рейка.">
+<meta name="twitter:title" content="KOZYR — рейкбек і порівняння покер-румів і клубів">
+<meta name="twitter:description" content="KOZYR — порівняння перевірених покер-румів і клубів по рейкбеку, лимитам и условиям выплат. Збери угоду під свою гру и возвращай часть рейка.">
 <meta name="twitter:image" content="https://kozyr.club/og-image.png">
-<title>Покер Украина 2026 — рейкбек, легальные румы и клубы | KOZYR</title>
-<meta name="description" content="Покер в Украине на гривны: сравни легальные покер-румы и клубы ClubGG по рейкбеку, лимитам и скорости выплат. PokerBet, KlubOk — реальные условия без маркетинга.">
+<title>Покер Україна 2026 — рейкбек, легальні руми і клуби | KOZYR</title>
+<meta name="description" content="Покер в Україні на гривні: порівняй легальні покер-руми і клуби ClubGG за рейкбеком, лімітами та швидкістю виплат. PokerBet, KlubOk — реальні умови без маркетингу.">
 <style>
 :root {
   --bg: #FAFAFC;
@@ -872,7 +874,7 @@ img, svg { display: block; }
   font-family: var(--f-display); font-weight: 700; font-size: 14px;
   color: #fff; letter-spacing: -0.02em; flex-shrink: 0;
 }
-.kf-logo--img { background: none !important; overflow: hidden; border: 1px solid var(--border, #E3E7F1); }
+.kf-logo--img { background: none !important; overflow: hidden; border: 1px solid var(--line, #E3E7F1); }
 .kf-logo--img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .kf-room-name {
   font-family: var(--f-display);
@@ -938,8 +940,6 @@ img, svg { display: block; }
 }
 .kf-accept--no .kf-accept-icon { background: #E08D28; color: #fff; }
 @media (max-width: 640px) {
-  /* НЕ прячем текст — на мобильных карточка, места хватает.
-     Плашка становится чуть крупнее и переносится на всю ширину строки. */
   .kf-accept {
     font-size: 11px;
     padding: 4px 10px 4px 4px;
@@ -948,13 +948,12 @@ img, svg { display: block; }
   }
   .kf-accept-text {
     display: inline;
-    white-space: normal;      /* разрешаем перенос длинных названий стран */
+    white-space: normal;
     line-height: 1.2;
   }
   .kf-accept-icon { width: 18px; height: 18px; }
   .kf-accept-icon svg { width: 11px; height: 11px; }
   .kf-accept .fi { width: 14px; height: 10px; }
-  /* Плашка в мета-ряду карточки — на своей строке, не жмётся к тексту доступа */
   .kf-room-meta .kf-accept {
     margin-top: 4px;
     flex-basis: 100%;
@@ -1025,7 +1024,6 @@ img, svg { display: block; }
 .kf-tag--more { background: transparent; border-style: dashed; color: var(--ink-3); }
 
 .kf-payout { display: flex; align-items: center; gap: 7px; font-weight: 500; }
-/* Выплата как spec-строка в карточке — совпадает по размеру с остальными значениями */
 .kf-spec-row .kf-payout { font-size: 13px; color: var(--ink); font-family: var(--f-body); padding-top: 1px; }
 .kf-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 .kf-dot--fast { background: var(--success); }
@@ -1105,7 +1103,6 @@ img, svg { display: block; }
 }
 .kf-card-rake .kf-rake { font-size: 40px; }
 .kf-card-rake .kf-rake em { font-size: 26px; }
-/* «Уточняется» — не раздуваем до 40px, оставляем читаемый размер */
 .kf-card-rake .kf-rake--pending { font-size: 20px; font-weight: 600; color: var(--ink-2); }
 .kf-card-rake .kf-rake-note { font-size: 10px; margin-top: 4px; }
 
@@ -2506,7 +2503,6 @@ body::before {
 .kf-card:hover::after { opacity: 1; }
 .kf-card-rake .kf-rake { font-size: 44px; color: var(--gold-deep); }
 .kf-card-rake .kf-rake em { font-size: 28px; color: var(--gold); }
-/* «Уточняется» (pending) — читаемый размер, перебивает крупный gold-рейк выше */
 .kf-card-rake .kf-rake--pending { font-size: 20px; font-weight: 600; color: var(--ink-2); }
 
 /* активные пилюли фильтров — крупнее, читаемее */
@@ -2835,10 +2831,10 @@ body::before {
     {
       "@type": "WebSite",
       "@id": "https://kozyr.club/#website",
-      "url": "https://kozyr.club/ua/",
+      "url": "https://kozyr.club/ua/uk/",
       "name": "KOZYR",
-      "description": "Витрина рейкбек-сделок в покере для игроков из Украины",
-      "inLanguage": "ru-UA",
+      "description": "Вітрина рейкбек-угод у покері для гравців з України",
+      "inLanguage": "uk-UA",
       "publisher": {"@id": "https://kozyr.club/#organization"}
     },
     {
@@ -2852,7 +2848,7 @@ body::before {
         "width": 512,
         "height": 512
       },
-      "description": "Витрина рейкбек-сделок в покере: каталог проверенных румов и клубов, честные условия, прямые партнёрские ссылки.",
+      "description": "Вітрина рейкбек-угод у покері: каталог перевірених румів і клубів, чесні умови, прямі партнерські посилання.",
       "sameAs": ["https://t.me/kozyr_support"]
     }
   ]
@@ -2886,7 +2882,7 @@ body::before {
 
 <div class="compliance" role="region" aria-label="Правовое уведомление">
   <div class="compliance-inner">
-    Используя сайт, ты принимаешь <a href="/ua/legal/#terms">Пользовательское соглашение</a> и <a href="/ua/legal/#privacy">Политику конфиденциальности</a>. Только для лиц старше 21 года.
+    Використовуючи сайт, ти приймаєш <a href="/ua/uk/legal/#terms">Користувацьку угоду</a> и <a href="/ua/uk/legal/#privacy">Політику конфіденційності</a>. Лише для осіб старше 21 року.
   </div>
 </div>
 
@@ -2916,19 +2912,19 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <span>KOZYR</span>
     </a>
     <div class="nav-links">
-      <a href="#partners">Партнёры</a>
-      <a href="/ua/rooms/pokerbet/">PokerBet</a>
-      <a href="/ua/clubs/klubok/">KlubOk</a>
-      <a href="#compare">Сравнение</a>
-      <a href="/ua/blog/">Блог</a>
+      <a href="#partners">Партнери</a>
+      <a href="/ua/uk/rooms/pokerbet/">PokerBet</a>
+      <a href="/ua/uk/clubs/klubok/">KlubOk</a>
+      <a href="#compare">Порівняння</a>
+      <a href="/ua/uk/blog/">Блог</a>
       <a href="#faq">FAQ</a>
     </div>
     <div class="nav-actions">
-      <div class="lang" role="group" aria-label="Выбор языка">
-        <a href="/ua/" hreflang="ru-UA" lang="ru" aria-current="page">RU</a>
-        <a href="/ua/uk/" hreflang="uk-UA" lang="uk">UA</a>
+      <div class="lang" role="group" aria-label="Вибір мови">
+        <a href="/ua/" hreflang="ru-UA" lang="ru">RU</a>
+        <a href="/ua/uk/" hreflang="uk-UA" lang="uk" aria-current="page">UA</a>
       </div>
-      <a href="#partners" class="btn btn-primary">Смотреть партнёров</a>
+      <a href="#partners" class="btn btn-primary">Дивитися партнерів</a>
       <button class="nav-burger" id="nav-burger" aria-expanded="false" aria-controls="nav-drawer" aria-label="Меню">
         <svg class="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
         <svg class="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -2936,13 +2932,13 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     </div>
   </div>
   <div class="nav-drawer" id="nav-drawer">
-    <a href="#partners">Партнёры <span aria-hidden="true">→</span></a>
-    <a href="/ua/rooms/pokerbet/">PokerBet <span aria-hidden="true">→</span></a>
-    <a href="/ua/clubs/klubok/">KlubOk <span aria-hidden="true">→</span></a>
-    <a href="#compare">Сравнение румов <span aria-hidden="true">→</span></a>
+    <a href="#partners">Партнери <span aria-hidden="true">→</span></a>
+    <a href="/ua/uk/rooms/pokerbet/">PokerBet <span aria-hidden="true">→</span></a>
+    <a href="/ua/uk/clubs/klubok/">KlubOk <span aria-hidden="true">→</span></a>
+    <a href="#compare">Порівняння румів <span aria-hidden="true">→</span></a>
     <a href="#score">Калькулятор <span aria-hidden="true">→</span></a>
     <a href="#faq">FAQ <span aria-hidden="true">→</span></a>
-    <a href="#partners" class="btn btn-dark">Смотреть партнёров</a>
+    <a href="#partners" class="btn btn-dark">Дивитися партнерів</a>
   </div>
 </nav>
 
@@ -2951,30 +2947,30 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     <div class="hero-copy">
       <div class="eyebrow">
         <span class="eyebrow-dot"></span>
-        <span>Рейкбек в покер-румах · Украина</span>
+        <span>Рейкбек у покер-румах · Україна</span>
       </div>
-      <h1 id="hero-title">Твой <em>козырь</em><br>в&nbsp;покере.</h1>
-      <p class="hero-desc">Прозрачные партнёрские сделки с проверенными покер-румами. Возвращаем часть комиссии рума игроку — легально, регулярно, без скрытых условий.</p>
+      <h1 id="hero-title">Твой <em>козир</em><br>у&nbsp;покері.</h1>
+      <p class="hero-desc">Прозорі партнерські угоди з перевіреними покер-румами. Повертаємо частину комісії руму гравцю — легально, регулярно, без прихованих умов.</p>
       <div class="hero-ctas">
-        <a href="#partners" class="btn btn-dark btn-xl">Смотреть партнёров →</a>
-        <a href="#how" class="btn btn-ghost btn-xl">Как это работает</a>
+        <a href="#partners" class="btn btn-dark btn-xl">Дивитися партнерів →</a>
+        <a href="#how" class="btn btn-ghost btn-xl">Як це працює</a>
       </div>
       <div class="hero-stats">
         <div>
           <div class="stat-num" data-partners-count>2</div>
-          <div class="stat-label">Проверенных партнёра</div>
+          <div class="stat-label">Перевірених партнери</div>
         </div>
         <div>
           <div class="stat-num">Kozyr Score</div>
-          <div class="stat-label">Прозрачный рейтинг</div>
+          <div class="stat-label">Прозорий рейтинг</div>
         </div>
         <div>
           <div class="stat-num">21+</div>
-          <div class="stat-label">Ответственная игра</div>
+          <div class="stat-label">Відповідальна гра</div>
         </div>
         <div>
           <div class="stat-num">24/7</div>
-          <div class="stat-label">Поддержка в Telegram</div>
+          <div class="stat-label">Підтримка в Telegram</div>
         </div>
       </div>
     </div>
@@ -2989,24 +2985,24 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
         <div class="trump-tag">Флагман</div>
 
         <div class="trump-content">
-          <div class="trump-eyebrow">Топ по Kozyr Score</div>
+          <div class="trump-eyebrow">Топ за Kozyr Score</div>
           <div class="trump-value">до&nbsp;<em>X%</em></div>
-          <div class="trump-label">Возврат рейка</div>
+          <div class="trump-label">Повернення рейка</div>
         </div>
 
         <hr class="trump-rule">
 
         <div class="trump-room">
           <h3 class="trump-room-name" itemprop="name">PokerBet</h3>
-          <p class="trump-room-meta">Лицензированный украинский оператор · Депозиты в UAH</p>
+          <p class="trump-room-meta">Ліцензований український оператор · Депозити в UAH</p>
         </div>
 
         <hr class="trump-rule">
 
         <div class="trump-footer">
-          <div class="trump-access">Прямая реф-ссылка · Kozyr Score 8.2</div>
-          <a href="/ua/rooms/pokerbet/" class="trump-cta">
-            <span>Открыть обзор</span>
+          <div class="trump-access">Пряме реф-посилання · Kozyr Score 8.2</div>
+          <a href="/ua/uk/rooms/pokerbet/" class="trump-cta">
+            <span>Відкрити огляд</span>
             <svg><use href="#icon-arrow-ne"/></svg>
           </a>
         </div>
@@ -3026,14 +3022,14 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 
     <div class="kf-head">
       <div>
-        <div class="section-tag"><span class="accent-text">● Каталог сделок</span></div>
-        <h2 id="finder-title">Собери сделку <em>под свою игру</em>.</h2>
-        <p class="kf-lead">Жми на заголовок колонки — рейкбек, страна, лимиты, формат, платёжки — и оставляй только те условия, которые тебе подходят. Каталог пересобирается на лету, до трёх румов можно поставить рядом и сравнить построчно.</p>
+        <div class="section-tag"><span class="accent-text">● Каталог угод</span></div>
+        <h2 id="finder-title">Збери угоду <em>під свою гру</em>.</h2>
+        <p class="kf-lead">Тисни на заголовок колонки — рейкбек, країна, ліміти, формат, платіжки — і залишай лише ті умови, які тобі підходять. Каталог перезбирається на льоту, до трьох румів можна поставити поруч і порівняти построчно.</p>
       </div>
 
       <div class="kf-readout" role="status" aria-live="polite">
         <div>
-          <div class="kf-readout-label">Подходит сделок</div>
+          <div class="kf-readout-label">Підходить угод</div>
           <div class="kf-readout-top">
             <span class="kf-readout-num" id="kf-count">0</span>
             <span class="kf-readout-of">из <span id="kf-total">0</span></span>
@@ -3045,29 +3041,29 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     </div>
 
     <div class="kf-demo-flag" id="kf-demo-flag" hidden>
-      <span>Демо-данные включены · выключи KOZYR_DEMO перед деплоем</span>
+      <span>Демо-дані увімкнені · вимкни KOZYR_DEMO перед деплоєм</span>
     </div>
 
     <!-- Быстрый подбор: три вопроса, которые сразу выставляют фильтры -->
-    <div class="kf-quickpick" role="group" aria-label="Быстрый подбор сделки">
-      <div class="kf-qp-title">Подбор за 15 секунд</div>
+    <div class="kf-quickpick" role="group" aria-label="Швидкий підбір угоди">
+      <div class="kf-qp-title">Підбір за 15 секунд</div>
 
       <div>
-        <div class="kf-qp-group-label" id="kf-qp-game-label">Что играешь</div>
+        <div class="kf-qp-group-label" id="kf-qp-game-label">Що граєш</div>
         <div class="kf-qp-opts" id="kf-qp-games" role="group" aria-labelledby="kf-qp-game-label"></div>
       </div>
 
       <div>
-        <div class="kf-qp-group-label" id="kf-qp-limit-label">Твой лимит</div>
+        <div class="kf-qp-group-label" id="kf-qp-limit-label">Твій ліміт</div>
         <div class="kf-qp-opts" id="kf-qp-limits" role="group" aria-labelledby="kf-qp-limit-label"></div>
       </div>
 
       <div>
-        <div class="kf-qp-group-label" id="kf-qp-country-label">Откуда играешь</div>
+        <div class="kf-qp-group-label" id="kf-qp-country-label">Звідки граєш</div>
         <div class="kf-qp-opts" id="kf-qp-countries" role="group" aria-labelledby="kf-qp-country-label"></div>
       </div>
 
-      <button class="btn btn-dark" id="kf-qp-apply">Показать →</button>
+      <button class="btn btn-dark" id="kf-qp-apply">Показати →</button>
     </div>
 
     <div class="kf-bar">
@@ -3084,25 +3080,25 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 
       <button class="btn btn-ghost kf-mobile-filters" id="kf-open-sheet">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M6 12h12M10 19h4"/></svg>
-        Фильтры <span id="kf-sheet-count"></span>
+        Фільтри <span id="kf-sheet-count"></span>
       </button>
 
       <div class="kf-bar-spacer"></div>
 
-      <label class="kf-sr" for="kf-sort">Сортировка</label>
+      <label class="kf-sr" for="kf-sort">Сортування</label>
       <div class="kf-select-wrap">
         <select class="kf-select" id="kf-sort">
-          <option value="score">Сортировка: Kozyr Score</option>
-          <option value="rake">Сортировка: рейкбек</option>
-          <option value="payout">Сортировка: скорость выплат</option>
-          <option value="name">Сортировка: по алфавиту</option>
+          <option value="score">Сортування: Kozyr Score</option>
+          <option value="rake">Сортування: рейкбек</option>
+          <option value="payout">Сортування: швидкість виплат</option>
+          <option value="name">Сортування: за алфавітом</option>
         </select>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
       </div>
 
       <button class="kf-reset" id="kf-reset" hidden>
         <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-        Сбросить фильтры
+        Скинути фільтри
       </button>
     </div>
 
@@ -3110,7 +3106,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 
     <div class="kf-table-wrap" id="kf-table-wrap">
       <table class="kf-table">
-        <caption class="kf-sr">Сравнение партнёрских сделок с фильтрами по колонкам</caption>
+        <caption class="kf-sr">Порівняння партнерських угод з фільтрами за колонками</caption>
         <thead><tr id="kf-thead"></tr></thead>
         <tbody id="kf-tbody"></tbody>
       </table>
@@ -3120,24 +3116,24 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 
     <div class="kf-empty" id="kf-empty" hidden>
       <svg class="kf-empty-suit"><use href="#suit-spade"/></svg>
-      <h3>Под такие условия сделок нет</h3>
-      <p>Слишком узкий набор фильтров. Сними самый жёсткий из них — обычно это минимальный рейкбек — или сбрось всё и начни заново.</p>
+      <h3>Під такі умови угод немає</h3>
+      <p>Занадто вузький набір фільтрів. Зніми найжорсткіший з них — зазвичай це мінімальний рейкбек — або скинь усе і почни заново.</p>
       <div class="kf-empty-actions">
-        <button class="btn btn-dark" id="kf-empty-reset">Сбросить фильтры</button>
-        <a href="https://t.me/kozyr_support" class="btn btn-ghost">Спросить в Telegram</a>
+        <button class="btn btn-dark" id="kf-empty-reset">Скинути фільтри</button>
+        <a href="https://t.me/kozyr_support" class="btn btn-ghost">Запитати в Telegram</a>
       </div>
     </div>
 
     <p class="kf-note">
-      Проценты и условия подтверждаются напрямую у партнёров и обновляются по мере поступления данных.
-      Нет нужного рума? <a href="https://t.me/kozyr_support">Напиши в Telegram</a> — расскажем, что в работе.
+      Відсотки та умови підтверджуються напряму в партнерів і оновлюються в міру надходження даних.
+      Немає потрібного руму? <a href="https://t.me/kozyr_support">Напиши в Telegram</a> — розкажемо, що в роботі.
     </p>
   </div>
 
   <div class="kf-compare-bar" id="kf-compare-bar">
     <div class="kf-compare-list" id="kf-compare-list"></div>
-    <span class="kf-compare-hint">Можно до трёх</span>
-    <button class="btn btn-primary" id="kf-compare-go">Сравнить</button>
+    <span class="kf-compare-hint">Можна до трьох</span>
+    <button class="btn btn-primary" id="kf-compare-go">Порівняти</button>
   </div>
 </section>
 
@@ -3145,72 +3141,72 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 <section class="how" aria-labelledby="how-title" id="how">
   <div class="wrap">
     <div class="section-tag">
-      <span>Как это работает</span>
+      <span>Як це працює</span>
     </div>
-    <h2 id="how-title">Три клика между тобой и <em>первым возвратом</em>.</h2>
+    <h2 id="how-title">Три кліки між тобою і <em>першим поверненням</em>.</h2>
     <div class="how-steps">
       <div class="how-step">
         <div class="how-step-num">01</div>
-        <h3>Выбираешь партнёра</h3>
-        <p>В разделе <a href="#partners">Партнёры</a> — все актуальные сделки. У каждой указан Kozyr Score, процент возврата и тип доступа (прямая ссылка или клубный формат). Читаешь обзор — понимаешь что подходит именно тебе.</p>
+        <h3>Обираєш партнера</h3>
+        <p>У розділі <a href="#partners">Партнери</a> — усі актуальні угоди. У кожної вказаний Kozyr Score, відсоток повернення та тип доступу (пряме посилання або клубний формат). Читаєш огляд — розумієш що підходить саме тобі.</p>
       </div>
       <div class="how-step">
         <div class="how-step-num">02</div>
-        <h3>Активируешь одним кликом</h3>
-        <p>Для прямых сделок — переходишь по ссылке KOZYR и регистрируешься в руме как обычно. Для клубных форматов — ссылка ведёт в клуб ClubGG, где хост даёт доступ к приложению. KOZYR передаёт тебя партнёру и в игру не вмешивается.</p>
+        <h3>Активуєш одним кліком</h3>
+        <p>Для прямих угод — переходиш за посиланням KOZYR і реєструєшся в румі як зазвичай. Для клубних форматів — посилання веде в клуб ClubGG, де хост дає доступ до застосунку. KOZYR передає тебе партнеру і в гру не втручається.</p>
       </div>
       <div class="how-step">
         <div class="how-step-num">03</div>
-        <h3>Получаешь возврат</h3>
-        <p>Играешь как обычно — рейкбек начисляет сам рум или клуб по своим условиям. Периодичность и валюта выплат зависят от партнёра: у лицензированных румов обычно на игровой счёт, в клубных форматах — на карту напрямую от клуба. KOZYR в расчётах и выплатах не участвует.</p>
+        <h3>Отримуєш повернення</h3>
+        <p>Граєш як зазвичай — рейкбек нараховує сам рум або клуб за своїми умовами. Періодичність і валюта виплат залежать від партнера: у ліцензованих румів зазвичай на ігровий рахунок, у клубних форматах — на картку напряму від клубу. KOZYR у розрахунках і виплатах не бере участі.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Тематические подборки — компактные ссылки на гео-лендинги -->
+<!-- Тематичні добірки — компактні посилання на гео-лендинги -->
 <section class="topics" aria-labelledby="topics-title" id="topics">
   <div class="wrap">
     <div class="topics-head">
-      <div class="section-tag"><span>◆ Подборки под задачу</span></div>
-      <h2 id="topics-title" class="topics-title">Тематические <em>гиды</em></h2>
-      <p class="topics-lede">Быстрый переход к партнёрам, отобранным под конкретный запрос — гривня, старт с нуля, мобилка.</p>
+      <div class="section-tag"><span>◆ Добірки під задачу</span></div>
+      <h2 id="topics-title" class="topics-title">Тематичні <em>гайди</em></h2>
+      <p class="topics-lede">Швидкий перехід до партнерів, підібраних під конкретний запит — гривня, старт з нуля, мобілка.</p>
     </div>
     <div class="topics-grid">
-      <a href="/ua/rooms/na-grivnu/" class="topic-card topic-card--gold">
+      <a href="/ua/uk/rooms/na-grivnu/" class="topic-card topic-card--gold">
         <div class="topic-card-suit" aria-hidden="true">
           <svg viewBox="0 0 40 40" fill="currentColor"><path d="M20 4L28 20L20 36L12 20Z" opacity="0.9"/><circle cx="20" cy="20" r="3.5" fill="#fff"/></svg>
         </div>
         <div class="topic-card-eyebrow">Валюта</div>
-        <h3 class="topic-card-title">Игра в <em>гривне</em></h3>
-        <p class="topic-card-desc">Румы и клубы с прямым UAH-депозитом через Monobank и ПриватБанк. Без обменников, крипты и P2P.</p>
+        <h3 class="topic-card-title">Гра в <em>гривні</em></h3>
+        <p class="topic-card-desc">Руми та клуби з прямим UAH-депозитом через Monobank і ПриватБанк. Без обмінників, крипти й P2P.</p>
         <div class="topic-card-meta">
-          <span class="topic-card-count">2 партнёра</span>
-          <span class="topic-card-arrow" aria-hidden="true">Открыть →</span>
+          <span class="topic-card-count">2 партнери</span>
+          <span class="topic-card-arrow" aria-hidden="true">Відкрити →</span>
         </div>
       </a>
-      <a href="/ua/rooms/dlya-novichkov/" class="topic-card topic-card--blue">
+      <a href="/ua/uk/rooms/dlya-novichkov/" class="topic-card topic-card--blue">
         <div class="topic-card-suit" aria-hidden="true">
           <svg viewBox="0 0 40 40" fill="currentColor"><path d="M20 4C14 4 10 8 10 13c0 6 10 8 10 16 0-8 10-10 10-16 0-5-4-9-10-9zm-2 32h4l1 2h-6l1-2z"/></svg>
         </div>
-        <div class="topic-card-eyebrow">Первый рум</div>
-        <h3 class="topic-card-title">Для <em>новичков</em></h3>
-        <p class="topic-card-desc">Микро-лимиты от NL2, депозит от 200 ₴, простая верификация. Место где комфортно учиться без страха слить.</p>
+        <div class="topic-card-eyebrow">Перший рум</div>
+        <h3 class="topic-card-title">Для <em>новачків</em></h3>
+        <p class="topic-card-desc">Мікро-ліміти від NL2, депозит від 200 ₴, проста верифікація. Місце де комфортно вчитися без страху злити.</p>
         <div class="topic-card-meta">
-          <span class="topic-card-count">2 партнёра</span>
-          <span class="topic-card-arrow" aria-hidden="true">Открыть →</span>
+          <span class="topic-card-count">2 партнери</span>
+          <span class="topic-card-arrow" aria-hidden="true">Відкрити →</span>
         </div>
       </a>
-      <a href="/ua/rooms/mobilnye/" class="topic-card topic-card--dark">
+      <a href="/ua/uk/rooms/mobilnye/" class="topic-card topic-card--dark">
         <div class="topic-card-suit" aria-hidden="true">
           <svg viewBox="0 0 40 40" fill="currentColor"><path d="M20 4c-2 6-8 8-8 14 0 5 4 8 8 8s8-3 8-8c0-6-6-8-8-14zm-2 26v6h4v-6h-4z"/></svg>
         </div>
-        <div class="topic-card-eyebrow">Мобильные</div>
-        <h3 class="topic-card-title">С <em>телефона</em></h3>
-        <p class="topic-card-desc">Партнёры с полноценными приложениями iOS и Android. Все проверены, поддерживают украинские карты.</p>
+        <div class="topic-card-eyebrow">Мобільні</div>
+        <h3 class="topic-card-title">З <em>телефону</em></h3>
+        <p class="topic-card-desc">Партнери з повноцінними застосунками iOS та Android. Усі перевірені, підтримують українські картки.</p>
         <div class="topic-card-meta">
-          <span class="topic-card-count">2 партнёра</span>
-          <span class="topic-card-arrow" aria-hidden="true">Открыть →</span>
+          <span class="topic-card-count">2 партнери</span>
+          <span class="topic-card-arrow" aria-hidden="true">Відкрити →</span>
         </div>
       </a>
     </div>
@@ -3221,8 +3217,8 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
   <div class="wrap">
     <div class="compare-head">
       <div class="section-tag"><span class="accent-text">● PokerBet vs KlubOk</span></div>
-      <h2 id="compare-title">Что выбрать <em>под свою задачу</em>.</h2>
-      <p class="compare-lead">Два разных подхода: покер-рум на гривны с лицензией Curaçao — или приватный клуб в ClubGG с мягкими полями. Сравнение по ключевым параметрам.</p>
+      <h2 id="compare-title">Що обрати <em>під своє завдання</em>.</h2>
+      <p class="compare-lead">Два різні підходи: покер-рум на гривні з ліцензією Curaçao — або приватний клуб у ClubGG з м'якими полями. Порівняння за ключовими параметрами.</p>
     </div>
 
     <div class="compare-wrap">
@@ -3233,39 +3229,39 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
             <th>
               <div class="compare-room">
                 <div class="compare-logo compare-logo--img"><img src="/ua/blog/logos/pokerbet.webp" alt="PokerBet" width="44" height="44"></div>
-                <div><div class="compare-name">PokerBet</div><div class="compare-sub">Лицензия Curaçao (CGA)</div></div>
+                <div><div class="compare-name">PokerBet</div><div class="compare-sub">Ліцензія Curaçao (CGA)</div></div>
               </div>
             </th>
             <th>
               <div class="compare-room">
                 <div class="compare-logo compare-logo--img"><img src="/ua/blog/logos/klubok.webp" alt="KlubOk" width="44" height="44"></div>
-                <div><div class="compare-name">KlubOk</div><div class="compare-sub">Клуб в ClubGG</div></div>
+                <div><div class="compare-name">KlubOk</div><div class="compare-sub">Клуб у ClubGG</div></div>
               </div>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr><th scope="row">Рейкбек</th><td>нет</td><td class="compare-best">40%</td></tr>
-          <tr><th scope="row">Модель начисления</th><td>—</td><td>еженедельно</td></tr>
-          <tr><th scope="row">Юрисдикция лицензии</th><td>Curaçao (CGA)</td><td>офшорная юрисдикция</td></tr>
-          <tr><th scope="row">Лимиты кэша</th><td>0.50/1 – 50/100 ₴</td><td>0.50/1 – 100/200 ₴</td></tr>
-          <tr><th scope="row">Форматы</th><td>Холдем, Омаха, Short Deck, MTT, fast-fold</td><td>Холдем, PLO5, AoF, 6+, SNG, MTT</td></tr>
-          <tr><th scope="row">Платёжки</th><td>карта / P2P / крипта</td><td>перевод / крипта</td></tr>
-          <tr><th scope="row">Мин. депозит</th><td>300 ₴</td><td class="compare-best">100 ₴</td></tr>
-          <tr><th scope="row">Срок вывода</th><td>~100 минут</td><td class="compare-best">до 1 часа</td></tr>
-          <tr><th scope="row">Верификация</th><td>обязательна</td><td>не требуется*</td></tr>
-          <tr><th scope="row">Поля</th><td>фишовые, слабые оппоненты</td><td>фишовые, слабые оппоненты</td></tr>
-          <tr><th scope="row">Валюта</th><td>гривна (UAH)</td><td>гривна (1 фишка = 1 ₴)</td></tr>
+          <tr><th scope="row">Рейкбек</th><td>немає</td><td class="compare-best">40%</td></tr>
+          <tr><th scope="row">Модель нарахування</th><td>—</td><td>щотижня</td></tr>
+          <tr><th scope="row">Юрисдикція ліцензії</th><td>Curaçao (CGA)</td><td>офшорна юрисдикція</td></tr>
+          <tr><th scope="row">Ліміти кешу</th><td>0.50/1 – 50/100 ₴</td><td>0.50/1 – 100/200 ₴</td></tr>
+          <tr><th scope="row">Формати</th><td>Холдем, Омаха, Short Deck, MTT, fast-fold</td><td>Холдем, PLO5, AoF, 6+, SNG, MTT</td></tr>
+          <tr><th scope="row">Платіжки</th><td>картка / P2P / крипта</td><td>переказ / крипта</td></tr>
+          <tr><th scope="row">Мін. депозит</th><td>300 ₴</td><td class="compare-best">100 ₴</td></tr>
+          <tr><th scope="row">Термін виведення</th><td>~100 хвилин</td><td class="compare-best">до 1 години</td></tr>
+          <tr><th scope="row">Верифікація</th><td>обов'язкова</td><td>не потрібна*</td></tr>
+          <tr><th scope="row">Поля</th><td>фішові, слабкі опоненти</td><td>фішові, слабкі опоненти</td></tr>
+          <tr><th scope="row">Валюта</th><td>гривня (UAH)</td><td>гривня (1 фішка = 1 ₴)</td></tr>
           <tr>
             <th scope="row"></th>
-            <td><a href="/ua/rooms/pokerbet/" class="btn btn-dark compare-cta">Обзор PokerBet →</a></td>
-            <td><a href="/ua/clubs/klubok/" class="btn btn-dark compare-cta">Обзор KlubOk →</a></td>
+            <td><a href="/ua/uk/rooms/pokerbet/" class="btn btn-dark compare-cta">Огляд PokerBet →</a></td>
+            <td><a href="/ua/uk/clubs/klubok/" class="btn btn-dark compare-cta">Огляд KlubOk →</a></td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <p class="compare-note">Ищешь игру на гривны с депозитами картой, через P2P или крипту — PokerBet. Ищешь высокий рейкбек и мягкие поля без верификации — KlubOk. Условия подтверждаются у партнёров и обновляются по мере поступления данных.</p>
+    <p class="compare-note">Шукаєш гру на гривні з депозитами карткою, через P2P або крипту — PokerBet. Шукаєш високий рейкбек і м'які поля без верифікації — KlubOk. Умови підтверджуються в партнерів і оновлюються в міру надходження даних.</p>
   </div>
 </section>
 
@@ -3274,12 +3270,12 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
   <div class="wrap match-inner">
     <div class="match-copy">
       <div class="section-tag"><span class="accent-text">● Kozyr Match</span></div>
-      <h2 id="match-title-h2">Посчитай <em>свой</em> возврат.</h2>
-      <p>Введи лимит кэша и часы игры в неделю — покажем ориентировочный возврат через наших партнёров. Ставки рейка — усреднённые для NL-cash.</p>
+      <h2 id="match-title-h2">Порахуй <em>свій</em> повернення.</h2>
+      <p>Введи ліміт кешу та години гри на тиждень — покажемо орієнтовне повернення через наших партнерів. Ставки рейка — усереднені для NL-cash.</p>
       <ul class="match-checklist">
-        <li>Формула публичная — никаких скрытых коэффициентов</li>
-        <li>Проценты возврата подтверждаются партнёрами</li>
-        <li>Расчёт в USD с ориентиром по актуальному курсу</li>
+        <li>Формула публічна — жодних прихованих коефіцієнтів</li>
+        <li>Відсотки повернення підтверджуються партнерами</li>
+        <li>Розрахунок у USD з орієнтиром за актуальним курсом</li>
       </ul>
     </div>
     <div class="match" role="region" aria-label="Калькулятор Kozyr Match">
@@ -3289,7 +3285,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       </div>
       <div class="field">
         <div class="field-label">
-          <span>Твой лимит</span>
+          <span>Твій ліміт</span>
           <span class="value" id="limit-value">NL50</span>
         </div>
         <div class="limit-grid" id="limits">
@@ -3303,18 +3299,18 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       </div>
       <div class="field">
         <div class="field-label">
-          <span>Часов в неделю</span>
+          <span>Годин на тиждень</span>
           <span class="value"><span id="hours-value">20</span> ч</span>
         </div>
-        <input type="range" min="5" max="60" value="20" step="1" class="slider" id="hours" aria-label="Часов в неделю">
+        <input type="range" min="5" max="60" value="20" step="1" class="slider" id="hours" aria-label="Годин на тиждень">
       </div>
       <div class="result-block">
-        <div class="result-title">Через KOZYR ты вернёшь</div>
-        <div class="result-total"><span class="accent">$<span id="total">847</span></span>/мес</div>
-        <div class="result-note" id="loss-note">Без сделки теряешь $565 в месяц</div>
+        <div class="result-title">Через KOZYR ти повернеш</div>
+        <div class="result-total"><span class="accent">$<span id="total">847</span></span>/міс</div>
+        <div class="result-note" id="loss-note">Без угоди втрачаєш $565 на місяць</div>
         <div class="result-rooms" id="result-rooms"></div>
       </div>
-      <a href="#partners" class="btn btn-dark btn-lg match-cta">Смотреть партнёров →</a>
+      <a href="#partners" class="btn btn-dark btn-lg match-cta">Дивитися партнерів →</a>
     </div>
   </div>
 </section>
@@ -3322,73 +3318,73 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 <section class="faq" aria-labelledby="faq-title" id="faq">
   <div class="wrap faq-inner">
     <div class="faq-side">
-      <div class="section-tag"><span>FAQ · Часто задаваемые</span></div>
-      <h2 id="faq-title">Всё, что нужно знать <em>до</em> первой сделки.</h2>
-      <p>Если ответа нет — пиши в Telegram @kozyr_support, отвечаем за 15 минут в любое время суток.</p>
-      <a href="https://t.me/kozyr_support" class="btn btn-primary">Написать в Telegram →</a>
+      <div class="section-tag"><span>FAQ · Часті запитання</span></div>
+      <h2 id="faq-title">Усе, що потрібно знати <em>до</em> першої угоди.</h2>
+      <p>Якщо відповіді немає — пиши в Telegram @kozyr_support, відповідаємо за 15 хвилин у будь-який час доби.</p>
+      <a href="https://t.me/kozyr_support" class="btn btn-primary">Написати в Telegram →</a>
     </div>
     <div class="faq-list">
       <div class="faq-item">
         <button class="faq-q">
-          Что такое рейкбек и как он работает?
+          Що таке рейкбек і як він працює?
           <svg class="faq-icon"><use href="#icon-plus"/></svg>
         </button>
         <div class="faq-a">
-          <p>Рейкбек — это возврат части рейка (комиссии рума с каждой раздачи) игроку. Механика простая: покер-рум платит партнёрскую комиссию за каждого приведённого игрока. KOZYR как партнёр получает эту комиссию и возвращает её большую часть игроку. Регистрация через нашу реф-ссылку = получаешь рейкбек. Регистрация напрямую = вся комиссия остаётся у рума.</p>
+          <p>Рейкбек — це повернення частини рейка (комісії руму з кожної роздачі) гравцю. Механіка проста: покер-рум платить партнерську комісію за кожного приведеного гравця. KOZYR як партнер отримує цю комісію і повертає її більшу частину гравцю. Реєстрація через наше реф-посилання = отримуєш рейкбек. Реєстрація напряму = вся комісія залишається в руму.</p>
         </div>
       </div>
       <div class="faq-item">
         <button class="faq-q">
-          Как активировать сделку?
+          Як активувати угоду?
           <svg class="faq-icon"><use href="#icon-plus"/></svg>
         </button>
         <div class="faq-a">
-          <p>Выбираешь партнёра в разделе <a href="#partners">Партнёры</a>, читаешь обзор, нажимаешь CTA. Дальше два сценария в зависимости от типа партнёра. <strong>Прямая ссылка</strong> — переходишь по реф-ссылке в рум, регистрируешься как обычно, рейкбек начисляется автоматически. <strong>Клубный формат</strong> — CTA ведёт в Telegram-чат клуба, где получаешь доступ к приложению. Обе схемы прозрачные, никаких промокодов или скрытых шагов.</p>
+          <p>Обираєш партнера в разделе <a href="#partners">Партнери</a>, читаєш огляд, натискаєш CTA. Далі два сценарії залежно від типу партнера. <strong>Пряме посилання</strong> — переходиш за реф-посиланням у рум, реєструєшся як зазвичай, рейкбек нараховується автоматично. <strong>Клубний формат</strong> — CTA веде в Telegram-чат клубу, де отримуєш доступ до застосунку. Обидві схеми прозорі, жодних промокодів або прихованих кроків.</p>
         </div>
       </div>
       <div class="faq-item">
         <button class="faq-q">
-          Что такое Kozyr Score?
+          Що таке Kozyr Score?
           <svg class="faq-icon"><use href="#icon-plus"/></svg>
         </button>
         <div class="faq-a">
-          <p>Наш рейтинг покерных партнёров от 0 до 10 по пяти параметрам: рейкбек, качество трафика, скорость выплат, промо и поддержка. Оценка каждого партнёра публикуется на его странице обзора с разбивкой по критериям. Методология открытая, обновляется по мере накопления данных. Ни один партнёр не может «купить» повышенную оценку.</p>
+          <p>Наш рейтинг покерних партнерів від 0 до 10 за п'ятьма параметрами: рейкбек, якість трафіку, швидкість виплат, промо та підтримка. Оцінка кожного партнера публікується на його сторінці огляду з розбивкою за критеріями. Методологія відкрита, оновлюється в міру накопичення даних. Жоден партнер не може «купити» підвищену оцінку.</p>
         </div>
       </div>
       <div class="faq-item">
         <button class="faq-q">
-          Что означают типы партнёров: «Прямая ссылка» и «Клубный формат»?
+          Що означають типи партнерів: «Пряме посилання» та «Клубний формат»?
           <svg class="faq-icon"><use href="#icon-plus"/></svg>
         </button>
         <div class="faq-a">
-          <p><strong>Прямая ссылка</strong> (♦ бубна) — классические покер-румы: регистрируешься через нашу реф-ссылку, играешь на их платформе. Обычно это лицензированные операторы с прямыми банковскими депозитами. <strong>Клубный формат</strong> (♣ треф) — приватные покерные приложения (ClubGG, PPPoker, PokerBros), где игроки объединяются в клубы. Обычно мягче поля и клубные расчёты через Telegram-администратора клуба.</p>
+          <p><strong>Пряме посилання</strong> (♦ бубна) — класичні покер-руми: реєструєшся через наше реф-посилання, граєш на їхній платформі. Зазвичай це ліцензовані оператори з прямими банківськими депозитами. <strong>Клубний формат</strong> (♣ трефа) — приватні покерні застосунки (ClubGG, PPPoker, PokerBros), де гравці об'єднуються в клуби. Зазвичай м'якші поля та клубні розрахунки через Telegram-адміністратора клубу.</p>
         </div>
       </div>
       <div class="faq-item">
         <button class="faq-q">
-          Как часто и как выплачивается рейкбек?
+          Як часто і як виплачується рейкбек?
           <svg class="faq-icon"><use href="#icon-plus"/></svg>
         </button>
         <div class="faq-a">
-          <p>Зависит от типа партнёра. У лицензированных румов рейкбек обычно начисляется еженедельно или ежемесячно на игровой счёт или отдельным переводом. В клубных форматах — как правило, еженедельные расчёты через Telegram-администрацию клуба напрямую на карту. Точные условия и валюта выплат указаны на странице каждого партнёра.</p>
+          <p>Залежить від типу партнера. У ліцензованих румів рейкбек зазвичай нараховується щотижня або щомісяця на ігровий рахунок або окремим переказом. У клубних форматах — як правило, щотижневі розрахунки через Telegram-адміністрацію клубу напряму на картку. Точні умови та валюта виплат зазначені на сторінці кожного партнера.</p>
         </div>
       </div>
       <div class="faq-item">
         <button class="faq-q">
-          С какими странами работает KOZYR?
+          З якими країнами працює KOZYR?
           <svg class="faq-icon"><use href="#icon-plus"/></svg>
         </button>
         <div class="faq-a">
-          <p>Сейчас основной фокус — <strong>Украина</strong>: партнёры адаптированы под украинских игроков, расчёты в UAH, поддержка на русском и украинском. В планах добавление партнёрств для Польши и Германии. Актуальный список доступных сделок фильтруется по стране в разделе <a href="#partners">Партнёры</a>. Правовая ответственность за соблюдение локального законодательства — на игроке, подробности в <a href="/ua/legal/#terms">Пользовательском соглашении</a>.</p>
+          <p>Зараз основний фокус — <strong>Україна</strong>: партнери адаптовані під українських гравців, розрахунки в UAH, підтримка російською та українською. У планах додавання партнерств для Польщі та Німеччини. Актуальний список доступних угод фільтрується за країною в розділі <a href="#partners">Партнери</a>. Правова відповідальність за дотримання локального законодавства — на гравці, подробиці в <a href="/ua/uk/legal/#terms">Пользовательском соглашении</a>.</p>
         </div>
       </div>
       <div class="faq-item">
         <button class="faq-q">
-          Возможно ли использование KOZYR анонимно?
+          Чи можливе використання KOZYR анонімно?
           <svg class="faq-icon"><use href="#icon-plus"/></svg>
         </button>
         <div class="faq-a">
-          <p>Использование сайта KOZYR — да, без регистрации: смотришь партнёров, читаешь обзоры, пользуешься калькулятором. Регистрация в покер-руме — по правилам самого рума. Лицензированные операторы требуют полную KYC-верификацию (паспорт, ИНН, подтверждение адреса). Клубные приложения обычно более гибкие в этом плане. Мы не запрашиваем ваши документы — все KYC-процедуры проходят между тобой и румом.</p>
+          <p>Використання сайту KOZYR — так, без реєстрації: дивишся партнерів, читаєш огляди, користуєшся калькулятором. Реєстрація в покер-румі — за правилами самого руму. Ліцензовані оператори вимагають повну KYC-верифікацію (паспорт, ІПН, підтвердження адреси). Клубні застосунки зазвичай гнучкіші в цьому плані. Ми не запитуємо ваші документи — усі KYC-процедури проходять між тобою і румом.</p>
         </div>
       </div>
     </div>
@@ -3397,9 +3393,9 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 
 <section class="final" aria-labelledby="final-title">
   <div class="final-inner">
-    <h2 id="final-title">Готов сыграть <em>свой</em> козырь?</h2>
-    <p>30 секунд на выбор, один клик на активацию, стабильный возврат каждый месяц.</p>
-    <a href="#partners" class="btn btn-primary btn-xl">Смотреть партнёров →</a>
+    <h2 id="final-title">Готовий зіграти <em>свій</em> козир?</h2>
+    <p>30 секунд на вибір, один клік на активацію, стабільне повернення щомісяця.</p>
+    <a href="#partners" class="btn btn-primary btn-xl">Дивитися партнерів →</a>
     <div class="final-suits">
       <svg><use href="#suit-spade"/></svg>
       <svg><use href="#suit-heart"/></svg>
@@ -3436,7 +3432,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 17 5 25 28 34 -2 8 -132 -113z" fill="#14358F"/></g></g></svg></span>
           <span>KOZYR</span>
         </a>
-        <p>Платформа сделок в покер-румах. Возвращаем игрокам до 75% рейка через прозрачный калькулятор.</p>
+        <p>Платформа угод у покер-румах. Повертаємо гравцям до 75% рейка через прозорий калькулятор.</p>
         <div class="footer-social">
           <a href="https://t.me/kozyr_support" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.5 4.5L2.5 12l6 2 2 6 3-4 5 4 3-15z"/></svg></a>
           <a href="https://t.me/kozyr_support" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 4H21l-6.6 7.5L22 20h-6.3l-4.9-6.4L5 20H3l7.1-8.1L2 4h6.4l4.5 5.9L18.9 4z"/></svg></a>
@@ -3446,47 +3442,47 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <div class="footer-col">
         <h4>Продукт</h4>
         <ul>
-          <li><a href="#partners">Партнёры</a></li>
+          <li><a href="#partners">Партнери</a></li>
           <li><a href="#score">Калькулятор</a></li>
-          <li><a href="#how">Как это работает</a></li>
-          <li><a href="#countries">Легальность</a></li>
+          <li><a href="#how">Як це працює</a></li>
+          <li><a href="#countries">Легальність</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Партнёры</h4>
+        <h4>Партнери</h4>
         <ul>
-          <li><a href="/ua/rooms/pokerbet/">PokerBet</a></li>
-          <li><a href="/ua/clubs/klubok/">KlubOk (ClubGG)</a></li>
+          <li><a href="/ua/uk/rooms/pokerbet/">PokerBet</a></li>
+          <li><a href="/ua/uk/clubs/klubok/">KlubOk (ClubGG)</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Помощь</h4>
+        <h4>Допомога</h4>
         <ul>
-          <li><a href="/ua/blog/">Блог</a></li>
+          <li><a href="/ua/uk/blog/">Блог</a></li>
           <li><a href="#faq">FAQ</a></li>
-          <li><a href="https://t.me/kozyr_support">Telegram-поддержка</a></li>        </ul>
+          <li><a href="https://t.me/kozyr_support">Telegram-підтримка</a></li>        </ul>
       </div>
       <div class="footer-col">
-        <h4>Юридическое</h4>
+        <h4>Юридичне</h4>
         <ul>
-          <li><a href="/ua/legal/#terms">Пользовательское соглашение</a></li>
-          <li><a href="/ua/legal/#privacy">Приватность</a></li>
-          <li><a href="/ua/legal/#responsible-gaming">Ответственная игра</a></li>
-          <li><a href="/ua/legal/#disclaimer">Отказ от ответственности</a></li>
+          <li><a href="/ua/uk/legal/#terms">Користувацьку угоду</a></li>
+          <li><a href="/ua/uk/legal/#privacy">Приватність</a></li>
+          <li><a href="/ua/uk/legal/#responsible-gaming">Відповідальна гра</a></li>
+          <li><a href="/ua/uk/legal/#disclaimer">Відмова від відповідальності</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <div>© 2026 KOZYR · Играй ответственно · 21+</div>
+      <div>© 2026 KOZYR · Грай відповідально · 21+</div>
       <div class="footer-countries">
-        <span class="active">RU</span>
-        <span>UA</span>
+        <span>RU</span>
+        <span class="active">UA</span>
       </div>
     </div>
   </div>
 </footer>
 
-<!-- Единый источник данных о партнёрах (одна точка правды: главная + блог) -->
+<!-- Єдине джерело даних про партнерів -->
 <script src="/partners.js?v=13"></script>
 
 <script>
@@ -3550,7 +3546,7 @@ function render() {
   const totalEl = document.getElementById('total');
   const cur = parseInt(totalEl.textContent.replace(/[\s,]/g,'')) || 0;
   animate(totalEl, cur, topReturn);
-  document.getElementById('loss-note').textContent = `Без сделки теряешь $${loss.toLocaleString('ru-RU')} в месяц`;
+  document.getElementById('loss-note').textContent = `Без угоди втрачаєш $${loss.toLocaleString('ru-RU')} на місяць`;
 
   document.getElementById('result-rooms').innerHTML = top.map(r => `
     <div class="result-room">
@@ -3581,7 +3577,7 @@ document.querySelectorAll('.faq-item').forEach(item => {
 });
 
 render();
-// Перерисовываем после загрузки финдера — чтобы подхватить реальных партнёров
+// Перерисовываем после загрузки финдера — чтобы подхватить реальных партнерів
 window.addEventListener('load', function () { try { render(); } catch (e) {} });
 </script>
 
@@ -3594,11 +3590,11 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
    1) KOZYR_DEMO — переключатель демо-данных (перед деплоем: false)
    2) LIVE_ROOMS — реальные партнёры
 
-   TODO перед публикацией (данные подтверждаются у партнёров):
-   · rake      — реальный % возврата (сейчас null → «уточняется»)
+   TODO перед публикацией (данные подтверждаются у партнерів):
+   · rake      — реальный % возврата (сейчас null → «уточнюється»)
    · limits    — реально доступные лимиты
    · games     — реально доступные форматы
-   · payments  — карта / крипта / банк (уже сгруппировано)
+   · payments  — картка / крипта / банк (уже сгруппировано)
    · bonus     — что реально даёт рум
    · url       — реф-ссылка вместо страницы обзора, если нужно
    ============================================================ */
@@ -3613,58 +3609,58 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
 
   var DICT = {
     countries: {
-      /* активные и в разработке — уже были */
-      ua:  { label: 'Украина',       flag: 'ua' },
-      pl:  { label: 'Польша',        flag: 'pl' },
-      de:  { label: 'Германия',      flag: 'de' },
-      cz:  { label: 'Чехия',         flag: 'cz' },
+      /* активні та в розробці — вже були */
+      ua:  { label: 'Україна',       flag: 'ua' },
+      pl:  { label: 'Польща',        flag: 'pl' },
+      de:  { label: 'Німеччина',     flag: 'de' },
+      cz:  { label: 'Чехія',         flag: 'cz' },
       int: { label: 'International', flag: null },
-      /* СНГ — для корректной работы плашки acceptance */
-      ru:  { label: 'Россия',        flag: 'ru' },
-      by:  { label: 'Беларусь',      flag: 'by' },
+      /* СНД — для коректної роботи плашки acceptance */
+      ru:  { label: 'Росія',         flag: 'ru' },
+      by:  { label: 'Білорусь',      flag: 'by' },
       kz:  { label: 'Казахстан',     flag: 'kz' },
       md:  { label: 'Молдова',       flag: 'md' },
-      ge:  { label: 'Грузия',        flag: 'ge' },
-      am:  { label: 'Армения',       flag: 'am' },
+      ge:  { label: 'Грузія',        flag: 'ge' },
+      am:  { label: 'Вірменія',      flag: 'am' },
       az:  { label: 'Азербайджан',   flag: 'az' },
-      /* Балтия */
+      /* Балтія */
       lt:  { label: 'Литва',         flag: 'lt' },
-      lv:  { label: 'Латвия',        flag: 'lv' },
-      ee:  { label: 'Эстония',       flag: 'ee' },
-      /* Прочие типовые EU */
-      sk:  { label: 'Словакия',      flag: 'sk' },
-      hu:  { label: 'Венгрия',       flag: 'hu' },
-      ro:  { label: 'Румыния',       flag: 'ro' },
-      bg:  { label: 'Болгария',      flag: 'bg' },
-      at:  { label: 'Австрия',       flag: 'at' },
-      it:  { label: 'Италия',        flag: 'it' },
-      es:  { label: 'Испания',       flag: 'es' },
-      pt:  { label: 'Португалия',    flag: 'pt' },
-      fr:  { label: 'Франция',       flag: 'fr' },
-      nl:  { label: 'Нидерланды',    flag: 'nl' },
-      be:  { label: 'Бельгия',       flag: 'be' },
-      gb:  { label: 'Великобритания', flag: 'gb' },
-      ie:  { label: 'Ирландия',      flag: 'ie' },
-      tr:  { label: 'Турция',        flag: 'tr' },
-      il:  { label: 'Израиль',       flag: 'il' },
-      cy:  { label: 'Кипр',          flag: 'cy' }
+      lv:  { label: 'Латвія',        flag: 'lv' },
+      ee:  { label: 'Естонія',       flag: 'ee' },
+      /* Інші типові EU */
+      sk:  { label: 'Словаччина',    flag: 'sk' },
+      hu:  { label: 'Угорщина',      flag: 'hu' },
+      ro:  { label: 'Румунія',       flag: 'ro' },
+      bg:  { label: 'Болгарія',      flag: 'bg' },
+      at:  { label: 'Австрія',       flag: 'at' },
+      it:  { label: 'Італія',        flag: 'it' },
+      es:  { label: 'Іспанія',       flag: 'es' },
+      pt:  { label: 'Португалія',    flag: 'pt' },
+      fr:  { label: 'Франція',       flag: 'fr' },
+      nl:  { label: 'Нідерланди',    flag: 'nl' },
+      be:  { label: 'Бельгія',       flag: 'be' },
+      gb:  { label: 'Велика Британія', flag: 'gb' },
+      ie:  { label: 'Ірландія',      flag: 'ie' },
+      tr:  { label: 'Туреччина',     flag: 'tr' },
+      il:  { label: 'Ізраїль',       flag: 'il' },
+      cy:  { label: 'Кіпр',          flag: 'cy' }
     },
     games: {
-      cash:  { label: 'Кэш' },
+      cash:  { label: 'Кеш' },
       mtt:   { label: 'МТТ' },
-      spins: { label: 'Спины' },
+      spins: { label: 'Спіни' },
       plo:   { label: 'Омаха' },
       sng:   { label: 'SNG' }
     },
     payments: {
-      card:   { label: 'Карта' },
+      card:   { label: 'Картка' },
       crypto: { label: 'Крипта' },
-      bank:   { label: 'Банк-перевод' }
+      bank:   { label: 'Банк-переказ' }
     },
     payout: {
-      fast: { label: 'До 1 часа',   dot: 'fast' },
-      day:  { label: 'До 24 часов', dot: 'mid'  },
-      slow: { label: 'Дольше суток', dot: 'slow' }
+      fast: { label: 'До 1 години',   dot: 'fast' },
+      day:  { label: 'До 24 годин', dot: 'mid'  },
+      slow: { label: 'Довше доби', dot: 'slow' }
     },
     network: {
       pokerbet: { label: 'PokerBet' },
@@ -3672,7 +3668,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       ipoker:   { label: 'iPoker' },
       winning:  { label: 'Winning' },
       chico:    { label: 'Chico' },
-      indep:    { label: 'Независимый' }
+      indep:    { label: 'Незалежний' }
     },
     software: {
       win:     { label: 'Windows' },
@@ -3680,18 +3676,18 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       ios:     { label: 'iOS' },
       android: { label: 'Android' },
       web:     { label: 'Браузер' },
-      hud:     { label: 'HUD разрешён' }
+      hud:     { label: 'HUD дозволений' }
     },
     bonus: {
-      welcome:  { label: 'Приветственный' },
-      freeroll: { label: 'Фрироллы' },
+      welcome:  { label: 'Привітальний' },
+      freeroll: { label: 'Фріроли' },
       rakerace: { label: 'Рейк-гонки' },
-      missions: { label: 'Миссии' },
+      missions: { label: 'Місії' },
       none:     { label: 'Без бонуса' }
     },
     access: {
-      direct: { label: 'Прямая ссылка' },
-      club:   { label: 'Клубный формат' }
+      direct: { label: 'Пряме посилання' },
+      club:   { label: 'Клубний формат' }
     }
   };
 
@@ -3703,7 +3699,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       name: 'PokerBet',
       logo: { text: 'PB', from: '#2668FF', to: '#1E52D9' },
       score: 8.2,
-      rake: null,                       // рейкбека нет
+      rake: null,                       // рейкбека немає
       access: 'direct',
       countries: ['ua'],
       limits: ['NL10', 'NL25', 'NL50', 'NL100', 'NL200'],
@@ -3713,16 +3709,16 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       software: ['win', 'android', 'ios', 'web', 'hud'],
       bonus: ['welcome', 'freeroll'],
       payoutHours: 2,
-      payoutLabel: '~100 минут',
+      payoutLabel: '~100 хвилин',
       currency: 'UAH',
-      license: 'Лицензия Curaçao (CGA)',
-      note: 'Покер-рум с игрой в гривне. Депозиты картой, через P2P или в крипте. Рейкбека нет.',
+      license: 'Ліцензія Curaçao (CGA)',
+      note: 'Покер-рум з грою в гривні. Депозити карткою, через P2P або в крипті. Рейкбека немає.',
       url: '/ua/rooms/pokerbet/'
     },
     {
       id: 'klubok',
       name: 'KlubOk',
-      logo: { text: 'KO', from: '#D9A93B', to: '#7E5512' },
+      logo: { text: 'KO', from: '#229ED9', to: '#1a89bd' },
       score: 7.9,
       rake: 40,                         // 40% еженедельно (подтверждено на /ua/clubs/klubok/)
       access: 'club',
@@ -3734,16 +3730,17 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       software: ['ios', 'android', 'win'],
       bonus: ['rakerace'],
       payoutHours: 1,
-      payoutLabel: '15–60 минут',
+      payoutLabel: '15–60 хвилин',
       currency: 'UAH',
-      license: 'Офшорная юрисдикция',
-      note: 'Приватный клуб в ClubGG. Мягкие поля, расчёты в гривне через Telegram.',
+      license: 'Офшорна юрисдикція',
+      note: 'Приватний клуб у ClubGG. М’які поля, розрахунки в гривні через Telegram.',
       url: '/ua/clubs/klubok/'
     }
   ];
 
-  /* Единый источник данных: если загружен /partners.js — берём его,
-     иначе используем инлайновый LIVE_ROOMS как fallback (не ломаемся). */
+  /* Единый источник данных для калькулятора Kozyr Match */
+  /* Єдине джерело даних: якщо завантажено /partners.js — беремо його,
+     інакше — інлайновий LIVE_ROOMS як fallback. */
   if (window.KOZYR_PARTNERS && window.KOZYR_PARTNERS.length) {
     LIVE_ROOMS = window.KOZYR_PARTNERS;
   } else {
@@ -3753,14 +3750,14 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
   /* ---------- Демо-набор (чтобы увидеть фильтры в работе) ---------- */
 
   var DEMO_ROOMS = [
-    { id:'d3', demo:true, name:'Демо-рум 03', logo:{text:'03',from:'#7C3AED',to:'#5B21B6'}, score:8.6, rake:60, access:'direct', countries:['ua','pl'], limits:['NL25','NL50','NL100','NL200','NL500'], games:['cash','mtt','plo'], network:'ipoker', payments:['card','crypto'], software:['win','mac','web','hud'], bonus:['welcome','rakerace'], payoutHours:6, payoutLabel:'до 6 часов', currency:'EUR', license:'MGA', note:'Демо-запись. Заменить на реального партнёра.', url:'#' },
-    { id:'d4', demo:true, name:'Демо-рум 04', logo:{text:'04',from:'#05A661',to:'#047857'}, score:7.4, rake:45, access:'club', countries:['ua','kz'], limits:['NL10','NL25','NL50'], games:['cash','spins'], network:'clubgg', payments:['crypto'], software:['ios','android'], bonus:['missions'], payoutHours:1, payoutLabel:'до часа', currency:'USDT', license:'Офшор', note:'Демо-запись.', url:'#' },
-    { id:'d5', demo:true, name:'Демо-рум 05', logo:{text:'05',from:'#E63946',to:'#B91C1C'}, score:6.8, rake:35, access:'direct', countries:['pl'], limits:['NL50','NL100','NL200'], games:['cash','mtt'], network:'winning', payments:['card','bank'], software:['win','mac','android'], bonus:['welcome'], payoutHours:48, payoutLabel:'1–3 дня', currency:'PLN', license:'Ustawa hazardowa', note:'Демо-запись.', url:'#' },
-    { id:'d6', demo:true, name:'Демо-рум 06', logo:{text:'06',from:'#0EA5E9',to:'#0369A1'}, score:8.9, rake:70, access:'club', countries:['int'], limits:['NL100','NL200','NL500'], games:['cash','plo'], network:'indep', payments:['crypto'], software:['win','web','hud'], bonus:['rakerace','missions'], payoutHours:2, payoutLabel:'1–3 часа', currency:'USDT', license:'Офшор', note:'Демо-запись.', url:'#' },
-    { id:'d7', demo:true, name:'Демо-рум 07', logo:{text:'07',from:'#F59E0B',to:'#B45309'}, score:7.1, rake:50, access:'direct', countries:['de','cz'], limits:['NL10','NL25','NL50','NL100'], games:['cash','sng','mtt'], network:'chico', payments:['card','bank'], software:['win','mac','ios','android'], bonus:['freeroll'], payoutHours:24, payoutLabel:'до суток', currency:'EUR', license:'Glücksspielstaatsvertrag', note:'Демо-запись.', url:'#' },
-    { id:'d8', demo:true, name:'Демо-рум 08', logo:{text:'08',from:'#8B5CF6',to:'#6D28D9'}, score:6.2, rake:30, access:'direct', countries:['ua','pl','cz'], limits:['NL10','NL25'], games:['spins','sng'], network:'ipoker', payments:['card'], software:['android','ios','web'], bonus:['none'], payoutHours:72, payoutLabel:'2–3 дня', currency:'EUR', license:'MGA', note:'Демо-запись.', url:'#' },
-    { id:'d9', demo:true, name:'Демо-рум 09', logo:{text:'09',from:'#14B8A6',to:'#0F766E'}, score:8.0, rake:55, access:'club', countries:['ua','int'], limits:['NL25','NL50','NL100','NL200'], games:['cash','mtt','plo','spins'], network:'clubgg', payments:['card','crypto'], software:['ios','android','win','hud'], bonus:['rakerace'], payoutHours:1, payoutLabel:'15–45 минут', currency:'UAH', license:'Офшор', note:'Демо-запись.', url:'#' },
-    { id:'d10', demo:true, name:'Демо-рум 10', logo:{text:'10',from:'#64748B',to:'#334155'}, score:5.9, rake:25, access:'direct', countries:['kz','int'], limits:['NL500'], games:['cash'], network:'indep', payments:['crypto'], software:['win'], bonus:['none'], payoutHours:12, payoutLabel:'до 12 часов', currency:'USDT', license:'Офшор', note:'Демо-запись.', url:'#' }
+    { id:'d3', demo:true, name:'Демо-рум 03', logo:{text:'03',from:'#7C3AED',to:'#5B21B6'}, score:8.6, rake:60, access:'direct', countries:['ua','pl'], limits:['NL25','NL50','NL100','NL200','NL500'], games:['cash','mtt','plo'], network:'ipoker', payments:['card','crypto'], software:['win','mac','web','hud'], bonus:['welcome','rakerace'], payoutHours:6, payoutLabel:'до 6 годин', currency:'EUR', license:'MGA', note:'Демо-запис. Замінити на реального партнера.', url:'#' },
+    { id:'d4', demo:true, name:'Демо-рум 04', logo:{text:'04',from:'#05A661',to:'#047857'}, score:7.4, rake:45, access:'club', countries:['ua','kz'], limits:['NL10','NL25','NL50'], games:['cash','spins'], network:'clubgg', payments:['crypto'], software:['ios','android'], bonus:['missions'], payoutHours:1, payoutLabel:'до години', currency:'USDT', license:'Офшор', note:'Демо-запис.', url:'#' },
+    { id:'d5', demo:true, name:'Демо-рум 05', logo:{text:'05',from:'#E63946',to:'#B91C1C'}, score:6.8, rake:35, access:'direct', countries:['pl'], limits:['NL50','NL100','NL200'], games:['cash','mtt'], network:'winning', payments:['card','bank'], software:['win','mac','android'], bonus:['welcome'], payoutHours:48, payoutLabel:'1–3 дні', currency:'PLN', license:'Ustawa hazardowa', note:'Демо-запис.', url:'#' },
+    { id:'d6', demo:true, name:'Демо-рум 06', logo:{text:'06',from:'#0EA5E9',to:'#0369A1'}, score:8.9, rake:70, access:'club', countries:['int'], limits:['NL100','NL200','NL500'], games:['cash','plo'], network:'indep', payments:['crypto'], software:['win','web','hud'], bonus:['rakerace','missions'], payoutHours:2, payoutLabel:'1–3 години', currency:'USDT', license:'Офшор', note:'Демо-запис.', url:'#' },
+    { id:'d7', demo:true, name:'Демо-рум 07', logo:{text:'07',from:'#F59E0B',to:'#B45309'}, score:7.1, rake:50, access:'direct', countries:['de','cz'], limits:['NL10','NL25','NL50','NL100'], games:['cash','sng','mtt'], network:'chico', payments:['card','bank'], software:['win','mac','ios','android'], bonus:['freeroll'], payoutHours:24, payoutLabel:'до доби', currency:'EUR', license:'Glücksspielstaatsvertrag', note:'Демо-запис.', url:'#' },
+    { id:'d8', demo:true, name:'Демо-рум 08', logo:{text:'08',from:'#8B5CF6',to:'#6D28D9'}, score:6.2, rake:30, access:'direct', countries:['ua','pl','cz'], limits:['NL10','NL25'], games:['spins','sng'], network:'ipoker', payments:['card'], software:['android','ios','web'], bonus:['none'], payoutHours:72, payoutLabel:'2–3 дні', currency:'EUR', license:'MGA', note:'Демо-запис.', url:'#' },
+    { id:'d9', demo:true, name:'Демо-рум 09', logo:{text:'09',from:'#14B8A6',to:'#0F766E'}, score:8.0, rake:55, access:'club', countries:['ua','int'], limits:['NL25','NL50','NL100','NL200'], games:['cash','mtt','plo','spins'], network:'clubgg', payments:['card','crypto'], software:['ios','android','win','hud'], bonus:['rakerace'], payoutHours:1, payoutLabel:'15–45 хвилин', currency:'UAH', license:'Офшор', note:'Демо-запис.', url:'#' },
+    { id:'d10', demo:true, name:'Демо-рум 10', logo:{text:'10',from:'#64748B',to:'#334155'}, score:5.9, rake:25, access:'direct', countries:['kz','int'], limits:['NL500'], games:['cash'], network:'indep', payments:['crypto'], software:['win'], bonus:['none'], payoutHours:12, payoutLabel:'до 12 годин', currency:'USDT', license:'Офшор', note:'Демо-запис.', url:'#' }
   ];
 
   var ROOMS = KOZYR_DEMO ? LIVE_ROOMS.concat(DEMO_ROOMS) : LIVE_ROOMS.slice();
@@ -3794,12 +3791,12 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
 
   var FACETS = [
     { key:'rake',      label:'Рейкбек',  type:'min' },
-    { key:'countries', label:'Страна',   type:'multi' },
-    { key:'limits',    label:'Лимиты',   type:'multi', order:LIMIT_ORDER },
+    { key:'countries', label:'Країна',   type:'multi' },
+    { key:'limits',    label:'Ліміти',   type:'multi', order:LIMIT_ORDER },
     { key:'games',     label:'Формат',   type:'multi' },
-    { key:'payments',  label:'Платёжки', type:'multi' },
-    { key:'payout',    label:'Выплата',  type:'multi', order:['fast','day','slow'] },
-    { key:'network',   label:'Сеть',     type:'multi' },
+    { key:'payments',  label:'Платіжки', type:'multi' },
+    { key:'payout',    label:'Виплата',  type:'multi', order:['fast','day','slow'] },
+    { key:'network',   label:'Мережа',     type:'multi' },
     { key:'software',  label:'Софт',     type:'multi' },
     { key:'bonus',     label:'Бонус',    type:'multi' },
     { key:'access',    label:'Доступ',   type:'multi' }
@@ -3815,12 +3812,12 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     { id:'room',     label:'Рум',      filters:[] },
     { id:'score',    label:'Score',    filters:[] },
     { id:'rake',     label:'Рейкбек',  filters:['rake'] },
-    { id:'country',  label:'Страна',   filters:['countries'] },
-    { id:'limits',   label:'Лимиты',   filters:['limits'] },
+    { id:'country',  label:'Країна',   filters:['countries'] },
+    { id:'limits',   label:'Ліміти',   filters:['limits'] },
     { id:'games',    label:'Формат',   filters:['games'] },
-    { id:'payments', label:'Платёжки', filters:['payments'], hideMd:true },
-    { id:'payout',   label:'Выплата',  filters:['payout'],   hideMd:true },
-    { id:'more',     label:'Ещё',      filters:['network','software','bonus','access'] },
+    { id:'payments', label:'Платіжки', filters:['payments'], hideMd:true },
+    { id:'payout',   label:'Виплата',  filters:['payout'],   hideMd:true },
+    { id:'more',     label:'Ще',      filters:['network','software','bonus','access'] },
     { id:'actions',  label:'',         filters:[] }
   ];
 
@@ -3866,9 +3863,9 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     return '<span aria-hidden="true" style="font-size:11px;color:var(--ink-3)">◈</span>';
   }
 
-  /* Плашка "Принимает вашу страну / Не принимает" — рядом с флагами.
-     Возвращает пустую строку, если гео ещё не пришло или неизвестно —
-     карточка перерендерится по событию kozyr:geo (см. слушатель ниже). */
+  /* Плашка "Приймає вашу країну / Не приймає" — поруч із прапорами.
+     Повертає порожній рядок, якщо гео ще не прийшло — картка перемалюється
+     за подією kozyr:geo (див. слухач нижче). */
   function acceptanceBadge(room) {
     var geo = (window.KozyrGeo && window.KozyrGeo.get) ? window.KozyrGeo.get() : null;
     if (!geo) return '';
@@ -3876,13 +3873,13 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     if (!d) return '';
     var accepted = (room.acceptedCountries || room.countries || []).indexOf(geo) !== -1;
     var flag = d.flag ? '<span class="fi fi-' + d.flag + '"></span>' : '';
-    var mainText = accepted ? 'Доступен для ' + esc(d.label) : 'Недоступен для ' + esc(d.label);
+    var mainText = accepted ? 'Доступний для ' + esc(d.label) : 'Недоступний для ' + esc(d.label);
     var iconYes = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>';
     var iconNo  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg>';
     return '<span class="kf-accept ' + (accepted ? 'kf-accept--yes' : 'kf-accept--no') +
       '" title="' + (accepted
-        ? 'Партнёр работает с игроками из региона: ' + esc(d.label)
-        : 'Партнёр не обслуживает игроков из региона: ' + esc(d.label)) + '">' +
+        ? 'Партнер працює з гравцями з регіону: ' + esc(d.label)
+        : 'Партнер не обслуговує гравців з регіону: ' + esc(d.label)) + '">' +
       '<span class="kf-accept-icon" aria-hidden="true">' + (accepted ? iconYes : iconNo) + '</span>' +
       '<span class="kf-accept-text">' + mainText + '</span>' +
       flag +
@@ -4021,11 +4018,11 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
 
   function rakeHtml(room, big) {
     if (room.rake === null || room.rake === undefined) {
-      return '<div class="kf-rake kf-rake--pending">Уточняется</div>' +
-             '<div class="kf-rake-note">Ждём данные партнёра</div>';
+      return '<div class="kf-rake kf-rake--pending">Уточнюється</div>' +
+             '<div class="kf-rake-note">Чекаємо дані партнера</div>';
     }
     return '<div class="kf-rake">до&nbsp;' + room.rake + '<em>%</em></div>' +
-           (big ? '' : '<div class="kf-rake-note">Возврат рейка</div>');
+           (big ? '' : '<div class="kf-rake-note">Повернення рейка</div>');
   }
 
   function logoHtml(room) {
@@ -4083,8 +4080,8 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
         '<td>' + tagList(r, 'network', 1) + '</td>' +
         '<td><div class="kf-actions">' +
           '<button class="kf-check" data-cmp="' + r.id + '" aria-pressed="' + checked + '" ' +
-            'aria-label="Добавить ' + esc(r.name) + ' к сравнению" title="К сравнению">' + checkSvg() + '</button>' +
-          '<a class="kf-go" href="' + esc(r.url) + '">Открыть<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a>' +
+            'aria-label="Додати ' + esc(r.name) + ' до порівняння" title="До порівняння">' + checkSvg() + '</button>' +
+          '<a class="kf-go" href="' + esc(r.url) + '">Відкрити<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a>' +
         '</div></td>' +
       '</tr>';
     }).join('');
@@ -4101,15 +4098,15 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
         '</div>' +
         '<div class="kf-card-rake">' + rakeHtml(r, true) + '</div>' +
         '<div class="kf-card-spec">' +
-          '<div class="kf-spec-row"><span class="kf-spec-key">Лимиты</span>' + tagList(r, 'limits', 4) + '</div>' +
+          '<div class="kf-spec-row"><span class="kf-spec-key">Ліміти</span>' + tagList(r, 'limits', 4) + '</div>' +
           '<div class="kf-spec-row"><span class="kf-spec-key">Формат</span>' + tagList(r, 'games', 4) + '</div>' +
-          '<div class="kf-spec-row"><span class="kf-spec-key">Платёжки</span>' + paymentsCell(r) + '</div>' +
-          '<div class="kf-spec-row"><span class="kf-spec-key">Выплата</span>' + payoutCell(r) + '</div>' +
-          '<div class="kf-spec-row"><span class="kf-spec-key">Сеть</span>' + tagList(r, 'network', 1) + '</div>' +
+          '<div class="kf-spec-row"><span class="kf-spec-key">Платіжки</span>' + paymentsCell(r) + '</div>' +
+          '<div class="kf-spec-row"><span class="kf-spec-key">Виплата</span>' + payoutCell(r) + '</div>' +
+          '<div class="kf-spec-row"><span class="kf-spec-key">Мережа</span>' + tagList(r, 'network', 1) + '</div>' +
         '</div>' +
         '<div class="kf-card-foot">' +
-          '<a class="kf-go" href="' + esc(r.url) + '">Открыть обзор<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a>' +
-          '<button class="kf-check" data-cmp="' + r.id + '" aria-pressed="' + checked + '" aria-label="Добавить ' + esc(r.name) + ' к сравнению">' + checkSvg() + '</button>' +
+          '<a class="kf-go" href="' + esc(r.url) + '">Відкрити огляд<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a>' +
+          '<button class="kf-check" data-cmp="' + r.id + '" aria-pressed="' + checked + '" aria-label="Додати ' + esc(r.name) + ' до порівняння">' + checkSvg() + '</button>' +
         '</div>' +
       '</article>';
     }).join('');
@@ -4122,13 +4119,13 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     var pills = [];
     if (state.min > 0) {
       pills.push('<span class="kf-pill"><span class="kf-pill-key">рейкбек</span>от ' + state.min + '%' +
-        '<button data-drop="rake" aria-label="Убрать фильтр по рейкбеку">×</button></span>');
+        '<button data-drop="rake" aria-label="Прибрати фільтр за рейкбеком">×</button></span>');
     }
     Object.keys(state.sel).forEach(function (k) {
       state.sel[k].forEach(function (v) {
         pills.push('<span class="kf-pill"><span class="kf-pill-key">' + esc(facet(k).label) + '</span>' +
           esc(labelOf(k, v)) +
-          '<button data-drop="' + k + '" data-val="' + esc(v) + '" aria-label="Убрать фильтр ' + esc(labelOf(k, v)) + '">×</button></span>');
+          '<button data-drop="' + k + '" data-val="' + esc(v) + '" aria-label="Прибрати фільтр ' + esc(labelOf(k, v)) + '">×</button></span>');
       });
     });
     box.innerHTML = pills.join('');
@@ -4153,8 +4150,8 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       if (!best || r.rake > best.rake) best = r;
     });
     $('kf-best').innerHTML = best
-      ? '<span>Максимум в выдаче</span><strong>' + esc(best.name) + ' · до ' + best.rake + '%</strong>'
-      : (n ? '<span>Проценты уточняются у партнёров</span>' : '<span>Ослабь фильтры, чтобы увидеть сделки</span>');
+      ? '<span>Максимум у видачі</span><strong>' + esc(best.name) + ' · до ' + best.rake + '%</strong>'
+      : (n ? '<span>Відсотки уточнюються в партнерів</span>' : '<span>Послаб фільтри, щоб побачити угоди</span>');
   }
 
   /* ---------- Главный рендер ---------- */
@@ -4162,10 +4159,8 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
   function draw() {
     var list;
     try { list = results(); }
-    catch (e) { list = ROOMS.slice(); }   /* если фильтр упал — показываем все румы */
+    catch (e) { list = ROOMS.slice(); }
 
-    /* Вспомогательные блоки оборачиваем по отдельности:
-       ошибка в шапке/табло НЕ должна прятать саму таблицу с румами. */
     try { renderHead(); } catch (e) {}
     try { renderActive(); } catch (e) {}
     try { renderReadout(list); } catch (e) {}
@@ -4179,8 +4174,6 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       try {
         if (state.view === 'table') renderRows(list); else renderCards(list);
       } catch (e) {
-        /* последний рубеж: если основной рендер упал — рисуем простую таблицу,
-           чтобы румы ВСЕГДА были видны */
         try { renderRowsFallback(list); } catch (e2) {}
       }
     }
@@ -4195,8 +4188,6 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     try { pushUrl(); } catch (e) {}
   }
 
-  /* Аварийный рендер строк — минимум разметки, без плашек и доп-ячеек,
-     срабатывает только если основной renderRows бросил исключение. */
   function renderRowsFallback(list) {
     var tb = $('kf-tbody');
     if (!tb) return;
@@ -4204,14 +4195,14 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       return '<tr class="kf-row-in">' +
         '<td><div class="kf-room"><div class="kf-room-main"><span class="kf-room-name">' + esc(r.name) + '</span></div></div></td>' +
         '<td><div class="kf-score"><span class="kf-score-num">' + (r.score != null ? r.score.toFixed(1) : '—') + '</span></div></td>' +
-        '<td>' + (r.rake != null ? 'до ' + r.rake + '%' : 'Уточняется') + '</td>' +
+        '<td>' + (r.rake != null ? 'до ' + r.rake + '%' : 'Уточнюється') + '</td>' +
         '<td>' + (r.countries || []).slice(0, 2).map(function (c) { return labelOf('countries', c); }).join(', ') + '</td>' +
         '<td>' + (r.limits || []).slice(0, 3).join(', ') + '</td>' +
         '<td class="kf-col-hide-lg">' + (r.games || []).map(function (g) { return labelOf('games', g); }).join(', ') + '</td>' +
         '<td class="kf-col-hide-md">' + (r.payments || []).join(', ') + '</td>' +
         '<td class="kf-col-hide-md">' + esc(r.payoutLabel || '') + '</td>' +
         '<td>' + labelOf('network', r.network) + '</td>' +
-        '<td><a class="kf-go" href="' + esc(r.url || '#') + '">Открыть</a></td>' +
+        '<td><a class="kf-go" href="' + esc(r.url || '#') + '">Відкрити</a></td>' +
       '</tr>';
     }).join('');
   }
@@ -4232,14 +4223,14 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       var quick = [0, 30, 40, 50, 60];
       return '<div class="kf-group" data-key="rake">' +
         '<div class="kf-slider-val"><span class="kf-slider-num" data-rake-out>' + state.min + '%</span>' +
-        '<span class="kf-slider-cap">минимум возврата</span></div>' +
-        '<input type="range" class="kf-range" min="0" max="75" step="5" value="' + state.min + '" data-rake aria-label="Минимальный рейкбек, %">' +
+        '<span class="kf-slider-cap">мінімум повернення</span></div>' +
+        '<input type="range" class="kf-range" min="0" max="75" step="5" value="' + state.min + '" data-rake aria-label="Мінімальний рейкбек, %">' +
         '<div class="kf-quick">' + quick.map(function (q) {
           return '<button data-rake-quick="' + q + '" aria-pressed="' + (state.min === q) + '">' + (q === 0 ? 'Любой' : 'от ' + q + '%') + '</button>';
         }).join('') + '</div>' +
         '<button class="kf-opt" data-pending aria-pressed="' + state.pending + '">' +
           '<span class="kf-box">' + checkSvg() + '</span>' +
-          '<span class="kf-opt-label">Показывать сделки без подтверждённого %</span></button>' +
+          '<span class="kf-opt-label">Показувати угоди без підтвердженого %</span></button>' +
         '</div>';
     }
     var opts = optionsFor(key);
@@ -4265,7 +4256,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     pop = document.createElement('div');
     pop.className = 'kf-pop';
     pop.setAttribute('role', 'dialog');
-    pop.setAttribute('aria-label', 'Фильтр: ' + col.label);
+    pop.setAttribute('aria-label', 'Фільтр: ' + col.label);
 
     var body = col.filters.map(function (k, i) {
       var f = facet(k);
@@ -4277,9 +4268,9 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
 
     pop.innerHTML =
       '<div class="kf-pop-head"><span class="kf-pop-title">' + esc(col.label) + '</span>' +
-      '<button class="kf-pop-clear" data-clear="' + colId + '">Очистить</button></div>' +
+      '<button class="kf-pop-clear" data-clear="' + colId + '">Очистити</button></div>' +
       body +
-      '<div class="kf-pop-foot"><span>Esc — закрыть</span></div>';
+      '<div class="kf-pop-foot"><span>Esc — закрити</span></div>';
 
     document.body.appendChild(pop);
     place(btn);
@@ -4317,12 +4308,12 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     list.innerHTML = state.compare.map(function (id) {
       var r = roomById(id);
       return '<span class="kf-compare-chip">' + logoHtml(r) + esc(r.name) +
-        '<button data-uncmp="' + id + '" aria-label="Убрать ' + esc(r.name) + '">×</button></span>';
+        '<button data-uncmp="' + id + '" aria-label="Прибрати ' + esc(r.name) + '">×</button></span>';
     }).join('');
     bar.classList.toggle('is-up', state.compare.length > 0);
     document.body.classList.toggle('kf-has-compare', state.compare.length > 0);
     $('kf-compare-go').disabled = state.compare.length < 2;
-    $('kf-compare-go').textContent = state.compare.length < 2 ? 'Выбери ещё один' : 'Сравнить';
+    $('kf-compare-go').textContent = state.compare.length < 2 ? 'Обери ще один' : 'Порівняти';
   }
 
   function roomById(id) {
@@ -4340,30 +4331,30 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
 
     var rows = [
       { key:'Kozyr Score', cell:function (r) { return r.score.toFixed(1); }, best:function (r) { return r.score === bestScore; } },
-      { key:'Рейкбек', cell:function (r) { return r.rake === null ? 'уточняется' : 'до ' + r.rake + '%'; }, best:function (r) { return r.rake !== null && r.rake === bestRake; } },
+      { key:'Рейкбек', cell:function (r) { return r.rake === null ? 'уточнюється' : 'до ' + r.rake + '%'; }, best:function (r) { return r.rake !== null && r.rake === bestRake; } },
       { key:'Доступ', cell:function (r) { return labelOf('access', r.access); } },
-      { key:'Страны', cell:function (r) { return r.countries.map(function (c) { return labelOf('countries', c); }).join(', '); } },
-      { key:'Лимиты', cell:function (r) { return r.limits.join(' · '); } },
-      { key:'Форматы', cell:function (r) { return r.games.map(function (g) { return labelOf('games', g); }).join(', '); } },
-      { key:'Сеть', cell:function (r) { return labelOf('network', r.network); } },
-      { key:'Платёжки', cell:function (r) { return r.payments.map(function (p) { return labelOf('payments', p); }).join(', '); } },
+      { key:'Країни', cell:function (r) { return r.countries.map(function (c) { return labelOf('countries', c); }).join(', '); } },
+      { key:'Ліміти', cell:function (r) { return r.limits.join(' · '); } },
+      { key:'Формати', cell:function (r) { return r.games.map(function (g) { return labelOf('games', g); }).join(', '); } },
+      { key:'Мережа', cell:function (r) { return labelOf('network', r.network); } },
+      { key:'Платіжки', cell:function (r) { return r.payments.map(function (p) { return labelOf('payments', p); }).join(', '); } },
       { key:'Валюта', cell:function (r) { return r.currency; } },
-      { key:'Выплата', cell:function (r) { return r.payoutLabel; }, best:function (r) { return r.payoutHours === fastest; } },
+      { key:'Виплата', cell:function (r) { return r.payoutLabel; }, best:function (r) { return r.payoutHours === fastest; } },
       { key:'Софт', cell:function (r) { return r.software.map(function (s) { return labelOf('software', s); }).join(', '); } },
-      { key:'Бонусы', cell:function (r) { return (r.bonus && r.bonus.length ? r.bonus : ['none']).map(function (b) { return labelOf('bonus', b); }).join(', '); } },
-      { key:'Правовой статус', cell:function (r) { return r.license; } },
-      { key:'Комментарий', cell:function (r) { return r.note; } }
+      { key:'Бонуси', cell:function (r) { return (r.bonus && r.bonus.length ? r.bonus : ['none']).map(function (b) { return labelOf('bonus', b); }).join(', '); } },
+      { key:'Правовий статус', cell:function (r) { return r.license; } },
+      { key:'Коментар', cell:function (r) { return r.note; } }
     ];
 
     var m = document.createElement('div');
     m.className = 'kf-modal';
     m.setAttribute('role', 'dialog');
     m.setAttribute('aria-modal', 'true');
-    m.setAttribute('aria-label', 'Сравнение сделок');
+    m.setAttribute('aria-label', 'Порівняння угод');
     m.innerHTML =
       '<div class="kf-modal-inner">' +
-      '<div class="kf-modal-head"><h3>Сравнение · ' + list.length + ' рума</h3>' +
-      '<button class="kf-modal-close" aria-label="Закрыть">×</button></div>' +
+      '<div class="kf-modal-head"><h3>Порівняння · ' + list.length + ' руму</h3>' +
+      '<button class="kf-modal-close" aria-label="Закрити">×</button></div>' +
       '<table class="kf-cmp"><thead><tr><th></th>' +
       list.map(function (r) {
         return '<th>' + roomCell(r, -1) + '</th>';
@@ -4372,11 +4363,11 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
         return '<tr><th scope="row">' + esc(row.key) + '</th>' + list.map(function (r) {
           var isBest = row.best && row.best(r) && list.length > 1;
           return '<td' + (isBest ? ' class="is-best"' : '') + '>' + esc(row.cell(r)) +
-            (isBest ? '<span class="kf-cmp-best-mark">лучший в подборке</span>' : '') + '</td>';
+            (isBest ? '<span class="kf-cmp-best-mark">найкращий у добірці</span>' : '') + '</td>';
         }).join('') + '</tr>';
       }).join('') +
       '<tr><th scope="row"></th>' + list.map(function (r) {
-        return '<td><a class="kf-go" href="' + esc(r.url) + '">Открыть обзор<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a></td>';
+        return '<td><a class="kf-go" href="' + esc(r.url) + '">Відкрити огляд<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a></td>';
       }).join('') + '</tr>' +
       '</tbody></table></div>';
 
@@ -4398,16 +4389,16 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     var s = document.createElement('div');
     s.className = 'kf-sheet';
     s.innerHTML =
-      '<div class="kf-sheet-inner" role="dialog" aria-modal="true" aria-label="Фильтры">' +
-      '<div class="kf-sheet-head"><h3>Фильтры</h3><button class="kf-modal-close" aria-label="Закрыть">×</button></div>' +
+      '<div class="kf-sheet-inner" role="dialog" aria-modal="true" aria-label="Фільтри">' +
+      '<div class="kf-sheet-head"><h3>Фільтри</h3><button class="kf-modal-close" aria-label="Закрити">×</button></div>' +
       '<div class="kf-sheet-body">' +
       FACETS.map(function (f) {
         return '<div class="kf-sheet-group"><span class="kf-pop-title">' + esc(f.label) + '</span>' + groupHtml(f.key) + '</div>';
       }).join('') +
       '</div>' +
       '<div class="kf-sheet-foot">' +
-      '<button class="btn btn-ghost" data-sheet-reset>Сбросить</button>' +
-      '<button class="btn btn-dark" data-sheet-apply>Показать <span data-sheet-n></span></button>' +
+      '<button class="btn btn-ghost" data-sheet-reset>Скинути</button>' +
+      '<button class="btn btn-dark" data-sheet-apply>Показати <span data-sheet-n></span></button>' +
       '</div></div>';
 
     document.body.appendChild(s);
@@ -4516,14 +4507,12 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     if (!$('kf-tbody')) return;
     try { $('kf-demo-flag').hidden = !KOZYR_DEMO; } catch (e) {}
 
-    /* Каждый шаг инициализации изолирован: сбой в одном не должен
-       помешать отрисовке каталога. draw() вызываем в любом случае. */
     try { readUrl(); } catch (e) {}
     try { renderQuickpick(); } catch (e) {}
     draw();
 
-    /* Плашка "Принимает вашу страну" на карточках может быть пустой при
-       первом рендере — если гео ещё не пришло. Перерисуем, когда придёт. */
+    /* Плашка "Приймає вашу країну" на картках може бути порожньою при
+       першому рендері — якщо гео ще не прийшло. Перемалюємо, коли прийде. */
     if (window.KozyrGeo) {
       window.KozyrGeo.onReady(function (c) {
         if (c) draw();
@@ -4616,7 +4605,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     var sheetBtn = $('kf-open-sheet');
     if (sheetBtn) sheetBtn.addEventListener('click', openSheet);
 
-    // счётчики партнёров в шапке и герое
+    // счётчики партнерів в шапке и герое
     var live = ROOMS.filter(function (r) { return !r.demo; }).length;
     document.querySelectorAll('[data-partners-count]').forEach(function (el) { el.textContent = ROOMS.length; });
     document.querySelectorAll('[data-countries-count]').forEach(function (el) {
@@ -4725,11 +4714,11 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
 <div class="geo-banner" id="geo-banner" role="alert" aria-live="polite">
   <svg class="geo-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2C20 17.5 12 22 12 22z"/><circle cx="12" cy="10" r="3"/></svg>
   <div class="geo-banner-text">
-    <strong>Ты не из Украины?</strong> Наши партнёры адаптированы под украинский рынок. Проверь легальность и доступность рум-платформ в своей стране.
+    <strong>Ти не з України?</strong> Наші партнери адаптовані під український ринок. Перевір легальність і доступність рум-платформ у своїй країні.
   </div>
   <div class="geo-banner-actions">
-    <a href="/" class="geo-banner-btn" id="geo-banner-cta">Сменить регион</a>
-    <button class="geo-banner-close" id="geo-banner-close" aria-label="Закрыть">×</button>
+    <a href="/" class="geo-banner-btn" id="geo-banner-cta">Змінити регіон</a>
+    <button class="geo-banner-close" id="geo-banner-close" aria-label="Закрити">×</button>
   </div>
 </div>
 
