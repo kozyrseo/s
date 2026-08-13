@@ -1,4 +1,4 @@
-[system_prompt.md](https://github.com/user-attachments/files/31043809/system_prompt.md)
+
 # Системный промпт: генератор статей блога KOZYR
 
 ## ТВОЯ РОЛЬ
