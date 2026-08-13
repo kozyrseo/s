@@ -1,0 +1,70 @@
+{
+  "slug": "chto-takoe-bedbid-dzhekpot-v-pokere",
+  "url_slug": "chto-takoe-bedbid-dzhekpot-v-pokere",
+  "lang": "uk",
+  "meta_title": "Бедбіт джекпот покер: як працює і як виграти 2026",
+  "meta_description": "Як спрацює бедбіт джекпот у покері: правила, умови та розподіл призів. Де грати з Bad Beat Jackpot в Україні — розбір механіки.",
+  "h1_title": "Що таке бедбіт джекпот покер і як його виграти",
+  "tags": [
+    "format:nlh",
+    "topic:bonuses",
+    "platform:klubok",
+    "audience:regular"
+  ],
+  "image_prompt": "Abstract editorial scene of glowing poker chips and digital prize counter rising against dark felt-green surface, with data streams and light bursts symbolizing progressive jackpot growth. Cinematic composition emphasizing tension and rare fortune, without showing faces or logos.",
+  "has_hero_image": true,
+  "word_count": 357,
+  "russian_preview": {
+    "title_ru": "Що таке бедбіт джекпот покер і як його виграти",
+    "summary_ru": "Стаття пояснює механіку бедбіт джекпота (Bad Beat Jackpot) у покері: що це, як накопичується фонд, які умови потрібні для спрацювання, як розподіляється виплата між учасниками столу. Розбираються типові вимоги до мінімальних комбінацій (каре в Холдемі, каре дам в Омасі), використання обох кишенькових карт, кількість гравців. Наводяться приклади великих виплат та структура розподілу (30-50% тому, хто програв, 20-30% переможцю, решта — іншим гравцям). Акцент на KlubOk як майданчику з активним джекпотом в Україні. Структура: вступ, механіка, умови, розподіл призів, де грати, поради щодо максимізації шансів, висновок із закликом до відповідальної гри. Внутрішні посилання на наявні статті про рейкбек, приватні клуби та порівняння PokerBet vs KlubOk, цільове посилання на огляд KlubOk.",
+    "h2_translations": [
+      {
+        "en": "Як працює бедбіт джекпот: механіка та накопичення фонду",
+        "ru": "Як працює бедбіт джекпот: механіка та накопичення фонду"
+      },
+      {
+        "en": "Умови спрацювання: які руки кваліфікують джекпот",
+        "ru": "Умови спрацювання: які руки кваліфікують джекпот"
+      },
+      {
+        "en": "Розподіл виплати: хто і скільки отримує",
+        "ru": "Розподіл виплати: хто і скільки отримує"
+      },
+      {
+        "en": "Де грати з bad beat jackpot в Україні",
+        "ru": "Де грати з bad beat jackpot в Україні"
+      },
+      {
+        "en": "Як збільшити шанси виграти джекпот",
+        "ru": "Як збільшити шанси виграти джекпот"
+      },
+      {
+        "en": "Чи варто полювати за бедбіт джекпотом",
+        "ru": "Чи варто полювати за бедбіт джекпотом"
+      }
+    ]
+  },
+  "translation_of": {
+    "ru": "chto-takoe-bedbid-dzhekpot-v-pokere"
+  },
+  "topic_row_data": {
+    "status": "queued",
+    "lang": "ru",
+    "topic": "Что такое бэдбит джекпот и как его выиграть",
+    "primary_keyword": "бэдбит джекпот покер",
+    "secondary_keywords": "bad beat jackpot;джекпот покер;как сработает бэдбит",
+    "intent": "informational",
+    "target_page": "/ua/clubs/klubok/",
+    "notes": "Кластер: клубы/фишки. KlubOk имеет Bad Beat джекпот. Объяснить механику.",
+    "country": "ua",
+    "langs": [
+      "ru",
+      "uk"
+    ],
+    "_source_row": 7
+  },
+  "source_row": 7,
+  "generated_at": "2026-08-13T19:31:34.887661+00:00",
+  "translated_from": "ru",
+  "translator_model": "claude-sonnet-4-5"
+}
