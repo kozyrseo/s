@@ -278,7 +278,7 @@ img, svg { display: block; }
   background: #FFFFFF;
   border: 1px solid rgba(10,17,40,0.08);
   border-radius: 20px;
-  padding: 68px 44px 128px 44px;
+  padding: 56px 40px 56px 40px;
   box-shadow:
     0 40px 80px rgba(10,17,40,0.12),
     0 12px 24px rgba(10,17,40,0.06);
@@ -286,7 +286,7 @@ img, svg { display: block; }
   transition: transform 0.4s ease;
   display: flex;
   flex-direction: column;
-  gap: 36px;
+  gap: 28px;
   animation: dealCard 0.7s cubic-bezier(0.2, 0.9, 0.3, 1) both;
 }
 
@@ -473,6 +473,70 @@ img, svg { display: block; }
   letter-spacing: 0.01em;
   transition: all 0.2s;
 }
+/* ===== Премиум-карточка партнёра (флагман) ===== */
+.trump-logo-badge {
+  width: 88px; height: 88px;
+  margin: 0 auto 20px;
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid rgba(10,17,40,0.08);
+  box-shadow: 0 12px 28px rgba(10,17,40,0.14), 0 2px 6px rgba(10,17,40,0.06);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 2;
+  overflow: visible;
+}
+.trump-logo-badge img { width: 60px; height: 60px; border-radius: 14px; object-fit: cover; }
+.trump-logo-badge .trump-verified {
+  position: absolute; bottom: -6px; right: -6px;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, #2668FF, #1E52D9);
+  border: 3px solid #fff;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 10px rgba(38,104,255,0.35);
+}
+.trump-verified svg { width: 15px; height: 15px; color: #fff; }
+.trump-stars {
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  margin-top: 14px;
+}
+.trump-stars-icons { display: inline-flex; gap: 2px; }
+.trump-stars-icons svg { width: 15px; height: 15px; color: #F5A623; }
+.trump-stars-num {
+  font-family: var(--f-display); font-weight: 700; font-size: 13px;
+  color: var(--ink); margin-left: 4px;
+}
+.trump-stars-count {
+  font-family: var(--f-mono); font-size: 10px; color: var(--ink-3);
+  letter-spacing: 0.05em;
+}
+.trump-value-badge {
+  display: inline-block;
+  font-family: var(--f-mono); font-size: 9.5px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold);
+  background: linear-gradient(135deg, rgba(156,106,24,0.10), rgba(156,106,24,0.04));
+  border: 1px solid rgba(156,106,24,0.22);
+  padding: 5px 12px; border-radius: 100px;
+  margin-bottom: 18px;
+}
+.trump-pills {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+  margin-top: 4px;
+}
+.trump-pill {
+  font-family: var(--f-mono); font-size: 10.5px; font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--ink-2);
+  background: var(--bg);
+  border: 1px solid rgba(10,17,40,0.07);
+  padding: 7px 13px; border-radius: 100px;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.trump-pill svg { width: 13px; height: 13px; color: var(--accent); opacity: 0.9; }
+.trump-value em { background: linear-gradient(135deg, #C88A2E, #9C6A18); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.trump-cta { background: linear-gradient(135deg, #0A1128, #1a2340); box-shadow: 0 10px 24px rgba(10,17,40,0.28); }
+.trump-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(10,17,40,0.36); }
+
 .trump-cta:hover { background: #001344; transform: translateY(-1px); }
 .trump-cta svg { width: 14px; height: 14px; transition: transform 0.15s; }
 .trump-cta:hover svg { transform: translate(2px, -2px); }
@@ -2983,19 +3047,29 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
           <svg class="trump-suit"><use href="#suit-diamond"/></svg>
         </div>
 
-        <div class="trump-tag">Флагман</div>
+                <div class="trump-tag">Флагман</div>
+
+        <div class="trump-logo-badge">
+          <img src="/ua/blog/logos/pokerbet.webp" alt="Логотип PokerBet" width="60" height="60" loading="lazy">
+          <span class="trump-verified" title="Проверенный партнёр"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+        </div>
 
         <div class="trump-content">
           <div class="trump-eyebrow">Топ за Kozyr Score</div>
+          <span class="trump-value-badge">Вітальний бонус</span>
           <div class="trump-value">до&nbsp;<em>40 000&nbsp;₴</em></div>
-          <div class="trump-label">Welcome-бонус</div>
         </div>
 
         <hr class="trump-rule">
 
         <div class="trump-room">
           <h3 class="trump-room-name" itemprop="name">PokerBet</h3>
-          <p class="trump-room-meta">Покер-рум на гривні · ліцензія Curaçao</p>
+          <div class="trump-stars"><span class="trump-stars-icons"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg><svg viewBox="0 0 24 24"><defs><linearGradient id="hs"><stop offset="50%" stop-color="#F5A623"/><stop offset="50%" stop-color="#E2E5EC"/></linearGradient></defs><path fill="url(#hs)" d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><span class="trump-stars-num">4.6</span><span class="trump-stars-count">· 5 відгуків</span></div>
+          <div class="trump-pills">
+          <span class="trump-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 10h4a2 2 0 010 4H9"/></svg>Гривня UAH</span>
+          <span class="trump-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg>Ліцензія Curaçao</span>
+          <span class="trump-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Виплати ~100 хв</span>
+          </div>
         </div>
 
         <hr class="trump-rule">
@@ -3006,11 +3080,6 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
             <span>Відкрити огляд</span>
             <svg><use href="#icon-arrow-ne"/></svg>
           </a>
-        </div>
-
-        <div class="trump-corner trump-corner--br">
-          <span class="trump-rank">01</span>
-          <svg class="trump-suit"><use href="#suit-diamond"/></svg>
         </div>
       </article>
     </div>
