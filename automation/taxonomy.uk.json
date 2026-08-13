@@ -1,3 +1,15 @@
 {
-  "articles": {}
+  "articles": {
+    "chto-takoe-bedbid-dzhekpot-v-pokere": {
+      "title": "Що таке бедбіт джекпот покер і як його виграти",
+      "description": "Як спрацює бедбіт джекпот у покері: правила, умови та розподіл призів. Де грати з Bad Beat Jackpot в Україні — розбір механіки.",
+      "tags": [
+        "format:nlh",
+        "topic:bonuses",
+        "platform:klubok",
+        "audience:regular"
+      ],
+      "summary_for_related": "Як спрацює бедбіт джекпот у покері: правила, умови та розподіл призів. Де грати з Bad Beat Jackpot в Україні — розбір механіки."
+    }
+  }
 }
