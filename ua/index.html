@@ -3222,7 +3222,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     <div class="compare-head">
       <div class="section-tag"><span class="accent-text">● PokerBet vs KlubOk</span></div>
       <h2 id="compare-title">Что выбрать <em>под свою задачу</em>.</h2>
-      <p class="compare-lead">Два разных подхода: легальный украинский рум с лицензией — или приватный клуб в ClubGG с мягкими полями. Сравнение по ключевым параметрам.</p>
+      <p class="compare-lead">Два разных подхода: покер-рум на гривны с лицензией Curaçao — или приватный клуб в ClubGG с мягкими полями. Сравнение по ключевым параметрам.</p>
     </div>
 
     <div class="compare-wrap">
@@ -3233,7 +3233,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
             <th>
               <div class="compare-room">
                 <div class="compare-logo compare-logo--img"><img src="/ua/blog/logos/pokerbet.webp" alt="PokerBet" width="44" height="44"></div>
-                <div><div class="compare-name">PokerBet</div><div class="compare-sub">Лицензия КРАИЛ</div></div>
+                <div><div class="compare-name">PokerBet</div><div class="compare-sub">Лицензия Curaçao (CGA)</div></div>
               </div>
             </th>
             <th>
@@ -3245,15 +3245,15 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
           </tr>
         </thead>
         <tbody>
-          <tr><th scope="row">Рейкбек</th><td class="pending">уточняется</td><td class="compare-best">40%</td></tr>
-          <tr><th scope="row">Модель начисления</th><td class="pending">уточняется</td><td>еженедельно</td></tr>
-          <tr><th scope="row">Правовой статус</th><td class="compare-best">легальный (КРАИЛ)</td><td>офшорная юрисдикция</td></tr>
+          <tr><th scope="row">Рейкбек</th><td>нет</td><td class="compare-best">40%</td></tr>
+          <tr><th scope="row">Модель начисления</th><td>—</td><td>еженедельно</td></tr>
+          <tr><th scope="row">Юрисдикция лицензии</th><td>Curaçao (CGA)</td><td>офшорная юрисдикция</td></tr>
           <tr><th scope="row">Лимиты кэша</th><td>0.50/1 – 50/100 ₴</td><td>0.50/1 – 100/200 ₴</td></tr>
           <tr><th scope="row">Форматы</th><td>Холдем, Омаха, Short Deck, MTT, fast-fold</td><td>Холдем, PLO5, AoF, 6+, SNG, MTT</td></tr>
-          <tr><th scope="row">Платёжки</th><td>карта / крипта</td><td>перевод / крипта</td></tr>
+          <tr><th scope="row">Платёжки</th><td>карта / P2P / крипта</td><td>перевод / крипта</td></tr>
           <tr><th scope="row">Мин. депозит</th><td>300 ₴</td><td class="compare-best">100 ₴</td></tr>
-          <tr><th scope="row">Срок вывода</th><td class="pending">уточняется</td><td class="compare-best">до 1 часа</td></tr>
-          <tr><th scope="row">Верификация</th><td>обязательна (паспорт + ИНН)</td><td>не требуется*</td></tr>
+          <tr><th scope="row">Срок вывода</th><td>~100 минут</td><td class="compare-best">до 1 часа</td></tr>
+          <tr><th scope="row">Верификация</th><td>обязательна</td><td>не требуется*</td></tr>
           <tr><th scope="row">Поля</th><td>фишовые, слабые оппоненты</td><td>фишовые, слабые оппоненты</td></tr>
           <tr><th scope="row">Валюта</th><td>гривна (UAH)</td><td>гривна (1 фишка = 1 ₴)</td></tr>
           <tr>
@@ -3265,7 +3265,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       </table>
     </div>
 
-    <p class="compare-note">Выбираешь легальность и налоговую прозрачность — PokerBet. Ищешь высокий рейкбек и мягкие поля без верификации — KlubOk. Проценты и условия подтверждаются у партнёров и обновляются по мере поступления данных.</p>
+    <p class="compare-note">Ищешь игру на гривны с депозитами картой, через P2P или крипту — PokerBet. Ищешь высокий рейкбек и мягкие поля без верификации — KlubOk. Условия подтверждаются у партнёров и обновляются по мере поступления данных.</p>
   </div>
 </section>
 
@@ -3703,20 +3703,20 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       name: 'PokerBet',
       logo: { text: 'PB', from: '#2668FF', to: '#1E52D9' },
       score: 8.2,
-      rake: null,                       // TODO: подтвердить % у партнёрки
+      rake: null,                       // рейкбека нет
       access: 'direct',
       countries: ['ua'],
       limits: ['NL10', 'NL25', 'NL50', 'NL100', 'NL200'],
       games: ['cash', 'mtt', 'spins'],
       network: 'pokerbet',
-      payments: ['card', 'bank'],
+      payments: ['card', 'bank', 'crypto'],
       software: ['win', 'android', 'ios', 'web', 'hud'],
       bonus: ['welcome', 'freeroll'],
       payoutHours: 2,
-      payoutLabel: '1–2 часа',
+      payoutLabel: '~100 минут',
       currency: 'UAH',
-      license: 'Лицензия КРАИЛ',
-      note: 'Единственный полностью легальный украинский рум. Налоги удерживаются автоматически.',
+      license: 'Лицензия Curaçao (CGA)',
+      note: 'Покер-рум с игрой в гривне. Депозиты картой, через P2P или в крипте. Рейкбека нет.',
       url: '/ua/rooms/pokerbet/'
     },
     {
@@ -4340,7 +4340,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
 
     var rows = [
       { key:'Kozyr Score', cell:function (r) { return r.score.toFixed(1); }, best:function (r) { return r.score === bestScore; } },
-      { key:'Рейкбек', cell:function (r) { return r.rake === null ? 'уточняется' : 'до ' + r.rake + '%'; }, best:function (r) { return r.rake !== null && r.rake === bestRake; } },
+      { key:'Рейкбек', cell:function (r) { return r.rake === null ? 'нет' : 'до ' + r.rake + '%'; }, best:function (r) { return r.rake !== null && r.rake === bestRake; } },
       { key:'Доступ', cell:function (r) { return labelOf('access', r.access); } },
       { key:'Страны', cell:function (r) { return r.countries.map(function (c) { return labelOf('countries', c); }).join(', '); } },
       { key:'Лимиты', cell:function (r) { return r.limits.join(' · '); } },

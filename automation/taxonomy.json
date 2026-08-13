@@ -39,7 +39,7 @@
     },
     "/ua/rooms/pokerbet/": {
       "title": "PokerBet — обзор украинского покер-рума",
-      "description": "Легальный украинский рум: гривна, Холдем и Омаха, депозит картой и криптой, форматы кэша и турниров."
+      "description": "Покер-рум на гривны с лицензией Curaçao: гривна, Холдем и Омаха, депозит картой, через P2P или крипту, форматы кэша и турниров."
     },
     "/ua/clubs/klubok/": {
       "title": "KlubOk — обзор приватного клуба в ClubGG",
@@ -60,14 +60,14 @@
     },
     "pokerbet-ili-klubok-sravnenie": {
       "title": "PokerBet или KlubOk: где играть в Украине",
-      "description": "Сравнение PokerBet и KlubOk: легальный украинский рум против приватного клуба в ClubGG. Рейкбек, поля, выводы, кому что подходит.",
+      "description": "Сравнение PokerBet и KlubOk: покер-рум на гривны (Curaçao) против приватного клуба в ClubGG. Поля, выплаты, кому что подходит.",
       "tags": [
         "format:mixed",
         "topic:comparison",
         "topic:room-review",
         "audience:regular"
       ],
-      "summary_for_related": "Сравнение PokerBet и KlubOk: легальный украинский рум против приватного клуба в ClubGG. Рейкбек, поля, выводы, кому что подходит."
+      "summary_for_related": "Сравнение PokerBet и KlubOk: покер-рум на гривны (Curaçao) против приватного клуба в ClubGG. Поля, выплаты, кому что подходит."
     },
     "kak-rabotayut-privatnye-pokerclubi": {
       "title": "Как работают приватные покерные клубы в ClubGG",
