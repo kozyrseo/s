@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="stylesheet" href="/ua/blog/kozyr-blog.css?v=20260815">
+<link rel="stylesheet" href="/ua/blog/kozyr-blog.css?v=20260816">
 
 <script type="application/ld+json">
 {
@@ -107,7 +107,7 @@
 <script src="/analytics.js" defer></script>
 
 <style>
-/* Article-specific styles (kept minimal, leveraging kozyr-blog.css) */
+/* Article-specific styles (kept minimal, leveraging kozyr-blog.css?v=20260816) */
 .key-takeaways {
   background: rgba(156, 106, 24, 0.06);
   border-left: 3px solid var(--gold);
@@ -184,20 +184,7 @@ details.faq-item summary {
   line-height: 1.5;
 }
 details.faq-item summary::-webkit-details-marker { display: none; }
-details.faq-item summary::after {
-  content: "+";
-  position: absolute;
-  right: 0;
-  top: 0;
-  font-size: 22px;
-  color: var(--gold);
-  font-weight: 300;
-  transition: transform 0.2s;
-  line-height: 1;
-}
-details.faq-item[open] summary::after {
-  content: "−";
-}
+details.faq-item summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-right: 0; }
 details.faq-item .faq-answer {
   margin-top: 14px;
   color: var(--fg-mute);
@@ -240,7 +227,7 @@ details.faq-item .faq-answer {
 }
 
 /* ── Article body typography ─────────────────────────
-   Local overrides for .post-body only. The global kozyr-blog.css
+   Local overrides for .post-body only. The global kozyr-blog.css?v=20260816
    sets `h2 { margin: 0 0 20px }`, which works on landing pages
    where each H2 sits in its own padded section — but inside a
    single flowing blog article it makes section headers crash

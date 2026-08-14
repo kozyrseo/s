@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="stylesheet" href="/ua/blog/kozyr-blog.css?v=20260815">
+<link rel="stylesheet" href="/ua/blog/kozyr-blog.css?v=20260816">
 
 <script type="application/ld+json">
 {
@@ -107,7 +107,7 @@
 <script src="/analytics.js" defer></script>
 
 <style>
-/* Article-specific styles (kept minimal, leveraging kozyr-blog.css) */
+/* Article-specific styles (kept minimal, leveraging kozyr-blog.css?v=20260816) */
 .key-takeaways {
   background: rgba(156, 106, 24, 0.06);
   border-left: 3px solid var(--gold);
@@ -184,20 +184,7 @@ details.faq-item summary {
   line-height: 1.5;
 }
 details.faq-item summary::-webkit-details-marker { display: none; }
-details.faq-item summary::after {
-  content: "+";
-  position: absolute;
-  right: 0;
-  top: 0;
-  font-size: 22px;
-  color: var(--gold);
-  font-weight: 300;
-  transition: transform 0.2s;
-  line-height: 1;
-}
-details.faq-item[open] summary::after {
-  content: "−";
-}
+details.faq-item summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-right: 0; }
 details.faq-item .faq-answer {
   margin-top: 14px;
   color: var(--fg-mute);
@@ -240,7 +227,7 @@ details.faq-item .faq-answer {
 }
 
 /* ── Article body typography ─────────────────────────
-   Local overrides for .post-body only. The global kozyr-blog.css
+   Local overrides for .post-body only. The global kozyr-blog.css?v=20260816
    sets `h2 { margin: 0 0 20px }`, which works on landing pages
    where each H2 sits in its own padded section — but inside a
    single flowing blog article it makes section headers crash
@@ -285,6 +272,11 @@ details.faq-item .faq-answer {
   color: var(--fg-mute);
   font-style: italic;
 }
+
+.post-hero__author { display: inline-flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10); border-radius: 999px; color: #fff !important; font-family: 'Inter', system-ui, sans-serif !important; font-weight: 600; font-size: 13px; text-transform: none; }
+.post-hero__author img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,255,255,0.25); box-shadow: 0 2px 6px rgba(0,0,0,0.3); display: block; flex-shrink: 0; }
+.post-hero__author span, .post-hero__author a { color: #fff !important; font-family: inherit; text-decoration: none; }
+@media (max-width: 480px) { .post-hero__author { padding: 5px 10px 5px 5px; gap: 8px; font-size: 12px; } .post-hero__author img { width: 24px; height: 24px; } }
 </style>
 </head>
 <body>
@@ -360,6 +352,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
           <p class="post-hero__lede">Проиграть с каре королей стрит-флешу — это досадно. Но что, если такой бэдбит принесёт вам сотни тысяч гривен? Бэдбит джекпот покер превращает самые обидные раздачи в крупнейшие выплаты сессии. В некоторых клубах и румах фонд джекпота растёт месяцами, достигая семизначных сумм. Парадокс в том, что крупнейший приз получает не тот, кто выиграл банк, а тот, кто проиграл с монструозной рукой.</p>
           <div class="post-hero__meta">
             <span class="tag">Обзоры</span><span class="dot"></span>
+            <span class="post-hero__author"><img src="/ua/blog/authors/nikita.webp" alt="Никита Волошин" width="28" height="28" loading="lazy"><span>Никита Волошин</span></span><span class="dot"></span>
             <time datetime="2026-08-13">13 августа 2026</time><span class="dot"></span>
             <span>12 мин чтения</span>
             

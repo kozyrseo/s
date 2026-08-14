@@ -93,12 +93,14 @@ a:hover { color: var(--accent-deep); text-decoration: underline; }
 /* мобильное меню */
 .nav-toggle, .nav-burger, .nav-backdrop { display: none; }
 @media (max-width: 860px) {
+  /* Шапка с открытым меню должна перекрывать хлебные крошки и hero статьи */
+  .header { z-index: 100; }
   .nav {
     position: fixed; inset: 64px 0 auto 0; flex-direction: column; gap: 0;
     background: #ffffff; border-bottom: 1px solid var(--border);
     padding: 8px 24px 16px; margin: 0;
     transform: translateY(-120%); transition: transform .25s ease;
-    z-index: 45;
+    z-index: 90;
     box-shadow: 0 12px 28px rgba(10,17,40,.12);
   }
   .nav a { padding: 12px 0; border-bottom: 1px solid var(--border); }
@@ -111,7 +113,7 @@ a:hover { color: var(--accent-deep); text-decoration: underline; }
   .header-cta { display: none; }
   .nav-toggle:checked ~ .nav { transform: translateY(0); }
   .nav-toggle:checked ~ .nav-backdrop {
-    display: block; position: fixed; inset: 0; background: rgba(10,17,40,.3); z-index: 40;
+    display: block; position: fixed; inset: 0; background: rgba(10,17,40,.3); z-index: 85;
   }
 }
 
@@ -608,7 +610,8 @@ a:focus-visible, summary:focus-visible, .nav-burger:focus-visible {
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg fill='%230A1128' fill-opacity='0.022'%3E%3Cpath d='M55 30c-8 9-20 17-20 28a10 10 0 0 0 18 6l-3 12h10l-3-12a10 10 0 0 0 18-6c0-11-12-19-20-28z'/%3E%3Cpath d='M165 60c11 0 20 7 20 16 0 11-14 18-20 27-6-9-20-16-20-27 0-9 9-16 20-16z'/%3E%3Cpath d='M110 130l16 20-16 20-16-20z'/%3E%3Cg%3E%3Ccircle cx='40' cy='168' r='9'/%3E%3Ccircle cx='52' cy='160' r='9'/%3E%3Ccircle cx='52' cy='176' r='9'/%3E%3Crect x='44' y='168' width='4' height='16'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   background-size:220px 220px}
 body{position:relative}
-.blog-post,.breadcrumbs,.header,.footer{position:relative;z-index:1}
+.blog-post,.breadcrumbs,.footer{position:relative;z-index:1}
+.header{position:relative;z-index:50}
 
 /* ---------- HERO статьи (тёмный, премиум) ---------- */
 .post-hero{position:relative;overflow:hidden;margin:14px 0 0;
