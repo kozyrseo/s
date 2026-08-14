@@ -42,6 +42,14 @@ body {
   * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
 
+/* ========== MOBILE OVERFLOW GUARDS (fix: hero img распирал страницу) ========== */
+/* Ни одно изображение/медиа не может быть шире своего контейнера */
+img, video, iframe, svg, table { max-width: 100%; }
+img, video { height: auto; }
+/* Страховка от любого горизонтального переполнения на всех страницах */
+html, body { overflow-x: hidden; }
+/* ============================================================================ */
+
 .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
 
 a { color: var(--accent); text-decoration: none; }
@@ -634,7 +642,10 @@ body{position:relative}
 /* ---------- layout: статья + оглавление ---------- */
 .article-shell{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:56px;align-items:start;margin-top:36px}
 @media(max-width:960px){.article-shell{grid-template-columns:1fr;gap:0}}
-.article-shell .post-body{max-width:720px}
+.article-shell .post-body{max-width:720px;min-width:0}
+@media(max-width:960px){.article-shell .post-body{max-width:100%}}
+/* Grid-дети должны сжиматься ниже своего контента (иначе 1fr распирается длинным текстом) */
+.article-shell > *{min-width:0;max-width:100%;overflow-wrap:break-word;word-wrap:break-word}
 
 /* оглавление sticky + scrollspy */
 .toc-side{position:sticky;top:88px;font-size:14px}
@@ -774,3 +785,9 @@ body{position:relative}
   border-radius:999px;color:var(--ink-3);text-decoration:none;transition:color .15s,background .15s}
 .lang a:hover{color:var(--ink)}
 .lang a[aria-current="page"]{color:var(--ink);background:#fff;box-shadow:0 1px 2px rgba(0,0,0,0.08)}
+
+
+/* Мобильные боковые отступы контента: 24px слишком много на узком экране */
+@media (max-width: 600px) {
+  .container { padding: 0 16px; }
+}
