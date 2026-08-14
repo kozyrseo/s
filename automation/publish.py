@@ -314,10 +314,22 @@ def extract_lede(md_text: str) -> tuple[str, str]:
 
 # ==== FAQ rendering ====
 
-def render_faq_html(faq: list[dict]) -> str:
+# Локализованные заголовки FAQ-секции по языку статьи
+FAQ_HEADINGS = {
+    "ru": "Частые вопросы",
+    "uk": "Часті запитання",
+    "en": "Frequently asked questions",
+    "pl": "Najczęściej zadawane pytania",
+    "kz": "Жиі қойылатын сұрақтар",
+}
+
+
+def render_faq_html(faq: list[dict], lang: str = "ru") -> str:
     """Render visible FAQ section with <details>/<summary> blocks."""
     if not faq:
         return ""
+    # Язык может прийти как 'ua' (RU-контент на украинском домене) — маппим на 'ru'
+    heading = FAQ_HEADINGS.get(lang, FAQ_HEADINGS.get("ru"))
     items = []
     for entry in faq:
         q = escape_html(entry.get("question", "").strip())
@@ -332,8 +344,8 @@ def render_faq_html(faq: list[dict]) -> str:
 </details>''')
 
     items_html = "\n".join(items)
-    return f'''<section class="faq-section" aria-label="Frequently asked questions">
-<h2>Frequently asked questions</h2>
+    return f'''<section class="faq-section" aria-label="{heading}">
+<h2>{heading}</h2>
 {items_html}
 </section>'''
 
@@ -1316,7 +1328,7 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
 
     # FAQ
     faq = meta.get("faq", [])
-    faq_html = render_faq_html(faq)
+    faq_html = render_faq_html(faq, lang)
     faq_jsonld = render_faq_jsonld(faq)
 
     # Key takeaways
