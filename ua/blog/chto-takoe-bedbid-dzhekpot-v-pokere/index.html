@@ -40,7 +40,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="stylesheet" href="/ua/blog/kozyr-blog.css">
+<link rel="stylesheet" href="/ua/blog/kozyr-blog.css?v=20260814">
 
 <script type="application/ld+json">
 {
@@ -114,6 +114,13 @@
   padding: 22px 26px;
   margin: 32px 0 40px;
   border-radius: 4px;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+@media (max-width: 600px) {
+  .key-takeaways { padding: 18px 18px; margin: 24px 0 32px; }
 }
 .key-takeaways .takeaways-label {
   font-size: 11px;

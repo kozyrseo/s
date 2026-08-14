@@ -87,9 +87,11 @@ a:hover { color: var(--accent-deep); text-decoration: underline; }
 @media (max-width: 860px) {
   .nav {
     position: fixed; inset: 64px 0 auto 0; flex-direction: column; gap: 0;
-    background: var(--surface); border-bottom: 1px solid var(--border);
+    background: #ffffff; border-bottom: 1px solid var(--border);
     padding: 8px 24px 16px; margin: 0;
     transform: translateY(-120%); transition: transform .25s ease;
+    z-index: 45;
+    box-shadow: 0 12px 28px rgba(10,17,40,.12);
   }
   .nav a { padding: 12px 0; border-bottom: 1px solid var(--border); }
   .nav-burger {
@@ -394,7 +396,17 @@ a:focus-visible, summary:focus-visible, .nav-burger:focus-visible {
 }
 @media (max-width: 560px) {
   .blog-index-intro { padding: 44px 0 40px; }
-  .blog-stats { flex-wrap: wrap; border-radius: 20px; }
+  .blog-stats {
+    display: flex; flex-wrap: wrap; gap: 12px 20px;
+    border-radius: 16px; padding: 16px 18px;
+    width: 100%; box-sizing: border-box;
+  }
+  .blog-stats__item {
+    padding: 0; align-items: flex-start; flex: 0 0 auto; min-width: 68px;
+  }
+  .blog-stats__item + .blog-stats__item { border-left: none; }
+  .blog-stats__num { font-size: 30px; }
+  .blog-stats__lbl { text-align: left; }
 }
 
 /* ---------- Сетка карточек ---------- */
@@ -655,11 +667,16 @@ body{position:relative}
 /* ---------- Ключевые выводы (премиум) ---------- */
 .key-takeaways{position:relative;margin:36px 0;padding:28px 32px 26px;background:var(--surface);
   border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:var(--r-lg,16px);
-  box-shadow:0 16px 40px rgba(10,17,40,.10);overflow:hidden}
+  box-shadow:0 16px 40px rgba(10,17,40,.10);box-sizing:border-box;max-width:100%;
+  overflow-wrap:break-word;word-wrap:break-word}
 .key-takeaways .takeaways-label{font-family:var(--f-mono);font-size:11px;font-weight:600;
   letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep,#7E5512);margin:0 0 16px}
 .key-takeaways ul{margin:0;padding:0;list-style:none;display:grid;gap:13px}
 .key-takeaways li{position:relative;padding-left:24px;font-size:16px;line-height:1.55;color:var(--ink)}
+@media (max-width: 600px) {
+  .key-takeaways { padding: 20px 18px; margin: 28px 0; }
+  .key-takeaways li { font-size: 15px; padding-left: 22px; }
+}
 .key-takeaways li::before{content:"";position:absolute;left:0;top:.5em;width:8px;height:8px;border-radius:50%;
   background:var(--gold-lt,#D9A93B);box-shadow:0 0 0 4px var(--gold-tint,#F5EEDD)}
 
