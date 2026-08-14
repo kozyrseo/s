@@ -740,8 +740,9 @@ body{position:relative}
 .pcard__k{color:var(--ink-3)}
 .pcard__v{color:var(--ink);font-weight:600;text-align:right}
 .pcard__v.hi{color:var(--gold-deep,#7E5512)}
-.pcard__cta{margin-top:auto;display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  font-family:var(--f-display);font-weight:600;font-size:15px;padding:12px 18px;border-radius:999px;transition:transform .15s,box-shadow .2s}
+.pcard__cta{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:7px;
+  font-family:var(--f-display);font-weight:600;font-size:15px;padding:13px 18px;border-radius:12px;
+  text-align:center;line-height:1.35;width:100%;box-sizing:border-box;transition:transform .15s,box-shadow .2s}
 .pcard--room .pcard__cta{background:var(--accent);color:#fff}
 .pcard--club .pcard__cta{background:var(--ink);color:#fff}
 .pcard__cta:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(10,17,40,.2)}
