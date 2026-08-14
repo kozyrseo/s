@@ -15,9 +15,9 @@
       name: "PokerBet",
       logo: { text: "PB", from: "#2668FF", to: "#1E52D9" },
       score: 8.2,
-      rake: null,
+      rake: "none",
       currency: "UAH",
-      license: "Лицензия КРАИЛ",
+      license: "Лицензия Curaçao",
       url: "/ua/rooms/pokerbet/",
       access: "direct",
       /* countries — страны для фильтра каталога (где партнёр представлен).
@@ -33,11 +33,11 @@
       bonus: ["welcome", "freeroll"],
       payoutHours: 2,
       payoutLabel: "1–2 часа",
-      note: "Единственный полностью легальный украинский рум. Налоги удерживаются автоматически.",
+      note: "Покер-рум на гривны с лицензией Curaçao. Рейкбека нет — только бонусы.",
       card: {
         logoText: "P",
         logoImg: "/ua/blog/logos/pokerbet.webp",
-        kind: "Легальный рум · КРАИЛ",
+        kind: "Покер-рум · Curaçao",
         dark: false,
         rows: [
           ["Рейкбек", "rake"],
@@ -90,6 +90,7 @@
   window.KOZYR_PARTNERS = PARTNERS;
 
   function rakeText(p) {
+    if (p.rake === "none") return "нет";
     return (p.rake === null || p.rake === undefined) ? "уточняется" : (p.rake + "% еженедельно");
   }
   function esc(s) {
