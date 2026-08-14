@@ -184,6 +184,8 @@ details.faq-item summary {
   line-height: 1.5;
 }
 details.faq-item summary::-webkit-details-marker { display: none; }
+details.faq-item summary { list-style: none; }
+details.faq-item summary::marker { content: ""; }
 details.faq-item summary::after {
   content: "+";
   position: absolute;
@@ -596,8 +598,8 @@ ClubGG — онлайн-платформа підписки із соціаль�
         </div>
       </div>
 
-      <section class="faq-section" aria-label="Frequently asked questions">
-<h2>Frequently asked questions</h2>
+      <section class="faq-section" aria-label="Часті запитання">
+<h2>Часті запитання</h2>
 <details class="faq-item">
 <summary>Що таке приватні покерні клуби в ClubGG?</summary>
 <div class="faq-answer">Приватні покерні клуби в ClubGG — це закриті ігрові спільноти всередині додатка ClubGG, розробленого компанією GGPoker. Кожен клуб має унікальний ID, власну базу гравців і керується менеджером або агентом. Доступ можливий лише за запрошенням або через запит із зазначенням ID клубу та реферального коду. Клуби можуть об'єднуватися в союзи (до 250 клубів в одному союзі), створюючи спільний пул гравців та єдине лобі для всіх учасників.</div>
