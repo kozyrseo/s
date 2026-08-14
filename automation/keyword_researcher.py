@@ -21,7 +21,7 @@ KOZYR — Модуль анализа ключевых запросов и ав�
 Использует:
   - GOOGLE_SERVICE_ACCOUNT_JSON — тот же, что в generate.py
   - GOOGLE_SHEETS_ID              — та же таблица
-  - GSC_SITE_URL                  — sc-domain:kozyr.ua или https://kozyr.ua/
+  - GSC_SITE_URL                  — sc-domain:kozyr.club или https://kozyr.club/
   - ANTHROPIC_API_KEY             — для кластеризации + web_search
 """
 
@@ -100,6 +100,30 @@ def get_existing_queries(sheet) -> set[str]:
         if pk:
             existing.add(pk)
     return existing
+
+
+def get_existing_topics_full(sheet) -> list[dict]:
+    """Возвращает существующие темы как список dict с ключами topic,
+    primary_keyword, secondary_keywords, target_page, intent — для проверки
+    каннибализации (нужны все поля, а не только строка ключа)."""
+    try:
+        records = sheet.get_all_records()
+    except Exception:
+        return []
+    out = []
+    for row in records:
+        # берём только активные темы (не rejected) — с rejected не конфликтуем
+        status = str(row.get("status", "")).strip().lower()
+        if status == "rejected":
+            continue
+        out.append({
+            "topic": str(row.get("topic", "")),
+            "primary_keyword": str(row.get("primary_keyword", "")),
+            "secondary_keywords": str(row.get("secondary_keywords", "")),
+            "target_page": str(row.get("target_page", "")),
+            "intent": str(row.get("intent", "")),
+        })
+    return out
 
 
 def append_topic_to_sheet(sheet, topic_data: dict, country: str = "ua",
@@ -222,50 +246,104 @@ def fetch_gsc_opportunities(site_url: str) -> list[dict]:
 
 # ==== Кластеризация через Claude + Web Search ====
 
-CLUSTER_SYSTEM_PROMPT = """Ты — SEO-стратег для сайта KOZYR (витрина рейкбек-сделок
-в покере, домен kozyr.ua, аудитория — игроки СНГ/Украины).
+CLUSTER_SYSTEM_PROMPT = """Ты — ведущий SEO-стратег для сайта KOZYR — витрины
+покерных рейкбек-сделок и обзоров покер-румов/клубов. Домен kozyr.club.
+Аудитория: игроки в покер из Украины (укр + рус языки), ищущие где играть,
+какой рейкбек, какие бонусы, как выводить деньги.
 
-Задача: получить список поисковых запросов и (опционально) свежий web_search
-по покерной тематике и выдать 5-8 новых тем статей для блога.
+ТВОЯ ЗАДАЧА: на основе поисковых запросов (GSC) и web_search выдать 6-8 новых
+тем для блога, которые вместе покрывают воронку трафика — от широких
+информационных запросов (много трафика, верх воронки) до узких коммерческих
+(меньше трафика, но горячая аудитория, близкая к выбору рума).
 
-Правила:
-1. Одна тема = одна статья ~2000 слов, узкий SEO-фокус.
-2. Не дублируй темы: смотри список EXISTING_TOPICS — новые темы должны
-   раскрывать другой аспект.
-3. primary_keyword — точная поисковая фраза (низкочастотник или средний),
-   как её ищут в Google. Не «покер», а «рейкбек в pokerbet 2026».
-   ГЕО-ТАРГЕТИНГ (ОБЯЗАТЕЛЬНО): аудитория — игроки Украины. Ключи должны
-   ловить украинский трафик. Где уместно, включай в primary/secondary
-   гео- и бренд-маркеры: «Украина/Україна», «на гривны», «рейкбек Украина»,
-   «покер клуб Украина», «легальный покер», «ClubGG», «PokerBet», «KlubOk».
-   Плохо: «что такое рейкбек». Хорошо: «рейкбек в покере Украина 2026».
-   Плохо: «приватные клубы». Хорошо: «покерный клуб ClubGG Украина».
-   secondary_keywords — 3 штуки, минимум один с гео или брендом.
-4. target_page — куда вести читателя:
-   - `/ua/`                     (каталог сделок)
-   - `/ua/rooms/pokerbet/`      (обзор PokerBet)
-   - `/ua/clubs/klubok/`        (обзор KlubOk)
-5. intent:
-   - `informational` — читатель хочет разобраться (что такое, как работает)
-   - `commercial`    — читатель выбирает (сравнение, рейтинг, «где лучше»)
-6. notes — 2-3 предложения оператору: что подчеркнуть, каких формулировок
-   избегать, на какие цифры не ссылаться.
-7. evidence — коротко: откуда угол темы (какие GSC-запросы её питают,
-   какие тренды подсмотрены в web_search).
+═══════════════════════════════════════════════════════════════════
+ФАКТЫ О ПЛОЩАДКАХ (КРИТИЧЕСКИ ВАЖНО — не противоречь им!)
+═══════════════════════════════════════════════════════════════════
+Сайт уже описывает эти площадки строго определённым образом. Темы и ключи
+НЕ ДОЛЖНЫ противоречить фактам ниже, иначе статьи создадут дезинформацию:
 
-Отвечай строго JSON-массивом, без преамбулы, без code fences:
+• PokerBet — покер-рум на гривны, лицензия Curaçao Gaming Authority (НЕ
+  украинская лицензия). У PokerBet НЕТ программы рейкбека — есть только
+  бонусы (Welcome до 40 000 ₴, промо). ЗАПРЕЩЕНО: темы вида «рейкбек в
+  PokerBet», «PokerBet рейкбек 40%» — такого продукта не существует.
+  Можно: «бонусы PokerBet», «PokerBet вывод денег», «PokerBet обзор».
+
+• KlubOk (ClubGG) — приватный покерный клуб в приложении ClubGG. Здесь
+  рейкбек ЕСТЬ и достигает 40-65% (выплачивает агент клуба, не сам ClubGG).
+  Игра на виртуальную валюту, реальные деньги через агентов. Рейкбек-темы
+  привязывай к КЛУБАМ/ClubGG/KlubOk, НЕ к PokerBet.
+
+• Онлайн-покер в Украине легален. НЕ используй устаревшее: регулятор
+  «КРАИЛ» упоминай только если тема прямо про регулирование, и то
+  аккуратно (регуляторная среда менялась). НЕ строй темы вокруг
+  «легальный/нелегальный», «запрет», паники — это отпугивает и устаревает.
+
+═══════════════════════════════════════════════════════════════════
+СТРАТЕГИЯ КЛЮЧЕЙ: ШИРОКИЕ + УЗКИЕ (обязательный баланс)
+═══════════════════════════════════════════════════════════════════
+Из 6-8 тем распредели примерно так:
+
+▸ 2-3 ШИРОКИЕ информационные темы (верх воронки, много трафика):
+  Обучающие запросы, которые ищут массово. Приводят новый трафик,
+  строят авторитет, легко ранжируются длинным качественным контентом.
+  primary_keyword — среднечастотный обучающий запрос БЕЗ бренда.
+  Примеры: «как играть в покер онлайн», «что такое рейкбек в покере»,
+  «правила техасского холдема», «покерные комбинации», «банкролл
+  менеджмент», «как выводить деньги из покер-рума».
+  intent: informational. target_page: обычно /ua/ или /ua/blog/.
+
+▸ 3-4 УЗКИЕ коммерческие темы (низ воронки, горячий трафик):
+  Запросы людей, готовых выбрать рум/клуб. Меньше трафика, но высокая
+  конверсия в переход по партнёрской ссылке.
+  primary_keyword — длинный хвост с гео/брендом/годом.
+  Примеры: «покер на гривны украина 2026», «покерный клуб ClubGG
+  украина», «PokerBet обзор бонусы», «где играть в покер новичку украина»,
+  «лучшие покер-румы украина рейкбек».
+  intent: commercial. target_page: /ua/rooms/pokerbet/, /ua/clubs/klubok/, /ua/.
+
+▸ 1 ТРЕНДОВАЯ/сезонная тема (если web_search выявил актуальное):
+  Свежий инфоповод, турнир, обновление румов. Ловит всплеск интереса.
+
+═══════════════════════════════════════════════════════════════════
+ПРАВИЛА КАЧЕСТВА КЛЮЧЕЙ
+═══════════════════════════════════════════════════════════════════
+1. Одна тема = одна статья 1800-2600 слов, один чёткий поисковый интент.
+2. НЕ дублируй темы из EXISTING_TOPICS — раскрывай новые аспекты/запросы.
+   НЕ КАННИБАЛИЗИРУЙ: две твои темы не должны бороться за один запрос.
+   Каждая тема — свой уникальный primary_keyword и своя страница-цель.
+   Если две темы близки (например «рейкбек в клубе» и «как получить
+   рейкбек ClubGG») — оставь ОДНУ, более широкую/сильную. Разные темы =
+   разные поисковые интенты, а не переформулировки одного запроса.
+3. primary_keyword — реальная поисковая фраза, как её вводят в Google.
+   Широкие: без бренда, обучающие. Узкие: гео + бренд/год + модификатор.
+   Плохо (пусто): «покер». Плохо (мертво): «рейкбек в PokerBet».
+   Хорошо (широкий): «что такое рейкбек в покере».
+   Хорошо (узкий): «покерный клуб clubgg украина рейкбек».
+4. secondary_keywords — ровно 3 связанных запроса (LSI/синонимы/вариации),
+   которые статья тоже закроет. Смесь: 1 широкий + 1-2 с гео/брендом.
+5. ГЕО: аудитория — Украина. В узких темах включай «Украина/Україна»,
+   «на гривны», «ClubGG/PokerBet/KlubOk» где уместно. В широких —
+   можно без гео (обучающие запросы ищут вне привязки к стране).
+6. target_page: /ua/ (каталог), /ua/rooms/pokerbet/ (обзор PokerBet),
+   /ua/clubs/klubok/ (обзор KlubOk), /ua/blog/ (общий блог).
+7. intent: informational (разобраться) | commercial (выбрать/сравнить).
+8. notes — 2-3 предложения оператору: угол статьи, на чём сделать акцент,
+   каких формулировок ИЗБЕГАТЬ (напомни про факты выше, если тема рядом
+   с PokerBet/рейкбеком/регулированием).
+9. evidence — откуда взят угол (какой GSC-запрос/тренд web_search питает).
+
+Отвечай СТРОГО JSON-массивом, без преамбулы, без code fences:
 
 [
   {
-    "topic": "...",
-    "primary_keyword": "...",
-    "secondary_keywords": "ключ1, ключ2, ключ3",
+    "topic": "Что такое рейкбек в покере и как его получать",
+    "primary_keyword": "что такое рейкбек в покере",
+    "secondary_keywords": "как работает рейкбек, рейкбек украина, рейкбек клуб clubgg",
     "intent": "informational",
-    "target_page": "/ua/",
-    "notes": "...",
-    "evidence": "GSC: 240 показов по 'рейкбек в pokerbet', позиция 12; тренд web: обсуждение на 2p2 в марте"
-  },
-  ...
+    "target_page": "/ua/blog/",
+    "notes": "Широкая обучающая тема (верх воронки). Объясни механику рейкбека простыми словами, приведи расчёт. Рейкбек-примеры привязывай к клубам ClubGG (40-65%), НЕ к PokerBet (у него рейкбека нет — только бонусы).",
+    "evidence": "GSC: широкий обучающий запрос, высокие показы; строит трафик и авторитет"
+  }
 ]
 """
 
@@ -292,7 +370,7 @@ def cluster_and_generate_topics(
 
     existing_block = "\n".join(f"- {q}" for q in sorted(existing_queries)[:40]) or "(пусто)"
 
-    user_msg = f"""GSC OPPORTUNITIES (запросы, по которым сайт kozyr.ua уже показывается,
+    user_msg = f"""GSC OPPORTUNITIES (запросы, по которым сайт kozyr.club уже показывается,
 но позиция низкая — есть место для роста, если написать точечную статью):
 
 {gsc_block}
@@ -305,16 +383,20 @@ EXISTING_TOPICS (уже есть в очереди или опубликован
 
 ---
 
-Проверь через web_search:
-1. Какие темы про рейкбек, PokerBet, приватные покерные клубы, ClubGG сейчас
-   обсуждаются на 2p2, покерных форумах, Reddit r/poker, RakeTheRake, PokerNews
-   за последние 3-6 месяцев.
-2. Есть ли изменения в законодательстве Украины по онлайн-покеру.
-3. Какие вопросы про рейкбек часто задают на украинских покерных форумах.
+Проверь через web_search (для актуальности и трендов):
+1. Какие ОБУЧАЮЩИЕ покерные темы сейчас популярны (правила, стратегии,
+   комбинации, банкролл, вывод денег) — это широкие трафиковые запросы.
+2. Что игроки из Украины/СНГ спрашивают про покерные клубы ClubGG, рейкбек
+   в клубах, игру на гривны, вывод средств — узкие коммерческие запросы.
+3. Свежие тренды: новые форматы, обновления приложений, турниры, промо.
 
-Затем выдай {MAX_NEW_TOPICS_PER_RUN} тем в JSON-формате из системного промпта.
-Приоритет: темы, питаемые GSC-запросами (там уже есть спрос), с
-дополнительной опорой на найденное в web_search.
+ПОМНИ факты о площадках из системного промпта: PokerBet = бонусы (НЕ рейкбек),
+рейкбек = только клубы ClubGG/KlubOk. Не предлагай темы, противоречащие этому.
+
+Затем выдай {MAX_NEW_TOPICS_PER_RUN} тем в JSON из системного промпта,
+соблюдая баланс: 2-3 широкие информационные (трафик) + 3-4 узкие
+коммерческие (конверсия) + опционально 1 трендовая.
+Приоритет: если есть GSC-запросы с реальным спросом — питай темы ими.
 """
 
     tools = []
@@ -376,7 +458,8 @@ EXISTING_TOPICS (уже есть в очереди или опубликован
 
 # ==== Telegram-отчёт ====
 
-def send_telegram_report(new_topics: list[dict], gsc_stats: dict) -> None:
+def send_telegram_report(new_topics: list[dict], gsc_stats: dict,
+                         cannibal_skipped: list[dict] | None = None) -> None:
     """Присылает в чат оператора сводку по итогам keyword-research."""
     token = os.environ.get("TELEGRAM_BOT_TOKEN")
     chat_id = os.environ.get("TELEGRAM_CHAT_ID")
@@ -390,6 +473,13 @@ def send_telegram_report(new_topics: list[dict], gsc_stats: dict) -> None:
         f"📊 GSC: обработано {gsc_stats.get('opportunities_found', 0)} запросов-возможностей "
         f"(impressions ≥ {GSC_MIN_IMPRESSIONS}, позиция {GSC_MIN_POSITION}-{GSC_MAX_POSITION}).",
         f"➕ Добавлено {len(new_topics)} новых тем в таблицу со `status=suggested`.",
+    ]
+    if cannibal_skipped:
+        lines.append(
+            f"🚫 Отсеяно {len(cannibal_skipped)} тем из-за каннибализации "
+            f"(боролись бы за те же запросы)."
+        )
+    lines += [
         "",
         "*ТОП-5 тем на ревью:*",
     ]
@@ -444,6 +534,104 @@ def escape_md(text: str) -> str:
 
 # ==== Основной пайплайн ====
 
+
+# ═══════════════════════════════════════════════════════════════════
+# Детектор каннибализации ключевых слов
+# ═══════════════════════════════════════════════════════════════════
+# Каннибализация = две статьи борются за один поисковый запрос. Google не
+# знает какую показывать → обе проседают. Ловим ДО добавления новой темы.
+# Ключевые сигналы: (1) пересечение слов в primary_keyword (главный), (2)
+# общее сходство ключей, (3) совпадение target_page + intent. Различаем
+# широкие обучающие и узкие коммерческие темы — они НЕ конфликтуют, даже
+# если про один предмет (разный интент = разная страница выдачи).
+
+_STOPWORDS = {
+    "в", "на", "и", "с", "по", "для", "как", "что", "такое", "это", "за",
+    "от", "до", "из", "о", "об", "у", "к", "the", "a", "an", "of", "to",
+    "in", "on", "for", "how", "what", "is", "покер", "poker", "2025", "2026",
+    "украина", "україна", "украины", "україни", "онлайн",
+}
+
+def _stem(w: str) -> str:
+    """Грубый стемминг — отрезаем частые русские окончания, чтобы
+    сопоставлять однокоренные (рейкбек/рейкбека, клуб/клубе/клубах)."""
+    for suf in ("ами", "ями", "ах", "ях", "ов", "ев", "ом", "ем", "ей",
+                "ой", "ую", "ю", "е", "а", "и", "ы", "у", "о"):
+        if len(w) - len(suf) >= 4 and w.endswith(suf):
+            return w[:-len(suf)]
+    return w
+
+def _keywords_set(topic: dict) -> set:
+    """Значимые (стеммированные) слова из всех ключей темы."""
+    text = " ".join([
+        topic.get("primary_keyword", ""),
+        topic.get("secondary_keywords", ""),
+        topic.get("topic", ""),
+    ]).lower()
+    words = re.findall(r"[a-zа-яёіїєґ]+", text)
+    return {_stem(w) for w in words if len(w) > 2 and w not in _STOPWORDS}
+
+def _primary_set(topic: dict) -> set:
+    """Только слова из primary_keyword — сильнейший сигнал конфликта."""
+    words = re.findall(r"[a-zа-яёіїєґ]+", topic.get("primary_keyword", "").lower())
+    return {_stem(w) for w in words if len(w) > 2 and w not in _STOPWORDS}
+
+def _similarity(a: dict, b: dict) -> float:
+    """Жаккар-сходство по всем ключам (0..1)."""
+    sa, sb = _keywords_set(a), _keywords_set(b)
+    if not sa or not sb:
+        return 0.0
+    return len(sa & sb) / len(sa | sb)
+
+def _primary_overlap(a: dict, b: dict) -> float:
+    """Доля пересечения ГЛАВНЫХ ключей (от меньшего, 0..1)."""
+    pa, pb = _primary_set(a), _primary_set(b)
+    if not pa or not pb:
+        return 0.0
+    return len(pa & pb) / min(len(pa), len(pb))
+
+CANNIBAL_THRESHOLD = 0.45
+
+def detect_cannibalization(new_topic: dict, existing_topics: list[dict]) -> dict | None:
+    """
+    Проверяет, не съедает ли new_topic какую-то из existing_topics.
+    Возвращает dict с деталями конфликта или None если чисто.
+
+    Конфликтом считаем, если выполнено ЛЮБОЕ:
+      • общее сходство ключей >= 0.45
+      • главные ключи (primary) пересекаются на >= 60%
+      • среднее сходство (>=0.3) И та же страница-цель И тот же интент
+      • сильное пересечение primary (>=0.5) И та же страница-цель
+    Широкая инфо-тема и узкая коммерческая про один предмет НЕ конфликтуют
+    (разный intent + разный target_page → разные места в выдаче).
+    """
+    best = None
+    for ex in existing_topics:
+        sim = _similarity(new_topic, ex)
+        pov = _primary_overlap(new_topic, ex)
+        same_target = (new_topic.get("target_page", "").strip() ==
+                       ex.get("target_page", "").strip())
+        same_intent = (new_topic.get("intent", "").strip() ==
+                       ex.get("intent", "").strip())
+        is_conflict = (sim >= CANNIBAL_THRESHOLD
+                       or pov >= 0.6
+                       or (sim >= 0.3 and same_target and same_intent)
+                       or (pov >= 0.5 and same_target))
+        score = max(sim, pov)
+        if is_conflict and (best is None or score > best["_score"]):
+            best = {
+                "conflicts_with": ex.get("topic", ex.get("primary_keyword", "?")),
+                "similarity": round(sim, 2),
+                "primary_overlap": round(pov, 2),
+                "same_target": same_target,
+                "same_intent": same_intent,
+                "target_page": new_topic.get("target_page", ""),
+                "_score": score,
+            }
+    return best
+
+
+
 def run(lang: str = "ru", skip_gsc: bool = False, skip_web: bool = False,
         dry_run: bool = False) -> dict:
     """
@@ -471,6 +659,7 @@ def run(lang: str = "ru", skip_gsc: bool = False, skip_web: bool = False,
     # 2. Существующие темы
     sheet = get_sheet()
     existing = get_existing_queries(sheet)
+    existing_full = get_existing_topics_full(sheet)  # для проверки каннибализации
     print(f"📚 В таблице сейчас {len(existing)} уникальных тем/ключей")
 
     # 3. Claude → новые темы
@@ -480,18 +669,39 @@ def run(lang: str = "ru", skip_gsc: bool = False, skip_web: bool = False,
         do_web_search=not skip_web,
     )
 
-    # Отфильтровываем те, что уже есть
+    # Отфильтровываем: точные дубли + каннибализацию (темы, съедающие друг друга)
     fresh = []
+    cannibal_skipped = []  # для отчёта
+    # накопитель уже принятых тем этого прогона (чтобы новые темы не ели друг друга)
+    accepted_full = list(existing_full)
     for t in topics:
         topic_norm = t.get("topic", "").strip().lower()
         pk_norm = t.get("primary_keyword", "").strip().lower()
+
+        # (а) точный дубль
         if topic_norm in existing or pk_norm in existing:
             print(f"⏭️  Пропускаю дубль: {t.get('topic')!r}")
             continue
+
+        # (б) каннибализация — тема борется за тот же запрос, что уже есть
+        conflict = detect_cannibalization(t, accepted_full)
+        if conflict:
+            print(f"🚫 Каннибализация: {t.get('topic')!r} пересекается с "
+                  f"{conflict['conflicts_with']!r} "
+                  f"(сходство {conflict['similarity']}, "
+                  f"та же цель: {conflict['same_target']}). Пропускаю.")
+            cannibal_skipped.append({
+                "topic": t.get("topic", ""),
+                "conflicts_with": conflict["conflicts_with"],
+                "similarity": conflict["similarity"],
+            })
+            continue
+
         fresh.append(t)
-        # Тут же добавляем в existing, чтобы не задваивались темы внутри одного прогона
+        # Добавляем в накопители, чтобы следующие темы прогона не задваивались/не ели
         existing.add(topic_norm)
         existing.add(pk_norm)
+        accepted_full.append(t)
 
     fresh = fresh[:MAX_NEW_TOPICS_PER_RUN]
 
@@ -524,7 +734,7 @@ def run(lang: str = "ru", skip_gsc: bool = False, skip_web: bool = False,
         "new_topics_added": len(fresh),
     }
     if not dry_run:
-        send_telegram_report(fresh, stats)
+        send_telegram_report(fresh, stats, cannibal_skipped=cannibal_skipped)
 
     return {"topics": fresh, "stats": stats}
 
