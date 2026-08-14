@@ -66,10 +66,16 @@ jobs:
           git add -A -f sitemap.xml automation/taxonomy*.json 2>/dev/null || true
           # Удалённые pending
           git add -A -u _pending _pending_* 2>/dev/null || true
+          # Подхватываем ВСЁ, включая файлы вне списка директорий (hero.webp и т.п.),
+          # чтобы rebase не падал на unstaged changes
+          git add -A
           if git diff --staged --quiet; then
             echo "Nothing to commit."
           else
             git commit -m "Publish multilang article: ${{ inputs.slug }}"
-            git pull --rebase origin main || true
-            git push
+            # Забираем свежие изменения из main перед пушем.
+            # Без || true: если rebase не прошёл — шаг должен упасть явно, а не пушить вслепую.
+            git pull --rebase origin main
+            # Ретрай пуша на случай гонки с параллельным коммитом
+            git push || (git pull --rebase origin main && git push)
           fi
