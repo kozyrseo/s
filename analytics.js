@@ -19,6 +19,14 @@
 
   var GA_MEASUREMENT_ID = 'G-XXXXXXXXXX'; // ← ЗАМЕНИ на свой ID
 
+  // --- gtag shim (определён ВСЕГДА, до всех проверок) ---
+  // Стандартный паттерн Google: события пушатся в dataLayer-очередь.
+  // Если gtag.js загружен — обрабатываются. Если нет — просто лежат в очереди.
+  // Это позволяет affiliate_click handler ниже вызывать gtag() безопасно,
+  // даже когда GA ещё не настроена (плейсхолдер ID) или пользователь не дал consent.
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+
   // Пока плейсхолдер — не инициализируем (чтобы не мусорить статистику).
   if (!GA_MEASUREMENT_ID || GA_MEASUREMENT_ID === 'G-XXXXXXXXXX') {
     return;
@@ -29,19 +37,36 @@
     return;
   }
 
-  // --- Стандартная загрузка gtag.js ---
-  var s = document.createElement('script');
-  s.async = true;
-  s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
-  document.head.appendChild(s);
+  // --- Cookie consent (GDPR / ePrivacy) ---
+  // Не грузим GA4 без явного согласия пользователя на аналитику.
+  function hasAnalyticsConsent() {
+    return window.KozyrConsent && window.KozyrConsent.hasConsent('analytics');
+  }
 
-  window.dataLayer = window.dataLayer || [];
-  function gtag() { window.dataLayer.push(arguments); }
-  window.gtag = gtag;
-  gtag('js', new Date());
-  gtag('config', GA_MEASUREMENT_ID, {
-    anonymize_ip: true
-  });
+  function initGA() {
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
+    document.head.appendChild(s);
+    window.gtag('js', new Date());
+    window.gtag('config', GA_MEASUREMENT_ID, {
+      anonymize_ip: true
+    });
+  }
+
+  // Если консент уже дан — грузим сразу
+  if (hasAnalyticsConsent()) {
+    initGA();
+  } else {
+    // Ждём консент — banner отправит событие, если пользователь согласится
+    window.addEventListener('kozyr:consent-ready', function (e) {
+      if (e.detail && e.detail.categories && e.detail.categories.analytics === true) {
+        initGA();
+      }
+    });
+    // Если пользователь отклонил — тихо ничего не делаем, GA не грузится.
+    // gtag()-события всё равно пушатся в dataLayer — но никуда не уходят.
+  }
 
   // --- Трекинг кликов по партнёрским ссылкам ---
   // Ловим на этапе всплытия, чтобы не мешать переходу.
