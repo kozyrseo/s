@@ -1,19 +1,38 @@
-# OS / editor
-.DS_Store
-Thumbs.db
-*.swp
-.vscode/
-.idea/
+# ============================================================================
+# KOZYR — .gitignore
+# ============================================================================
 
-# Секреты — НИКОГДА не коммитить
-.env
-.env.*
-*service-account*.json
-secrets/
-
-# Логи и временное
-*.log
-.cache/
-node_modules/
+*.py
+requirements.txt
 __pycache__/
 *.pyc
+.venv/
+venv/
+env/
+
+_pending/
+_pending_uk/
+.bot_state/
+automation/
+analytics/
+
+README.md
+CHANGES.md
+STATUS.md
+DEPLOY*.md
+BLOG-*.md
+FAVICON-*.md
+FIX-*.md
+
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+.env
+.env.local
+.env.*.local
+
+node_modules/
+package-lock.json
