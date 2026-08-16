@@ -7,7 +7,7 @@
 <meta name="robots" content="index, follow">
 
 <title>KOZYR — Poker Rakeback · Choose Your Region</title>
-<meta name="description" content="KOZYR — international poker rakeback platform. Choose your country: Ukraine (live), Poland and Kazakhstan (coming soon), International.">
+<meta name="description" content="KOZYR — international poker rakeback platform. Choose your country: Ukraine (live), Poland and Germany (coming soon), International.">
 
 <!-- Canonical + hreflang: this root page is the x-default -->
 <link rel="canonical" href="https://kozyr.club/">
@@ -45,7 +45,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.11.0/css/flag-icons.min.css">
 
-<!-- Structured data: minimal, points to the org + this page as WebSite -->
+<!-- Structured data -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -55,12 +55,7 @@
       "@id": "https://kozyr.club/#organization",
       "name": "KOZYR",
       "url": "https://kozyr.club/",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://kozyr.club/icon-512.png",
-        "width": 512,
-        "height": 512
-      },
+      "logo": { "@type": "ImageObject", "url": "https://kozyr.club/icon-512.png", "width": 512, "height": 512 },
       "sameAs": ["https://t.me/kozyr_support"]
     },
     {
@@ -118,6 +113,8 @@ a { color: inherit; text-decoration: none; }
   text-align: center; line-height: 1.5;
 }
 .compliance-inner strong { color: var(--ink); font-weight: 600; }
+.compliance-inner a { color: var(--ink-2); border-bottom: 1px dotted var(--border-2); }
+.compliance-inner a:hover { color: var(--accent); }
 
 /* ---------- Header / nav ---------- */
 .nav {
@@ -130,6 +127,7 @@ a { color: inherit; text-decoration: none; }
   display: flex; align-items: center; justify-content: space-between;
   height: 72px; padding: 0 32px;
   max-width: var(--w); margin: 0 auto;
+  gap: 20px;
 }
 .logo {
   display: flex; align-items: center; gap: 10px;
@@ -141,11 +139,38 @@ a { color: inherit; text-decoration: none; }
 .logo-mark svg { width: 100%; height: 100%; display: block; }
 
 .nav-aux {
-  display: flex; align-items: center; gap: 24px;
+  display: flex; align-items: center; gap: 16px;
   font-size: 14px; color: var(--ink-2); font-weight: 500;
 }
-.nav-aux a:hover { color: var(--ink); }
-.nav-aux .tg-badge {
+.nav-aux > a:hover { color: var(--ink); }
+
+/* ---------- Language switcher (RU/UK/EN) ---------- */
+.lang-switch {
+  display: inline-flex;
+  padding: 3px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  gap: 2px;
+}
+.lang-switch button {
+  border: none; background: transparent;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 100px;
+  font-family: var(--f-mono);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-3);
+  transition: color 0.15s, background 0.15s;
+}
+.lang-switch button:hover { color: var(--ink); }
+.lang-switch button.is-active {
+  background: var(--ink);
+  color: #fff;
+}
+
+.tg-badge {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 14px; border-radius: 100px;
   background: var(--surface); border: 1px solid var(--border);
@@ -153,16 +178,20 @@ a { color: inherit; text-decoration: none; }
   color: var(--ink-2);
   transition: border-color 0.15s, color 0.15s;
 }
-.nav-aux .tg-badge:hover { border-color: var(--accent); color: var(--accent); }
-.nav-aux .tg-badge svg { width: 14px; height: 14px; }
+.tg-badge:hover { border-color: var(--accent); color: var(--accent); }
+.tg-badge svg { width: 14px; height: 14px; }
 
 @media (max-width: 720px) {
-  .nav-inner { height: 60px; padding: 0 20px; }
-  .nav-aux .tg-badge span { display: none; }
-  .compliance-inner { padding: 8px 20px; font-size: 11px; }
+  .nav-inner { height: 60px; padding: 0 16px; gap: 12px; }
+  .nav-aux { gap: 10px; }
+  .nav-aux .regions-link { display: none; }
+  .tg-badge span { display: none; }
+  .tg-badge { padding: 8px 10px; }
+  .lang-switch button { padding: 6px 9px; font-size: 10px; }
+  .compliance-inner { padding: 8px 16px; font-size: 11px; }
 }
 
-/* ---------- Hero (bilingual) ---------- */
+/* ---------- Hero (bilingual visuals via i18n) ---------- */
 .hero {
   padding: 80px 0 40px;
   text-align: center;
@@ -170,7 +199,6 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
 }
 .hero::before {
-  /* soft suit-pattern background, blue tint */
   content: ""; position: absolute; inset: 0; z-index: 0;
   opacity: 0.5; pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg fill='%232668FF' fill-opacity='0.045'%3E%3Cpath d='M55 30c-8 9-20 17-20 28a10 10 0 0 0 18 6l-3 12h10l-3-12a10 10 0 0 0 18-6c0-11-12-19-20-28z'/%3E%3Cpath d='M165 60c11 0 20 7 20 16 0 11-14 18-20 27-6-9-20-16-20-27 0-9 9-16 20-16z'/%3E%3Cpath d='M110 130l16 20-16 20-16-20z'/%3E%3Cg%3E%3Ccircle cx='40' cy='168' r='9'/%3E%3Ccircle cx='52' cy='160' r='9'/%3E%3Ccircle cx='52' cy='176' r='9'/%3E%3Crect x='44' y='168' width='4' height='16'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
@@ -203,20 +231,14 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--f-serif); font-style: italic; font-weight: 400;
   color: var(--accent);
 }
-.hero .lede-en {
+.hero .lede {
   font-family: var(--f-serif); font-size: clamp(18px, 2.2vw, 22px);
   line-height: 1.5; color: var(--ink-2);
-  max-width: 52ch; margin: 0 auto 6px;
-}
-.hero .lede-ru {
-  font-size: 15px; color: var(--ink-3);
-  max-width: 60ch; margin: 0 auto;
+  max-width: 52ch; margin: 0 auto;
 }
 
 /* ---------- Regions grid ---------- */
-.regions {
-  padding: 40px 0 80px;
-}
+.regions { padding: 40px 0 80px; }
 .regions-head {
   display: flex; align-items: baseline; justify-content: space-between;
   gap: 24px; margin-bottom: 24px; flex-wrap: wrap;
@@ -235,9 +257,7 @@ a { color: inherit; text-decoration: none; }
   border-bottom: 1px dashed rgba(38,104,255,0.35);
   padding-bottom: 1px;
 }
-.regions-head .aux-link a:hover {
-  border-bottom-color: var(--accent);
-}
+.regions-head .aux-link a:hover { border-bottom-color: var(--accent); }
 
 .regions-grid {
   display: grid;
@@ -246,7 +266,6 @@ a { color: inherit; text-decoration: none; }
 }
 @media (min-width: 900px) {
   .regions-grid { grid-template-columns: repeat(4, 1fr); }
-  /* Live regions span 2 columns each on desktop; coming ones stay compact */
   .regions-grid .region-card.live { grid-column: span 2; }
 }
 @media (max-width: 720px) {
@@ -265,7 +284,11 @@ a { color: inherit; text-decoration: none; }
               border-color 0.18s;
   position: relative;
 }
-.region-card.live { cursor: pointer; }
+/* Live cards are clickable everywhere; the underlying <a> is a real
+   link (SEO-visible), the whole card acts as one big hit target. */
+.region-card.live {
+  cursor: pointer;
+}
 .region-card.live:hover {
   transform: translateY(-3px);
   border-color: var(--accent);
@@ -294,9 +317,7 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.14em; text-transform: uppercase;
   padding: 4px 10px; border-radius: 100px;
 }
-.region-status.live {
-  background: var(--success-tint); color: var(--success);
-}
+.region-status.live { background: var(--success-tint); color: var(--success); }
 .region-status.soon {
   background: var(--surface-alt); color: var(--ink-3);
   border: 1px dashed var(--border-2);
@@ -313,10 +334,15 @@ a { color: inherit; text-decoration: none; }
   margin-bottom: 16px;
 }
 
-/* Live region: language pills */
+/* Live region: language pills inside a clickable card.
+   Pills are real <a> — they're the SEO-visible links.
+   Click on a pill goes to its href (via stopPropagation, we prevent
+   the parent card handler from re-firing). */
 .region-langs {
   display: flex; flex-wrap: wrap; gap: 8px;
   margin: 4px 0 auto;
+  position: relative;  /* keep pills above the card overlay */
+  z-index: 2;
 }
 .region-lang-pill {
   display: inline-flex; align-items: center; gap: 6px;
@@ -364,6 +390,7 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--f-mono); font-size: 10px; font-weight: 600;
   letter-spacing: 0.08em; text-transform: uppercase;
   box-shadow: 0 4px 10px rgba(38,104,255,0.25);
+  z-index: 3;
 }
 .region-card.is-your-region .you-are-here { display: inline-flex; }
 .region-card.is-your-region.live {
@@ -371,7 +398,7 @@ a { color: inherit; text-decoration: none; }
   box-shadow: 0 6px 20px rgba(38,104,255,0.12);
 }
 
-/* ---------- Not-listed CTA (small, minimal) ---------- */
+/* ---------- Not-listed CTA ---------- */
 .not-listed {
   margin-top: 40px;
   padding: 28px 32px;
@@ -386,8 +413,7 @@ a { color: inherit; text-decoration: none; }
   color: rgba(255,255,255,0.8);
 }
 .not-listed-text strong { color: #fff; font-weight: 600; }
-.not-listed-text .ru { display: block; font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 2px; }
-.not-listed a {
+.not-listed a.tg-cta {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 12px 20px; border-radius: 100px;
   background: var(--accent); color: #fff;
@@ -395,8 +421,8 @@ a { color: inherit; text-decoration: none; }
   transition: background 0.15s, transform 0.15s;
   white-space: nowrap;
 }
-.not-listed a:hover { background: var(--accent-deep); transform: translateY(-1px); }
-.not-listed a svg { width: 15px; height: 15px; }
+.not-listed a.tg-cta:hover { background: var(--accent-deep); transform: translateY(-1px); }
+.not-listed a.tg-cta svg { width: 15px; height: 15px; }
 
 /* ---------- Footer ---------- */
 .footer {
@@ -422,7 +448,7 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.04em;
 }
 @media (max-width: 640px) {
-  .footer-inner { padding: 0 20px; flex-direction: column; align-items: flex-start; gap: 16px; }
+  .footer-inner { padding: 0 16px; flex-direction: column; align-items: flex-start; gap: 16px; }
   .not-listed { flex-direction: column; align-items: flex-start; padding: 24px; }
 }
 </style>
@@ -430,9 +456,9 @@ a { color: inherit; text-decoration: none; }
 <body>
 
 <div class="compliance">
-  <div class="compliance-inner">
+  <div class="compliance-inner" data-i18n-html="compliance">
     <strong>21+ only.</strong> By using this site you agree to the regional
-    <a href="/ua/legal/">Terms &amp; Privacy</a>. · Играйте ответственно / Грайте відповідально.
+    <a href="/ua/legal/">Terms &amp; Privacy</a>. · Play responsibly.
   </div>
 </div>
 
@@ -462,7 +488,14 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <span>KOZYR</span>
     </a>
     <div class="nav-aux">
-      <a href="/countries/">Regions</a>
+      <a href="/countries/" class="regions-link" data-i18n="regions_link">Regions</a>
+
+      <div class="lang-switch" role="tablist" aria-label="Interface language">
+        <button type="button" data-set-lang="ru" role="tab" aria-label="Русский">RU</button>
+        <button type="button" data-set-lang="uk" role="tab" aria-label="Українська">UK</button>
+        <button type="button" data-set-lang="en" role="tab" aria-label="English">EN</button>
+      </div>
+
       <a href="https://t.me/kozyr_support" class="tg-badge" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.24 3.64 11.95c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
         <span>Telegram</span>
@@ -475,10 +508,10 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 
   <section class="hero">
     <div class="wrap hero-inner">
-      <div class="hero-eyebrow">KOZYR · Poker Rakeback</div>
-      <h1>Choose your <em>region</em>.</h1>
-      <p class="lede-en">Regional platforms with local partners, currencies and languages. Pick the country you play from.</p>
-      <p class="lede-ru">Региональные площадки с локальными партнёрами и валютами · Регіональні платформи з локальними партнерами та мовами.</p>
+      <div class="hero-eyebrow" data-i18n="hero_eyebrow">KOZYR · Poker Rakeback</div>
+      <h1><span data-i18n="hero_title_prefix">Choose your</span>
+          <em data-i18n="hero_title_em">region</em>.</h1>
+      <p class="lede" data-i18n="hero_lede">Regional platforms with local partners, currencies and languages. Pick the country you play from.</p>
     </div>
   </section>
 
@@ -486,44 +519,62 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     <div class="wrap">
 
       <div class="regions-head">
-        <h2>Available regions</h2>
-        <div class="aux-link">Need details? <a href="/countries/">full regions list →</a></div>
+        <h2 data-i18n="regions_head">Available regions</h2>
+        <div class="aux-link">
+          <span data-i18n="regions_aux">Need details?</span>
+          <a href="/countries/" data-i18n="regions_aux_link">full regions list →</a>
+        </div>
       </div>
 
       <div class="regions-grid">
 
-        <!-- ============ UKRAINE — LIVE, 2 languages ============ -->
-        <div class="region-card live" data-country="ua">
-          <span class="you-are-here">Your region</span>
+        <!-- ============ UKRAINE ============ -->
+        <!--
+          Live card: the whole card is clickable via JS (see bottom).
+          data-href-<lang> tells the click handler where to send the visitor
+          depending on the current UI language. Individual pills below are
+          real <a> tags — Google follows them; users clicking a pill go to
+          that specific language regardless of switcher state.
+        -->
+        <div class="region-card live"
+             data-country="ua"
+             data-href-en="/ua/"
+             data-href-ru="/ua/"
+             data-href-uk="/ua/uk/">
+          <span class="you-are-here" data-i18n="your_region">Your region</span>
           <div class="region-head">
             <span class="fi fi-ua" aria-hidden="true"></span>
-            <span class="region-status live">● Live</span>
+            <span class="region-status live"><span class="dot">●</span> <span data-i18n="status_live">Live</span></span>
           </div>
-          <h3 class="region-name">Ukraine</h3>
-          <div class="region-native">Україна · UAH · legal since 2020</div>
+          <h3 class="region-name" data-i18n="ua_name">Ukraine</h3>
+          <div class="region-native" data-i18n="ua_native">Україна · UAH · legal since 2020</div>
 
           <div class="region-langs">
             <a href="/ua/" class="region-lang-pill" lang="ru" hreflang="ru-UA">
-              Русская версия <code>RU</code>
+              <span data-i18n="ua_pill_ru">Русская версия</span> <code>RU</code>
             </a>
             <a href="/ua/uk/" class="region-lang-pill" lang="uk" hreflang="uk-UA">
-              Українська версія <code>UK</code>
+              <span data-i18n="ua_pill_uk">Українська версія</span> <code>UK</code>
             </a>
           </div>
         </div>
 
-        <!-- ============ INTERNATIONAL — Live preview ============ -->
-        <div class="region-card live" data-country="int">
+        <!-- ============ INTERNATIONAL ============ -->
+        <div class="region-card live"
+             data-country="int"
+             data-href-en="/int/"
+             data-href-ru="/int/"
+             data-href-uk="/int/">
           <div class="region-head">
             <span class="fi-int" aria-hidden="true">◈</span>
-            <span class="region-status live">● Preview</span>
+            <span class="region-status live"><span class="dot">●</span> <span data-i18n="status_preview">Preview</span></span>
           </div>
-          <h3 class="region-name">International</h3>
-          <div class="region-native">Global · USD / USDT · English</div>
+          <h3 class="region-name" data-i18n="int_name">International</h3>
+          <div class="region-native" data-i18n="int_native">Global · USD / USDT · English</div>
 
           <div class="region-langs">
             <a href="/int/" class="region-lang-pill" lang="en" hreflang="en">
-              English version <code>EN</code>
+              <span data-i18n="int_pill_en">English version</span> <code>EN</code>
             </a>
           </div>
         </div>
@@ -534,10 +585,10 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
             <span class="fi fi-pl" aria-hidden="true"></span>
             <span class="region-status soon">Q4 2026</span>
           </div>
-          <h3 class="region-name">Poland</h3>
-          <div class="region-native">Polska · PLN</div>
+          <h3 class="region-name" data-i18n="pl_name">Poland</h3>
+          <div class="region-native" data-i18n="pl_native">Polska · PLN</div>
           <div class="region-meta">
-            <span>Polski + UK</span><span>Ustawa hazardowa</span>
+            <span data-i18n="pl_meta_langs">Polski + EN</span><span data-i18n="pl_meta_law">Ustawa hazardowa</span>
           </div>
         </div>
 
@@ -547,10 +598,10 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
             <span class="fi fi-de" aria-hidden="true"></span>
             <span class="region-status soon">Q1 2027</span>
           </div>
-          <h3 class="region-name">Germany</h3>
-          <div class="region-native">Deutschland · EUR</div>
+          <h3 class="region-name" data-i18n="de_name">Germany</h3>
+          <div class="region-native" data-i18n="de_native">Deutschland · EUR</div>
           <div class="region-meta">
-            <span>Deutsch + EN</span><span>Glücksspielstaatsvertrag</span>
+            <span data-i18n="de_meta_langs">Deutsch + EN</span><span data-i18n="de_meta_law">Glücksspielstaatsvertrag</span>
           </div>
         </div>
 
@@ -558,13 +609,12 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 
       <!-- ============ NOT LISTED / TG ============ -->
       <div class="not-listed">
-        <div class="not-listed-text">
+        <div class="not-listed-text" data-i18n-html="not_listed">
           <strong>Your country isn't listed yet?</strong> Drop us a line — enough demand from your region and we prioritize it.
-          <span class="ru">Твоей страны нет в списке? Напиши нам, наберётся запрос — запустим приоритетно.</span>
         </div>
-        <a href="https://t.me/kozyr_support" rel="noopener">
+        <a href="https://t.me/kozyr_support" class="tg-cta" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.24 3.64 11.95c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
-          Write on Telegram
+          <span data-i18n="not_listed_cta">Write on Telegram</span>
         </a>
       </div>
 
@@ -588,60 +638,261 @@ c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36
       <span>KOZYR</span>
     </a>
     <div class="footer-links">
-      <a href="/countries/">All regions</a>
-      <a href="/ua/legal/">Legal (RU)</a>
-      <a href="https://t.me/kozyr_support" rel="noopener">Telegram support</a>
+      <a href="/countries/" data-i18n="footer_all_regions">All regions</a>
+      <a href="/ua/legal/" data-i18n="footer_legal">Legal</a>
+      <a href="https://t.me/kozyr_support" rel="noopener" data-i18n="footer_support">Telegram support</a>
     </div>
-    <div class="footer-copy">© 2026 KOZYR · 21+ · Play responsibly</div>
+    <div class="footer-copy" data-i18n="footer_copy">© 2026 KOZYR · 21+ · Play responsibly</div>
   </div>
 </footer>
 
 <!-- ============================================================
-     Soft geo highlight: when geo.js resolves the visitor's country,
-     add .is-your-region to the matching card. NO redirect, NO nag —
-     the user still explicitly chooses. Cache is 24h in localStorage,
-     served by /assets/kozyr-geo.js (already used site-wide).
+     i18n + interactive behavior
      ============================================================ -->
-<script defer src="/assets/kozyr-geo.js?v=12"></script>
 <script>
 (function () {
   'use strict';
 
-  // Map ipapi.co country codes (lowercase) → data-country slug on cards.
-  // We treat CIS visitors as "Ukraine region" only when they speak RU/UK;
-  // for others we leave the chooser neutral so they pick themselves.
-  var GEO_TO_REGION = {
-    'ua': 'ua',
-    'ru': 'ua',  // Russian speakers land on UA version by default
-    'by': 'ua',  // same
-    'md': 'ua',
-    'pl': 'pl',
-    'de': 'de',
-    'at': 'de',  // Austria — German speakers
+  // ---- 1. Translation strings ----------------------------------------
+  var STRINGS = {
+    en: {
+      compliance:         "<strong>21+ only.</strong> By using this site you agree to the regional <a href=\"/ua/legal/\">Terms &amp; Privacy</a>. · Play responsibly.",
+      regions_link:       "Regions",
+      hero_eyebrow:       "KOZYR · Poker Rakeback",
+      hero_title_prefix:  "Choose your",
+      hero_title_em:      "region",
+      hero_lede:          "Regional platforms with local partners, currencies and languages. Pick the country you play from.",
+      regions_head:       "Available regions",
+      regions_aux:        "Need details?",
+      regions_aux_link:   "full regions list →",
+      status_live:        "Live",
+      status_preview:     "Preview",
+      your_region:        "Your region",
+      ua_name:            "Ukraine",
+      ua_native:          "Україна · UAH · legal since 2020",
+      ua_pill_ru:         "Russian version",
+      ua_pill_uk:         "Ukrainian version",
+      int_name:           "International",
+      int_native:         "Global · USD / USDT · English",
+      int_pill_en:        "English version",
+      pl_name:            "Poland",
+      pl_native:          "Polska · PLN",
+      pl_meta_langs:      "Polski + EN",
+      pl_meta_law:        "Ustawa hazardowa",
+      de_name:            "Germany",
+      de_native:          "Deutschland · EUR",
+      de_meta_langs:      "Deutsch + EN",
+      de_meta_law:        "Glücksspielstaatsvertrag",
+      not_listed:         "<strong>Your country isn't listed yet?</strong> Drop us a line — enough demand from your region and we prioritize it.",
+      not_listed_cta:     "Write on Telegram",
+      footer_all_regions: "All regions",
+      footer_legal:       "Legal",
+      footer_support:     "Telegram support",
+      footer_copy:        "© 2026 KOZYR · 21+ · Play responsibly"
+    },
+    ru: {
+      compliance:         "<strong>Только 21+.</strong> Используя сайт, ты принимаешь региональные <a href=\"/ua/legal/\">Условия и Политику</a>. · Играй ответственно.",
+      regions_link:       "Регионы",
+      hero_eyebrow:       "KOZYR · Рейкбек в покере",
+      hero_title_prefix:  "Выбери свой",
+      hero_title_em:      "регион",
+      hero_lede:          "Региональные площадки с локальными партнёрами, валютами и языками. Выбери страну, в которой играешь.",
+      regions_head:       "Доступные регионы",
+      regions_aux:        "Нужны детали?",
+      regions_aux_link:   "полный список стран →",
+      status_live:        "Работает",
+      status_preview:     "Превью",
+      your_region:        "Твой регион",
+      ua_name:            "Украина",
+      ua_native:          "Украина · UAH · легально с 2020",
+      ua_pill_ru:         "Русская версия",
+      ua_pill_uk:         "Українська версія",
+      int_name:           "International",
+      int_native:         "Глобально · USD / USDT · English",
+      int_pill_en:        "English version",
+      pl_name:            "Польша",
+      pl_native:          "Polska · PLN",
+      pl_meta_langs:      "Польский + EN",
+      pl_meta_law:        "Ustawa hazardowa",
+      de_name:            "Германия",
+      de_native:          "Deutschland · EUR",
+      de_meta_langs:      "Немецкий + EN",
+      de_meta_law:        "Glücksspielstaatsvertrag",
+      not_listed:         "<strong>Твоей страны нет в списке?</strong> Напиши нам — наберётся запрос из региона, запустим приоритетно.",
+      not_listed_cta:     "Написать в Telegram",
+      footer_all_regions: "Все регионы",
+      footer_legal:       "Правовая база",
+      footer_support:     "Поддержка в Telegram",
+      footer_copy:        "© 2026 KOZYR · 21+ · Играй ответственно"
+    },
+    uk: {
+      compliance:         "<strong>Тільки 21+.</strong> Використовуючи сайт, ти приймаєш регіональні <a href=\"/ua/legal/\">Умови та Політику</a>. · Грай відповідально.",
+      regions_link:       "Регіони",
+      hero_eyebrow:       "KOZYR · Рейкбек у покері",
+      hero_title_prefix:  "Обери свій",
+      hero_title_em:      "регіон",
+      hero_lede:          "Регіональні платформи з локальними партнерами, валютами й мовами. Обери країну, в якій ти граєш.",
+      regions_head:       "Доступні регіони",
+      regions_aux:        "Потрібні деталі?",
+      regions_aux_link:   "повний список країн →",
+      status_live:        "Працює",
+      status_preview:     "Прев'ю",
+      your_region:        "Твій регіон",
+      ua_name:            "Україна",
+      ua_native:          "Україна · UAH · легально з 2020",
+      ua_pill_ru:         "Русская версия",
+      ua_pill_uk:         "Українська версія",
+      int_name:           "International",
+      int_native:         "Глобально · USD / USDT · English",
+      int_pill_en:        "English version",
+      pl_name:            "Польща",
+      pl_native:          "Polska · PLN",
+      pl_meta_langs:      "Польська + EN",
+      pl_meta_law:        "Ustawa hazardowa",
+      de_name:            "Німеччина",
+      de_native:          "Deutschland · EUR",
+      de_meta_langs:      "Німецька + EN",
+      de_meta_law:        "Glücksspielstaatsvertrag",
+      not_listed:         "<strong>Твоєї країни ще немає у списку?</strong> Напиши нам — набереться запит із регіону, запустимо пріоритетно.",
+      not_listed_cta:     "Написати в Telegram",
+      footer_all_regions: "Всі регіони",
+      footer_legal:       "Правова інформація",
+      footer_support:     "Підтримка в Telegram",
+      footer_copy:        "© 2026 KOZYR · 21+ · Грай відповідально"
+    }
   };
 
-  function highlight(regionSlug) {
-    if (!regionSlug) return;
-    var card = document.querySelector('.region-card[data-country="' + regionSlug + '"]');
-    if (!card) return;
-    card.classList.add('is-your-region');
+  var SUPPORTED = ['ru', 'uk', 'en'];
+  var STORAGE_KEY = 'kozyr_lang';
+
+  // ---- 2. Language detection -----------------------------------------
+  function detectLang() {
+    // 1) previously chosen
+    try {
+      var saved = localStorage.getItem(STORAGE_KEY);
+      if (saved && SUPPORTED.indexOf(saved) !== -1) return saved;
+    } catch (e) {}
+
+    // 2) browser preference — try navigator.languages, then navigator.language
+    var candidates = [];
+    if (navigator.languages && navigator.languages.length) {
+      candidates = candidates.concat(navigator.languages);
+    }
+    if (navigator.language) candidates.push(navigator.language);
+
+    for (var i = 0; i < candidates.length; i++) {
+      var tag = String(candidates[i]).toLowerCase();
+      if (tag.indexOf('uk') === 0) return 'uk';       // Ukrainian
+      if (tag.indexOf('ru') === 0) return 'ru';       // Russian
+      if (tag.indexOf('be') === 0) return 'ru';       // Belarusian speakers → RU
+      if (tag.indexOf('en') === 0) return 'en';
+    }
+
+    // 3) fallback
+    return 'en';
   }
 
-  function apply(country) {
+  // ---- 3. Apply translations to the DOM ------------------------------
+  function applyLang(lang) {
+    if (SUPPORTED.indexOf(lang) === -1) lang = 'en';
+    var dict = STRINGS[lang];
+
+    // plain text nodes
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+      var key = el.getAttribute('data-i18n');
+      if (dict[key] != null) el.textContent = dict[key];
+    });
+
+    // rich text (with links / <strong>)
+    document.querySelectorAll('[data-i18n-html]').forEach(function (el) {
+      var key = el.getAttribute('data-i18n-html');
+      if (dict[key] != null) el.innerHTML = dict[key];
+    });
+
+    // update <html lang="…"> and switcher state
+    document.documentElement.lang = (lang === 'en') ? 'en' :
+                                    (lang === 'uk') ? 'uk-UA' : 'ru-UA';
+    document.querySelectorAll('.lang-switch button').forEach(function (btn) {
+      btn.classList.toggle('is-active', btn.getAttribute('data-set-lang') === lang);
+    });
+
+    // remember for next visit
+    try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) {}
+
+    // stash current language for the card click handler
+    document.documentElement.setAttribute('data-lang', lang);
+  }
+
+  // ---- 4. Wire up the switcher ---------------------------------------
+  function bindSwitcher() {
+    document.querySelectorAll('[data-set-lang]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        applyLang(btn.getAttribute('data-set-lang'));
+      });
+    });
+  }
+
+  // ---- 5. Make live region cards fully clickable ---------------------
+  // Click anywhere on a .live card → go to the URL matching the current
+  // language. Clicks on <a> children (the pills) win because the browser
+  // fires their default action first; we skip if the click already landed
+  // on a link.
+  function bindCardClicks() {
+    document.querySelectorAll('.region-card.live').forEach(function (card) {
+      card.addEventListener('click', function (evt) {
+        // if the user actually clicked a real link inside, let the browser handle it
+        var target = evt.target;
+        while (target && target !== card) {
+          if (target.tagName === 'A') return;
+          target = target.parentNode;
+        }
+        var lang = document.documentElement.getAttribute('data-lang') || 'en';
+        var href = card.getAttribute('data-href-' + lang)
+                || card.getAttribute('data-href-en');
+        if (href) window.location.href = href;
+      });
+
+      // keyboard accessibility
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('role', 'link');
+      card.addEventListener('keydown', function (evt) {
+        if (evt.key === 'Enter' || evt.key === ' ') {
+          evt.preventDefault();
+          card.click();
+        }
+      });
+    });
+  }
+
+  // ---- 6. Geo highlight (uses /assets/kozyr-geo.js) ------------------
+  var GEO_TO_REGION = {
+    'ua': 'ua', 'ru': 'ua', 'by': 'ua', 'md': 'ua',
+    'pl': 'pl',
+    'de': 'de', 'at': 'de'
+  };
+  function applyGeo(country) {
     if (!country) return;
-    var region = GEO_TO_REGION[country.toLowerCase()];
-    if (region) highlight(region);
+    var region = GEO_TO_REGION[String(country).toLowerCase()];
+    if (!region) return;
+    var card = document.querySelector('.region-card[data-country="' + region + '"]');
+    if (card) card.classList.add('is-your-region');
   }
-
-  // If geo.js already loaded, use it. Otherwise wait for the CustomEvent it fires.
-  function boot() {
-    if (window.KozyrGeo) {
-      window.KozyrGeo.onReady(apply);
+  function bootGeo() {
+    if (window.KozyrGeo && typeof window.KozyrGeo.onReady === 'function') {
+      window.KozyrGeo.onReady(applyGeo);
     } else {
       window.addEventListener('kozyr:geo', function (e) {
-        apply(e.detail && e.detail.country);
+        applyGeo(e.detail && e.detail.country);
       });
     }
+  }
+
+  // ---- 7. Boot -------------------------------------------------------
+  function boot() {
+    applyLang(detectLang());
+    bindSwitcher();
+    bindCardClicks();
+    bootGeo();
   }
 
   if (document.readyState === 'loading') {
@@ -652,6 +903,7 @@ c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36
 })();
 </script>
 
+<script defer src="/assets/kozyr-geo.js?v=12"></script>
 <script src="/analytics.js" defer></script>
 </body>
 </html>
