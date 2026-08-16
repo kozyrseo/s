@@ -4,15 +4,52 @@
 # Docs: https://developers.cloudflare.com/pages/configuration/headers/
 # ============================================================================
 
-# --- Глобальная безопасность для всех страниц ---
+# ─── Глобальная безопасность для всех страниц ──────────────────────────────
 /*
+  # Запрет MIME-sniffing (иначе .txt может исполниться как .js при определённых заголовках)
   X-Content-Type-Options: nosniff
+
+  # Запрет вставки нашего сайта в iframe (защита от clickjacking).
+  # Дублируется через frame-ancestors в CSP, но старые браузеры знают только этот.
   X-Frame-Options: SAMEORIGIN
+
+  # Referrer: отсылаем только origin (без пути) на внешние сайты. Локально — полный.
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: geolocation=(), microphone=(), camera=()
+
+  # Отключаем всё, что нам не нужно (геолокация браузера, микрофон, камера…)
+  # geolocation=() — не путать с geo-детектом через ipapi.co, это разные вещи.
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()
+
+  # HTTPS на 1 год для всего домена и поддоменов. Preload не включаем сразу —
+  # можно потом submit'ить на hstspreload.org.
   Strict-Transport-Security: max-age=31536000; includeSubDomains
 
-# --- Статика: агрессивный кэш (файлы неизменяемы / меняются редко) ---
+  # ─── Content-Security-Policy ──────────────────────────────────────────────
+  # Whitelist для загружаемых ресурсов. Всё, чего нет в списке — блокируется.
+  # Основа защиты от XSS: даже если атакующий вставит <script>, браузер его
+  # не запустит, если домен не в списке.
+  #
+  # Разбор политик:
+  #   default-src 'self'      — базовое: только со своего домена
+  #   script-src              — свой + inline (много inline-скриптов) + GTM для GA4
+  #   style-src               — свой + inline + Google Fonts CSS + jsdelivr (flag-icons CSS)
+  #   font-src                — Google Fonts (woff2 с fonts.gstatic.com)
+  #   img-src                 — свой + data: (для inline SVG) + https: (для webp/jpg)
+  #   connect-src             — свой + ipapi.co (гео) + Google Analytics
+  #   frame-src 'none'        — никаких iframe у нас нет, блок полностью
+  #   frame-ancestors 'self'  — нас нельзя вставлять в чужие iframe
+  #   base-uri 'self'         — защита от <base> tag injection
+  #   form-action 'self' https://t.me — формы отправляются только к нам или в Telegram
+  #   object-src 'none'       — блок для <object>/<embed> (легаси Flash/Java)
+  #   upgrade-insecure-requests — авто-upgrade http→https если случайно есть
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://ipapi.co https://www.google-analytics.com https://region1.google-analytics.com; frame-src 'none'; frame-ancestors 'self'; base-uri 'self'; form-action 'self' https://t.me; object-src 'none'; upgrade-insecure-requests
+
+  # Cross-Origin-Opener-Policy: изолирует наше окно от других вкладок с
+  # чужих origin — защита от side-channel-атак (Spectre-класс).
+  Cross-Origin-Opener-Policy: same-origin
+
+
+# ─── Статика: агрессивный кэш (файлы неизменяемы / меняются редко) ─────────
 /analytics.js
   Cache-Control: public, max-age=3600
 
@@ -25,6 +62,12 @@
 /*.png
   Cache-Control: public, max-age=604800
 
+/*.jpg
+  Cache-Control: public, max-age=604800
+
+/*.webp
+  Cache-Control: public, max-age=604800
+
 /*.svg
   Cache-Control: public, max-age=604800
 
@@ -34,6 +77,7 @@
 /*.woff2
   Cache-Control: public, max-age=31536000, immutable
 
-# --- HTML: короткий кэш, чтобы правки быстро долетали ---
+
+# ─── HTML: короткий кэш, чтобы правки быстро долетали ──────────────────────
 /*.html
   Cache-Control: public, max-age=300
