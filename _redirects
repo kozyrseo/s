@@ -4,15 +4,65 @@
 # Docs: https://developers.cloudflare.com/pages/configuration/redirects/
 # ПРИМЕЧАНИЕ: www→apex и HTTPS Cloudflare делает сам на уровне домена
 # (Rules → Redirect Rules). Здесь — только маршруты внутри сайта.
+#
+# Cloudflare matches TOP-DOWN, first match wins. Specific rules before wildcards.
 # ============================================================================
 
-# Каталоги без завершающего слэша → со слэшем (единообразие URL)
+
+# ==== A. Trailing slash normalization for known indexed dirs ================
+# (unchanged from previous version)
 /ua           /ua/            301
 /int          /int/           301
 /countries    /countries/     301
-/ua/clubs     /ua/clubs/klubok/   301
-/ua/rooms     /ua/rooms/pokerbet/ 301
 
-# Блог со слэшем — единообразие URL
+# For /ua/blog and /ua/uk/blog — force trailing slash
 /ua/blog      /ua/blog/       301
 /ua/uk/blog   /ua/uk/blog/    301
+
+
+# ==== B. Legacy → canonical /ua/ tree (cleanup 2026-08-16) =================
+# The following paths served copies of /ua/... content. Files removed.
+# Google may still have them in the index; 301 tells it to consolidate
+# link authority onto the canonical URL.
+#
+# IMPORTANT: /rooms/, /clubs/, /uk/rooms/, /uk/clubs/ don't have hub pages,
+# so bare directory URLs redirect to their flagship product page.
+
+# ---- /rooms/ tree (no hub page in /ua/rooms/) ----
+/rooms          /ua/rooms/pokerbet/          301
+/rooms/         /ua/rooms/pokerbet/          301
+/rooms/*        /ua/rooms/:splat             301
+
+# ---- /clubs/ tree (no hub page in /ua/clubs/) ----
+/clubs          /ua/clubs/klubok/            301
+/clubs/         /ua/clubs/klubok/            301
+/clubs/*        /ua/clubs/:splat             301
+
+# ---- /blog/ tree ----
+# /blog/ and /blog/ hub page: /ua/blog/ DOES exist as blog index
+/blog           /ua/blog/                    301
+/blog/          /ua/blog/                    301
+/blog/*         /ua/blog/:splat              301
+
+# ---- /uk/ locale (moved to /ua/uk/) ----
+/uk             /ua/uk/                      301
+# Bare hub redirects for /uk/rooms and /uk/clubs (no hub in /ua/uk/rooms/, /ua/uk/clubs/)
+/uk/rooms       /ua/uk/rooms/pokerbet/       301
+/uk/rooms/      /ua/uk/rooms/pokerbet/       301
+/uk/clubs       /ua/uk/clubs/klubok/         301
+/uk/clubs/      /ua/uk/clubs/klubok/         301
+# Everything else under /uk/ maps to /ua/uk/
+/uk/*           /ua/uk/:splat                301
+
+
+# ==== C. Block internal-only paths from public access ======================
+# Prevent Google/users from stumbling onto dev/build files.
+# Returns 404 to hide their existence.
+/*.py           /404.html                    404
+/*.md           /404.html                    404
+/_pending/*     /404.html                    404
+/_pending_uk/*  /404.html                    404
+/.bot_state/*   /404.html                    404
+/automation/*   /404.html                    404
+/analytics/*    /404.html                    404
+/requirements.txt  /404.html                 404
