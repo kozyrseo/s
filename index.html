@@ -3,20 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#2668FF">
+<meta name="theme-color" content="#000714">
 <meta name="robots" content="index, follow">
 
 <title>KOZYR — Poker Rakeback · Choose Your Region</title>
-<meta name="description" content="KOZYR — international poker rakeback platform. Choose your country: Ukraine (live), Poland and Germany (coming soon), International.">
+<meta name="description" content="KOZYR — international poker rakeback platform. Choose your region: Ukraine, International. Poland and Germany coming soon.">
 
-<!-- Canonical + hreflang: this root page is the x-default -->
 <link rel="canonical" href="https://kozyr.club/">
 <link rel="alternate" hreflang="x-default" href="https://kozyr.club/">
 <link rel="alternate" hreflang="en"        href="https://kozyr.club/">
 <link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/">
 <link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/">
 
-<!-- Favicon / manifest -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="16x16"  href="/favicon-16.png">
 <link rel="icon" type="image/png" sizes="32x32"  href="/favicon-32.png">
@@ -25,7 +23,6 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
-<!-- OG / Twitter -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="KOZYR">
 <meta property="og:url" content="https://kozyr.club/">
@@ -39,13 +36,11 @@
 <meta name="twitter:description" content="International poker rakeback platform.">
 <meta name="twitter:image" content="https://kozyr.club/og-image.png">
 
-<!-- Fonts + flag icons -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.11.0/css/flag-icons.min.css">
 
-<!-- Structured data -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -73,399 +68,404 @@
 
 <style>
 :root {
-  --bg: #FAFAFC;
-  --surface: #FFFFFF;
-  --surface-alt: #F5F7FB;
   --surface-dark: #000714;
-  --ink: #0A1128;
-  --ink-2: #5C6580;
-  --ink-3: #8B90A5;
+  --surface-dark-2: #060e22;
+  --ink-inv: #E8ECF7;
+  --ink-inv-2: #A8B0C8;
+  --ink-inv-3: #6B7391;
   --accent: #2668FF;
   --accent-deep: #1E52D9;
-  --accent-tint: #EBF1FF;
-  --success: #05A661;
-  --success-tint: #E5F5EC;
-  --border: #E5E7EE;
-  --border-2: #D0D5E0;
+  --accent-glow: #6DA0FF;
+  --gold: #E4B95B;
+  --success: #05C46B;
+  --border-dark: rgba(255,255,255,0.08);
+  --border-dark-hover: rgba(255,255,255,0.22);
+  --glass: rgba(255,255,255,0.04);
+  --glass-hover: rgba(255,255,255,0.08);
   --f-display: 'Space Grotesk', system-ui, sans-serif;
   --f-body: 'Inter', system-ui, sans-serif;
   --f-mono: 'JetBrains Mono', monospace;
   --f-serif: 'Instrument Serif', Georgia, serif;
-  --w: 1200px;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-body { font-family: var(--f-body); background: var(--bg); color: var(--ink); font-size: 16px; line-height: 1.6; }
+html {
+  -webkit-font-smoothing: antialiased;
+  background: var(--surface-dark);
+}
+body {
+  font-family: var(--f-body);
+  background: var(--surface-dark);
+  color: var(--ink-inv);
+  font-size: 16px; line-height: 1.55;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
 a { color: inherit; text-decoration: none; }
 
-.wrap { max-width: var(--w); margin: 0 auto; padding: 0 32px; }
+/* ============ Ambient background ============ */
+.stage {
+  position: relative; flex: 1;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.stage::before {
+  /* soft radial glow */
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 900px 500px at 30% 15%, rgba(38,104,255,0.18), transparent 60%),
+    radial-gradient(ellipse 700px 400px at 80% 80%, rgba(228,185,91,0.06), transparent 65%);
+}
+.stage::after {
+  /* suit pattern */
+  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-repeat: repeat; background-size: 260px 260px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260' viewBox='0 0 260 260'%3E%3Cg fill='%23ffffff' fill-opacity='0.028'%3E%3Cpath d='M55 30c-9 10-22 19-22 31a11 11 0 0 0 20 6l-3 13h11l-3-13a11 11 0 0 0 20-6c0-12-13-21-23-31z'/%3E%3Cpath d='M195 76c12 0 22 8 22 18 0 12-15 20-22 30-7-10-22-18-22-30 0-10 10-18 22-18z'/%3E%3Cpath d='M130 158l18 22-18 22-18-22z'/%3E%3C/g%3E%3C/svg%3E");
+}
 
-/* ---------- Compliance strip ---------- */
+.wrap { width: 100%; max-width: 1240px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 2; }
+
+/* ============ Compliance strip ============ */
 .compliance {
-  background: var(--surface-alt);
-  border-bottom: 1px solid var(--border);
+  position: relative; z-index: 3;
+  border-bottom: 1px solid var(--border-dark);
+  background: rgba(0,0,0,0.35);
 }
 .compliance-inner {
-  max-width: var(--w); margin: 0 auto;
-  padding: 10px 32px;
-  font-size: 12px; color: var(--ink-3);
+  max-width: 1240px; margin: 0 auto;
+  padding: 8px 32px;
+  font-size: 12px; color: var(--ink-inv-3);
   text-align: center; line-height: 1.5;
 }
-.compliance-inner strong { color: var(--ink); font-weight: 600; }
-.compliance-inner a { color: var(--ink-2); border-bottom: 1px dotted var(--border-2); }
-.compliance-inner a:hover { color: var(--accent); }
+.compliance-inner strong { color: var(--ink-inv-2); font-weight: 600; }
+.compliance-inner a { color: var(--ink-inv-2); border-bottom: 1px dotted var(--border-dark-hover); }
+.compliance-inner a:hover { color: var(--accent-glow); }
 
-/* ---------- Header / nav ---------- */
+/* ============ Nav ============ */
 .nav {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(250,250,252,0.9);
-  backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid var(--border);
+  position: relative; z-index: 3;
+  border-bottom: 1px solid var(--border-dark);
 }
 .nav-inner {
   display: flex; align-items: center; justify-content: space-between;
-  height: 72px; padding: 0 32px;
-  max-width: var(--w); margin: 0 auto;
-  gap: 20px;
+  height: 68px; padding: 0 32px;
+  max-width: 1240px; margin: 0 auto; gap: 20px;
 }
 .logo {
   display: flex; align-items: center; gap: 10px;
   font-family: var(--f-display); font-weight: 700;
-  font-size: 20px; letter-spacing: -0.02em;
-  color: var(--ink);
+  font-size: 19px; letter-spacing: -0.02em; color: #fff;
 }
-.logo-mark { width: 32px; height: 32px; display: inline-flex; }
+.logo-mark { width: 30px; height: 30px; display: inline-flex; }
 .logo-mark svg { width: 100%; height: 100%; display: block; }
+.nav-aux { display: flex; align-items: center; gap: 14px; font-size: 13px; }
 
-.nav-aux {
-  display: flex; align-items: center; gap: 16px;
-  font-size: 14px; color: var(--ink-2); font-weight: 500;
-}
-.nav-aux > a:hover { color: var(--ink); }
-
-/* ---------- Language switcher (RU/UK/EN) ---------- */
+/* Language switcher (dark version) */
 .lang-switch {
-  display: inline-flex;
-  padding: 3px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 100px;
-  gap: 2px;
+  display: inline-flex; padding: 3px;
+  background: var(--glass); border: 1px solid var(--border-dark);
+  border-radius: 100px; gap: 2px;
+  backdrop-filter: blur(8px);
 }
 .lang-switch button {
-  border: none; background: transparent;
-  cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 100px;
-  font-family: var(--f-mono);
-  font-size: 11px; font-weight: 600;
+  border: none; background: transparent; cursor: pointer;
+  padding: 6px 12px; border-radius: 100px;
+  font-family: var(--f-mono); font-size: 11px; font-weight: 600;
   letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-inv-3);
   transition: color 0.15s, background 0.15s;
 }
-.lang-switch button:hover { color: var(--ink); }
-.lang-switch button.is-active {
-  background: var(--ink);
-  color: #fff;
-}
+.lang-switch button:hover { color: #fff; }
+.lang-switch button.is-active { background: #fff; color: var(--surface-dark); }
 
 .tg-badge {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 14px; border-radius: 100px;
-  background: var(--surface); border: 1px solid var(--border);
+  padding: 7px 13px; border-radius: 100px;
+  background: var(--glass); border: 1px solid var(--border-dark);
   font-family: var(--f-mono); font-size: 12px; font-weight: 500;
-  color: var(--ink-2);
-  transition: border-color 0.15s, color 0.15s;
+  color: var(--ink-inv-2);
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
-.tg-badge:hover { border-color: var(--accent); color: var(--accent); }
+.tg-badge:hover { border-color: var(--accent-glow); color: #fff; background: var(--glass-hover); }
 .tg-badge svg { width: 14px; height: 14px; }
 
-@media (max-width: 720px) {
-  .nav-inner { height: 60px; padding: 0 16px; gap: 12px; }
-  .nav-aux { gap: 10px; }
-  .nav-aux .regions-link { display: none; }
-  .tg-badge span { display: none; }
-  .tg-badge { padding: 8px 10px; }
-  .lang-switch button { padding: 6px 9px; font-size: 10px; }
-  .compliance-inner { padding: 8px 16px; font-size: 11px; }
+/* ============ Hero + chooser (single viewport) ============ */
+.hero {
+  flex: 1;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 56px 0 40px;
+  min-height: 0;
+}
+.hero-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 460px) 1fr;
+  gap: 80px;
+  align-items: center;
 }
 
-/* ---------- Hero (bilingual visuals via i18n) ---------- */
-.hero {
-  padding: 80px 0 40px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-.hero::before {
-  content: ""; position: absolute; inset: 0; z-index: 0;
-  opacity: 0.5; pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg fill='%232668FF' fill-opacity='0.045'%3E%3Cpath d='M55 30c-8 9-20 17-20 28a10 10 0 0 0 18 6l-3 12h10l-3-12a10 10 0 0 0 18-6c0-11-12-19-20-28z'/%3E%3Cpath d='M165 60c11 0 20 7 20 16 0 11-14 18-20 27-6-9-20-16-20-27 0-9 9-16 20-16z'/%3E%3Cpath d='M110 130l16 20-16 20-16-20z'/%3E%3Cg%3E%3Ccircle cx='40' cy='168' r='9'/%3E%3Ccircle cx='52' cy='160' r='9'/%3E%3Ccircle cx='52' cy='176' r='9'/%3E%3Crect x='44' y='168' width='4' height='16'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  background-size: 220px 220px;
-}
-.hero-inner { position: relative; z-index: 1; }
+/* --- Hero text (left) --- */
+.hero-text { position: relative; z-index: 2; }
+
 .hero-eyebrow {
-  display: inline-flex; align-items: center; gap: 9px;
+  display: inline-flex; align-items: center; gap: 10px;
   font-family: var(--f-mono);
-  font-size: 12px; font-weight: 500;
-  letter-spacing: 0.16em; text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 22px;
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 24px;
 }
 .hero-eyebrow::before {
-  content: ""; width: 7px; height: 7px; border-radius: 50%;
-  background: var(--accent);
-  animation: pulse 2s ease-in-out infinite;
+  content: ""; width: 28px; height: 1px;
+  background: var(--gold); opacity: 0.6;
 }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
 
 .hero h1 {
-  font-family: var(--f-display); font-weight: 700; letter-spacing: -0.025em;
-  font-size: clamp(32px, 5vw, 56px); line-height: 1.05;
-  color: var(--ink);
-  margin: 0 auto 18px;
-  max-width: 18ch;
+  font-family: var(--f-display); font-weight: 700;
+  font-size: clamp(48px, 5.5vw, 76px);
+  line-height: 0.98; letter-spacing: -0.035em;
+  margin-bottom: 22px;
+  color: #fff;
 }
 .hero h1 em {
   font-family: var(--f-serif); font-style: italic; font-weight: 400;
-  color: var(--accent);
-}
-.hero .lede {
-  font-family: var(--f-serif); font-size: clamp(18px, 2.2vw, 22px);
-  line-height: 1.5; color: var(--ink-2);
-  max-width: 52ch; margin: 0 auto;
+  background: linear-gradient(180deg, var(--accent-glow) 0%, var(--accent) 100%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* ---------- Regions grid ---------- */
-.regions { padding: 40px 0 80px; }
-.regions-head {
-  display: flex; align-items: baseline; justify-content: space-between;
-  gap: 24px; margin-bottom: 24px; flex-wrap: wrap;
+.hero-lede {
+  font-family: var(--f-serif); font-style: italic;
+  font-size: 19px; line-height: 1.5;
+  color: var(--ink-inv-2);
+  max-width: 40ch;
 }
-.regions-head h2 {
-  font-family: var(--f-display); font-weight: 600;
-  font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--ink-3);
-}
-.regions-head .aux-link {
-  font-family: var(--f-mono); font-size: 12px; font-weight: 500;
-  color: var(--ink-3); letter-spacing: 0.04em;
-}
-.regions-head .aux-link a {
-  color: var(--accent); text-decoration: none;
-  border-bottom: 1px dashed rgba(38,104,255,0.35);
-  padding-bottom: 1px;
-}
-.regions-head .aux-link a:hover { border-bottom-color: var(--accent); }
 
-.regions-grid {
+/* --- Cards (right) --- */
+.chooser {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-}
-@media (min-width: 900px) {
-  .regions-grid { grid-template-columns: repeat(4, 1fr); }
-  .regions-grid .region-card.live { grid-column: span 2; }
-}
-@media (max-width: 720px) {
-  .regions-grid { grid-template-columns: 1fr; }
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
 }
 
 .region-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 28px 26px;
-  display: flex; flex-direction: column;
-  min-height: 220px;
-  transition: transform 0.18s cubic-bezier(.2,.7,.3,1),
-              box-shadow 0.18s,
-              border-color 0.18s;
   position: relative;
-}
-/* Live cards are clickable everywhere; the underlying <a> is a real
-   link (SEO-visible), the whole card acts as one big hit target. */
-.region-card.live {
+  background: var(--glass);
+  border: 1px solid var(--border-dark);
+  border-radius: 20px;
+  padding: 26px 24px;
+  display: flex; flex-direction: column;
+  min-height: 320px;
+  overflow: hidden;
   cursor: pointer;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: transform 0.22s cubic-bezier(.2,.7,.3,1),
+              border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
-.region-card.live:hover {
+.region-card::before {
+  /* subtle suit watermark */
+  content: "♠";
+  position: absolute; right: -30px; bottom: -60px;
+  font-size: 240px; line-height: 1;
+  color: #fff; opacity: 0.03;
+  pointer-events: none; font-family: var(--f-serif);
+}
+.region-card:hover {
   transform: translateY(-3px);
-  border-color: var(--accent);
-  box-shadow: 0 14px 32px rgba(10,17,40,0.08);
+  border-color: var(--border-dark-hover);
+  background: var(--glass-hover);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
 }
-.region-card.coming { opacity: 0.75; }
 
-.region-head {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 18px;
+.region-top {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 16px; margin-bottom: 26px;
+  position: relative; z-index: 1;
 }
-.region-head .fi {
-  display: block; width: 48px; height: 36px;
+.region-flag {
+  display: block; width: 52px; height: 36px;
   border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
-.region-head .fi-int {
+.region-flag.int {
   display: flex; align-items: center; justify-content: center;
-  width: 48px; height: 36px; border-radius: 5px;
-  background: linear-gradient(135deg, var(--accent-tint), var(--surface-alt));
-  color: var(--accent); font-family: var(--f-serif); font-size: 20px;
+  background: linear-gradient(135deg, rgba(38,104,255,0.25), rgba(38,104,255,0.06));
+  color: var(--accent-glow); font-family: var(--f-serif); font-size: 22px;
+  border: 1px solid var(--border-dark);
 }
 .region-status {
-  font-family: var(--f-mono);
-  font-size: 10px; font-weight: 500;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 10px; border-radius: 100px;
+  background: rgba(5,196,107,0.14);
+  color: var(--success);
+  font-family: var(--f-mono); font-size: 10px; font-weight: 700;
   letter-spacing: 0.14em; text-transform: uppercase;
-  padding: 4px 10px; border-radius: 100px;
 }
-.region-status.live { background: var(--success-tint); color: var(--success); }
-.region-status.soon {
-  background: var(--surface-alt); color: var(--ink-3);
-  border: 1px dashed var(--border-2);
+.region-status .dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--success);
+  animation: pulse 2s ease-in-out infinite;
 }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
 
 .region-name {
   font-family: var(--f-display); font-weight: 700;
-  font-size: 22px; letter-spacing: -0.02em;
-  margin-bottom: 4px;
+  font-size: 30px; letter-spacing: -0.025em; line-height: 1;
+  margin-bottom: 6px; color: #fff;
+  position: relative; z-index: 1;
 }
 .region-native {
   font-family: var(--f-serif); font-style: italic;
-  font-size: 14px; color: var(--ink-3);
-  margin-bottom: 16px;
+  font-size: 15px; color: var(--ink-inv-3);
+  margin-bottom: auto;
+  position: relative; z-index: 1;
 }
 
-/* Live region: language pills inside a clickable card.
-   Pills are real <a> — they're the SEO-visible links.
-   Click on a pill goes to its href (via stopPropagation, we prevent
-   the parent card handler from re-firing). */
 .region-langs {
   display: flex; flex-wrap: wrap; gap: 8px;
-  margin: 4px 0 auto;
-  position: relative;  /* keep pills above the card overlay */
-  z-index: 2;
+  margin-top: 24px;
+  position: relative; z-index: 2;
 }
-.region-lang-pill {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 14px;
-  background: var(--surface-alt);
-  border: 1px solid var(--border);
+.lang-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-dark);
   border-radius: 100px;
-  font-size: 13px; font-weight: 500;
-  color: var(--ink-2);
+  font-size: 12px; font-weight: 500;
+  color: var(--ink-inv-2);
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
-.region-lang-pill:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-tint);
+.lang-pill:hover {
+  border-color: var(--accent-glow);
+  color: #fff;
+  background: rgba(38,104,255,0.14);
 }
-.region-lang-pill code {
-  font-family: var(--f-mono); font-size: 10px;
-  font-weight: 600; letter-spacing: 0.08em;
-  color: var(--ink-3);
-  padding: 2px 6px; background: rgba(10,17,40,0.06);
-  border-radius: 4px;
+.lang-pill code {
+  font-family: var(--f-mono); font-size: 9px;
+  font-weight: 700; letter-spacing: 0.08em;
+  color: var(--ink-inv-3);
+  padding: 2px 6px; background: rgba(255,255,255,0.06);
+  border-radius: 3px;
 }
-.region-lang-pill:hover code {
-  color: var(--accent); background: rgba(38,104,255,0.12);
-}
-
-/* Coming region: minimal meta */
-.region-card.coming .region-meta {
-  font-family: var(--f-mono); font-size: 11px;
-  color: var(--ink-3); letter-spacing: 0.04em;
-  margin-top: auto;
-}
-.region-card.coming .region-meta span + span::before {
-  content: "·"; margin: 0 8px; opacity: 0.5;
+.lang-pill:hover code {
+  color: var(--accent-glow); background: rgba(38,104,255,0.18);
 }
 
-/* "Your region" pill — added dynamically by geo.js */
+/* "Your region" pill */
 .you-are-here {
-  position: absolute; top: 14px; right: 14px;
+  position: absolute; top: 16px; right: 16px;
   display: none;
   align-items: center; gap: 5px;
-  padding: 4px 9px; border-radius: 100px;
+  padding: 4px 10px; border-radius: 100px;
   background: var(--accent); color: #fff;
-  font-family: var(--f-mono); font-size: 10px; font-weight: 600;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  box-shadow: 0 4px 10px rgba(38,104,255,0.25);
-  z-index: 3;
+  font-family: var(--f-mono); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  box-shadow: 0 4px 14px rgba(38,104,255,0.4);
+  z-index: 5;
 }
 .region-card.is-your-region .you-are-here { display: inline-flex; }
-.region-card.is-your-region.live {
-  border-color: var(--accent);
-  box-shadow: 0 6px 20px rgba(38,104,255,0.12);
+.region-card.is-your-region {
+  border-color: rgba(109,160,255,0.45);
+  background: linear-gradient(180deg, rgba(38,104,255,0.10), var(--glass));
+  box-shadow: 0 10px 30px rgba(38,104,255,0.20);
 }
 
-/* ---------- Not-listed CTA ---------- */
-.not-listed {
-  margin-top: 40px;
-  padding: 28px 32px;
-  background: var(--surface-dark);
-  color: #fff;
-  border-radius: 16px;
+/* ============ Micro-footer ============ */
+.micro-footer {
+  position: relative; z-index: 3;
+  border-top: 1px solid var(--border-dark);
+  padding: 18px 0;
+  background: rgba(0,0,0,0.25);
+}
+.micro-inner {
+  max-width: 1240px; margin: 0 auto;
+  padding: 0 32px;
   display: flex; align-items: center; justify-content: space-between;
   gap: 24px; flex-wrap: wrap;
+  font-size: 12px;
 }
-.not-listed-text {
-  font-size: 15px; line-height: 1.5;
-  color: rgba(255,255,255,0.8);
-}
-.not-listed-text strong { color: #fff; font-weight: 600; }
-.not-listed a.tg-cta {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 12px 20px; border-radius: 100px;
-  background: var(--accent); color: #fff;
-  font-weight: 600; font-size: 14px;
-  transition: background 0.15s, transform 0.15s;
-  white-space: nowrap;
-}
-.not-listed a.tg-cta:hover { background: var(--accent-deep); transform: translateY(-1px); }
-.not-listed a.tg-cta svg { width: 15px; height: 15px; }
 
-/* ---------- Footer ---------- */
-.footer {
-  background: var(--surface-dark);
-  color: rgba(255,255,255,0.6);
-  padding: 40px 0 32px;
-  margin-top: 40px;
+.coming-inline {
+  display: inline-flex; align-items: center; gap: 12px;
+  color: var(--ink-inv-3);
+  font-family: var(--f-mono);
+  letter-spacing: 0.06em;
+  font-size: 11px;
 }
-.footer-inner {
-  max-width: var(--w); margin: 0 auto;
-  padding: 0 32px;
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-  gap: 20px;
-  font-size: 13px;
+.coming-inline .label {
+  color: var(--gold); text-transform: uppercase;
+  letter-spacing: 0.14em; font-weight: 600;
+  font-size: 10px;
 }
-.footer .logo { color: #fff; font-size: 16px; }
-.footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
-.footer-links a { color: rgba(255,255,255,0.55); transition: color 0.15s; }
-.footer-links a:hover { color: #fff; }
-.footer-copy {
-  font-family: var(--f-mono); font-size: 11px;
-  color: rgba(255,255,255,0.35);
-  letter-spacing: 0.04em;
+.coming-inline .divider { color: var(--ink-inv-3); opacity: 0.4; }
+.coming-inline .flag {
+  display: inline-flex; align-items: center; gap: 6px;
 }
-@media (max-width: 640px) {
-  .footer-inner { padding: 0 16px; flex-direction: column; align-items: flex-start; gap: 16px; }
-  .not-listed { flex-direction: column; align-items: flex-start; padding: 24px; }
+.coming-inline .flag .fi {
+  width: 18px; height: 13px; border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+.coming-inline a.all-regions {
+  color: var(--accent-glow); font-weight: 500;
+  border-bottom: 1px dashed rgba(109,160,255,0.4);
+  padding-bottom: 1px; transition: color 0.15s, border-color 0.15s;
+}
+.coming-inline a.all-regions:hover { color: #fff; border-bottom-color: #fff; }
+
+.micro-legal {
+  display: inline-flex; align-items: center; gap: 14px;
+  color: var(--ink-inv-3);
+  font-family: var(--f-mono);
+  font-size: 11px; letter-spacing: 0.04em;
+}
+.micro-legal a { color: var(--ink-inv-2); transition: color 0.15s; }
+.micro-legal a:hover { color: #fff; }
+.micro-legal .sep { opacity: 0.3; }
+
+/* ============ Responsive ============ */
+@media (max-width: 960px) {
+  .hero-inner { grid-template-columns: 1fr; gap: 44px; }
+  .hero-text { max-width: 560px; }
+  .hero h1 { font-size: clamp(40px, 8vw, 56px); }
+  .region-card { min-height: 260px; padding: 22px 20px; }
+  .region-name { font-size: 26px; }
+}
+@media (max-width: 720px) {
+  .nav-inner { height: 60px; padding: 0 16px; gap: 12px; }
+  .nav-aux { gap: 10px; }
+  .tg-badge span { display: none; }
+  .tg-badge { padding: 7px 10px; }
+  .lang-switch button { padding: 6px 9px; font-size: 10px; }
+  .compliance-inner { padding: 8px 16px; font-size: 11px; }
+  .hero { padding: 40px 0 32px; }
+  .hero-eyebrow { margin-bottom: 18px; }
+  .hero h1 { margin-bottom: 16px; }
+  .hero-lede { font-size: 17px; }
+  .chooser { grid-template-columns: 1fr; gap: 12px; }
+  .region-card { min-height: 220px; }
+  .micro-inner { padding: 0 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .coming-inline { flex-wrap: wrap; }
+}
+@media (max-width: 420px) {
+  .region-card::before { display: none; }
 }
 </style>
 </head>
 <body>
 
-<div class="compliance">
-  <div class="compliance-inner" data-i18n-html="compliance">
-    <strong>21+ only.</strong> By using this site you agree to the regional
-    <a href="/ua/legal/">Terms &amp; Privacy</a>. · Play responsibly.
-  </div>
-</div>
+<div class="stage">
 
-<nav class="nav">
-  <div class="nav-inner">
-    <a href="/" class="logo">
-      <span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
+  <div class="compliance">
+    <div class="compliance-inner" data-i18n-html="compliance">
+      <strong>21+ only.</strong> By using this site you agree to the regional <a href="/ua/legal/">Terms &amp; Privacy</a>. · Play responsibly.
+    </div>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/" class="logo">
+        <span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
 fill="#000000" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 587 1 1071 0 1076 -3 16
 -32 42 583 -519 198 -180 547 -499 775 -709 228 -209 547 -501 708 -649 l294
 -267 905 0 c497 0 904 2 904 4 0 5 18 -12 -530 502 -228 214 -562 526 -740
@@ -474,7 +474,7 @@ fill="#000000" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 
 107 311 296 440 420 129 124 368 351 530 505 162 154 389 370 505 481 115 110
 308 292 428 404 119 113 217 208 217 212 0 4 -405 8 -901 8 l-901 0 -132 -128
 c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36
--66 -58 -66 -51 1 8 0 517 0 1132 l-2 1117 -650 0 -650 0 0 -3090z" fill="#2668FF"/></g><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
+-66 -58 -66 -51 1 8 0 517 0 1132 l-2 1117 -650 0 -650 0 0 -3090z" fill="#4C87FF"/></g><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
 fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59 c39 -33 78 -61 88 -63
 18 -2 41 33 41 63 0 22 39 74 55 74 7 0 16 7 19 16 10 25 47 72 99 125 26 27
 47 55 47 63 0 21 49 76 67 76 17 0 93 79 93 96 0 7 17 27 38 46 21 19 42 42
@@ -484,346 +484,225 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 16 187 23 215 6 25 7 33 17 120 2 25 7 61 11 80 4 19 8 51 10 70 2 19 7 53 10
 75 3 22 8 76 10 120 3 44 8 91 11 105 15 55 22 109 29 220 2 41 9 104 15 140
 6 36 13 77 15 91 2 14 -1 31 -6 36 -7 7 -4 16 11 26 12 8 19 20 15 27 -4 6 -1
-17 5 25 28 34 -2 8 -132 -113z" fill="#14358F"/></g></g></svg></span>
-      <span>KOZYR</span>
-    </a>
-    <div class="nav-aux">
-      <a href="/countries/" class="regions-link" data-i18n="regions_link">Regions</a>
-
-      <div class="lang-switch" role="tablist" aria-label="Interface language">
-        <button type="button" data-set-lang="ru" role="tab" aria-label="Русский">RU</button>
-        <button type="button" data-set-lang="uk" role="tab" aria-label="Українська">UK</button>
-        <button type="button" data-set-lang="en" role="tab" aria-label="English">EN</button>
-      </div>
-
-      <a href="https://t.me/kozyr_support" class="tg-badge" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.24 3.64 11.95c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
-        <span>Telegram</span>
+17 5 25 28 34 -2 8 -132 -113z" fill="#7C9AD6"/></g></g></svg></span>
+        <span>KOZYR</span>
       </a>
-    </div>
-  </div>
-</nav>
-
-<main>
-
-  <section class="hero">
-    <div class="wrap hero-inner">
-      <div class="hero-eyebrow" data-i18n="hero_eyebrow">KOZYR · Poker Rakeback</div>
-      <h1><span data-i18n="hero_title_prefix">Choose your</span>
-          <em data-i18n="hero_title_em">region</em>.</h1>
-      <p class="lede" data-i18n="hero_lede">Regional platforms with local partners, currencies and languages. Pick the country you play from.</p>
-    </div>
-  </section>
-
-  <section class="regions">
-    <div class="wrap">
-
-      <div class="regions-head">
-        <h2 data-i18n="regions_head">Available regions</h2>
-        <div class="aux-link">
-          <span data-i18n="regions_aux">Need details?</span>
-          <a href="/countries/" data-i18n="regions_aux_link">full regions list →</a>
+      <div class="nav-aux">
+        <div class="lang-switch" role="tablist" aria-label="Language">
+          <button type="button" data-set-lang="ru" role="tab" aria-label="Русский">RU</button>
+          <button type="button" data-set-lang="uk" role="tab" aria-label="Українська">UK</button>
+          <button type="button" data-set-lang="en" role="tab" aria-label="English">EN</button>
         </div>
-      </div>
-
-      <div class="regions-grid">
-
-        <!-- ============ UKRAINE ============ -->
-        <!--
-          Live card: the whole card is clickable via JS (see bottom).
-          data-href-<lang> tells the click handler where to send the visitor
-          depending on the current UI language. Individual pills below are
-          real <a> tags — Google follows them; users clicking a pill go to
-          that specific language regardless of switcher state.
-        -->
-        <div class="region-card live"
-             data-country="ua"
-             data-href-en="/ua/"
-             data-href-ru="/ua/"
-             data-href-uk="/ua/uk/">
-          <span class="you-are-here" data-i18n="your_region">Your region</span>
-          <div class="region-head">
-            <span class="fi fi-ua" aria-hidden="true"></span>
-            <span class="region-status live"><span class="dot">●</span> <span data-i18n="status_live">Live</span></span>
-          </div>
-          <h3 class="region-name" data-i18n="ua_name">Ukraine</h3>
-          <div class="region-native" data-i18n="ua_native">Україна · UAH · legal since 2020</div>
-
-          <div class="region-langs">
-            <a href="/ua/" class="region-lang-pill" lang="ru" hreflang="ru-UA">
-              <span data-i18n="ua_pill_ru">Русская версия</span> <code>RU</code>
-            </a>
-            <a href="/ua/uk/" class="region-lang-pill" lang="uk" hreflang="uk-UA">
-              <span data-i18n="ua_pill_uk">Українська версія</span> <code>UK</code>
-            </a>
-          </div>
-        </div>
-
-        <!-- ============ INTERNATIONAL ============ -->
-        <div class="region-card live"
-             data-country="int"
-             data-href-en="/int/"
-             data-href-ru="/int/"
-             data-href-uk="/int/">
-          <div class="region-head">
-            <span class="fi-int" aria-hidden="true">◈</span>
-            <span class="region-status live"><span class="dot">●</span> <span data-i18n="status_preview">Preview</span></span>
-          </div>
-          <h3 class="region-name" data-i18n="int_name">International</h3>
-          <div class="region-native" data-i18n="int_native">Global · USD / USDT · English</div>
-
-          <div class="region-langs">
-            <a href="/int/" class="region-lang-pill" lang="en" hreflang="en">
-              <span data-i18n="int_pill_en">English version</span> <code>EN</code>
-            </a>
-          </div>
-        </div>
-
-        <!-- ============ POLAND — Coming ============ -->
-        <div class="region-card coming" data-country="pl" aria-disabled="true">
-          <div class="region-head">
-            <span class="fi fi-pl" aria-hidden="true"></span>
-            <span class="region-status soon">Q4 2026</span>
-          </div>
-          <h3 class="region-name" data-i18n="pl_name">Poland</h3>
-          <div class="region-native" data-i18n="pl_native">Polska · PLN</div>
-          <div class="region-meta">
-            <span data-i18n="pl_meta_langs">Polski + EN</span><span data-i18n="pl_meta_law">Ustawa hazardowa</span>
-          </div>
-        </div>
-
-        <!-- ============ GERMANY — Coming ============ -->
-        <div class="region-card coming" data-country="de" aria-disabled="true">
-          <div class="region-head">
-            <span class="fi fi-de" aria-hidden="true"></span>
-            <span class="region-status soon">Q1 2027</span>
-          </div>
-          <h3 class="region-name" data-i18n="de_name">Germany</h3>
-          <div class="region-native" data-i18n="de_native">Deutschland · EUR</div>
-          <div class="region-meta">
-            <span data-i18n="de_meta_langs">Deutsch + EN</span><span data-i18n="de_meta_law">Glücksspielstaatsvertrag</span>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- ============ NOT LISTED / TG ============ -->
-      <div class="not-listed">
-        <div class="not-listed-text" data-i18n-html="not_listed">
-          <strong>Your country isn't listed yet?</strong> Drop us a line — enough demand from your region and we prioritize it.
-        </div>
-        <a href="https://t.me/kozyr_support" class="tg-cta" rel="noopener">
+        <a href="https://t.me/kozyr_support" class="tg-badge" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.24 3.64 11.95c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
-          <span data-i18n="not_listed_cta">Write on Telegram</span>
+          <span>Telegram</span>
         </a>
       </div>
-
     </div>
-  </section>
-</main>
+  </nav>
 
-<footer class="footer">
-  <div class="footer-inner">
-    <a href="/" class="logo">
-      <span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
-fill="#ffffff" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 587 1 1071 0 1076 -3 16
--32 42 583 -519 198 -180 547 -499 775 -709 228 -209 547 -501 708 -649 l294
--267 905 0 c497 0 904 2 904 4 0 5 18 -12 -530 502 -228 214 -562 526 -740
-694 -425 398 -844 786 -1006 931 -71 63 -228 203 -349 310 -376 334 -500 446
--581 524 l-79 75 66 63 c339 322 703 669 789 752 58 55 197 188 310 295 113
-107 311 296 440 420 129 124 368 351 530 505 162 154 389 370 505 481 115 110
-308 292 428 404 119 113 217 208 217 212 0 4 -405 8 -901 8 l-901 0 -132 -128
-c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36
--66 -58 -66 -51 1 8 0 517 0 1132 l-2 1117 -650 0 -650 0 0 -3090z"/></g></g></svg></span>
-      <span>KOZYR</span>
-    </a>
-    <div class="footer-links">
-      <a href="/countries/" data-i18n="footer_all_regions">All regions</a>
-      <a href="/ua/legal/" data-i18n="footer_legal">Legal</a>
-      <a href="https://t.me/kozyr_support" rel="noopener" data-i18n="footer_support">Telegram support</a>
+  <main class="hero">
+    <div class="wrap">
+      <div class="hero-inner">
+
+        <div class="hero-text">
+          <div class="hero-eyebrow" data-i18n="eyebrow">Poker rakeback</div>
+          <h1><span data-i18n="title_1">Choose your</span>
+              <em data-i18n="title_em">region</em>.</h1>
+          <p class="hero-lede" data-i18n="lede">Regional platforms with local partners, currencies and languages.</p>
+        </div>
+
+        <div class="chooser">
+
+          <!-- UKRAINE -->
+          <div class="region-card"
+               data-country="ua"
+               data-href-en="/ua/"
+               data-href-ru="/ua/"
+               data-href-uk="/ua/uk/">
+            <span class="you-are-here" data-i18n="your_region">Your region</span>
+            <div class="region-top">
+              <span class="region-flag fi fi-ua" aria-hidden="true"></span>
+              <span class="region-status">
+                <span class="dot"></span> <span data-i18n="status_live">Live</span>
+              </span>
+            </div>
+            <h2 class="region-name" data-i18n="ua_name">Ukraine</h2>
+            <div class="region-native" data-i18n="ua_native">Україна · UAH</div>
+            <div class="region-langs">
+              <a href="/ua/" class="lang-pill" lang="ru" hreflang="ru-UA">
+                <span data-i18n="pill_ru">Русская</span> <code>RU</code>
+              </a>
+              <a href="/ua/uk/" class="lang-pill" lang="uk" hreflang="uk-UA">
+                <span data-i18n="pill_uk">Українська</span> <code>UK</code>
+              </a>
+            </div>
+          </div>
+
+          <!-- INTERNATIONAL -->
+          <div class="region-card"
+               data-country="int"
+               data-href-en="/int/"
+               data-href-ru="/int/"
+               data-href-uk="/int/">
+            <div class="region-top">
+              <span class="region-flag int" aria-hidden="true">◈</span>
+              <span class="region-status">
+                <span class="dot"></span> <span data-i18n="status_preview">Preview</span>
+              </span>
+            </div>
+            <h2 class="region-name" data-i18n="int_name">International</h2>
+            <div class="region-native" data-i18n="int_native">Global · USD / USDT</div>
+            <div class="region-langs">
+              <a href="/int/" class="lang-pill" lang="en" hreflang="en">
+                <span data-i18n="pill_en">English</span> <code>EN</code>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
     </div>
-    <div class="footer-copy" data-i18n="footer_copy">© 2026 KOZYR · 21+ · Play responsibly</div>
+  </main>
+
+  <div class="micro-footer">
+    <div class="micro-inner">
+      <div class="coming-inline">
+        <span class="label" data-i18n="coming_label">Coming</span>
+        <span class="flag"><span class="fi fi-pl" aria-hidden="true"></span> <span data-i18n="pl_name">Poland</span></span>
+        <span class="divider">·</span>
+        <span class="flag"><span class="fi fi-de" aria-hidden="true"></span> <span data-i18n="de_name">Germany</span></span>
+        <span class="divider">·</span>
+        <a href="/countries/" class="all-regions" data-i18n="all_regions_link">all regions →</a>
+      </div>
+      <div class="micro-legal">
+        <span>© 2026 KOZYR</span>
+        <span class="sep">·</span>
+        <span>21+</span>
+        <span class="sep">·</span>
+        <a href="/ua/legal/" data-i18n="footer_legal">Legal</a>
+      </div>
+    </div>
   </div>
-</footer>
 
-<!-- ============================================================
-     i18n + interactive behavior
-     ============================================================ -->
+</div>
+
+<!-- ============ i18n + interactive ============ -->
 <script>
 (function () {
   'use strict';
 
-  // ---- 1. Translation strings ----------------------------------------
   var STRINGS = {
     en: {
-      compliance:         "<strong>21+ only.</strong> By using this site you agree to the regional <a href=\"/ua/legal/\">Terms &amp; Privacy</a>. · Play responsibly.",
-      regions_link:       "Regions",
-      hero_eyebrow:       "KOZYR · Poker Rakeback",
-      hero_title_prefix:  "Choose your",
-      hero_title_em:      "region",
-      hero_lede:          "Regional platforms with local partners, currencies and languages. Pick the country you play from.",
-      regions_head:       "Available regions",
-      regions_aux:        "Need details?",
-      regions_aux_link:   "full regions list →",
-      status_live:        "Live",
-      status_preview:     "Preview",
-      your_region:        "Your region",
-      ua_name:            "Ukraine",
-      ua_native:          "Україна · UAH · legal since 2020",
-      ua_pill_ru:         "Russian version",
-      ua_pill_uk:         "Ukrainian version",
-      int_name:           "International",
-      int_native:         "Global · USD / USDT · English",
-      int_pill_en:        "English version",
-      pl_name:            "Poland",
-      pl_native:          "Polska · PLN",
-      pl_meta_langs:      "Polski + EN",
-      pl_meta_law:        "Ustawa hazardowa",
-      de_name:            "Germany",
-      de_native:          "Deutschland · EUR",
-      de_meta_langs:      "Deutsch + EN",
-      de_meta_law:        "Glücksspielstaatsvertrag",
-      not_listed:         "<strong>Your country isn't listed yet?</strong> Drop us a line — enough demand from your region and we prioritize it.",
-      not_listed_cta:     "Write on Telegram",
-      footer_all_regions: "All regions",
-      footer_legal:       "Legal",
-      footer_support:     "Telegram support",
-      footer_copy:        "© 2026 KOZYR · 21+ · Play responsibly"
+      compliance:        "<strong>21+ only.</strong> By using this site you agree to the regional <a href=\"/ua/legal/\">Terms &amp; Privacy</a>. · Play responsibly.",
+      eyebrow:           "Poker rakeback",
+      title_1:           "Choose your",
+      title_em:          "region",
+      lede:              "Regional platforms with local partners, currencies and languages.",
+      status_live:       "Live",
+      status_preview:    "Preview",
+      your_region:       "Your region",
+      ua_name:           "Ukraine",
+      ua_native:         "Україна · UAH",
+      pill_ru:           "Russian",
+      pill_uk:           "Ukrainian",
+      int_name:          "International",
+      int_native:        "Global · USD / USDT",
+      pill_en:           "English",
+      coming_label:      "Coming",
+      pl_name:           "Poland",
+      de_name:           "Germany",
+      all_regions_link:  "all regions →",
+      footer_legal:      "Legal"
     },
     ru: {
-      compliance:         "<strong>Только 21+.</strong> Используя сайт, ты принимаешь региональные <a href=\"/ua/legal/\">Условия и Политику</a>. · Играй ответственно.",
-      regions_link:       "Регионы",
-      hero_eyebrow:       "KOZYR · Рейкбек в покере",
-      hero_title_prefix:  "Выбери свой",
-      hero_title_em:      "регион",
-      hero_lede:          "Региональные площадки с локальными партнёрами, валютами и языками. Выбери страну, в которой играешь.",
-      regions_head:       "Доступные регионы",
-      regions_aux:        "Нужны детали?",
-      regions_aux_link:   "полный список стран →",
-      status_live:        "Работает",
-      status_preview:     "Превью",
-      your_region:        "Твой регион",
-      ua_name:            "Украина",
-      ua_native:          "Украина · UAH · легально с 2020",
-      ua_pill_ru:         "Русская версия",
-      ua_pill_uk:         "Українська версія",
-      int_name:           "International",
-      int_native:         "Глобально · USD / USDT · English",
-      int_pill_en:        "English version",
-      pl_name:            "Польша",
-      pl_native:          "Polska · PLN",
-      pl_meta_langs:      "Польский + EN",
-      pl_meta_law:        "Ustawa hazardowa",
-      de_name:            "Германия",
-      de_native:          "Deutschland · EUR",
-      de_meta_langs:      "Немецкий + EN",
-      de_meta_law:        "Glücksspielstaatsvertrag",
-      not_listed:         "<strong>Твоей страны нет в списке?</strong> Напиши нам — наберётся запрос из региона, запустим приоритетно.",
-      not_listed_cta:     "Написать в Telegram",
-      footer_all_regions: "Все регионы",
-      footer_legal:       "Правовая база",
-      footer_support:     "Поддержка в Telegram",
-      footer_copy:        "© 2026 KOZYR · 21+ · Играй ответственно"
+      compliance:        "<strong>Только 21+.</strong> Используя сайт, ты принимаешь региональные <a href=\"/ua/legal/\">Условия и Политику</a>. · Играй ответственно.",
+      eyebrow:           "Рейкбек в покере",
+      title_1:           "Выбери свой",
+      title_em:          "регион",
+      lede:              "Региональные площадки с локальными партнёрами, валютами и языками.",
+      status_live:       "Работает",
+      status_preview:    "Превью",
+      your_region:       "Твой регион",
+      ua_name:           "Украина",
+      ua_native:         "Украина · UAH",
+      pill_ru:           "Русская",
+      pill_uk:           "Українська",
+      int_name:          "International",
+      int_native:        "Глобально · USD / USDT",
+      pill_en:           "English",
+      coming_label:      "Скоро",
+      pl_name:           "Польша",
+      de_name:           "Германия",
+      all_regions_link:  "все регионы →",
+      footer_legal:      "Правовая база"
     },
     uk: {
-      compliance:         "<strong>Тільки 21+.</strong> Використовуючи сайт, ти приймаєш регіональні <a href=\"/ua/legal/\">Умови та Політику</a>. · Грай відповідально.",
-      regions_link:       "Регіони",
-      hero_eyebrow:       "KOZYR · Рейкбек у покері",
-      hero_title_prefix:  "Обери свій",
-      hero_title_em:      "регіон",
-      hero_lede:          "Регіональні платформи з локальними партнерами, валютами й мовами. Обери країну, в якій ти граєш.",
-      regions_head:       "Доступні регіони",
-      regions_aux:        "Потрібні деталі?",
-      regions_aux_link:   "повний список країн →",
-      status_live:        "Працює",
-      status_preview:     "Прев'ю",
-      your_region:        "Твій регіон",
-      ua_name:            "Україна",
-      ua_native:          "Україна · UAH · легально з 2020",
-      ua_pill_ru:         "Русская версия",
-      ua_pill_uk:         "Українська версія",
-      int_name:           "International",
-      int_native:         "Глобально · USD / USDT · English",
-      int_pill_en:        "English version",
-      pl_name:            "Польща",
-      pl_native:          "Polska · PLN",
-      pl_meta_langs:      "Польська + EN",
-      pl_meta_law:        "Ustawa hazardowa",
-      de_name:            "Німеччина",
-      de_native:          "Deutschland · EUR",
-      de_meta_langs:      "Німецька + EN",
-      de_meta_law:        "Glücksspielstaatsvertrag",
-      not_listed:         "<strong>Твоєї країни ще немає у списку?</strong> Напиши нам — набереться запит із регіону, запустимо пріоритетно.",
-      not_listed_cta:     "Написати в Telegram",
-      footer_all_regions: "Всі регіони",
-      footer_legal:       "Правова інформація",
-      footer_support:     "Підтримка в Telegram",
-      footer_copy:        "© 2026 KOZYR · 21+ · Грай відповідально"
+      compliance:        "<strong>Тільки 21+.</strong> Використовуючи сайт, ти приймаєш регіональні <a href=\"/ua/legal/\">Умови та Політику</a>. · Грай відповідально.",
+      eyebrow:           "Рейкбек у покері",
+      title_1:           "Обери свій",
+      title_em:          "регіон",
+      lede:              "Регіональні платформи з локальними партнерами, валютами й мовами.",
+      status_live:       "Працює",
+      status_preview:    "Прев'ю",
+      your_region:       "Твій регіон",
+      ua_name:           "Україна",
+      ua_native:         "Україна · UAH",
+      pill_ru:           "Русская",
+      pill_uk:           "Українська",
+      int_name:          "International",
+      int_native:        "Глобально · USD / USDT",
+      pill_en:           "English",
+      coming_label:      "Скоро",
+      pl_name:           "Польща",
+      de_name:           "Німеччина",
+      all_regions_link:  "всі регіони →",
+      footer_legal:      "Правова база"
     }
   };
 
   var SUPPORTED = ['ru', 'uk', 'en'];
   var STORAGE_KEY = 'kozyr_lang';
 
-  // ---- 2. Language detection -----------------------------------------
   function detectLang() {
-    // 1) previously chosen
     try {
       var saved = localStorage.getItem(STORAGE_KEY);
       if (saved && SUPPORTED.indexOf(saved) !== -1) return saved;
     } catch (e) {}
-
-    // 2) browser preference — try navigator.languages, then navigator.language
     var candidates = [];
-    if (navigator.languages && navigator.languages.length) {
-      candidates = candidates.concat(navigator.languages);
-    }
+    if (navigator.languages && navigator.languages.length) candidates = candidates.concat(navigator.languages);
     if (navigator.language) candidates.push(navigator.language);
-
     for (var i = 0; i < candidates.length; i++) {
       var tag = String(candidates[i]).toLowerCase();
-      if (tag.indexOf('uk') === 0) return 'uk';       // Ukrainian
-      if (tag.indexOf('ru') === 0) return 'ru';       // Russian
-      if (tag.indexOf('be') === 0) return 'ru';       // Belarusian speakers → RU
+      if (tag.indexOf('uk') === 0) return 'uk';
+      if (tag.indexOf('ru') === 0) return 'ru';
+      if (tag.indexOf('be') === 0) return 'ru';
       if (tag.indexOf('en') === 0) return 'en';
     }
-
-    // 3) fallback
     return 'en';
   }
 
-  // ---- 3. Apply translations to the DOM ------------------------------
   function applyLang(lang) {
     if (SUPPORTED.indexOf(lang) === -1) lang = 'en';
     var dict = STRINGS[lang];
-
-    // plain text nodes
     document.querySelectorAll('[data-i18n]').forEach(function (el) {
       var key = el.getAttribute('data-i18n');
       if (dict[key] != null) el.textContent = dict[key];
     });
-
-    // rich text (with links / <strong>)
     document.querySelectorAll('[data-i18n-html]').forEach(function (el) {
       var key = el.getAttribute('data-i18n-html');
       if (dict[key] != null) el.innerHTML = dict[key];
     });
-
-    // update <html lang="…"> and switcher state
     document.documentElement.lang = (lang === 'en') ? 'en' :
                                     (lang === 'uk') ? 'uk-UA' : 'ru-UA';
     document.querySelectorAll('.lang-switch button').forEach(function (btn) {
       btn.classList.toggle('is-active', btn.getAttribute('data-set-lang') === lang);
     });
-
-    // remember for next visit
     try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) {}
-
-    // stash current language for the card click handler
     document.documentElement.setAttribute('data-lang', lang);
   }
 
-  // ---- 4. Wire up the switcher ---------------------------------------
   function bindSwitcher() {
     document.querySelectorAll('[data-set-lang]').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -832,44 +711,29 @@ c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36
     });
   }
 
-  // ---- 5. Make live region cards fully clickable ---------------------
-  // Click anywhere on a .live card → go to the URL matching the current
-  // language. Clicks on <a> children (the pills) win because the browser
-  // fires their default action first; we skip if the click already landed
-  // on a link.
   function bindCardClicks() {
-    document.querySelectorAll('.region-card.live').forEach(function (card) {
+    document.querySelectorAll('.region-card').forEach(function (card) {
       card.addEventListener('click', function (evt) {
-        // if the user actually clicked a real link inside, let the browser handle it
-        var target = evt.target;
-        while (target && target !== card) {
-          if (target.tagName === 'A') return;
-          target = target.parentNode;
+        var t = evt.target;
+        while (t && t !== card) {
+          if (t.tagName === 'A') return;
+          t = t.parentNode;
         }
         var lang = document.documentElement.getAttribute('data-lang') || 'en';
-        var href = card.getAttribute('data-href-' + lang)
-                || card.getAttribute('data-href-en');
+        var href = card.getAttribute('data-href-' + lang) || card.getAttribute('data-href-en');
         if (href) window.location.href = href;
       });
-
-      // keyboard accessibility
       card.setAttribute('tabindex', '0');
       card.setAttribute('role', 'link');
       card.addEventListener('keydown', function (evt) {
         if (evt.key === 'Enter' || evt.key === ' ') {
-          evt.preventDefault();
-          card.click();
+          evt.preventDefault(); card.click();
         }
       });
     });
   }
 
-  // ---- 6. Geo highlight (uses /assets/kozyr-geo.js) ------------------
-  var GEO_TO_REGION = {
-    'ua': 'ua', 'ru': 'ua', 'by': 'ua', 'md': 'ua',
-    'pl': 'pl',
-    'de': 'de', 'at': 'de'
-  };
+  var GEO_TO_REGION = { 'ua':'ua','ru':'ua','by':'ua','md':'ua' };
   function applyGeo(country) {
     if (!country) return;
     var region = GEO_TO_REGION[String(country).toLowerCase()];
@@ -881,13 +745,10 @@ c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36
     if (window.KozyrGeo && typeof window.KozyrGeo.onReady === 'function') {
       window.KozyrGeo.onReady(applyGeo);
     } else {
-      window.addEventListener('kozyr:geo', function (e) {
-        applyGeo(e.detail && e.detail.country);
-      });
+      window.addEventListener('kozyr:geo', function (e) { applyGeo(e.detail && e.detail.country); });
     }
   }
 
-  // ---- 7. Boot -------------------------------------------------------
   function boot() {
     applyLang(detectLang());
     bindSwitcher();
@@ -897,9 +758,7 @@ c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', boot);
-  } else {
-    boot();
-  }
+  } else { boot(); }
 })();
 </script>
 
