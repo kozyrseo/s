@@ -5,14 +5,15 @@ name: Refresh suggested/queue snapshots
 #   - queue_snapshot.json     — все строки со status=queued
 # Бот в TG читает эти snapshot-ы через GitHub Contents API — это на порядок
 # быстрее, чем каждый раз ходить в Sheets. Обновление — по кнопке (/suggested,
-# /queue) или после каждого изменения через approve/reject workflows.
+# /queue), по расписанию, ИЛИ сразу после approve/reject (там свой snapshot-шаг).
 
 on:
   workflow_dispatch:
   # Раз в час — на случай если оператор что-то поправил в таблице вручную
   schedule:
     - cron: '15 * * * *'
-  # После апрува/реджекта через отдельные workflows (workflow_run)
+  # После апрува/реджекта через отдельные workflows (workflow_run) —
+  # оставлено как подстраховка; основную пересборку approve/reject делают сами.
   workflow_run:
     workflows: ["Approve topic (row → queued)", "Reject topic row"]
     types: [completed]
@@ -21,7 +22,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: refresh-snapshots
+  group: sheets-snapshot
   cancel-in-progress: false
 
 jobs:
@@ -47,26 +48,9 @@ jobs:
           GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
           PYTHONPATH: automation
         run: |
-          python -c "
-          import json, os
-          from datetime import datetime, timezone
-          from pathlib import Path
-          from bot_v2.suggested_topics import list_by_status
-
-          root = Path('.').resolve()
-          cache = root / '.bot_state' / 'cache'
-          cache.mkdir(parents=True, exist_ok=True)
-
-          for status, filename in [
-              ('suggested', 'suggested_snapshot.json'),
-              ('queued',    'queue_snapshot.json'),
-          ]:
-              rows = list_by_status(status=status, lang='ru', limit=100)
-              out = {'collected_at': datetime.now(timezone.utc).isoformat(),
-                     'status': status, 'rows': rows}
-              (cache / filename).write_text(json.dumps(out, indent=2, ensure_ascii=False), encoding='utf-8')
-              print(f'{filename}: {len(rows)} rows')
-          "
+          # Единая логика пересборки — в bot_v2.suggested_topics snapshot
+          # (без lang-фильтра, показывает все темы: ru/uk/legacy).
+          python -m bot_v2.suggested_topics snapshot
 
       - name: Commit snapshots
         run: |
