@@ -47,7 +47,7 @@ body {
 img, video, iframe, svg, table { max-width: 100%; }
 img, video { height: auto; }
 /* Страховка от любого горизонтального переполнения на всех страницах */
-html, body { overflow-x: hidden; }
+html, body { overflow-x: clip; }
 /* ============================================================================ */
 
 .container { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
