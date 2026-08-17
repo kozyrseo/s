@@ -1400,38 +1400,64 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     # мобильную панель и CTA на его страницу. Если target_page = каталог (/ua/)
     # или пусто (обзор/сравнение) — партнёра нет, виджет/панель не появятся
     # (это правильно: в нейтральном сравнении не пушим одного партнёра).
-    _partner_url_to_id = {
-        "/ua/rooms/pokerbet/": "pokerbet",
-        "/ua/clubs/klubok/": "klubok",
-    }
-    _tp_norm = (target_page or "").rstrip("/") + "/" if target_page else ""
-    partner_id = _partner_url_to_id.get(_tp_norm, "")
-    partner_url = _tp_norm if partner_id else ""
+    # ── Партнёры статьи: масштабируемо, по тегам-платформам + network ────────
+    # Единая точка правды о партнёрах — partners.js. Здесь дублируем МИНИМУМ
+    # (id, network, url, есть ли рейкбек) только чтобы сгенерировать мета-теги
+    # и CTA. Добавляешь партнёра → дописываешь одну строку сюда и объект в
+    # partners.js. Логика ниже сама разложит его по статьям.
+    _tags = meta.get("tags", []) or []  # теги статьи (platform:*, topic:*, ...)
+    _PARTNERS_META = [
+        # id,          network,     url,                      rake(%|None)
+        ("pokerbet",   "pokerbet",  "/ua/rooms/pokerbet/",    None),
+        ("klubok",     "clubgg",    "/ua/clubs/klubok/",      40),
+    ]
+    # платформенные теги статьи: и id-партнёров, и сети (platform:clubgg и т.п.)
+    _plat_tags = [t.split(":", 1)[1] for t in (_tags or [])
+                  if t.startswith("platform:")]
+    _topic_tags = [t.split(":", 1)[1] for t in (_tags or [])
+                   if t.startswith("topic:")]
+    is_comparison = "comparison" in _topic_tags
 
-    # Статья-сравнение? Определяем по slug (sravnenie / -vs- / -ili- / -protiv-).
-    # Только если это НЕ страница конкретного партнёра. Для сравнения виджет
-    # покажет ОБЕ карточки (десктоп), мобильная панель не появится.
-    _slug_l = (slug or "").lower()
-    _cmp_markers = ("sravnenie", "-vs-", "-ili-", "-protiv-", "-vs.", "sravnitelnyy")
-    is_comparison = (not partner_id) and any(m in _slug_l for m in _cmp_markers)
+    # Разрешаем партнёров: приоритет — точное совпадение id, иначе по сети.
+    _by_id = [pm for pm in _PARTNERS_META if pm[0] in _plat_tags]
+    _by_net = [pm for pm in _PARTNERS_META if pm[1] in _plat_tags]
+    _resolved = _by_id if _by_id else _by_net
 
-    # Мета-теги партнёра (пустые, если партнёра нет — тогда блок не выводится)
-    if partner_id:
-        partner_meta_block = (
-            '<meta name="kozyr:partner" content="%s">\n'
-            '<meta name="kozyr:target" content="%s">'
-        ) % (escape_html(partner_id), escape_html(partner_url))
-        # Виджет-контейнер в боковой колонке (JS заполнит карточкой партнёра)
-        partner_widget_block = '<div class="toc-side__widget" data-partner-widget></div>'
-    elif is_comparison:
-        # Режим сравнения: обе карточки. JS читает kozyr:compare="all".
+    # Строим мета-теги платформ (их читает partners.js для виджета/панели).
+    # Всегда пишем kozyr:platforms из platform-тегов — JS сам решит по network.
+    _platforms_attr = ",".join(_plat_tags)
+
+    partner_id = ""
+    partner_url = ""
+    if is_comparison:
+        # Сравнение — обе (все) карточки, панель на мобильном не показываем.
         partner_meta_block = '<meta name="kozyr:compare" content="all">'
         partner_widget_block = '<div class="toc-side__widget" data-partner-widget></div>'
+    elif len(_resolved) == 1:
+        # Ровно один партнёр (обзор партнёра ИЛИ общая статья про сеть с одним
+        # партнёром в ней) → его карточка + персональный CTA + мобильная панель.
+        partner_id, _net, partner_url, _rake = _resolved[0]
+        _meta_lines = []
+        if _platforms_attr:
+            _meta_lines.append('<meta name="kozyr:platforms" content="%s">'
+                               % escape_html(_platforms_attr))
+        # для обратной совместимости и панели — явный partner+target
+        _meta_lines.append('<meta name="kozyr:partner" content="%s">' % escape_html(partner_id))
+        _meta_lines.append('<meta name="kozyr:target" content="%s">' % escape_html(partner_url))
+        partner_meta_block = "\n".join(_meta_lines)
+        partner_widget_block = '<div class="toc-side__widget" data-partner-widget></div>'
+    elif len(_resolved) > 1:
+        # Несколько партнёров по сети (общая статья про платформу) → все карточки,
+        # но БЕЗ персонального CTA (не выделяем одного) и без мобильной панели.
+        partner_meta_block = ('<meta name="kozyr:platforms" content="%s">'
+                              % escape_html(_platforms_attr)) if _platforms_attr else ""
+        partner_widget_block = '<div class="toc-side__widget" data-partner-widget></div>'
     else:
+        # Ни партнёра, ни сети, ни сравнения — инфо-статья.
         partner_meta_block = ""
         partner_widget_block = ""
 
-    # CTA: если есть партнёр — кнопка ведёт на его страницу; иначе на каталог.
+    # CTA: если есть ОДИН партнёр — кнопка на его страницу; иначе на каталог.
     cta_button_url = partner_url if partner_url else lang_cfg["home_url"]
 
     # ── Собираем финальный CTA-блок ─────────────────────────────────────────
@@ -1483,7 +1509,7 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
              escape_html(ui_cta["cta_button"]))
 
     # Короткий тег для пилюли в hero (из topic-тега, иначе — раздел).
-    _tags = meta.get("tags", []) or []
+    # (_tags уже определён выше, в блоке партнёров)
     _topic = next((t.split(":", 1)[1] for t in _tags if t.startswith("topic:")), "")
     _tag_labels = {
         "rakeback": "Рейкбек", "clubs": "Клубы", "rooms": "Румы",

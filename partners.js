@@ -153,6 +153,43 @@
   //   3. по совпадению <link rel="canonical"> ... но проще — по target-URL,
   //      который генератор кладёт в meta. Мы сопоставляем partner.url со
   //      значением из meta name="kozyr:target".
+  // ── МАСШТАБИРУЕМОЕ определение партнёров статьи ────────────────────────
+  // Партнёр(ы) статьи выводятся из её тегов-платформ + связи partner.network
+  // (единая точка правды — массив PARTNERS выше). Логика приоритета:
+  //   1. Явный id партнёра в тегах (platform:klubok) → этот партнёр
+  //   2. Сравнение (meta kozyr:compare) → все партнёры из указанных/по сети
+  //   3. Тег-СЕТЬ (platform:clubgg) → ВСЕ партнёры этой сети
+  //      (сейчас один — KlubOk; добавишь второй ClubGG-клуб → покажутся оба)
+  //   4. Ничего → инфо-статья, виджета нет
+  // Теги статьи приходят из meta name="kozyr:platforms" (напр. "klubok" или
+  // "clubgg" или "pokerbet,klubok"). Генератор проставляет их из platform:*-тегов.
+  function _platformTags() {
+    var m = document.querySelector('meta[name="kozyr:platforms"]');
+    if (!m || !m.content) return [];
+    return m.content.split(",").map(function (s) { return s.trim(); })
+      .filter(Boolean);
+  }
+  function resolvePartnersForPage() {
+    var tags = _platformTags();
+
+    // Явное сравнение (meta kozyr:compare) — обрабатывается отдельно в вызывающем
+    // коде, но если сюда попали — вернём всех совпавших по id/сети.
+    // 1. Явные партнёры: tag совпал с id партнёра
+    var byId = PARTNERS.filter(function (p) { return tags.indexOf(p.id) !== -1; });
+    // 2. Партнёры, чья СЕТЬ указана тегом (platform:clubgg → все clubgg-партнёры)
+    var byNet = PARTNERS.filter(function (p) {
+      return p.network && tags.indexOf(p.network) !== -1;
+    });
+
+    // Приоритет: если есть точное совпадение по id — берём его (обзор партнёра).
+    // Иначе — по сети (общая статья про платформу). Дедупликация по id.
+    var chosen = byId.length ? byId : byNet;
+    var seen = {};
+    return chosen.filter(function (p) {
+      if (seen[p.id]) return false; seen[p.id] = 1; return true;
+    });
+  }
+
   function findPartnerForPage(box) {
     // 1. Явный id на самом контейнере
     var explicit = (box.getAttribute("data-partner") || "").trim();
@@ -166,7 +203,11 @@
       var byMeta = PARTNERS.filter(function (p) { return p.id === mp.content.trim(); })[0];
       if (byMeta) return byMeta;
     }
-    // 3. meta name="kozyr:target" (= target_page статьи), сопоставляем с p.url
+    // 3. Новый способ — по тегам-платформам (kozyr:platforms) + network
+    var resolved = resolvePartnersForPage();
+    if (resolved.length === 1) return resolved[0];
+    // (несколько партнёров — обрабатывает renderSideWidget как список)
+    // 4. meta name="kozyr:target" (= target_page статьи), сопоставляем с p.url
     var mt = document.querySelector('meta[name="kozyr:target"]');
     if (mt && mt.content) {
       var t = mt.content.trim().replace(/\/+$/, "");
@@ -232,7 +273,20 @@
           cards.map(sideCardHTML).join("");
         return;
       }
-      // Обычный режим: один партнёр статьи
+      // Режим по тегам-платформам: один или несколько партнёров.
+      // resolvePartnersForPage учитывает id-теги и network (см. выше).
+      var resolved = resolvePartnersForPage().filter(function (p) { return p.card; });
+      if (resolved.length) {
+        var label = resolved.length > 1
+          ? "Площадки на этой платформе"
+          : "Площадка из обзора";
+        box.innerHTML =
+          '<div class="side-widget__label">' + label + "</div>" +
+          resolved.map(sideCardHTML).join("");
+        return;
+      }
+
+      // Фолбэк на старый способ (data-partner / kozyr:partner / kozyr:target)
       var p = findPartnerForPage(box);
       if (!p || !p.card) {
         // Партнёра нет (обзорная статья / нет совпадения) — прячем виджет.
@@ -259,9 +313,17 @@
     var cmpMeta = document.querySelector('meta[name="kozyr:compare"]');
     if (cmpMeta && cmpMeta.content && cmpMeta.content.trim()) return;
 
-    // партнёр — по тем же мета-тегам, что боковой виджет
-    var fake = document.createElement("div");
-    var p = findPartnerForPage(fake);
+    // Если статья относится к НЕСКОЛЬКИМ партнёрам (общая про платформу) —
+    // панель тоже не показываем: в неё нельзя честно вынести одного.
+    var resolved = resolvePartnersForPage().filter(function (p) { return p.card; });
+    if (resolved.length > 1) return;
+
+    // Один партнёр — берём его (из resolve или из старых мета-тегов).
+    var p = resolved.length === 1 ? resolved[0] : null;
+    if (!p) {
+      var fake = document.createElement("div");
+      p = findPartnerForPage(fake);
+    }
     if (!p || !p.card) return;  // обзорная статья / нет партнёра — панель не нужна
 
     var c = p.card || {};
