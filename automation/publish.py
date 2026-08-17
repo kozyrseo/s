@@ -1408,6 +1408,13 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     partner_id = _partner_url_to_id.get(_tp_norm, "")
     partner_url = _tp_norm if partner_id else ""
 
+    # Статья-сравнение? Определяем по slug (sravnenie / -vs- / -ili- / -protiv-).
+    # Только если это НЕ страница конкретного партнёра. Для сравнения виджет
+    # покажет ОБЕ карточки (десктоп), мобильная панель не появится.
+    _slug_l = (slug or "").lower()
+    _cmp_markers = ("sravnenie", "-vs-", "-ili-", "-protiv-", "-vs.", "sravnitelnyy")
+    is_comparison = (not partner_id) and any(m in _slug_l for m in _cmp_markers)
+
     # Мета-теги партнёра (пустые, если партнёра нет — тогда блок не выводится)
     if partner_id:
         partner_meta_block = (
@@ -1415,6 +1422,10 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
             '<meta name="kozyr:target" content="%s">'
         ) % (escape_html(partner_id), escape_html(partner_url))
         # Виджет-контейнер в боковой колонке (JS заполнит карточкой партнёра)
+        partner_widget_block = '<div class="toc-side__widget" data-partner-widget></div>'
+    elif is_comparison:
+        # Режим сравнения: обе карточки. JS читает kozyr:compare="all".
+        partner_meta_block = '<meta name="kozyr:compare" content="all">'
         partner_widget_block = '<div class="toc-side__widget" data-partner-widget></div>'
     else:
         partner_meta_block = ""

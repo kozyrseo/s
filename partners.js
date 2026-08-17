@@ -210,6 +210,29 @@
     var boxes = document.querySelectorAll("[data-partner-widget]");
     if (!boxes.length) return;
     boxes.forEach(function (box) {
+      // Режим сравнения: meta kozyr:compare="all" ИЛИ data-compare на контейнере
+      // → показываем ОБЕ карточки (для статей-сравнений). В нейтральном
+      // сравнении не выделяем одного партнёра, даём выбор из обоих.
+      var cmpMeta = document.querySelector('meta[name="kozyr:compare"]');
+      var cmpAttr = (box.getAttribute("data-compare") || "").trim();
+      var cmpVal = cmpAttr || (cmpMeta && cmpMeta.content ? cmpMeta.content.trim() : "");
+      if (cmpVal) {
+        var ids;
+        if (cmpVal === "all") {
+          ids = PARTNERS.map(function (p) { return p.id; });
+        } else {
+          ids = cmpVal.split(",").map(function (s) { return s.trim(); });
+        }
+        var cards = ids.map(function (id) {
+          return PARTNERS.filter(function (p) { return p.id === id; })[0];
+        }).filter(function (p) { return p && p.card; });
+        if (!cards.length) { box.style.display = "none"; return; }
+        box.innerHTML =
+          '<div class="side-widget__label">Площадки из сравнения</div>' +
+          cards.map(sideCardHTML).join("");
+        return;
+      }
+      // Обычный режим: один партнёр статьи
       var p = findPartnerForPage(box);
       if (!p || !p.card) {
         // Партнёра нет (обзорная статья / нет совпадения) — прячем виджет.
@@ -232,6 +255,10 @@
     return (p.rake === null || p.rake === undefined) ? null : ("рейкбек до " + p.rake + "%");
   }
   function renderMobileBar() {
+    // В режиме сравнения панель НЕ показываем (обе карточки видны в тексте).
+    var cmpMeta = document.querySelector('meta[name="kozyr:compare"]');
+    if (cmpMeta && cmpMeta.content && cmpMeta.content.trim()) return;
+
     // партнёр — по тем же мета-тегам, что боковой виджет
     var fake = document.createElement("div");
     var p = findPartnerForPage(fake);
