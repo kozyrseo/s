@@ -129,6 +129,111 @@ def reject_topic(row_index: int) -> dict:
     return get_topic_by_row(row_index) or {}
 
 
+def cleanup_suggested(dry_run: bool = True,
+                      only_bot_topics: bool = True) -> dict:
+    """
+    Массовая чистка: проходит все suggested-темы и переводит в rejected те,
+    что не проходят стоп-фильтр (чужие бренды / регуляторика / неверный
+    рейкбек). Использует ЕДИНУЮ проверку screen_topic из partners_config —
+    ту же, что фильтрует новые темы на входе.
+
+    Параметры:
+      dry_run        — если True, НЕ трогает таблицу, только возвращает
+                       список того, что было бы отклонено (для превью).
+      only_bot_topics — если True, чистит только темы, которые НЕ помечены
+                       как ручные. То есть тема с source != 'keyword_research'
+                       (и непустым source) считается заведённой оператором
+                       и НЕ трогается. Темы с пустым source (legacy-мусор от
+                       бота) — чистятся. Это защищает ручные правки оператора.
+
+    Возвращает dict:
+      {
+        "checked": N,            # сколько suggested-тем проверено
+        "rejected": [...],       # список {row, topic, reason}
+        "kept": M,               # сколько осталось suggested
+        "skipped_manual": K,     # сколько пропущено как ручные
+        "dry_run": bool,
+      }
+    """
+    # Импорт фильтра. Пробуем несколько путей, т.к. модуль может лежать
+    # в automation/ (обычно) — а этот файл в automation/bot_v2/.
+    screen_topic = None
+    load_partners = None
+    for import_path in ("partners_config", "automation.partners_config"):
+        try:
+            mod = __import__(import_path, fromlist=["screen_topic", "load_partners"])
+            screen_topic = mod.screen_topic
+            load_partners = mod.load_partners
+            break
+        except Exception:
+            continue
+    if screen_topic is None:
+        # последний шанс — добавить родительскую папку в sys.path
+        import os as _os
+        sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+        try:
+            from partners_config import screen_topic, load_partners
+        except Exception as e:
+            raise RuntimeError(
+                f"Не удалось импортировать partners_config для чистки: {e}"
+            )
+
+    partners = load_partners()
+    if not partners:
+        print("⚠️  partners.js не прочитан — чистка небезопасна, останавливаюсь")
+        return {"checked": 0, "rejected": [], "kept": 0,
+                "skipped_manual": 0, "dry_run": dry_run, "error": "no_partners"}
+
+    sheet = get_sheet()
+    records = sheet.get_all_records()
+    headers = _headers(sheet)
+    status_col = _col_index(headers, "status")
+    if status_col == -1:
+        raise RuntimeError("В таблице нет колонки 'status'")
+
+    rejected = []
+    kept = 0
+    skipped_manual = 0
+    checked = 0
+
+    for idx, row in enumerate(records, start=2):
+        if str(row.get("status", "")).strip().lower() != "suggested":
+            continue
+
+        # Защита ручных тем: если source задан и это НЕ keyword_research —
+        # тема заведена/отредактирована оператором, не трогаем.
+        src = str(row.get("source", "")).strip().lower()
+        if only_bot_topics and src and src != "keyword_research":
+            skipped_manual += 1
+            continue
+
+        checked += 1
+        reason = screen_topic(row, partners)
+        if reason:
+            rejected.append({
+                "row": idx,
+                "topic": row.get("topic", ""),
+                "reason": reason,
+            })
+        else:
+            kept += 1
+
+    # Применяем (если не dry-run). Идём СНИЗУ ВВЕРХ по номерам строк на
+    # случай будущих операций удаления — для update_cell порядок не важен,
+    # но так безопаснее и консистентнее.
+    if not dry_run and rejected:
+        for item in sorted(rejected, key=lambda x: x["row"], reverse=True):
+            sheet.update_cell(item["row"], status_col, "rejected")
+
+    return {
+        "checked": checked,
+        "rejected": rejected,
+        "kept": kept,
+        "skipped_manual": skipped_manual,
+        "dry_run": dry_run,
+    }
+
+
 def approve_and_dump_topic_file(row_index: int, target_path: str) -> str:
     """
     Помечает status=processing и записывает JSON-файл темы для generate.py.
@@ -195,6 +300,13 @@ def main() -> None:
     p_dump.add_argument("row", type=int)
     p_dump.add_argument("target", help="Куда положить файл, e.g. automation/topics/foo.json")
 
+    p_clean = sub.add_parser("cleanup",
+        help="Массово отклонить suggested-темы, не проходящие стоп-фильтр")
+    p_clean.add_argument("--apply", action="store_true",
+        help="Реально применить (без флага — только показать, dry-run)")
+    p_clean.add_argument("--include-manual", action="store_true",
+        help="Чистить и ручные темы тоже (по умолчанию ручные не трогаются)")
+
     args = parser.parse_args()
 
     try:
@@ -226,6 +338,25 @@ def main() -> None:
         elif args.cmd == "dump":
             path = approve_and_dump_topic_file(args.row, args.target)
             print(f"✅ Тема выгружена в {path} (row {args.row} → processing)")
+        elif args.cmd == "cleanup":
+            result = cleanup_suggested(
+                dry_run=not args.apply,
+                only_bot_topics=not args.include_manual,
+            )
+            mode = "DRY-RUN (ничего не изменено)" if result["dry_run"] else "ПРИМЕНЕНО"
+            print(f"🧹 Чистка suggested — {mode}")
+            print(f"   Проверено: {result['checked']}")
+            print(f"   Пропущено ручных: {result['skipped_manual']}")
+            print(f"   Останется чистых: {result['kept']}")
+            print(f"   {'Будет отклонено' if result['dry_run'] else 'Отклонено'}: "
+                  f"{len(result['rejected'])}")
+            print()
+            for item in result["rejected"]:
+                print(f"   ❌ row {item['row']}: {item['topic'][:55]}")
+                print(f"        → {item['reason']}")
+            if result["dry_run"] and result["rejected"]:
+                print()
+                print("   Чтобы применить: добавь флаг --apply")
     except Exception as e:
         print(f"❌ {type(e).__name__}: {e}", file=sys.stderr)
         sys.exit(1)
