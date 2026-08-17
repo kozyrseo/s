@@ -1,38 +1,41 @@
 # ============================================================================
-# KOZYR — .gitignore
+# KOZYR — .gitignore  (исправлено 2026-08-17)
+# ВАЖНО: automation/, *.py и requirements.txt НЕ игнорируются — их запускают
+# GitHub Actions (generate/publish/translate). Их игнор сломает генерацию статей.
 # ============================================================================
 
-*.py
-requirements.txt
+# Python
 __pycache__/
 *.pyc
 .venv/
 venv/
 env/
 
-_pending/
-_pending_uk/
+# Секреты
+.env
+.env.local
+.env.*.local
+
+# Runtime-состояние бота и сгенерированные отчёты — НЕ коммитить
 .bot_state/
-automation/
 analytics/
 
-README.md
+# Транзиентные заметки сессий (README.md и DEPLOY.md остаются в репозитории)
 CHANGES.md
 STATUS.md
-DEPLOY*.md
 BLOG-*.md
 FAVICON-*.md
-FIX-*.md
+FIXES-*.md
+DEPLOY-V3.md
+DEPLOY-FINAL.md
 
+# Редактор / ОС
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
 *.swp
 
-.env
-.env.local
-.env.*.local
-
+# Node
 node_modules/
 package-lock.json
