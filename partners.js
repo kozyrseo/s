@@ -222,13 +222,63 @@
     });
   }
   window.renderPartnerSideWidget = renderSideWidget;
+
+  // ── Мобильная липкая панель внизу экрана ───────────────────────────────
+  // Показывается ТОЛЬКО на мобильном (CSS прячет её на десктопе, где есть
+  // боковой виджет). Партнёр — тот же, что для бокового виджета.
+  // Появляется после небольшой прокрутки, чтобы не мешать на первом экране.
+  function rakeShort(p) {
+    if (p.rake === "none") return null;
+    return (p.rake === null || p.rake === undefined) ? null : ("рейкбек до " + p.rake + "%");
+  }
+  function renderMobileBar() {
+    // партнёр — по тем же мета-тегам, что боковой виджет
+    var fake = document.createElement("div");
+    var p = findPartnerForPage(fake);
+    if (!p || !p.card) return;  // обзорная статья / нет партнёра — панель не нужна
+
+    var c = p.card || {};
+    var logo;
+    if (c.logoImg) {
+      logo = '<span class="pbar__logo pbar__logo--img"><img src="' + esc(c.logoImg) +
+        '" alt="' + esc(p.name) + '" width="30" height="30" loading="lazy"></span>';
+    } else {
+      logo = '<span class="pbar__logo" style="background:linear-gradient(135deg,' +
+        esc(p.logo.from) + "," + esc(p.logo.to) + ')">' + esc(c.logoText || p.logo.text) + "</span>";
+    }
+    var rk = rakeShort(p);
+    var sub = rk ? ('<span class="pbar__sub">' + esc(rk) + "</span>") : "";
+    var bar = document.createElement("div");
+    bar.className = "partner-bar";
+    bar.setAttribute("data-partner-bar", "");
+    bar.innerHTML =
+      '<a href="' + esc(p.url) + '" class="pbar__inner">' +
+      '<span class="pbar__info">' + logo +
+      '<span class="pbar__txt"><span class="pbar__name">' + esc(p.name) + "</span>" + sub + "</span></span>" +
+      '<span class="pbar__cta">Играть →</span></a>';
+    document.body.appendChild(bar);
+
+    // Появление после прокрутки на ~40% первого экрана
+    function onScroll() {
+      if (window.scrollY > window.innerHeight * 0.4) {
+        bar.classList.add("show");
+      } else {
+        bar.classList.remove("show");
+      }
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+  window.renderPartnerMobileBar = renderMobileBar;
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
       render();
       renderSideWidget();
+      renderMobileBar();
     });
   } else {
     render();
     renderSideWidget();
+    renderMobileBar();
   }
 })();
