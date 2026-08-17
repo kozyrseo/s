@@ -11,19 +11,26 @@ on:
 permissions:
   contents: write
 
+# Чтобы reject и refresh не толкались за один и тот же snapshot-файл.
+concurrency:
+  group: sheets-snapshot
+  cancel-in-progress: false
+
 jobs:
   reject:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Install deps
         run: pip install -r automation/requirements.txt
-      - name: Reject row
+      - name: Reject row + refresh snapshot
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
@@ -31,12 +38,29 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           PYTHONPATH: automation
         run: |
+          # 1. Отклоняем строку в таблице
           python -m bot_v2.suggested_topics reject "${{ inputs.row }}"
+          # 2. СРАЗУ пересобираем snapshot, чтобы бот показывал актуальный
+          #    список без ожидания межворкфлоу-триггера (который ненадёжен).
+          python -m bot_v2.suggested_topics snapshot
+          # 3. Короткое подтверждение в TG
           python -c "
           import os, json, urllib.request
           token = os.environ['TELEGRAM_BOT_TOKEN']
           chat = os.environ['TELEGRAM_CHAT_ID']
-          payload = {'chat_id': chat, 'text': '❌ Строка ${{ inputs.row }} → rejected.', 'parse_mode': 'Markdown'}
+          payload = {'chat_id': chat, 'text': '❌ Строка ${{ inputs.row }} rejected.', 'parse_mode': 'Markdown'}
           req = urllib.request.Request(f'https://api.telegram.org/bot{token}/sendMessage', data=json.dumps(payload).encode(), headers={'Content-Type':'application/json'})
           urllib.request.urlopen(req, timeout=10)
           " || true
+      - name: Commit refreshed snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -f .bot_state/cache/ || true
+          if git diff --staged --quiet; then
+            echo "No snapshot changes."
+          else
+            git commit -m "bot: refresh snapshot after reject row ${{ inputs.row }}"
+            git pull --rebase origin main || true
+            git push
+          fi
