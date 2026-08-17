@@ -79,6 +79,17 @@ def extract(slug, lang):
     # hero + og image
     hero = (ROOT / sub / slug / "hero.webp")
     has_hero = hero.exists()
+    # Ensure a JPEG copy of the hero exists for og:image (social crawlers don't
+    # render WebP). Derive it from the WebP if missing, so re-rendering an article
+    # can never leave it with a WebP OG image.
+    if has_hero and not (ROOT / sub / slug / "hero.jpg").exists():
+        try:
+            from PIL import Image
+            with Image.open(hero) as _im:
+                _im.convert("RGB").save(ROOT / sub / slug / "hero.jpg",
+                                        format="JPEG", quality=86, optimize=True)
+        except Exception as _e:
+            print(f"⚠️  rerender: could not derive hero.jpg: {_e}")
     # article tag from breadcrumb/eyebrow
     tag = htmlmod.unescape(m1(r'<div class="eyebrow">(.*?)</div>', re.DOTALL)).replace("Блог KOZYR", "").strip() or "Рейкбек"
 
@@ -152,7 +163,7 @@ def main():
         "{{FAQ_BLOCK}}": build_faq(d["faq"], lang),
         "{{FAQ_JSONLD}}": "",
         "{{RELATED_ARTICLES_HTML}}": "",
-        "{{OG_IMAGE_URL}}": (site + canonical + "hero.webp") if d["has_hero"] else (site + "/og-image.png"),
+        "{{OG_IMAGE_URL}}": (site + canonical + "hero.jpg") if d["has_hero"] else (site + "/og-image.png"),
         "{{OG_IMAGE_WIDTH}}": "1536" if d["has_hero"] else "1200",
         "{{OG_IMAGE_HEIGHT}}": "1024" if d["has_hero"] else "630",
         "{{OG_IMAGE_ALT}}": htmlmod.escape(d["h1"]),
