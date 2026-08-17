@@ -1393,6 +1393,84 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     default_section = {"ru": "Рейкбек и сделки"}.get(lang, "Рейкбек и сделки")
     article_section = lang_cfg["article_section_map"].get(target_page, default_section)
 
+    # ── Определяем партнёра статьи по target_page (для виджета/CTA) ──────────
+    # Единая точка правды — partners.js (id ↔ url). Здесь дублируем только
+    # соответствие url→id, чтобы сгенерировать мета-теги. Если target_page —
+    # страница конкретного партнёра, статья получит его боковой виджет,
+    # мобильную панель и CTA на его страницу. Если target_page = каталог (/ua/)
+    # или пусто (обзор/сравнение) — партнёра нет, виджет/панель не появятся
+    # (это правильно: в нейтральном сравнении не пушим одного партнёра).
+    _partner_url_to_id = {
+        "/ua/rooms/pokerbet/": "pokerbet",
+        "/ua/clubs/klubok/": "klubok",
+    }
+    _tp_norm = (target_page or "").rstrip("/") + "/" if target_page else ""
+    partner_id = _partner_url_to_id.get(_tp_norm, "")
+    partner_url = _tp_norm if partner_id else ""
+
+    # Мета-теги партнёра (пустые, если партнёра нет — тогда блок не выводится)
+    if partner_id:
+        partner_meta_block = (
+            '<meta name="kozyr:partner" content="%s">\n'
+            '<meta name="kozyr:target" content="%s">'
+        ) % (escape_html(partner_id), escape_html(partner_url))
+        # Виджет-контейнер в боковой колонке (JS заполнит карточкой партнёра)
+        partner_widget_block = '<div class="toc-side__widget" data-partner-widget></div>'
+    else:
+        partner_meta_block = ""
+        partner_widget_block = ""
+
+    # CTA: если есть партнёр — кнопка ведёт на его страницу; иначе на каталог.
+    cta_button_url = partner_url if partner_url else lang_cfg["home_url"]
+
+    # ── Собираем финальный CTA-блок ─────────────────────────────────────────
+    # Для партнёрской статьи — персональный призыв на страницу партнёра, без
+    # поискового ключа. Для обзора/сравнения — generic на каталог (как раньше).
+    _partner_names = {"pokerbet": "PokerBet", "klubok": "KlubOk"}
+    _partner_rake = {"pokerbet": None, "klubok": 40}  # None = без рейкбека (бонусы)
+    ui_cta = lang_cfg["ui"]
+    if partner_id:
+        _pname = _partner_names.get(partner_id, "")
+        _prake = _partner_rake.get(partner_id)
+        # Локализованные шаблоны персонального CTA
+        if lang == "uk":
+            if _prake:
+                _cta_h = "Готовий почати грати в %s з рейкбеком до %d%%?" % (_pname, _prake)
+                _cta_p = "Забирай актуальний Club ID і контакт агента, підключайся до додатку та грай на м'яких полях із розрахунками в гривні."
+            else:
+                _cta_h = "Готовий почати грати в %s?" % _pname
+                _cta_p = "Реєструйся, забирай вітальний бонус і грай на гривні з ліцензованим покер-румом."
+            _cta_btn = "Перейти на %s" % _pname
+        else:
+            if _prake:
+                _cta_h = "Готов начать играть в %s с рейкбеком до %d%%?" % (_pname, _prake)
+                _cta_p = "Забирай актуальный Club ID и контакт агента, подключайся к приложению и играй на мягких полях с расчётами в гривне."
+            else:
+                _cta_h = "Готов начать играть в %s?" % _pname
+                _cta_p = "Регистрируйся, забирай приветственный бонус и играй на гривны с лицензированным покер-румом."
+            _cta_btn = "Перейти на %s" % _pname
+        final_cta_block = (
+            '<div class="final-cta">\n'
+            '        <h2>%s</h2>\n'
+            '        <p>%s</p>\n'
+            '        <a href="%s" class="btn btn-primary">%s <span>&rarr;</span></a>\n'
+            '      </div>'
+        ) % (escape_html(_cta_h), escape_html(_cta_p),
+             escape_html(cta_button_url), escape_html(_cta_btn))
+    else:
+        # generic CTA на каталог (без поискового ключа — просто про подбор сделки)
+        final_cta_block = (
+            '<div class="final-cta">\n'
+            '        <h2>%s%s</h2>\n'
+            '        <p>%s</p>\n'
+            '        <a href="%s" class="btn btn-primary">%s <span>&rarr;</span></a>\n'
+            '      </div>'
+        ) % (escape_html(ui_cta["cta_heading_prefix"].strip()),
+             escape_html(ui_cta["cta_heading_suffix"].strip().lstrip()),
+             escape_html(ui_cta["cta_paragraph"]),
+             escape_html(lang_cfg["home_url"]),
+             escape_html(ui_cta["cta_button"]))
+
     # Короткий тег для пилюли в hero (из topic-тега, иначе — раздел).
     _tags = meta.get("tags", []) or []
     _topic = next((t.split(":", 1)[1] for t in _tags if t.startswith("topic:")), "")
@@ -1561,6 +1639,9 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         "{{META_DESCRIPTION}}": escape_html(meta_description),
         "{{META_DESCRIPTION_JSON}}": escape_json_string(meta_description),
         "{{CANONICAL_URL}}": canonical_url,
+        "{{PARTNER_META_BLOCK}}": partner_meta_block,
+        "{{PARTNER_WIDGET_BLOCK}}": partner_widget_block,
+        "{{FINAL_CTA_BLOCK}}": final_cta_block,
         "{{H1_TITLE}}": escape_html(h1_title),
         "{{H1_TITLE_JSON}}": escape_json_string(h1_title),
         "{{LEDE}}": escape_html(lede_plain),

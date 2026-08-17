@@ -9,6 +9,7 @@
 <meta name="description" content="{{META_DESCRIPTION}}">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
 <link rel="canonical" href="{{CANONICAL_URL}}">
+{{PARTNER_META_BLOCK}}
 {{HREFLANG_BLOCK}}
 <meta property="og:type" content="article">
 <meta property="og:url" content="{{CANONICAL_URL}}">
@@ -390,6 +391,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
         <aside class="toc-side" aria-label="{{UI_BREADCRUMB_BLOG}}">
           <div class="toc-side__label">{{UI_IN_THIS_ARTICLE}}</div>
           <ul class="toc-side__list" id="toc-list"></ul>
+          {{PARTNER_WIDGET_BLOCK}}
         </aside>
       </div>
 
@@ -407,11 +409,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
   </section>
   <section>
     <div class="container" style="max-width:760px">
-      <div class="final-cta">
-        <h2>{{UI_CTA_HEADING_PREFIX}}<em>{{CTA_KEYWORD}}</em>{{UI_CTA_HEADING_SUFFIX}}</h2>
-        <p>{{UI_CTA_PARAGRAPH}}</p>
-        <a href="{{HOME_URL}}" class="btn btn-primary">{{UI_CTA_BUTTON}} <span>→</span></a>
-      </div>
+      {{FINAL_CTA_BLOCK}}
     </div>
   </section>
 </article>
