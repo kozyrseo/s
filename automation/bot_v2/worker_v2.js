@@ -205,6 +205,8 @@ function getCommandHandler(cmd) {
 async function showMoreMenu(chatId, env) {
   const kb = [
     [{ text: "🔍 Найти новые темы", callback_data: "menu_action:research" }],
+    [{ text: "🔄 Обновить список тем", callback_data: "menu_action:refresh" }],
+    [{ text: "📊 Аналитика: выбрать период", callback_data: "menu_action:analytics_period" }],
     [{ text: "📈 Статус пайплайна", callback_data: "menu_action:status" }],
     [{ text: "📋 Очередь тем", callback_data: "menu_action:queue" }],
     [{ text: "🌐 Перевести статью…", callback_data: "menu_action:translate_prompt" }],
@@ -347,6 +349,15 @@ async function handleCallback(cb, env) {
     return;
   }
 
+  // === Выбор периода аналитики кнопкой ===
+  // an_period:{default|week|month|quarter|year}
+  if (action === "an_period") {
+    const period = segments[1] || "default";
+    await answerCallback(cb.id, env, "📊 Запускаю сбор...");
+    await runAnalytics(cb.message.chat.id, period, env);
+    return;
+  }
+
   // v2 multilang UI: menu_action от кнопок "⚙️ Ещё"
   if (action === "menu_action") {
     const which = segments[1];
@@ -354,6 +365,14 @@ async function handleCallback(cb, env) {
     const chatId = cb.message.chat.id;
     if (which === "research") {
       await cmdResearch(chatId, [], cb.message, env);
+    } else if (which === "refresh") {
+      const ok = await triggerWorkflow("refresh-suggested.yml", {}, env);
+      await sendMessage(chatId, env, ok
+        ? "🔄 Обновляю список тем. Через ~1 минуту нажми «📝 Темы»."
+        : "❌ Не удалось запустить refresh-suggested.yml.");
+    } else if (which === "analytics_period") {
+      // Показать кнопки выбора периода (как «📊 Аналитика» из главного меню)
+      await cmdAnalytics(chatId, [], cb.message, env);
     } else if (which === "status") {
       await cmdStatus(chatId, [], cb.message, env);
     } else if (which === "queue") {
@@ -431,10 +450,10 @@ async function cmdHelp(chatId, args, msg, env) {
 *🎛 Главные кнопки (снизу чата):*
   📝 Темы — предложенные темы (кнопки «в очередь / генерить / отклонить»)
   ⚡ Сгенерить — статья из очереди
-  📊 Аналитика — сводка по опубликованным
+  📊 Аналитика — выбор периода кнопками (неделя / месяц / квартал / год / 60 дней)
   📋 Pending — статьи на ревью по всем языкам
   🌍 Страны — список настроенных стран и их языков
-  ⚙️ Ещё — дополнительные действия (research, статус, translate, A/B)
+  ⚙️ Ещё — research, обновить темы, аналитика за период, статус, translate, A/B
 
 *🌍 Мульти-язык (автоматически):*
   Одна тема в Sheets = одна страна = все её языки. Указываешь \`country=ua\` в таблице — бот генерит русскую версию и переводит на украинскую, публикует обе одновременно.
@@ -447,7 +466,7 @@ async function cmdHelp(chatId, args, msg, env) {
   Отмена: /cancel
 
 *Основные команды (те же что кнопки):*
-  /suggested \`[page]\` · /generate \`[N]\` · /analytics · /pending · /countries · /queue · /research · /status · /translate \`slug lang\` · /history \`slug\` · /edit \`slug\`
+  /suggested \`[page]\` · /generate \`[N]\` · /analytics \`[week|month|quarter|year|N]\` · /pending · /countries · /queue · /research · /status · /translate \`slug lang\` · /history \`slug\` · /edit \`slug\`
 
 Каждое действие запускает GitHub Actions — логи в \`Actions\`.`;
   // Отправляем и главную клавиатуру, чтобы она закрепилась у пользователя
@@ -484,6 +503,23 @@ async function cmdSuggested(chatId, args, msg, env) {
   const page = Math.max(0, parseInt(args[0] || "0", 10));
   const PAGE_SIZE = 5;
 
+  // --- ШАГ 1: убрать за собой прошлые сообщения /suggested ---
+  // При открытии ПЕРВОЙ страницы (page 0) чистим весь предыдущий список,
+  // чтобы в чате не копились десятки старых карточек с мёртвыми кнопками.
+  // id прошлых сообщений храним в GitHub-файле (KV не настроен).
+  const MSG_IDS_PATH = ".bot_state/cache/suggested_msg_ids.json";
+  if (page === 0) {
+    const prev = await ghReadJSON(MSG_IDS_PATH, env);
+    if (prev && Array.isArray(prev.ids) && String(prev.chat_id) === String(chatId)) {
+      for (const mid of prev.ids) {
+        await deleteMessage(chatId, mid, env);
+      }
+      await ghWriteFile(MSG_IDS_PATH,
+        JSON.stringify({ chat_id: chatId, ids: [] }, null, 2),
+        "bot: clear suggested msg ids", env).catch(() => {});
+    }
+  }
+
   const suggested = await ghReadJSON(".bot_state/cache/suggested_snapshot.json", env);
   // Если snapshot есть — берём из него (быстрее). Иначе просим Actions его обновить.
   if (!suggested || !Array.isArray(suggested.rows)) {
@@ -497,10 +533,16 @@ async function cmdSuggested(chatId, args, msg, env) {
     return;
   }
 
-  const rows = suggested.rows;
+  // --- ШАГ 2: фильтр на актуальность ---
+  // Снапшот может отставать от таблицы (напр. только что отклонённые темы
+  // ещё числятся здесь до пересборки). Показываем ТОЛЬКО status=suggested —
+  // страховка на случай протухшего снапшота.
+  const rows = (suggested.rows || []).filter(
+    r => String(r.status || "suggested").trim().toLowerCase() === "suggested"
+  );
   if (rows.length === 0) {
     await sendMessage(chatId, env,
-      "📭 Suggested-тем нет. Запусти /research чтобы бот нашёл новые.");
+      "📭 Suggested-тем нет (всё разобрано). Запусти /research чтобы найти новые.");
     return;
   }
 
@@ -511,13 +553,29 @@ async function cmdSuggested(chatId, args, msg, env) {
     return;
   }
 
+  // Свежесть снапшота: если старше ~2ч — предупредим и пересоберём.
+  let staleNote = "";
+  if (suggested.collected_at) {
+    const ageMs = Date.now() - new Date(suggested.collected_at).getTime();
+    if (ageMs > 2 * 3600 * 1000) {
+      staleNote = "\n⏳ _снапшот устарел, обновляю — повтори через минуту_";
+      // await, а не fire-and-forget: в Cloudflare Workers фоновый промис без
+      // ctx.waitUntil может не выполниться. Один лишний API-вызов не страшен.
+      await triggerWorkflow("refresh-suggested.yml", {}, env);
+    }
+  }
+
   const collectedAt = suggested.collected_at
     ? `_снапшот от: ${suggested.collected_at}_\n\n`
     : "";
-  const header = `📋 *Suggested темы* — стр. ${page + 1} (всего ${rows.length})\n${collectedAt}`;
+  const header = `📋 *Suggested темы* — стр. ${page + 1} (актуальных ${rows.length})\n${collectedAt}${staleNote}`;
+
+  // Собираем id всех отправленных сообщений — удалим при следующем /suggested.
+  const sentIds = [];
 
   // По одному сообщению на тему, чтобы кнопки удобно ложились
-  await sendMessage(chatId, env, header);
+  const hid = await sendMessage(chatId, env, header);
+  if (hid) sentIds.push(hid);
 
   for (const r of chunk) {
     // v2 multilang: показываем страну + языки
@@ -543,15 +601,30 @@ async function cmdSuggested(chatId, args, msg, env) {
         { text: "❌ Отклонить", callback_data: `reject_topic:${r._row}` },
       ],
     ];
-    await sendMessage(chatId, env, text, kb);
+    const mid = await sendMessage(chatId, env, text, kb);
+    if (mid) sentIds.push(mid);
   }
 
   // Пагинация
   if (start + PAGE_SIZE < rows.length) {
-    await sendMessage(chatId, env,
+    const pid = await sendMessage(chatId, env,
       `Ещё ${rows.length - (start + PAGE_SIZE)} тем впереди.`,
       [[{ text: "→ Следующая страница", callback_data: `more_suggested:${page + 1}` }]]);
+    if (pid) sentIds.push(pid);
   }
+
+  // --- ШАГ 3: запомнить id этой партии для удаления при след. /suggested ---
+  // На page 0 перезаписываем; на последующих страницах — дополняем.
+  let idsToSave = sentIds;
+  if (page > 0) {
+    const existing = await ghReadJSON(MSG_IDS_PATH, env);
+    if (existing && Array.isArray(existing.ids) && String(existing.chat_id) === String(chatId)) {
+      idsToSave = existing.ids.concat(sentIds);
+    }
+  }
+  await ghWriteFile(MSG_IDS_PATH,
+    JSON.stringify({ chat_id: chatId, ids: idsToSave }, null, 2),
+    "bot: track suggested msg ids", env).catch(() => {});
 }
 
 async function cmdQueue(chatId, args, msg, env) {
@@ -611,9 +684,51 @@ async function cmdResearch(chatId, args, msg, env) {
 }
 
 async function cmdAnalytics(chatId, args, msg, env) {
-  const ok = await triggerWorkflow("analytics-report.yml", {}, env);
+  // Если период передан аргументом (/analytics month, /analytics 30) —
+  // запускаем сразу (обратная совместимость с вводом команды).
+  const arg = ((args && args[0]) || "").trim().toLowerCase();
+  if (arg) {
+    await runAnalytics(chatId, arg, env);
+    return;
+  }
+  // Иначе — показываем выбор периода КНОПКАМИ, чтобы не вводить вручную.
+  const kb = [
+    [{ text: "📊 За 60 дней (стандарт)", callback_data: "an_period:default" }],
+    [
+      { text: "🗓 Неделя", callback_data: "an_period:week" },
+      { text: "🗓 Месяц", callback_data: "an_period:month" },
+    ],
+    [
+      { text: "🗓 Квартал", callback_data: "an_period:quarter" },
+      { text: "🗓 Год", callback_data: "an_period:year" },
+    ],
+  ];
+  await sendMessage(chatId, env,
+    "📊 *Аналитика KOZYR*\n\nЗа какой период собрать отчёт?", kb);
+}
+
+// Запуск сбора аналитики за период. periodArg:
+//   "default"/"" → 60 дней · "week"/"month"/"quarter"/"year" → пресет ·
+//   число (строка) → последние N дней.
+async function runAnalytics(chatId, periodArg, env) {
+  const inputs = {};
+  let note = "за последние 60 дней";
+  const presets = {
+    week: "за неделю", month: "за месяц",
+    quarter: "за квартал", year: "за год",
+  };
+  const p = (periodArg || "").trim().toLowerCase();
+  if (presets[p]) {
+    inputs.period = p;
+    note = presets[p];
+  } else if (/^\d{1,4}$/.test(p)) {
+    inputs.days = p;
+    note = `за ${p} дней`;
+  }
+  // "default"/пусто → inputs пустые → воркфлоу возьмёт дефолт 60 дней.
+  const ok = await triggerWorkflow("analytics-report.yml", inputs, env);
   await sendMessage(chatId, env, ok
-    ? "📊 Запустил сбор аналитики. Через ~2 минуты придёт сводка."
+    ? `📊 Запустил сбор аналитики (${note}). Через ~2 минуты придёт сводка.`
     : "❌ Не удалось запустить analytics-report.yml.");
 }
 
@@ -1319,15 +1434,44 @@ async function sendMessage(chatId, env, text, inlineKeyboard = null,
       // Fallback: если Markdown сломался, шлём plain
       if (resp.status === 400 && /parse entities/i.test(body)) {
         payload.parse_mode = undefined;
-        await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        const r2 = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
+        try {
+          const j2 = await r2.json();
+          return j2?.result?.message_id || null;
+        } catch (_) { return null; }
       }
+      return null;
+    }
+    // Успех — вернём message_id, чтобы вызывающий мог его запомнить/удалить.
+    try {
+      const j = await resp.json();
+      return j?.result?.message_id || null;
+    } catch (_) {
+      return null;
     }
   } catch (e) {
     console.error("sendMessage failed:", e);
+    return null;
+  }
+}
+
+// Удаляет сообщение по id. Тихо игнорирует ошибки (сообщение могло быть
+// удалено вручную, или ему >48ч — Telegram такие удалять не даёт).
+async function deleteMessage(chatId, messageId, env) {
+  if (!chatId || !messageId) return;
+  try {
+    await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/deleteMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, message_id: messageId }),
+    });
+  } catch (e) {
+    // не критично — просто лог
+    console.error("deleteMessage failed:", e);
   }
 }
 
