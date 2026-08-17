@@ -762,23 +762,33 @@ def update_sitemap(
     new_url = canonical_url_for_slug(lang_cfg, slug)
 
     if translation_of:
-        # The paired language for hreflang: zh and pt both pair with en;
-        # en pairs with pt by default. translation_of points at the en original.
-        hl = lang_cfg["html_lang"]
-        other_lang = "ru"  # KOZYR одноязычный; пара появится при добавлении uk
-        other_cfg = get_cfg(other_lang)
-        paired_url = canonical_url_for_slug(other_cfg, translation_of)
+        # translation_of may be a dict {lang: slug} (multilang pairing, current)
+        # or a bare slug string (legacy). Resolve the paired language + slug either
+        # way — the old code hardcoded "ru" and passed the dict straight into the
+        # URL, producing a literal "{'uk': '...'}" in the sitemap.
+        if isinstance(translation_of, dict):
+            other_lang, other_slug = next(iter(translation_of.items()))
+        else:
+            other_lang, other_slug = "ru", translation_of
+        try:
+            other_cfg = get_cfg(other_lang)
+            paired_url = canonical_url_for_slug(other_cfg, other_slug)
+        except (ValueError, KeyError):
+            other_cfg = None
+            paired_url = None
     else:
         paired_url = None
         other_cfg = None
 
-    # Build hreflang annotations for our own <url> block (only if paired)
+    # Build hreflang annotations for our own <url> block (only if paired).
+    # x-default points at the Russian (primary) version consistently on both sides.
     self_hreflang_lines = ""
     if paired_url and other_cfg:
+        x_default_url = new_url if lang_cfg["html_lang"] == "ru" else paired_url
         self_hreflang_lines = (
-            f'    <xhtml:link rel="alternate" hreflang="{lang_cfg["hreflang_self"]}"        href="{new_url}"/>\n'
-            f'    <xhtml:link rel="alternate" hreflang="{other_cfg["hreflang_self"]}"     href="{paired_url}"/>\n'
-            f'    <xhtml:link rel="alternate" hreflang="x-default" href="{(new_url if lang_cfg["html_lang"] != "pt-BR" else paired_url)}"/>\n'
+            f'    <xhtml:link rel="alternate" hreflang="{lang_cfg["hreflang_self"]}" href="{new_url}"/>\n'
+            f'    <xhtml:link rel="alternate" hreflang="{other_cfg["hreflang_self"]}" href="{paired_url}"/>\n'
+            f'    <xhtml:link rel="alternate" hreflang="x-default" href="{x_default_url}"/>\n'
         )
 
     # If our URL is already in the sitemap, just bump its lastmod.
@@ -1425,14 +1435,24 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         published_hero = target_dir / pending_hero.name
         shutil.copy2(pending_hero, published_hero)
         # og:image / twitter:image must be a JPEG (social crawlers don't render WebP).
-        # image_gen.py writes hero.jpg next to hero.webp; copy and point OG at it.
-        # Fall back to the hero's own name if no JPEG is present (e.g. legacy pending).
+        # Prefer a hero.jpg written by image_gen; if it's absent (pre-seeded or
+        # legacy hero, hero produced by another path), derive one from the hero
+        # itself at publish time so OG ALWAYS points at a JPEG.
+        published_jpg = target_dir / "hero.jpg"
         pending_hero_jpg = pending_dir / "hero.jpg"
+        og_image_name = pending_hero.name  # fallback (only if conversion fails)
         if pending_hero_jpg.exists():
-            shutil.copy2(pending_hero_jpg, target_dir / "hero.jpg")
+            shutil.copy2(pending_hero_jpg, published_jpg)
             og_image_name = "hero.jpg"
         else:
-            og_image_name = pending_hero.name
+            try:
+                from PIL import Image
+                with Image.open(published_hero) as _im:
+                    _im.convert("RGB").save(published_jpg, format="JPEG", quality=86, optimize=True)
+                og_image_name = "hero.jpg"
+                print(f"🖼️  Derived hero.jpg from {published_hero.name} for OG/social")
+            except Exception as e:
+                print(f"⚠️  Could not derive hero.jpg ({type(e).__name__}: {e}); OG uses {pending_hero.name}")
         og_image_url = f"{canonical_url}{og_image_name}"
         og_image_width = "1536"
         og_image_height = "1024"

@@ -360,29 +360,29 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
   </url>
 
-  <url>
+    <url>
     <loc>https://kozyr.club/ua/blog/klubok-reykbek-clubgg-ukraina/</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="ru-UA"        href="https://kozyr.club/ua/blog/klubok-reykbek-clubgg-ukraina/"/>
-    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/{'uk': 'klubok-reykbek-clubgg-ukraina'}/"/>
+    <xhtml:link rel="alternate" hreflang="ru-UA" href="https://kozyr.club/ua/blog/klubok-reykbek-clubgg-ukraina/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA" href="https://kozyr.club/ua/uk/blog/klubok-reykbek-clubgg-ukraina/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/ua/blog/klubok-reykbek-clubgg-ukraina/"/>
     <image:image>
-      <image:loc>https://kozyr.club/ua/blog/klubok-reykbek-clubgg-ukraina/hero.webp</image:loc>
+      <image:loc>https://kozyr.club/ua/blog/klubok-reykbek-clubgg-ukraina/hero.jpg</image:loc>
       <image:title>KlubOk — огляд приватного покерного клубу з рейкбеком до 40%</image:title>
     </image:image>
   </url>
-  <url>
+    <url>
     <loc>https://kozyr.club/ua/uk/blog/klubok-reykbek-clubgg-ukraina/</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="uk-UA"        href="https://kozyr.club/ua/uk/blog/klubok-reykbek-clubgg-ukraina/"/>
-    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/{'ru': 'klubok-reykbek-clubgg-ukraina'}/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/ua/uk/blog/klubok-reykbek-clubgg-ukraina/"/>
+    <xhtml:link rel="alternate" hreflang="ru-UA" href="https://kozyr.club/ua/blog/klubok-reykbek-clubgg-ukraina/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA" href="https://kozyr.club/ua/uk/blog/klubok-reykbek-clubgg-ukraina/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/ua/blog/klubok-reykbek-clubgg-ukraina/"/>
     <image:image>
-      <image:loc>https://kozyr.club/ua/uk/blog/klubok-reykbek-clubgg-ukraina/hero.webp</image:loc>
+      <image:loc>https://kozyr.club/ua/uk/blog/klubok-reykbek-clubgg-ukraina/hero.jpg</image:loc>
       <image:title>KlubOk — огляд приватного покерного клубу з рейкбеком до 40%</image:title>
     </image:image>
   </url>
