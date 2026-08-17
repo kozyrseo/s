@@ -110,8 +110,22 @@ def build_user_message(topic: dict, lang_cfg) -> str:
         taxonomy_path=lang_cfg["taxonomy"],
         url_prefix=lang_cfg["url_prefix"],
     )
+    # Жёсткая языковая директива. Тема МОЖЕТ прийти на другом языке (напр.
+    # украинская тема при генерации русской версии) — тогда данные темы ниже
+    # надо мысленно перевести на язык статьи и писать СТРОГО на нём. Без этого
+    # модель уходит в язык темы и русская версия выходит украинской (баг).
+    lang_native = lang_cfg.get("lang_name_native", lang_cfg.get("html_lang", "русском"))
+    html_lang = lang_cfg.get("html_lang", "ru")
+    lang_directive = (
+        f"\n🌐 ЯЗЫК СТАТЬИ — СТРОГО {lang_native.upper()} (html lang=\"{html_lang}\").\n"
+        f"Вся статья, заголовок, мета, ВЕСЬ текст — только на {lang_native} языке.\n"
+        f"Данные темы ниже могут быть на ДРУГОМ языке — если так, переведи их\n"
+        f"на {lang_native} и пиши на {lang_native}. Ключевые слова тоже подай\n"
+        f"на {lang_native} (сохраняя смысл и гео-привязку). НИ ОДНОГО слова на\n"
+        f"другом языке. Это критично: язык статьи должен совпадать с lang=\"{html_lang}\".\n"
+    )
     return f"""Generate an article based on this topic.
-
+{lang_directive}
 **Topic:** {topic.get('topic', '')}
 **Primary keyword:** {topic.get('primary_keyword', '')}
 **Secondary keywords:** {topic.get('secondary_keywords', '')}
@@ -512,7 +526,7 @@ def build_telegram_preview(article: dict, topic: dict, slug: str, lang_cfg, lang
     preview_md_link = f"https://github.com/{GITHUB_REPO}/blob/{GITHUB_BRANCH}/{pending_name}/{slug}/preview.md"
 
     # Language flag in the preview header — quick visual signal in TG queue
-    lang_flag = {"ru": "🇺🇦"}.get(lang, "🇺🇦")
+    lang_flag = {"ru": "🇷🇺", "uk": "🇺🇦", "pl": "🇵🇱", "kk": "🇰🇿"}.get(lang, "🏳️")
 
     quality_prefix = ""
     if quality_block:
