@@ -144,9 +144,91 @@
     });
   }
   window.renderPartnerCards = render;
+
+  // ── Боковой виджет партнёра (sticky в статье) ──────────────────────────
+  // Определяет партнёра статьи и рендерит его карточку в правой колонке.
+  // Партнёр берётся (в порядке приоритета):
+  //   1. из data-partner="klubok" на контейнере (если задан явно), ИЛИ
+  //   2. из <meta name="kozyr:partner" content="klubok">, ИЛИ
+  //   3. по совпадению <link rel="canonical"> ... но проще — по target-URL,
+  //      который генератор кладёт в meta. Мы сопоставляем partner.url со
+  //      значением из meta name="kozyr:target".
+  function findPartnerForPage(box) {
+    // 1. Явный id на самом контейнере
+    var explicit = (box.getAttribute("data-partner") || "").trim();
+    if (explicit) {
+      var byId = PARTNERS.filter(function (p) { return p.id === explicit; })[0];
+      if (byId) return byId;
+    }
+    // 2. meta name="kozyr:partner"
+    var mp = document.querySelector('meta[name="kozyr:partner"]');
+    if (mp && mp.content) {
+      var byMeta = PARTNERS.filter(function (p) { return p.id === mp.content.trim(); })[0];
+      if (byMeta) return byMeta;
+    }
+    // 3. meta name="kozyr:target" (= target_page статьи), сопоставляем с p.url
+    var mt = document.querySelector('meta[name="kozyr:target"]');
+    if (mt && mt.content) {
+      var t = mt.content.trim().replace(/\/+$/, "");
+      var byUrl = PARTNERS.filter(function (p) {
+        return String(p.url).replace(/\/+$/, "") === t;
+      })[0];
+      if (byUrl) return byUrl;
+    }
+    return null;
+  }
+
+  // Компактная карточка для боковой колонки (чуть плотнее основной).
+  function sideCardHTML(p) {
+    var c = p.card || {};
+    var rows = (c.rows || []).map(function (r) {
+      var label = r[0];
+      var val = r[1] === "rake" ? rakeText(p) : r[1];
+      var hi = r[1] === "rake" ? (p.rake !== null) : !!r[2];
+      if (val === undefined || val === null || val === "") return "";
+      return '<div class="pcard__row"><span class="pcard__k">' + esc(label) +
+        '</span><span class="pcard__v' + (hi ? " hi" : "") + '">' + esc(val) + "</span></div>";
+    }).join("");
+    var logo;
+    if (c.logoImg) {
+      logo = '<div class="pcard__logo pcard__logo--img"><img src="' + esc(c.logoImg) +
+        '" alt="' + esc(p.name) + '" width="40" height="40" loading="lazy"></div>';
+    } else {
+      logo = '<div class="pcard__logo" style="background:linear-gradient(135deg,' +
+        esc(p.logo.from) + "," + esc(p.logo.to) + ')">' + esc(c.logoText || p.logo.text) + "</div>";
+    }
+    return '<a href="' + esc(p.url) + '" class="pcard side-pcard ' +
+      (c.dark ? "pcard--club" : "pcard--room") + '">' +
+      '<div class="pcard__top">' + logo +
+      '<div><div class="pcard__name">' + esc(p.name) + "</div>" +
+      '<div class="pcard__badge">' + esc(c.kind || "") + "</div></div></div>" +
+      '<div class="pcard__rows">' + rows + "</div>" +
+      '<span class="pcard__cta">Перейти на ' + esc(p.name) + " →</span></a>";
+  }
+
+  function renderSideWidget() {
+    var boxes = document.querySelectorAll("[data-partner-widget]");
+    if (!boxes.length) return;
+    boxes.forEach(function (box) {
+      var p = findPartnerForPage(box);
+      if (!p || !p.card) {
+        // Партнёра нет (обзорная статья / нет совпадения) — прячем виджет.
+        box.style.display = "none";
+        return;
+      }
+      box.innerHTML =
+        '<div class="side-widget__label">Площадка из обзора</div>' +
+        sideCardHTML(p);
+    });
+  }
+  window.renderPartnerSideWidget = renderSideWidget;
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", render);
+    document.addEventListener("DOMContentLoaded", function () {
+      render();
+      renderSideWidget();
+    });
   } else {
     render();
+    renderSideWidget();
   }
 })();
