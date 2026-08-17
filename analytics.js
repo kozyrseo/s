@@ -17,7 +17,7 @@
 (function () {
   'use strict';
 
-  var GA_MEASUREMENT_ID = 'G-XXXXXXXXXX'; // ← ЗАМЕНИ на свой ID
+  var GA_MEASUREMENT_ID = 'G-E62CD39XNY'; // KOZYR — GA4 Measurement ID
 
   // --- gtag shim (определён ВСЕГДА, до всех проверок) ---
   // Стандартный паттерн Google: события пушатся в dataLayer-очередь.
