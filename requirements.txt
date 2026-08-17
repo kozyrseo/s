@@ -13,3 +13,6 @@ markdown>=3.7
 
 # New (for Search Console API in stats.py)
 google-api-python-client>=2.100.0
+
+# GA4 Data API — поведение + конверсии в аналитике (ga4_analytics.py)
+google-analytics-data>=0.18.0

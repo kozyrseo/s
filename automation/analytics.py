@@ -42,7 +42,11 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
-from google.oauth2.service_account import Credentials
+try:
+    from google.oauth2.service_account import Credentials
+    HAS_CREDS = True
+except ImportError:
+    HAS_CREDS = False
 
 try:
     from googleapiclient.discovery import build as gapi_build
@@ -51,6 +55,14 @@ except ImportError:
     HAS_GSC = False
 
 from lang_config import get_cfg, SITE_URL
+
+# GA4-модуль (поведение + конверсии). Опциональный — если недоступен,
+# отчёт всё равно строится на данных GSC (graceful degradation).
+try:
+    import ga4_analytics
+    HAS_GA4_MODULE = True
+except ImportError:
+    HAS_GA4_MODULE = False
 
 
 # ==== Конфигурация ====
@@ -86,10 +98,13 @@ def get_gsc_service():
     return gapi_build("searchconsole", "v1", credentials=credentials)
 
 
-def fetch_page_stats(service, site_url: str, page_url: str) -> dict:
-    """Достаёт агрегированные показатели по конкретному URL за LOOKBACK_DAYS."""
-    end_date = datetime.now(timezone.utc).date()
-    start_date = end_date - timedelta(days=LOOKBACK_DAYS)
+def fetch_page_stats(service, site_url: str, page_url: str,
+                     start_date=None, end_date=None) -> dict:
+    """Достаёт агрегированные показатели по конкретному URL за период."""
+    if end_date is None:
+        end_date = datetime.now(timezone.utc).date()
+    if start_date is None:
+        start_date = end_date - timedelta(days=LOOKBACK_DAYS)
 
     body = {
         "startDate": start_date.isoformat(),
@@ -124,10 +139,13 @@ def fetch_page_stats(service, site_url: str, page_url: str) -> dict:
 
 
 def fetch_top_queries_for_page(service, site_url: str, page_url: str,
-                                 limit: int = 5) -> list[dict]:
+                                 limit: int = 5,
+                                 start_date=None, end_date=None) -> list[dict]:
     """Достаёт топ-N запросов, по которым эта страница показывается."""
-    end_date = datetime.now(timezone.utc).date()
-    start_date = end_date - timedelta(days=LOOKBACK_DAYS)
+    if end_date is None:
+        end_date = datetime.now(timezone.utc).date()
+    if start_date is None:
+        start_date = end_date - timedelta(days=LOOKBACK_DAYS)
 
     body = {
         "startDate": start_date.isoformat(),
@@ -213,7 +231,52 @@ def parse_published_date(article_entry: dict) -> datetime | None:
 
 # ==== Основной сбор ====
 
-def collect_analytics(lang: str = "ru") -> dict:
+def resolve_period(days=None, date_from=None, date_to=None, period=None):
+    """
+    Определяет период отчёта из разных способов задания. Приоритет:
+      1. date_from + date_to  — точный диапазон (YYYY-MM-DD)
+      2. period               — пресет: 'week'/'month'/'quarter'/'year'
+      3. days                 — последние N дней
+      4. дефолт LOOKBACK_DAYS
+    Возвращает (start_date, end_date, label, n_days).
+    """
+    today = datetime.now(timezone.utc).date()
+
+    # 1. Точный диапазон
+    if date_from and date_to:
+        try:
+            start = datetime.strptime(date_from, "%Y-%m-%d").date()
+            end = datetime.strptime(date_to, "%Y-%m-%d").date()
+            if start > end:
+                start, end = end, start
+            n = (end - start).days
+            label = f"{start.isoformat()} — {end.isoformat()}"
+            return start, end, label, n
+        except ValueError:
+            print(f"⚠️  Неверный формат дат ({date_from}..{date_to}), "
+                  f"нужен YYYY-MM-DD. Использую последние {LOOKBACK_DAYS} дней.")
+
+    # 2. Пресеты
+    presets = {"week": 7, "month": 30, "quarter": 90, "year": 365}
+    if period and period in presets:
+        n = presets[period]
+        start = today - timedelta(days=n)
+        ru = {"week": "последняя неделя", "month": "последний месяц",
+              "quarter": "последний квартал", "year": "последний год"}
+        return start, today, ru[period], n
+
+    # 3. N дней
+    if days and days > 0:
+        start = today - timedelta(days=days)
+        return start, today, f"последние {days} дней", days
+
+    # 4. Дефолт
+    start = today - timedelta(days=LOOKBACK_DAYS)
+    return start, today, f"последние {LOOKBACK_DAYS} дней", LOOKBACK_DAYS
+
+
+def collect_analytics(lang: str = "ru", start_date=None, end_date=None,
+                      period_label: str | None = None) -> dict:
     """
     Собирает per-article аналитику для всех статей в taxonomy.
     Возвращает большой словарь с распределением по категориям + сырыми данными.
@@ -239,18 +302,32 @@ def collect_analytics(lang: str = "ru") -> dict:
         print("ℹ️  В taxonomy пусто, нечего анализировать")
         return {"lang": lang, "articles": [], "by_category": {}}
 
-    print(f"📊 Собираю аналитику по {len(articles)} статьям (lookback {LOOKBACK_DAYS} дней)")
+    # Период: если не передан — дефолтные последние LOOKBACK_DAYS дней.
+    today = datetime.now(timezone.utc).date()
+    if end_date is None:
+        end_date = today
+    if start_date is None:
+        start_date = end_date - timedelta(days=LOOKBACK_DAYS)
+    n_days = (end_date - start_date).days or LOOKBACK_DAYS
+    if not period_label:
+        period_label = f"{start_date.isoformat()} — {end_date.isoformat()}"
+
+    print(f"📊 Собираю аналитику по {len(articles)} статьям "
+          f"(период: {period_label}, {n_days} дней)")
 
     results = []
     for slug, entry in articles.items():
         page_url = f"{SITE_URL}{cfg['url_prefix']}/{slug}/"
-        stats = fetch_page_stats(service, site_url, page_url)
+        stats = fetch_page_stats(service, site_url, page_url,
+                                 start_date=start_date, end_date=end_date)
         if stats.get("error"):
             print(f"  ⚠️  {slug}: {stats['error']}")
             continue
         published_at = parse_published_date(entry)
         category = classify_article(stats, published_at)
-        top_queries = fetch_top_queries_for_page(service, site_url, page_url, limit=5)
+        top_queries = fetch_top_queries_for_page(
+            service, site_url, page_url, limit=5,
+            start_date=start_date, end_date=end_date)
 
         results.append({
             "slug": slug,
@@ -273,7 +350,35 @@ def collect_analytics(lang: str = "ru") -> dict:
     # «needs_boost» — по impressions убыванию (потенциал больше там, где больше показов)
     by_category["needs_boost"].sort(key=lambda x: -x["stats"].get("impressions", 0))
 
+    # ── Обогащаем данными GA4 (поведение + конверсии) ────────────────────────
+    ga4: dict = {"available": False}
+    if HAS_GA4_MODULE:
+        try:
+            ga4 = ga4_analytics.collect_ga4(days=n_days)
+        except Exception as e:
+            print(f"⚠️  GA4 сбор не удался (отчёт продолжит на GSC): {e}")
+            ga4 = {"available": False}
+
+    if ga4.get("available"):
+        behavior = ga4.get("behavior_by_page", {})
+        convs = ga4.get("conversions_by_page", {})
+        # ключи GA4 — pagePath. Наши статьи — url_prefix/slug/.
+        for r in results:
+            path = f"{cfg['url_prefix']}/{r['slug']}/"
+            # пробуем и с завершающим слешем, и без
+            b = behavior.get(path) or behavior.get(path.rstrip("/")) or {}
+            c = convs.get(path) or convs.get(path.rstrip("/")) or {}
+            r["behavior"] = b
+            r["conversions"] = c
+            # производная: конверсия страницы = клики-к-партнёру / просмотры
+            views = b.get("views", 0)
+            clicks = c.get("total", 0)
+            r["conv_rate"] = round(clicks / views, 4) if views else 0.0
+
     return {"lang": lang, "articles": results, "by_category": by_category,
+            "ga4": ga4,
+            "period_label": period_label,
+            "period_days": n_days,
             "collected_at": datetime.now(timezone.utc).isoformat()}
 
 
@@ -282,7 +387,7 @@ def collect_analytics(lang: str = "ru") -> dict:
 def format_markdown_report(analytics: dict) -> str:
     lines = ["# Аналитика KOZYR", ""]
     lines.append(f"_Собрано: {analytics.get('collected_at', '?')}_")
-    lines.append(f"_Период: последние {LOOKBACK_DAYS} дней_")
+    lines.append(f"_Период: {analytics.get('period_label', f'последние {LOOKBACK_DAYS} дней')}_")
     lines.append("")
 
     cats = analytics.get("by_category", {})
@@ -331,46 +436,229 @@ def format_markdown_report(analytics: dict) -> str:
                 )
             lines.append("")
 
+    # ── Конверсия и поведение (GA4) ──────────────────────────────────────
+    ga4 = analytics.get("ga4", {})
+    articles = analytics.get("articles", [])
+    if ga4.get("available"):
+        t = ga4.get("totals", {})
+        total_clicks = sum(a.get("conversions", {}).get("total", 0) for a in articles)
+        total_views = t.get("views", 0)
+        site_cr = (total_clicks / total_views) if total_views else 0.0
+        lines.append("## 📈 Конверсия и поведение (GA4)")
+        lines.append("")
+        lines.append(f"- Пользователи за период: **{t.get('users', 0)}**")
+        lines.append(f"- Просмотры: **{total_views}**")
+        lines.append(f"- Переходы к партнёрам: **{total_clicks}**")
+        lines.append(f"- Конверсия сайта: **{site_cr * 100:.2f}%**")
+        lines.append("")
+
+        # таблица по статьям: поведение + конверсия
+        with_data = [a for a in articles if a.get("behavior") or a.get("conversions")]
+        if with_data:
+            with_data.sort(key=lambda a: -a.get("conversions", {}).get("total", 0))
+            lines.append("### По статьям: просмотры → вовлечённость → переходы")
+            lines.append("")
+            lines.append("| Статья | Просм. | Ср. время | Отказы | Переходы | Конв. |")
+            lines.append("|---|---:|---:|---:|---:|---:|")
+            for a in with_data:
+                b = a.get("behavior", {})
+                c = a.get("conversions", {})
+                lines.append(
+                    f"| {a['title'][:50]} "
+                    f"| {b.get('views', 0)} "
+                    f"| {_fmt_time(b.get('avg_engagement_s', 0))} "
+                    f"| {b.get('bounce_rate', 0) * 100:.0f}% "
+                    f"| {c.get('total', 0)} "
+                    f"| {a.get('conv_rate', 0) * 100:.1f}% |"
+                )
+            lines.append("")
+
+        # разбивка кликов по блокам (что конвертит)
+        source_totals: dict[str, int] = {}
+        for a in articles:
+            for src, n in a.get("conversions", {}).get("by_source", {}).items():
+                source_totals[src] = source_totals.get(src, 0) + n
+        if source_totals:
+            lines.append("### 🎛 Что конвертит (клики по блокам)")
+            lines.append("")
+            lines.append("| Блок | Клики |")
+            lines.append("|---|---:|")
+            for src, n in sorted(source_totals.items(), key=lambda x: -x[1]):
+                label = SOURCE_LABELS.get(src, src)
+                lines.append(f"| {label} | {n} |")
+            lines.append("")
+
+        # источники трафика
+        src = ga4.get("traffic_sources", {})
+        if src:
+            lines.append("### 🚦 Источники трафика")
+            lines.append("")
+            for ch, n in sorted(src.items(), key=lambda x: -x[1]):
+                lines.append(f"- {ch}: **{n}**")
+            lines.append("")
+    else:
+        lines.append("## 📈 Конверсия и поведение")
+        lines.append("")
+        lines.append(
+            "_GA4 не подключён. Задай `GA4_PROPERTY_ID` и дай service "
+            "account доступ Viewer в GA4 — появятся переходы к партнёрам, "
+            "разбивка по блокам (виджет/панель/CTA), поведение и источники._")
+        lines.append("")
+
     return "\n".join(lines)
 
 
+def _fmt_time(seconds: float) -> str:
+    """Секунды → человекочитаемо (1м 23с)."""
+    s = int(round(seconds))
+    if s < 60:
+        return f"{s}с"
+    return f"{s // 60}м {s % 60:02d}с"
+
+
+def _pct(x: float) -> str:
+    return f"{round(x * 100, 1)}%"
+
+
+# Человекочитаемые названия источников кликов (link_source из analytics.js)
+SOURCE_LABELS = {
+    "side_widget": "виджет сбоку",
+    "mobile_bar": "моб. панель",
+    "final_cta": "финальный CTA",
+    "partner_card": "карточка",
+    "link": "ссылка в тексте",
+}
+
+
 def format_telegram_report(analytics: dict) -> str:
-    """Компактная сводка для TG (лимит 4096, режим Markdown v1)."""
+    """
+    Мощная сводка для Telegram (лимит 4096, Markdown v1).
+    Секции:
+      1. Итоги за период (трафик + конверсии) — если есть GA4
+      2. SEO-классы (winners/needs_boost/flat/new)
+      3. 🔥 Конверсия: топ статей по переходам к партнёрам
+      4. Что конвертит: разбивка кликов по блокам (виджет/панель/CTA)
+      5. ⚠️ Читают, но не кликают — где чинить виджет/CTA
+      6. Источники трафика
+      7. Топ для SEO-дожатия
+    Если GA4 недоступен — секции 1,3,4,5,6 тихо пропускаются, остаётся SEO.
+    """
     cats = analytics.get("by_category", {})
-    lines = [
-        "📊 *Аналитика KOZYR*",
-        f"_последние {LOOKBACK_DAYS} дней_",
-        "",
-        f"🟢 Winners: *{len(cats.get('winners', []))}*",
-        f"🟡 Needs boost: *{len(cats.get('needs_boost', []))}*",
-        f"🔴 Flat: *{len(cats.get('flat', []))}*",
+    ga4 = analytics.get("ga4", {})
+    ga4_on = ga4.get("available", False)
+    articles = analytics.get("articles", [])
+
+    L: list[str] = ["📊 *Аналитика KOZYR*",
+                    f"_{analytics.get('period_label', f'последние {LOOKBACK_DAYS} дней')}_", ""]
+
+    # ── 1. ИТОГИ ЗА ПЕРИОД ──────────────────────────────────────────────
+    if ga4_on:
+        t = ga4.get("totals", {})
+        # суммарные клики к партнёрам по всем статьям
+        total_clicks = sum(a.get("conversions", {}).get("total", 0) for a in articles)
+        total_views = t.get("views", 0)
+        site_cr = (total_clicks / total_views) if total_views else 0.0
+        L += [
+            "*⚡ Итоги за период*",
+            f"👥 Пользователи: *{t.get('users', 0)}*",
+            f"👁 Просмотры: *{total_views}*",
+            f"🎯 Переходы к партнёрам: *{total_clicks}*",
+            f"📈 Конверсия сайта: *{_pct(site_cr)}*",
+            "",
+        ]
+    else:
+        L += [
+            "_GA4 не подключён — показаны только SEO-данные из Search "
+            "Console. Подключи GA4 (GA4\\_PROPERTY\\_ID) для конверсий и "
+            "поведения._",
+            "",
+        ]
+
+    # ── 2. SEO-КЛАССЫ ───────────────────────────────────────────────────
+    L += [
+        "*🔍 SEO-статус статей*",
+        f"🟢 Winners: *{len(cats.get('winners', []))}*  "
+        f"🟡 Boost: *{len(cats.get('needs_boost', []))}*  "
+        f"🔴 Flat: *{len(cats.get('flat', []))}*  "
         f"⚫ New: *{len(cats.get('new', []))}*",
         "",
     ]
 
-    if cats.get("winners"):
-        lines.append("*🟢 Топ-5 победителей:*")
-        for it in cats["winners"][:5]:
-            s = it["stats"]
-            lines.append(
-                f"• {escape_md(it['title'][:55])} — {s.get('clicks', 0)}кл · "
-                f"поз. {s.get('position', '—')}"
-            )
-        lines.append("")
+    # ── 3. КОНВЕРСИЯ: топ статей по переходам к партнёрам ────────────────
+    if ga4_on:
+        by_conv = sorted(
+            [a for a in articles if a.get("conversions", {}).get("total", 0) > 0],
+            key=lambda a: -a["conversions"]["total"])
+        if by_conv:
+            L.append("*🔥 Топ по переходам к партнёрам*")
+            for a in by_conv[:5]:
+                c = a["conversions"]["total"]
+                cr = a.get("conv_rate", 0)
+                L.append(
+                    f"• {escape_md(a['title'][:48])} — *{c}* переходов "
+                    f"({_pct(cr)})")
+            L.append("")
 
+    # ── 4. ЧТО КОНВЕРТИТ: разбивка по блокам ────────────────────────────
+    if ga4_on:
+        source_totals: dict[str, int] = {}
+        for a in articles:
+            for src, n in a.get("conversions", {}).get("by_source", {}).items():
+                source_totals[src] = source_totals.get(src, 0) + n
+        if source_totals:
+            L.append("*🎛 Что конвертит (клики по блокам)*")
+            for src, n in sorted(source_totals.items(), key=lambda x: -x[1]):
+                label = SOURCE_LABELS.get(src, src)
+                L.append(f"• {label}: *{n}*")
+            L.append("")
+
+    # ── 5. ЧИТАЮТ, НО НЕ КЛИКАЮТ (проблемные) ───────────────────────────
+    if ga4_on:
+        # много просмотров, но конверсия низкая → чинить виджет/CTA
+        problem = []
+        for a in articles:
+            b = a.get("behavior", {})
+            views = b.get("views", 0)
+            cr = a.get("conv_rate", 0)
+            # порог: заметный трафик, но конверсия ниже 1%
+            if views >= 30 and cr < 0.01:
+                problem.append((a, views, cr))
+        problem.sort(key=lambda x: -x[1])
+        if problem:
+            L.append("*⚠️ Читают, но не кликают* (чинить виджет/CTA)")
+            for a, views, cr in problem[:5]:
+                L.append(
+                    f"• {escape_md(a['title'][:48])} — {views} просм., "
+                    f"конв. {_pct(cr)}")
+            L.append("")
+
+    # ── 6. ИСТОЧНИКИ ТРАФИКА ────────────────────────────────────────────
+    if ga4_on:
+        src = ga4.get("traffic_sources", {})
+        if src:
+            top = sorted(src.items(), key=lambda x: -x[1])[:5]
+            parts = [f"{k}: {v}" for k, v in top]
+            L.append("*🚦 Источники трафика:* " + escape_md(", ".join(parts)))
+            L.append("")
+
+    # ── 7. SEO-ДОЖАТИЕ ──────────────────────────────────────────────────
     if cats.get("needs_boost"):
-        lines.append("*🟡 Топ-5 для дожатия (высокий потенциал):*")
+        L.append("*🟡 Дожать в топ (высокий потенциал):*")
         for it in cats["needs_boost"][:5]:
             s = it["stats"]
-            lines.append(
-                f"• {escape_md(it['title'][:55])} — {s.get('impressions', 0)} показов · "
-                f"поз. {s.get('position', '—')}"
-            )
-        lines.append("")
+            L.append(
+                f"• {escape_md(it['title'][:48])} — {s.get('impressions', 0)} "
+                f"показов · поз. {s.get('position', '—')}")
+        L.append("")
 
-    lines.append("Полный отчёт: `analytics/report.md` в репозитории.")
-    lines.append("Команды: /analytics · /suggested · /queue · /help")
-    return "\n".join(lines)
+    L.append("Полный отчёт: `analytics/report.md`")
+    L.append("Команды: /analytics · /suggested · /queue · /help")
+
+    text = "\n".join(L)
+    # страховка от лимита Telegram (4096)
+    if len(text) > 4000:
+        text = text[:3980] + "\n…(обрезано)"
+    return text
 
 
 def escape_md(text: str) -> str:
@@ -443,10 +731,28 @@ def main() -> None:
                         help="Куда сохранить сырые данные (json)")
     parser.add_argument("--update-taxonomy", action="store_true",
                         help="Записать performance-метки в taxonomy.json")
+    # ── Настройка периода отчёта ──
+    parser.add_argument("--days", type=int, default=None,
+                        help="Последние N дней (напр. --days 30). "
+                             "По умолчанию 60.")
+    parser.add_argument("--period", choices=["week", "month", "quarter", "year"],
+                        default=None,
+                        help="Пресет периода: week/month/quarter/year")
+    parser.add_argument("--from", dest="date_from", default=None,
+                        help="Начало диапазона YYYY-MM-DD (с --to)")
+    parser.add_argument("--to", dest="date_to", default=None,
+                        help="Конец диапазона YYYY-MM-DD (с --from)")
     args = parser.parse_args()
 
+    # Определяем период из аргументов
+    start_date, end_date, period_label, _n = resolve_period(
+        days=args.days, date_from=args.date_from,
+        date_to=args.date_to, period=args.period)
+
     try:
-        analytics = collect_analytics(lang=args.lang)
+        analytics = collect_analytics(
+            lang=args.lang, start_date=start_date, end_date=end_date,
+            period_label=period_label)
     except Exception as e:
         print(f"❌ Сбор аналитики упал: {type(e).__name__}: {e}", file=sys.stderr)
         sys.exit(1)
