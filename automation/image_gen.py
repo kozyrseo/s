@@ -47,6 +47,10 @@ IMAGE_SIZE = "1536x1024"
 IMAGE_QUALITY = "high"
 WEBP_QUALITY = 82
 HERO_FILENAME = "hero.webp"
+# JPEG copy of the hero, used for og:image / twitter:image. Social crawlers
+# (Facebook, X/Twitter, LinkedIn) do not render WebP, so previews need a JPEG.
+HERO_OG_FILENAME = "hero.jpg"
+JPEG_QUALITY = 86
 
 # ==== Canvas ====
 CANVAS_W, CANVAS_H = 1536, 1024
@@ -228,6 +232,15 @@ def generate_hero_image(image_prompt: str, target_dir: Path) -> Path | None:
             target_dir.mkdir(parents=True, exist_ok=True)
             out_path = target_dir / HERO_FILENAME
             final.save(out_path, format="WEBP", quality=WEBP_QUALITY, method=6)
+            # Also write a JPEG copy for og:image / twitter:image (social crawlers
+            # don't render WebP). The in-page <img> keeps using the smaller WebP.
+            try:
+                final.convert("RGB").save(
+                    target_dir / HERO_OG_FILENAME,
+                    format="JPEG", quality=JPEG_QUALITY, optimize=True,
+                )
+            except Exception as e:
+                print(f"⚠️  hero.jpg (OG) export failed: {type(e).__name__}: {e}")
     except Exception as e:
         print(f"⚠️  Watermark or WebP conversion failed: {type(e).__name__}: {e}")
         # Fallback: save raw PNG (no watermark) so the article still gets a hero

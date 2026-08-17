@@ -132,6 +132,7 @@ def copy_hero_to_translations(source_dir: Path, translations: list[dict]) -> Non
     файла, чтобы папка _pending_uk/{slug}/ содержала всё для рендера.
     """
     from generate import HERO_FILENAME
+    from image_gen import HERO_OG_FILENAME
 
     hero_src = source_dir / HERO_FILENAME
     if not hero_src.exists():
@@ -139,12 +140,16 @@ def copy_hero_to_translations(source_dir: Path, translations: list[dict]) -> Non
               f"переводы будут без картинки (нестрашно, publish.py обработает).")
         return
 
+    hero_jpg_src = source_dir / HERO_OG_FILENAME
     for t in translations:
         if t.get("error"):
             continue
         target_dir = t.get("target_dir")
         if target_dir and Path(target_dir).exists():
             shutil.copy2(hero_src, Path(target_dir) / HERO_FILENAME)
+            # copy the JPEG OG-copy too, so og:image works for translations
+            if hero_jpg_src.exists():
+                shutil.copy2(hero_jpg_src, Path(target_dir) / HERO_OG_FILENAME)
             print(f"🖼️  Hero скопирована в {target_dir}")
 
 

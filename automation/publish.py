@@ -737,6 +737,8 @@ def update_sitemap(
     today_iso: str,
     lang_cfg,
     translation_of: str | None = None,
+    image_url: str | None = None,
+    image_title: str | None = None,
 ) -> None:
     """Add a new blog post URL to sitemap.xml.
 
@@ -788,6 +790,16 @@ def update_sitemap(
         )
         content = pattern.sub(rf"\g<1>{today_iso}\g<2>", content)
     else:
+        # Per-page image entry (article hero as JPEG) for the image sitemap.
+        image_block = ""
+        if image_url:
+            _title = escape_html(image_title or "")
+            image_block = (
+                f"    <image:image>\n"
+                f"      <image:loc>{image_url}</image:loc>\n"
+                + (f"      <image:title>{_title}</image:title>\n" if _title else "")
+                + f"    </image:image>\n"
+            )
         new_entry = (
             f"  <url>\n"
             f"    <loc>{new_url}</loc>\n"
@@ -795,6 +807,7 @@ def update_sitemap(
             f"    <changefreq>monthly</changefreq>\n"
             f"    <priority>0.7</priority>\n"
             f"{self_hreflang_lines}"
+            f"{image_block}"
             f"  </url>\n"
             f"</urlset>"
         )
@@ -895,6 +908,21 @@ def update_blog_index(
     if f'href="{new_card_url}"' in content:
         print(f"ℹ️  Blog index already has card for {slug}, skipping")
         return
+
+    # Keep the CollectionPage JSON-LD "hasPart" list in sync with the cards:
+    # add the newest article so structured data doesn't drift behind the page.
+    article_url_full = canonical_url_for_slug(lang_cfg, slug)
+    if '"hasPart"' in content and article_url_full not in content:
+        new_part = (
+            '    {"@type": "BlogPosting", "headline": '
+            + json.dumps(h1_title, ensure_ascii=False)
+            + f', "url": "{article_url_full}", "datePublished": "{date_iso}"}},\n'
+        )
+        content = re.sub(
+            r'"hasPart"\s*:\s*\[\s*\n',
+            lambda m: m.group(0) + new_part,
+            content, count=1,
+        )
 
     # Localized "min read" suffix for the card's date row
     min_read_label = lang_cfg["ui"]["min_read"]
@@ -1396,7 +1424,16 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     if has_hero:
         published_hero = target_dir / pending_hero.name
         shutil.copy2(pending_hero, published_hero)
-        og_image_url = f"{canonical_url}{pending_hero.name}"
+        # og:image / twitter:image must be a JPEG (social crawlers don't render WebP).
+        # image_gen.py writes hero.jpg next to hero.webp; copy and point OG at it.
+        # Fall back to the hero's own name if no JPEG is present (e.g. legacy pending).
+        pending_hero_jpg = pending_dir / "hero.jpg"
+        if pending_hero_jpg.exists():
+            shutil.copy2(pending_hero_jpg, target_dir / "hero.jpg")
+            og_image_name = "hero.jpg"
+        else:
+            og_image_name = pending_hero.name
+        og_image_url = f"{canonical_url}{og_image_name}"
         og_image_width = "1536"
         og_image_height = "1024"
         # Localized alt text
@@ -1622,7 +1659,11 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
 
     # Update sitemap (with hreflang pair if translation_of is set) and blog index.
     # Both write URLs, so they need publish_slug.
-    update_sitemap(publish_slug, today_iso, lang_cfg, translation_of=translation_of)
+    update_sitemap(
+        publish_slug, today_iso, lang_cfg, translation_of=translation_of,
+        image_url=(og_image_url if has_hero else None),
+        image_title=(h1_title if has_hero else None),
+    )
     update_blog_index(publish_slug, h1_title, meta_description, date_published, reading_time, lang_cfg, article_tag, has_hero)
 
     # Refresh Related blocks on this language's format pages

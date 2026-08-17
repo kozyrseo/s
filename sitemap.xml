@@ -43,8 +43,8 @@
     <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/rooms/pokerbet/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
     <image:image>
-      <image:loc>https://kozyr.club/og-image.png</image:loc>
-      <image:title>PokerBet — обзор украинского покер-рума</image:title>
+      <image:loc>https://kozyr.club/og-rooms-pokerbet.jpg</image:loc>
+      <image:title>PokerBet — обзор покер-рума 2026, лимиты и условия</image:title>
     </image:image>
   </url>
   <url>
@@ -56,8 +56,8 @@
     <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/clubs/klubok/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
     <image:image>
-      <image:loc>https://kozyr.club/og-image.png</image:loc>
-      <image:title>KlubOk в ClubGG — обзор клуба</image:title>
+      <image:loc>https://kozyr.club/og-clubs-klubok.jpg</image:loc>
+      <image:title>KlubOk в ClubGG — рейкбек и условия клуба</image:title>
     </image:image>
   </url>
   <url>
@@ -95,8 +95,8 @@
     <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/rooms/pokerbet/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
     <image:image>
-      <image:loc>https://kozyr.club/og-image.png</image:loc>
-      <image:title>PokerBet — огляд українського покер-руму</image:title>
+      <image:loc>https://kozyr.club/og-rooms-pokerbet.jpg</image:loc>
+      <image:title>PokerBet — огляд покер-рума 2026 | Ліміти та умови</image:title>
     </image:image>
   </url>
   <url>
@@ -108,8 +108,8 @@
     <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/clubs/klubok/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
     <image:image>
-      <image:loc>https://kozyr.club/og-image.png</image:loc>
-      <image:title>KlubOk у ClubGG — огляд клубу</image:title>
+      <image:loc>https://kozyr.club/og-clubs-klubok.jpg</image:loc>
+      <image:title>KlubOk в ClubGG — клуб для українських гравців | Рейкбек та умови</image:title>
     </image:image>
   </url>
   <url>
@@ -179,6 +179,10 @@
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/chto-takoe-reykbek-v-pokere/"/>
     <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/blog/chto-takoe-reykbek-v-pokere/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+    <image:image>
+      <image:loc>https://kozyr.club/ua/blog/chto-takoe-reykbek-v-pokere/hero.jpg</image:loc>
+      <image:title>Что такое рейкбек в покере и как на нём не потеряться</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/blog/chto-takoe-reykbek-v-pokere/</loc>
@@ -188,6 +192,10 @@
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/chto-takoe-reykbek-v-pokere/"/>
     <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/blog/chto-takoe-reykbek-v-pokere/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+    <image:image>
+      <image:loc>https://kozyr.club/ua/uk/blog/chto-takoe-reykbek-v-pokere/hero.jpg</image:loc>
+      <image:title>Що таке рейкбек у покері та як на ньому не втратити</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://kozyr.club/ua/blog/kak-rabotayut-privatnye-pokerclubi/</loc>
@@ -197,6 +205,10 @@
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/kak-rabotayut-privatnye-pokerclubi/"/>
     <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/blog/kak-rabotayut-privatnye-pokerclubi/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+    <image:image>
+      <image:loc>https://kozyr.club/ua/blog/kak-rabotayut-privatnye-pokerclubi/hero.jpg</image:loc>
+      <image:title>Как работают приватные покерные клубы в ClubGG</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/blog/kak-rabotayut-privatnye-pokerclubi/</loc>
@@ -206,6 +218,10 @@
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/kak-rabotayut-privatnye-pokerclubi/"/>
     <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/blog/kak-rabotayut-privatnye-pokerclubi/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+    <image:image>
+      <image:loc>https://kozyr.club/ua/uk/blog/kak-rabotayut-privatnye-pokerclubi/hero.jpg</image:loc>
+      <image:title>Як працюють приватні покерні клуби в ClubGG</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://kozyr.club/ua/blog/pokerbet-ili-klubok-sravnenie/</loc>
@@ -215,6 +231,10 @@
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/pokerbet-ili-klubok-sravnenie/"/>
     <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/blog/pokerbet-ili-klubok-sravnenie/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+    <image:image>
+      <image:loc>https://kozyr.club/ua/blog/pokerbet-ili-klubok-sravnenie/hero.jpg</image:loc>
+      <image:title>PokerBet или KlubOk: где играть в Украине</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/blog/pokerbet-ili-klubok-sravnenie/</loc>
@@ -224,6 +244,10 @@
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/pokerbet-ili-klubok-sravnenie/"/>
     <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/blog/pokerbet-ili-klubok-sravnenie/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+    <image:image>
+      <image:loc>https://kozyr.club/ua/uk/blog/pokerbet-ili-klubok-sravnenie/hero.jpg</image:loc>
+      <image:title>PokerBet чи KlubOk: де грати в Україні</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://kozyr.club/ua/blog/chto-takoe-bedbid-dzhekpot-v-pokere/</loc>
@@ -233,6 +257,10 @@
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/chto-takoe-bedbid-dzhekpot-v-pokere/"/>
     <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/blog/chto-takoe-bedbid-dzhekpot-v-pokere/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+    <image:image>
+      <image:loc>https://kozyr.club/ua/blog/chto-takoe-bedbid-dzhekpot-v-pokere/hero.jpg</image:loc>
+      <image:title>Что такое бэдбит джекпот покер и как его выиграть</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/blog/chto-takoe-bedbid-dzhekpot-v-pokere/</loc>
@@ -242,6 +270,10 @@
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/chto-takoe-bedbid-dzhekpot-v-pokere/"/>
     <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/blog/chto-takoe-bedbid-dzhekpot-v-pokere/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+    <image:image>
+      <image:loc>https://kozyr.club/ua/uk/blog/chto-takoe-bedbid-dzhekpot-v-pokere/hero.jpg</image:loc>
+      <image:title>Що таке бедбіт джекпот покер і як його виграти</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/</loc>
@@ -251,6 +283,10 @@
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/"/>
     <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/blog/pokernyy-klub-clubgg-ukraina/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+    <image:image>
+      <image:loc>https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/hero.jpg</image:loc>
+      <image:title>Покерный клуб ClubGG Украина: вступление и рейкбек до 65%</image:title>
+    </image:image>
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/blog/pokernyy-klub-clubgg-ukraina/</loc>
@@ -260,6 +296,10 @@
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/"/>
     <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/blog/pokernyy-klub-clubgg-ukraina/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+    <image:image>
+      <image:loc>https://kozyr.club/ua/uk/blog/pokernyy-klub-clubgg-ukraina/hero.jpg</image:loc>
+      <image:title>Покерний клуб ClubGG Україна: вступ і рейкбек до 65%</image:title>
+    </image:image>
   </url>
 
   <!-- ============================================================
