@@ -406,17 +406,27 @@ a:focus-visible, summary:focus-visible, .nav-burger:focus-visible {
 }
 @media (max-width: 560px) {
   .blog-index-intro { padding: 44px 0 40px; }
+  /* На мобильном — 3 равные колонки в ряд (стабильно на любой ширине),
+     разделители сохраняем, числа и подписи центрируем. Без wrap, чтобы
+     цифры не «плыли» и не переносились. */
   .blog-stats {
-    display: flex; flex-wrap: wrap; gap: 12px 20px;
-    border-radius: 16px; padding: 16px 18px;
+    display: flex; flex-wrap: nowrap; gap: 0;
+    border-radius: 16px; padding: 14px 8px;
     width: 100%; box-sizing: border-box;
   }
   .blog-stats__item {
-    padding: 0; align-items: flex-start; flex: 0 0 auto; min-width: 68px;
+    flex: 1 1 0; min-width: 0;
+    padding: 4px 6px; align-items: center; text-align: center;
   }
-  .blog-stats__item + .blog-stats__item { border-left: none; }
-  .blog-stats__num { font-size: 30px; }
-  .blog-stats__lbl { text-align: left; }
+  .blog-stats__item + .blog-stats__item {
+    border-left: 1px solid var(--border, #E3E7F1);
+  }
+  .blog-stats__num { font-size: 26px; }
+  .blog-stats__lbl {
+    text-align: center; margin-top: 5px;
+    font-size: 9.5px; letter-spacing: .06em;
+    white-space: nowrap;
+  }
 }
 
 /* ---------- Сетка карточек ---------- */
