@@ -514,21 +514,26 @@ EXISTING_TOPICS (уже есть в очереди или опубликован
     # регуляторику и неверную привязку рейкбека — ДО записи в таблицу.
     valid = []
     filtered_out = []
+    # Единая проверка (та же, что в авто-чистке таблицы): проверяет все поля,
+    # notes-скан negation-aware («не упоминать GGPoker» — ок).
+    try:
+        from partners_config import screen_topic as _screen
+    except Exception:
+        _screen = None
+
     for t in topics:
         if not isinstance(t, dict):
             continue
         if not t.get("topic") or not t.get("primary_keyword"):
             continue
 
-        pk = t.get("primary_keyword", "")
-        # проверяем и primary_keyword, и target_page (чужой бренд может
-        # прятаться в target_page вроде /ua/rooms/ggpoker/)
-        reason = is_foreign_or_regulatory(pk, partners)
-        if not reason:
-            reason = is_foreign_or_regulatory(t.get("target_page", ""), partners)
-        # secondary_keywords тоже прогоняем — но мягче: только чужие бренды
-        if not reason:
-            reason = is_foreign_or_regulatory(t.get("secondary_keywords", ""), partners)
+        reason = None
+        if _screen is not None:
+            reason = _screen(t, partners)
+        else:
+            # фолбэк на старую мягкую проверку, если screen_topic недоступен
+            reason = (is_foreign_or_regulatory(t.get("primary_keyword", ""), partners)
+                      or is_foreign_or_regulatory(t.get("target_page", ""), partners))
 
         if reason:
             filtered_out.append((t.get("topic", "?"), reason))
@@ -747,6 +752,33 @@ def run(lang: str = "ru", skip_gsc: bool = False, skip_web: bool = False,
         print("ℹ️  GSC_SITE_URL не задан — GSC пропускаем")
     else:
         gsc_opportunities = fetch_gsc_opportunities(site_url)
+
+    # 1.5. АВТО-ЧИСТКА: перед поиском новых тем прогоняем существующие
+    # suggested-темы через тот же стоп-фильтр и отклоняем мусор (чужие
+    # бренды / регуляторика / неверный рейкбек). Так таблица чистится сама
+    # при каждом прогоне. Ручные темы (source != keyword_research) не трогаем.
+    # dry_run прогона уважается: если dry_run — только показываем, не меняем.
+    cleanup_summary = {"rejected": [], "checked": 0}
+    try:
+        from bot_v2.suggested_topics import cleanup_suggested
+        cleanup_summary = cleanup_suggested(
+            dry_run=dry_run,             # в dry-run прогоне не трогаем таблицу
+            only_bot_topics=True,        # ручные темы оператора не чистим
+        )
+        n_rej = len(cleanup_summary.get("rejected", []))
+        if n_rej:
+            verb = "нашёл бы (dry-run)" if dry_run else "отклонил"
+            print(f"🧹 Авто-чистка: {verb} {n_rej} мусорных suggested-тем "
+                  f"(проверено {cleanup_summary.get('checked', 0)}, "
+                  f"пропущено ручных {cleanup_summary.get('skipped_manual', 0)})")
+            for item in cleanup_summary["rejected"]:
+                print(f"     ❌ row {item['row']}: {item['topic'][:50]} — {item['reason']}")
+        else:
+            print(f"🧹 Авто-чистка: мусора в suggested не найдено "
+                  f"(проверено {cleanup_summary.get('checked', 0)})")
+    except Exception as e:
+        # Чистка не должна ронять прогон — если что-то не так, просто логируем.
+        print(f"⚠️  Авто-чистка пропущена ({type(e).__name__}: {e})")
 
     # 2. Существующие темы
     sheet = get_sheet()
