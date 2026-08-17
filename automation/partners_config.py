@@ -218,6 +218,91 @@ def is_foreign_or_regulatory(primary_keyword: str, partners: list[dict]) -> str 
     return None
 
 
+# Маркеры отрицания: если чужой бренд идёт ПОСЛЕ такого слова поблизости —
+# это инструкция «НЕ упоминать конкурента», а не витрина конкурента.
+# Напр. notes «НЕ згадувати GGPoker» — это ХОРОШО, отбраковывать не нужно.
+_NEGATION_MARKERS = [
+    "не ", "нэ ", "без ", "уникат", "уникай", "избега", "избегай",
+    "не згад", "не упомин", "не назыв", "не назив", "не рекл",
+    "avoid", "without", "not mention", "don't", "dont", "except",
+    "крім наш", "кроме наш", "тільки наш", "только наш", "лише наш",
+]
+
+
+def _brand_is_negated(text_lower: str, brand_pos: int) -> bool:
+    """
+    Проверяет, стоит ли перед брендом (в окне ~60 символов слева) маркер
+    отрицания. Если да — упоминание бренда «защитное» (не упоминать его),
+    и отбраковывать тему НЕ нужно.
+    """
+    window_start = max(0, brand_pos - 60)
+    left_context = text_lower[window_start:brand_pos]
+    return any(marker in left_context for marker in _NEGATION_MARKERS)
+
+
+def has_foreign_brand_strict(text: str) -> str | None:
+    """
+    СТРОГАЯ проверка на чужой бренд — для свободного текста (notes, topic,
+    secondary_keywords). Любой чужой бренд считается проблемой ДАЖЕ рядом с
+    нашим партнёром — НО с учётом отрицания.
+
+    Почему строже: в notes/topic конкуренты часто перечисляются как ровня
+    («Перечисли румы: PokerBet, GGPoker, PokerMatch») — это витрина
+    конкурентов. НО если бренд идёт после «не упоминать / уникати / avoid» —
+    это правильная инструкция автору, её отбраковывать нельзя.
+
+    Возвращает причину-строку или None.
+    """
+    t = (text or "").lower()
+    if not t:
+        return None
+    for brand in FOREIGN_ROOM_BRANDS:
+        pos = t.find(brand)
+        if pos == -1:
+            continue
+        # бренд найден — но не под отрицанием ли он?
+        if _brand_is_negated(t, pos):
+            continue
+        return f"упоминание чужого бренда «{brand}»"
+    return None
+
+
+def screen_topic(topic: dict, partners: list[dict]) -> str | None:
+    """
+    Полная проверка ТЕМЫ (dict со всеми полями) на пригодность.
+    Объединяет все правила:
+      • primary_keyword / target_page — is_foreign_or_regulatory (мягко:
+        сравнение с нашим партнёром допустимо);
+      • notes / topic / secondary_keywords — строгий скан чужих брендов
+        + регуляторика.
+
+    Возвращает причину отбраковки (для лога) или None если тема чистая.
+    Это ЕДИНАЯ точка проверки — используется и на входе (новые темы от
+    Claude), и при чистке таблицы (старый мусор).
+    """
+    # 1. Ключевые поля — мягкий режим (сравнение с нашим партнёром допустимо),
+    #    сюда же попадает проверка на «рейкбек у беспейкбекового партнёра».
+    for field in ("primary_keyword", "target_page"):
+        reason = is_foreign_or_regulatory(topic.get(field, ""), partners)
+        if reason:
+            return f"{reason} [поле {field}]"
+
+    # 2. Регуляторика — в любом текстовом поле
+    for field in ("primary_keyword", "secondary_keywords", "topic", "notes"):
+        txt = (topic.get(field, "") or "").lower()
+        for term in REGULATORY_TERMS:
+            if term in txt:
+                return f"регуляторный/юридический термин «{term}» [поле {field}]"
+
+    # 3. Чужие бренды в свободном тексте — строгий режим
+    for field in ("topic", "secondary_keywords", "notes"):
+        reason = has_foreign_brand_strict(topic.get(field, ""))
+        if reason:
+            return f"{reason} [поле {field}]"
+
+    return None
+
+
 def build_partner_facts_block(partners: list[dict]) -> str:
     """
     Собрать человекочитаемый блок «ФАКТЫ О ПЛОЩАДКАХ» для системного промпта
