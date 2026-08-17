@@ -9,12 +9,13 @@
 <title>KOZYR — Регионы и партнёрства по странам</title>
 <meta name="description" content="Страны, где KOZYR работает с партнёрскими покер-румами. Украина запущена, готовятся Польша, Германия, Чехия. Валюты, языки, правовые базы каждого региона.">
 
-<!-- Canonical + hreflang -->
+<!-- Canonical + hreflang.
+     This is a language-SELECTOR page: one URL (/countries/) serves RU/UK/EN
+     via JS. Per Google's hreflang guidance, a selector page is marked with a
+     self-referential x-default and NO per-language alternates (three langs
+     pointing at the same URL was the previous error). -->
 <link rel="canonical" href="https://kozyr.club/countries/">
-<link rel="alternate" hreflang="x-default" href="https://kozyr.club/">
-<link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/countries/">
-<link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/countries/">
-<link rel="alternate" hreflang="en"        href="https://kozyr.club/countries/">
+<link rel="alternate" hreflang="x-default" href="https://kozyr.club/countries/">
 
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="16x16"  href="/favicon-16.png">
@@ -716,7 +717,7 @@ a { color: inherit; text-decoration: none; }
 </style>
   <script defer src="/assets/kozyr-age-gate.js?v=1"></script>
   <script defer src="/assets/kozyr-consent.js?v=1"></script>
-
+</head>
 <body>
 
 <div class="compliance">

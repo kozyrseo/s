@@ -4,16 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#000714">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, follow">
 
-<title>KOZYR — Poker Rakeback · Choose Your Region</title>
+<title>404 — Страница не найдена · KOZYR</title>
 <meta name="description" content="KOZYR — international poker rakeback platform. Choose your region: Ukraine, International. Poland and Germany coming soon.">
 
-<link rel="canonical" href="https://kozyr.club/">
-<link rel="alternate" hreflang="x-default" href="https://kozyr.club/">
-<link rel="alternate" hreflang="en"        href="https://kozyr.club/">
-<link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/">
-<link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/">
+<!-- 404 page: intentionally noindex, no canonical/hreflang. -->
 
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="16x16"  href="/favicon-16.png">
@@ -25,15 +21,14 @@
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="KOZYR">
-<meta property="og:url" content="https://kozyr.club/">
-<meta property="og:title" content="KOZYR — Poker Rakeback · Choose Your Region">
-<meta property="og:description" content="International poker rakeback platform. Regional versions with local partners and languages.">
+<meta property="og:title" content="404 — KOZYR">
+<meta property="og:description" content="Страница не найдена.">
 <meta property="og:image" content="https://kozyr.club/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="KOZYR — Poker Rakeback · Choose Your Region">
-<meta name="twitter:description" content="International poker rakeback platform.">
+<meta name="twitter:title" content="404 — KOZYR">
+<meta name="twitter:description" content="Страница не найдена.">
 <meta name="twitter:image" content="https://kozyr.club/og-image.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -450,9 +445,51 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 420px) {
   .region-card::before { display: none; }
 }
+
+/* ============ 404 ============ */
+.notfound { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 56px 0 48px; min-height: 0; }
+.nf-inner { max-width: 640px; margin: 0 auto; text-align: center; position: relative; z-index: 2; }
+.nf-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--f-mono); font-size: 11px; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold);
+  margin-bottom: 20px;
+}
+.nf-eyebrow::before, .nf-eyebrow::after { content: ""; width: 28px; height: 1px; background: var(--gold); opacity: 0.6; }
+.nf-code {
+  font-family: var(--f-display); font-weight: 700;
+  font-size: clamp(110px, 20vw, 210px); line-height: 0.9; letter-spacing: -0.04em;
+  background: linear-gradient(180deg, var(--accent-glow) 0%, var(--accent) 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+.nf-title {
+  font-family: var(--f-display); font-weight: 700;
+  font-size: clamp(30px, 4vw, 50px); line-height: 1.02; letter-spacing: -0.03em;
+  color: #fff; margin-bottom: 18px;
+}
+.nf-title em {
+  font-family: var(--f-serif); font-style: italic; font-weight: 400;
+  background: linear-gradient(180deg, var(--accent-glow) 0%, var(--accent) 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.nf-lede {
+  font-family: var(--f-serif); font-style: italic;
+  font-size: 19px; line-height: 1.5; color: var(--ink-inv-2);
+  max-width: 46ch; margin: 0 auto 34px;
+}
+.nf-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.nf-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 24px; border-radius: 12px; font-weight: 600; font-size: 15px;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease;
+}
+.nf-btn-primary { background: var(--accent); color: #fff; }
+.nf-btn-primary:hover { background: var(--accent-deep); transform: translateY(-2px); }
+.nf-btn-ghost { background: var(--glass); border: 1px solid var(--border-dark); color: var(--ink-inv); }
+.nf-btn-ghost:hover { border-color: var(--border-dark-hover); background: var(--glass-hover); transform: translateY(-2px); }
+@media (max-width: 640px) { .nf-lede { font-size: 17px; } .notfound { padding: 32px 0 40px; } }
 </style>
-  <script defer src="/assets/kozyr-age-gate.js?v=1"></script>
-  <script defer src="/assets/kozyr-consent.js?v=1"></script>
 </head>
 <body>
 
@@ -503,67 +540,17 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     </div>
   </nav>
 
-  <main class="hero">
+    <main class="notfound">
     <div class="wrap">
-      <div class="hero-inner">
-
-        <div class="hero-text">
-          <div class="hero-eyebrow" data-i18n="eyebrow">Poker rakeback</div>
-          <h1><span data-i18n="title_1">Choose your</span>
-              <em data-i18n="title_em">region</em>.</h1>
-          <p class="hero-lede" data-i18n="lede">Regional platforms with local partners, currencies and languages.</p>
+      <div class="nf-inner">
+        <div class="nf-eyebrow" data-i18n="nf_eyebrow">Error 404</div>
+        <div class="nf-code" aria-hidden="true">404</div>
+        <h1 class="nf-title"><span data-i18n="nf_title_1">Page</span> <em data-i18n="nf_title_em">not found</em>.</h1>
+        <p class="nf-lede" data-i18n="nf_lede">The link may be outdated or the address mistyped. Head back to the homepage or explore the blog on rakeback and poker rooms.</p>
+        <div class="nf-actions">
+          <a href="/" class="nf-btn nf-btn-primary" data-i18n="nf_home">Go home</a>
+          <a href="/ua/blog/" class="nf-btn nf-btn-ghost" data-i18n="nf_blog">Read the blog</a>
         </div>
-
-        <div class="chooser">
-
-          <!-- UKRAINE -->
-          <div class="region-card"
-               data-country="ua"
-               data-href-en="/ua/"
-               data-href-ru="/ua/"
-               data-href-uk="/ua/uk/">
-            <span class="you-are-here" data-i18n="your_region">Your region</span>
-            <div class="region-top">
-              <span class="region-flag fi fi-ua" aria-hidden="true"></span>
-              <span class="region-status">
-                <span class="dot"></span> <span data-i18n="status_live">Live</span>
-              </span>
-            </div>
-            <h2 class="region-name" data-i18n="ua_name">Ukraine</h2>
-            <div class="region-native" data-i18n="ua_native">Україна · UAH</div>
-            <div class="region-langs">
-              <a href="/ua/" class="lang-pill" lang="ru" hreflang="ru-UA">
-                <span data-i18n="pill_ru">Русская</span> <code>RU</code>
-              </a>
-              <a href="/ua/uk/" class="lang-pill" lang="uk" hreflang="uk-UA">
-                <span data-i18n="pill_uk">Українська</span> <code>UK</code>
-              </a>
-            </div>
-          </div>
-
-          <!-- INTERNATIONAL -->
-          <div class="region-card"
-               data-country="int"
-               data-href-en="/int/"
-               data-href-ru="/int/"
-               data-href-uk="/int/">
-            <div class="region-top">
-              <span class="region-flag int" aria-hidden="true">◈</span>
-              <span class="region-status">
-                <span class="dot"></span> <span data-i18n="status_preview">Preview</span>
-              </span>
-            </div>
-            <h2 class="region-name" data-i18n="int_name">International</h2>
-            <div class="region-native" data-i18n="int_native">Global · USD / USDT</div>
-            <div class="region-langs">
-              <a href="/int/" class="lang-pill" lang="en" hreflang="en">
-                <span data-i18n="pill_en">English</span> <code>EN</code>
-              </a>
-            </div>
-          </div>
-
-        </div>
-
       </div>
     </div>
   </main>
@@ -616,7 +603,13 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       pl_name:           "Poland",
       de_name:           "Germany",
       all_regions_link:  "all regions →",
-      footer_legal:      "Legal"
+      footer_legal:      "Legal",
+      nf_eyebrow:  "Error 404",
+      nf_title_1:  "Page",
+      nf_title_em: "not found",
+      nf_lede:     "The link may be outdated or the address mistyped. Head back to the homepage or explore the blog on rakeback and poker rooms.",
+      nf_home:     "Go home",
+      nf_blog:     "Read the blog"
     },
     ru: {
       compliance:        "<strong>Только 21+.</strong> Используя сайт, ты принимаешь региональные <a href=\"/ua/legal/\">Условия и Политику</a>. · Играй ответственно.",
@@ -638,7 +631,13 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       pl_name:           "Польша",
       de_name:           "Германия",
       all_regions_link:  "все регионы →",
-      footer_legal:      "Правовая база"
+      footer_legal:      "Правовая база",
+      nf_eyebrow:  "Ошибка 404",
+      nf_title_1:  "Страница",
+      nf_title_em: "не найдена",
+      nf_lede:     "Возможно, ссылка устарела или в адресе опечатка. Вернитесь на главную или загляните в блог о рейкбеке и покерных румах.",
+      nf_home:     "На главную",
+      nf_blog:     "Блог о покере"
     },
     uk: {
       compliance:        "<strong>Тільки 21+.</strong> Використовуючи сайт, ти приймаєш регіональні <a href=\"/ua/legal/\">Умови та Політику</a>. · Грай відповідально.",
@@ -660,7 +659,13 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       pl_name:           "Польща",
       de_name:           "Німеччина",
       all_regions_link:  "всі регіони →",
-      footer_legal:      "Правова база"
+      footer_legal:      "Правова база",
+      nf_eyebrow:  "Помилка 404",
+      nf_title_1:  "Сторінку",
+      nf_title_em: "не знайдено",
+      nf_lede:     "Можливо, посилання застаріло або в адресі помилка. Поверніться на головну або загляньте в блог про рейкбек і покерні руми.",
+      nf_home:     "На головну",
+      nf_blog:     "Блог про покер"
     }
   };
 
@@ -764,7 +769,6 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 })();
 </script>
 
-<script defer src="/assets/kozyr-geo.js?v=12"></script>
 <script src="/analytics.js" defer></script>
 </body>
 </html>
