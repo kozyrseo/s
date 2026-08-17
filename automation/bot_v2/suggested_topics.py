@@ -234,6 +234,48 @@ def cleanup_suggested(dry_run: bool = True,
     }
 
 
+def dump_snapshots(cache_dir: str = ".bot_state/cache") -> dict:
+    """
+    Пересобрать snapshot-файлы, которые читает Telegram-бот:
+      - suggested_snapshot.json — строки со status=suggested
+      - queue_snapshot.json     — строки со status=queued
+
+    Вызывается: из refresh-suggested.yml (по расписанию/кнопке) И напрямую
+    из approve/reject workflows, чтобы список в боте обновлялся СРАЗУ после
+    смены статуса (не дожидаясь межворкфлоу-триггера, который ненадёжен).
+
+    Возвращает {'suggested': N, 'queued': M} — сколько строк записано.
+    Внимание: файлы только пишутся на диск. Коммит/пуш делает вызывающий
+    workflow (здесь мы в песочнице git не трогаем).
+    """
+    from datetime import datetime, timezone
+    from pathlib import Path
+
+    cache = Path(cache_dir)
+    cache.mkdir(parents=True, exist_ok=True)
+
+    counts = {}
+    for status, filename in [
+        ("suggested", "suggested_snapshot.json"),
+        ("queued", "queue_snapshot.json"),
+    ]:
+        # ВАЖНО: без lang-фильтра — оператор должен видеть ВСЕ темы (и ru, и uk,
+        # и legacy без языка). Раньше здесь стоял lang="ru", из-за чего
+        # украинские/безъязычные темы не попадали в снапшот и не показывались
+        # в /suggested. Показываем всё, что имеет нужный статус.
+        rows = list_by_status(status=status, lang=None, limit=100)
+        out = {
+            "collected_at": datetime.now(timezone.utc).isoformat(),
+            "status": status,
+            "rows": rows,
+        }
+        (cache / filename).write_text(
+            json.dumps(out, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
+        counts[status] = len(rows)
+    return counts
+
+
 def approve_and_dump_topic_file(row_index: int, target_path: str) -> str:
     """
     Помечает status=processing и записывает JSON-файл темы для generate.py.
@@ -307,6 +349,9 @@ def main() -> None:
     p_clean.add_argument("--include-manual", action="store_true",
         help="Чистить и ручные темы тоже (по умолчанию ручные не трогаются)")
 
+    p_snap = sub.add_parser("snapshot",
+        help="Пересобрать snapshot-файлы для бота (suggested + queue)")
+
     args = parser.parse_args()
 
     try:
@@ -357,6 +402,11 @@ def main() -> None:
             if result["dry_run"] and result["rejected"]:
                 print()
                 print("   Чтобы применить: добавь флаг --apply")
+        elif args.cmd == "snapshot":
+            counts = dump_snapshots()
+            print(f"📸 Snapshot пересобран: "
+                  f"suggested={counts.get('suggested', 0)}, "
+                  f"queued={counts.get('queued', 0)}")
     except Exception as e:
         print(f"❌ {type(e).__name__}: {e}", file=sys.stderr)
         sys.exit(1)
