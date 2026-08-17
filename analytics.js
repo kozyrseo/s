@@ -70,27 +70,58 @@
 
   // --- Трекинг кликов по партнёрским ссылкам ---
   // Ловим на этапе всплытия, чтобы не мешать переходу.
+  // Считаем «партнёрским» клик, если ссылка помечена любым из:
+  //   rel~="sponsored"  — SEO-разметка партнёрских ссылок
+  //   .js-aff / data-aff — явная пометка
+  //   data-partner       — внешние ссылки на трек-домен партнёра (klink на
+  //                        страницах clubs/rooms)
+  //   .klink             — класс партнёрских кнопок
+  //   ссылка на /ua/clubs/<id>/ или /ua/rooms/<id>/ — внутренние переходы
+  //                        на страницу партнёра из статей (виджет/панель/CTA)
   document.addEventListener('click', function (e) {
     var a = e.target && e.target.closest ? e.target.closest('a') : null;
     if (!a) return;
 
     var rel = (a.getAttribute('rel') || '').toLowerCase();
+    var href = a.getAttribute('href') || '';
+    // Внутренняя ссылка на страницу партнёра (обзор → страница клуба/рума)
+    var partnerPage = href.match(/\/ua\/(?:clubs|rooms)\/([a-z0-9-]+)\/?/i);
+
     var isAffiliate =
       rel.indexOf('sponsored') !== -1 ||
       a.classList.contains('js-aff') ||
-      a.hasAttribute('data-aff');
+      a.classList.contains('klink') ||
+      a.hasAttribute('data-aff') ||
+      a.hasAttribute('data-partner') ||
+      !!partnerPage;
 
     if (!isAffiliate) return;
+
+    // Тип клика: внешний переход к партнёру (outbound) vs внутренний на его
+    // страницу-обзор (internal). Полезно разделять в отчётах GA4.
+    var isOutbound = /^https?:\/\//i.test(href) &&
+      href.indexOf(location.hostname) === -1;
+    var clickType = isOutbound ? 'affiliate_click' : 'partner_page_click';
+
+    // Метка-источник: откуда кликнули (виджет / мобильная панель / CTA / текст).
+    // Определяем по ближайшему контейнеру, чтобы видеть, что конвертит.
+    var source = 'link';
+    if (a.closest('[data-partner-widget]')) source = 'side_widget';
+    else if (a.closest('.partner-bar')) source = 'mobile_bar';
+    else if (a.closest('.final-cta')) source = 'final_cta';
+    else if (a.closest('.pcard')) source = 'partner_card';
 
     var label =
       a.getAttribute('data-aff') ||
       a.getAttribute('data-room') ||
+      (partnerPage ? partnerPage[1] : '') ||
       a.textContent.trim().slice(0, 60) ||
-      a.href;
+      href;
 
-    gtag('event', 'affiliate_click', {
+    gtag('event', clickType, {
       link_url: a.href,
       link_label: label,
+      link_source: source,
       page_path: location.pathname
     });
   }, false);

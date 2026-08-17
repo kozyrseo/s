@@ -1490,7 +1490,7 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
             '<div class="final-cta">\n'
             '        <h2>%s</h2>\n'
             '        <p>%s</p>\n'
-            '        <a href="%s" class="btn btn-primary">%s <span>&rarr;</span></a>\n'
+            '        <a href="%s" rel="sponsored" class="btn btn-primary">%s <span>&rarr;</span></a>\n'
             '      </div>'
         ) % (escape_html(_cta_h), escape_html(_cta_p),
              escape_html(cta_button_url), escape_html(_cta_btn))

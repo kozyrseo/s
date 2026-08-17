@@ -116,7 +116,7 @@
       logo = '<div class="pcard__logo" style="background:linear-gradient(135deg,' +
         esc(p.logo.from) + "," + esc(p.logo.to) + ')">' + esc(c.logoText || p.logo.text) + "</div>";
     }
-    return '<a href="' + esc(p.url) + '" class="pcard ' + (c.dark ? "pcard--club" : "pcard--room") + '">' +
+    return '<a href="' + esc(p.url) + '" rel="sponsored" class="pcard ' + (c.dark ? "pcard--club" : "pcard--room") + '">' +
       '<div class="pcard__top">' + logo +
       '<div><div class="pcard__name">' + esc(p.name) + "</div>" +
       '<div class="pcard__badge">' + esc(c.kind || "") + "</div></div></div>" +
@@ -238,7 +238,7 @@
       logo = '<div class="pcard__logo" style="background:linear-gradient(135deg,' +
         esc(p.logo.from) + "," + esc(p.logo.to) + ')">' + esc(c.logoText || p.logo.text) + "</div>";
     }
-    return '<a href="' + esc(p.url) + '" class="pcard side-pcard ' +
+    return '<a href="' + esc(p.url) + '" rel="sponsored" class="pcard side-pcard ' +
       (c.dark ? "pcard--club" : "pcard--room") + '">' +
       '<div class="pcard__top">' + logo +
       '<div><div class="pcard__name">' + esc(p.name) + "</div>" +
@@ -341,7 +341,7 @@
     bar.className = "partner-bar";
     bar.setAttribute("data-partner-bar", "");
     bar.innerHTML =
-      '<a href="' + esc(p.url) + '" class="pbar__inner">' +
+      '<a href="' + esc(p.url) + '" rel="sponsored" class="pbar__inner">' +
       '<span class="pbar__info">' + logo +
       '<span class="pbar__txt"><span class="pbar__name">' + esc(p.name) + "</span>" + sub + "</span></span>" +
       '<span class="pbar__cta">Играть →</span></a>';
