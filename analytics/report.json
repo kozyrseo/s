@@ -10,7 +10,7 @@
   "ga4": {
     "available": false
   },
-  "period_label": "последняя неделя",
-  "period_days": 7,
-  "collected_at": "2026-08-18T07:05:06.063435+00:00"
+  "period_label": "последние 60 дней",
+  "period_days": 60,
+  "collected_at": "2026-08-18T11:49:23.418977+00:00"
 }
