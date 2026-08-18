@@ -1,0 +1,86 @@
+{
+  "technical": {
+    "tier": "technical",
+    "scores": {
+      "title_length": {
+        "max": 5,
+        "score": 5,
+        "detail": "61 chars (target: 30-65)"
+      },
+      "desc_length": {
+        "max": 5,
+        "score": 5,
+        "detail": "137 chars (target: 130-160)"
+      },
+      "word_count": {
+        "max": 5,
+        "score": 5,
+        "detail": "2530 words (target: 1800-3500)"
+      },
+      "h2_count": {
+        "max": 5,
+        "score": 5,
+        "detail": "9 H2 headings (target: 7-12)"
+      },
+      "h3_count": {
+        "max": 3,
+        "score": 3,
+        "detail": "26 H3 headings (target: ≥3)"
+      },
+      "internal_links_count": {
+        "max": 5,
+        "score": 3,
+        "detail": "6 internal links (target: 3-5)"
+      },
+      "internal_links_diversity": {
+        "max": 3,
+        "score": 3,
+        "detail": "6 unique link targets"
+      },
+      "target_page_link": {
+        "max": 3,
+        "score": 3,
+        "detail": "Target /ua/blog/ ✓ found"
+      },
+      "primary_keyword": {
+        "max": 4,
+        "score": 3,
+        "detail": "title=True, first_para=True, h2=False"
+      },
+      "secondary_keywords": {
+        "max": 4,
+        "score": 0,
+        "detail": "0/3 secondaries found"
+      },
+      "faq_count": {
+        "max": 4,
+        "score": 4,
+        "detail": "6 FAQ items (target: ≥6)"
+      },
+      "no_cliches": {
+        "max": 4,
+        "score": 4,
+        "detail": "clean"
+      },
+      "table_format": {
+        "max": 4,
+        "score": 4,
+        "detail": "1 table(s), all well-formed"
+      }
+    },
+    "total": 47,
+    "max": 54,
+    "percent": 87
+  },
+  "content": {
+    "tier": "content",
+    "scores": {},
+    "total": 0,
+    "max": 50,
+    "percent": 0,
+    "error": "API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CeAo1WV5HGuxFxYzZiMTm'}"
+  },
+  "total": 45,
+  "verdict": "REJECT",
+  "telegram_block": "🏆 *Качество: 45/100* 🔴 REJECT\n   📊 Технически: 87/100 · 📝 Контент: 0/100\n   ⚠️ Content check: API call failed: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid\\_request\\_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request\\_id': 'req\\_011CeAo1WV5HGuxFxYzZiMTm'}\n\n⚠️ *Что улучшить:*\n   • internal\\_links\\_count: 6 internal links (target: 3-5)\n   • primary\\_keyword: title=True, first\\_para=True, h2=False\n   • secondary\\_keywords: 0/3 secondaries found"
+}
