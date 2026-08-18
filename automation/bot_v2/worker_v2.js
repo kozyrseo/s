@@ -358,6 +358,20 @@ async function handleCallback(cb, env) {
     return;
   }
 
+  // === Полный markdown-отчёт по кнопке (без повторного сбора) ===
+  if (action === "an_full") {
+    await answerCallback(cb.id, env, "📄 Загружаю отчёт...");
+    await sendFullReport(cb.message.chat.id, env);
+    return;
+  }
+
+  // === Обновить мгновенную сводку (перечитать report.json) ===
+  if (action === "an_refresh") {
+    await answerCallback(cb.id, env, "🔄 Обновляю...");
+    await showAnalyticsDashboard(cb.message.chat.id, env);
+    return;
+  }
+
   // v2 multilang UI: menu_action от кнопок "⚙️ Ещё"
   if (action === "menu_action") {
     const which = segments[1];
@@ -450,7 +464,7 @@ async function cmdHelp(chatId, args, msg, env) {
 *🎛 Главные кнопки (снизу чата):*
   📝 Темы — предложенные темы (кнопки «в очередь / генерить / отклонить»)
   ⚡ Сгенерить — статья из очереди
-  📊 Аналитика — выбор периода кнопками (неделя / месяц / квартал / год / 60 дней)
+  📊 Аналитика — мгновенная сводка (SEO + конверсии) + кнопки: собрать за неделю/месяц/квартал/год/60 дней, полный отчёт, обновить
   📋 Pending — статьи на ревью по всем языкам
   🌍 Страны — список настроенных стран и их языков
   ⚙️ Ещё — research, обновить темы, аналитика за период, статус, translate, A/B
@@ -691,9 +705,19 @@ async function cmdAnalytics(chatId, args, msg, env) {
     await runAnalytics(chatId, arg, env);
     return;
   }
-  // Иначе — показываем выбор периода КНОПКАМИ, чтобы не вводить вручную.
+  // Иначе — показываем ДАШБОРД: мгновенную сводку из последнего отчёта
+  // (без ожидания workflow) + кнопки выбора периода для свежего сбора.
+  await showAnalyticsDashboard(chatId, env);
+}
+
+// Дашборд аналитики: читает последний собранный отчёт (analytics/report.json
+// из репозитория) и рисует компактную сводку СРАЗУ, не дожидаясь workflow.
+// Под сводкой — кнопки периода (свежий сбор), полный отчёт и обновление.
+async function showAnalyticsDashboard(chatId, env) {
+  const report = await ghReadJSON("analytics/report.json", env);
+  const summary = renderInstantSummary(report);
   const kb = [
-    [{ text: "📊 За 60 дней (стандарт)", callback_data: "an_period:default" }],
+    [{ text: "📊 Собрать за 60 дней", callback_data: "an_period:default" }],
     [
       { text: "🗓 Неделя", callback_data: "an_period:week" },
       { text: "🗓 Месяц", callback_data: "an_period:month" },
@@ -702,9 +726,119 @@ async function cmdAnalytics(chatId, args, msg, env) {
       { text: "🗓 Квартал", callback_data: "an_period:quarter" },
       { text: "🗓 Год", callback_data: "an_period:year" },
     ],
+    [
+      { text: "📄 Полный отчёт", callback_data: "an_full" },
+      { text: "🔄 Обновить сводку", callback_data: "an_refresh" },
+    ],
   ];
-  await sendMessage(chatId, env,
-    "📊 *Аналитика KOZYR*\n\nЗа какой период собрать отчёт?", kb);
+  await sendMessage(chatId, env, summary, kb);
+}
+
+// Рендер компактной сводки из structured report.json.
+// Тихо деградирует: нет GA4 → показывает только SEO; отчёт пуст → приглашает
+// собрать. Все длинные заголовки статей обрезаются, спецсимволы экранируются.
+function renderInstantSummary(report) {
+  const L = ["📊 *Аналитика KOZYR* — последняя сводка"];
+
+  // Пустой/несобранный отчёт (нет by_category или совсем нет данных).
+  const cats = (report && report.by_category) || null;
+  const articles = (report && report.articles) || [];
+  const hasData = cats && (articles.length > 0 ||
+    ["winners", "needs_boost", "flat", "new"].some(k => (cats[k] || []).length > 0));
+  if (!report || !hasData) {
+    L.push("");
+    L.push("_Собранного отчёта пока нет (или он пуст). Выбери период ниже — " +
+      "бот соберёт свежие данные из Search Console + GA4 и пришлёт полную сводку._");
+    return L.join("\n");
+  }
+
+  const ga4 = report.ga4 || {};
+  if (report.period_label) L.push(`_${report.period_label}_`);
+  if (report.collected_at) {
+    L.push(`_обновлено: ${String(report.collected_at).slice(0, 16).replace("T", " ")} UTC_`);
+  }
+  L.push("");
+
+  // ── Итоги за период (только если GA4 подключён) ──
+  if (ga4.available) {
+    const t = ga4.totals || {};
+    const totalClicks = articles.reduce(
+      (s, a) => s + ((a.conversions && a.conversions.total) || 0), 0);
+    const views = t.views || 0;
+    const cr = views ? (totalClicks / views * 100) : 0;
+    L.push("*⚡ Итоги за период*");
+    L.push(`👥 Пользователи: *${t.users || 0}*  ·  👁 Просмотры: *${views}*`);
+    L.push(`🎯 Переходы к партнёрам: *${totalClicks}*  ·  📈 Конв.: *${cr.toFixed(2)}%*`);
+    L.push("");
+
+    // Лидер по переходам к партнёрам
+    const byConv = articles
+      .filter(a => a.conversions && a.conversions.total > 0)
+      .sort((a, b) => b.conversions.total - a.conversions.total);
+    if (byConv.length) {
+      L.push("*🔥 Топ по переходам*");
+      for (const a of byConv.slice(0, 3)) {
+        L.push(`• ${escapeMd(String(a.title || "").slice(0, 42))} — *${a.conversions.total}*`);
+      }
+      L.push("");
+    }
+  } else {
+    L.push("_GA4 не подключён — показаны только SEO-данные. " +
+      "Задай `GA4\\_PROPERTY\\_ID` для конверсий и поведения._");
+    L.push("");
+  }
+
+  // ── SEO-статус ──
+  const w = (cats.winners || []).length;
+  const b = (cats.needs_boost || []).length;
+  const f = (cats.flat || []).length;
+  const n = (cats.new || []).length;
+  L.push("*🔍 SEO-статус статей*");
+  L.push(`🟢 Winners: *${w}*  ·  🟡 Boost: *${b}*  ·  🔴 Flat: *${f}*  ·  ⚫ New: *${n}*`);
+
+  // ── Что дожать в топ ──
+  const boost = cats.needs_boost || [];
+  if (boost.length) {
+    L.push("");
+    L.push("*🟡 Дожать в топ (высокий потенциал):*");
+    for (const it of boost.slice(0, 3)) {
+      const s = it.stats || {};
+      L.push(`• ${escapeMd(String(it.title || "").slice(0, 42))} — ` +
+        `${s.impressions || 0} показов · поз. ${s.position || "—"}`);
+    }
+  }
+
+  L.push("");
+  L.push("_Свежий сбор за нужный период — кнопками ниже._");
+  return L.join("\n");
+}
+
+// Присылает полный markdown-отчёт (analytics/report.md) из репозитория,
+// разбивая на части под лимит Telegram. Тело — plain text, чтобы разметка
+// внутри отчёта не ломала Markdown-парсер бота.
+async function sendFullReport(chatId, env) {
+  const f = await ghReadFile("analytics/report.md", env);
+  if (!f || !String(f.text).trim()) {
+    await sendMessage(chatId, env,
+      "⚠️ `analytics/report.md` пуст. Сначала собери отчёт — кнопка периода выше.");
+    return;
+  }
+  const body = f.text;
+  const CHUNK = 3800;
+  const total = Math.ceil(body.length / CHUNK);
+  for (let i = 0; i < total; i++) {
+    const part = body.slice(i * CHUNK, (i + 1) * CHUNK);
+    const header = total > 1 ? `📄 Полный отчёт (${i + 1}/${total})\n\n` : "";
+    await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: (header + part).slice(0, 4000),
+        disable_web_page_preview: true,
+      }),
+    });
+  }
 }
 
 // Запуск сбора аналитики за период. periodArg:
