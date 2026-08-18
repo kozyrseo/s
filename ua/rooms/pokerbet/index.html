@@ -1070,6 +1070,80 @@ body::before {
 .btn-ghost:hover { transform: translateY(-2px); background: var(--surface); border-color: var(--ink); box-shadow: var(--shadow-sm); }
 .btn-xl { padding: 18px 30px; font-size: 16px; border-radius: 14px; }
 
+/* ============================================================
+   KOZYR — премиум CTA-кнопки (единая стилистика с липкой панелью).
+   Градиенты, внутренний блик, свечение и пробегающий блик на hover.
+   Переопределяет базовые .btn-* выше. Разметка кнопок не меняется.
+   ============================================================ */
+.article-body .btn,
+.btn { text-decoration: none !important; position: relative; overflow: hidden;
+  font-family: var(--f-display); font-weight: 700; }
+.btn > span, .btn svg { position: relative; z-index: 1; }
+.btn svg { transition: transform .2s var(--ease); }
+.btn:hover svg { transform: translateX(3px); }
+
+/* пробегающий световой блик (у залитых вариантов) */
+.btn-primary::after, .btn-dark::after, .btn-telegram::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.28) 50%, transparent 65%);
+  transform: translateX(-130%); transition: transform .6s var(--ease); pointer-events: none;
+}
+.btn-primary:hover::after, .btn-dark:hover::after, .btn-telegram:hover::after { transform: translateX(130%); }
+
+.btn-primary {
+  background: linear-gradient(135deg, #3B82FF, var(--accent-deep)); color: #fff;
+  box-shadow: 0 8px 22px rgba(38,104,255,.34), inset 0 1px 0 rgba(255,255,255,.22);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(38,104,255,.44), inset 0 1px 0 rgba(255,255,255,.3);
+}
+.btn-dark {
+  background: linear-gradient(135deg, #1a2445, var(--ink)); color: #fff;
+  box-shadow: 0 8px 22px rgba(10,17,40,.28), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.btn-dark:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(10,17,40,.4), inset 0 1px 0 rgba(255,255,255,.16);
+}
+.btn-telegram {
+  background: linear-gradient(135deg, #2BB0EC, #1a89bd); color: #fff;
+  box-shadow: 0 8px 22px rgba(34,158,217,.36), inset 0 1px 0 rgba(255,255,255,.22);
+}
+.btn-telegram:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(34,158,217,.46), inset 0 1px 0 rgba(255,255,255,.3);
+}
+.btn-ghost { background: transparent; border: 1.5px solid var(--border-2); color: var(--ink); }
+.btn-ghost:hover {
+  transform: translateY(-2px); border-color: var(--ink);
+  background: var(--surface); box-shadow: 0 8px 20px rgba(10,17,40,.1);
+}
+
+/* Финальная секция #cta на тёмном фоне: залитые остаются яркими,
+   ghost — светлая обводка. */
+#cta .btn-primary, #cta .btn-dark {
+  background: linear-gradient(135deg, #3B82FF, var(--accent-deep)); color: #fff;
+  box-shadow: 0 8px 22px rgba(38,104,255,.4), inset 0 1px 0 rgba(255,255,255,.24);
+}
+#cta .btn-primary:hover, #cta .btn-dark:hover {
+  box-shadow: 0 14px 34px rgba(38,104,255,.5), inset 0 1px 0 rgba(255,255,255,.3);
+}
+#cta .btn-ghost { border-color: rgba(255,255,255,.3); color: #fff; }
+#cta .btn-ghost:hover { background: rgba(255,255,255,.1); border-color: #fff; box-shadow: none; }
+
+/* Карточные CTA (боковые) — премиум: блик на hover.
+   Цвет/градиент задаётся ниже (в конце style), т.к. позже идут
+   перекрывающие определения .room-facts-cta / .side-cta-btn. */
+.room-facts-cta, .side-cta-btn { position: relative; overflow: hidden; }
+.room-facts-cta::after, .side-cta-btn::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.28) 50%, transparent 65%);
+  transform: translateX(-130%); transition: transform .6s var(--ease); pointer-events: none;
+}
+.room-facts-cta:hover::after, .side-cta-btn:hover::after { transform: translateX(130%); }
+.room-facts-cta > *, .side-cta-btn > * { position: relative; z-index: 1; }
+
 /* ---------- ХЛЕБНЫЕ КРОШКИ ---------- */
 
 .breadcrumbs { font-size: 13px; padding: 22px 0 4px; }
@@ -1293,6 +1367,18 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 .lang a { display: inline-flex; align-items: center; justify-content: center; min-width: 34px; padding: 5px 10px; border-radius: 999px; color: var(--ink-3); text-decoration: none; transition: color 0.15s, background 0.15s; }
 .lang a:hover { color: var(--ink); }
 .lang a[aria-current="page"] { color: var(--ink); background: var(--bg, #fff); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+
+/* ── Финальный слой: премиум-цвета карточных CTA (после всех перекрытий) ──
+   room-facts-cta — тёмная (фирменная). side-cta-btn НЕ трогаем: она
+   намеренно золотая (см. kozyr-enhance.css) — рифмуется с тёмной карточкой. */
+.room-facts-cta {
+  background: linear-gradient(135deg, #1a2445, var(--ink)) !important; color: #fff;
+  box-shadow: 0 8px 22px rgba(10,17,40,.28), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.room-facts-cta:hover {
+  background: linear-gradient(135deg, #22305c, #0d1530) !important; transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(10,17,40,.4), inset 0 1px 0 rgba(255,255,255,.16);
+}
 </style>
 <script src="/analytics.js" defer></script>
   <link rel="stylesheet" href="/assets/kozyr-enhance.css?v=16">
