@@ -7,5 +7,10 @@
     "flat": [],
     "new": []
   },
-  "collected_at": "2026-08-17T11:01:33.228486+00:00"
+  "ga4": {
+    "available": false
+  },
+  "period_label": "последняя неделя",
+  "period_days": 7,
+  "collected_at": "2026-08-18T07:05:06.063435+00:00"
 }
