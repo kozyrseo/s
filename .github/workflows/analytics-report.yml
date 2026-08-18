@@ -1,13 +1,34 @@
 name: Analytics report
 
-# Раз в неделю (или по кнопке /analytics) собирает GSC-данные по опубликованным
-# статьям, классифицирует их (winners/needs_boost/flat/new), пишет отчёт
-# в analytics/report.md, коммитит в репозиторий и присылает сводку в TG.
+# Собирает GSC + GA4 аналитику по опубликованным статьям, классифицирует их
+# (winners/needs_boost/flat/new), пишет отчёт в analytics/report.md, коммитит
+# в репозиторий и присылает мощную 7-секционную сводку в Telegram.
 # performance-метки проставляет в taxonomy.json — используется в publish.py
 # для приоритизации related-статей.
+#
+# Период задаётся кнопками в Telegram-боте (или вручную через "Run workflow"):
+#   period = week | month | quarter | year | default (60 дней)
+#   days   = кастомное число дней (переопределяет period, напр. "45")
 
 on:
   workflow_dispatch:
+    inputs:
+      period:
+        description: 'Период отчёта (пресет)'
+        required: false
+        type: choice
+        options:
+          - default
+          - week
+          - month
+          - quarter
+          - year
+        default: default
+      days:
+        description: 'Кастомный период: последние N дней (переопределяет пресет). Пусто = использовать пресет.'
+        required: false
+        type: string
+        default: ''
   schedule:
     # Понедельник 10:00 UTC — за час до keyword-research, чтобы её данные
     # уже влияли на выбор новых тем.
@@ -37,16 +58,27 @@ jobs:
       - name: Install deps
         run: |
           pip install -r automation/requirements.txt
-          pip install google-api-python-client
+          pip install google-api-python-client google-analytics-data
 
       - name: Run analytics
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
           GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          python automation/analytics.py --lang ru --telegram --update-taxonomy
+          # Собираем CLI-аргументы из inputs. Работает и для schedule (inputs пустые).
+          ARGS="--lang ru --telegram --update-taxonomy"
+          DAYS="${{ github.event.inputs.days }}"
+          PERIOD="${{ github.event.inputs.period }}"
+          if [ -n "$DAYS" ]; then
+            ARGS="$ARGS --days $DAYS"
+          elif [ -n "$PERIOD" ] && [ "$PERIOD" != "default" ]; then
+            ARGS="$ARGS --period $PERIOD"
+          fi
+          echo "Running: python automation/analytics.py $ARGS"
+          python automation/analytics.py $ARGS
 
       - name: Commit analytics + taxonomy update
         run: |
@@ -56,7 +88,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "Nothing to commit."
           else
-            git commit -m "Analytics: weekly report + taxonomy performance labels"
+            git commit -m "Analytics: report + taxonomy performance labels"
             git pull --rebase origin main || true
             git push
           fi
