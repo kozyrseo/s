@@ -351,11 +351,74 @@
   }
 
   /* ---- запуск ------------------------------------------------------ */
+  /* ---- Липкая CTA-панель vs cookie-баннер -------------------------
+     Баннер (.kz-consent-bar) и панель (.kozyr-sticky-cta) оба висят
+     внизу и перекрывались бы. Пока баннер в DOM — поднимаем панель
+     выше него (класс kz-cta-above-consent). По событию закрытия
+     (kozyr:consent-ready) — возвращаем панель на место. */
+  function manageStickyCtaConsent() {
+    var cta = document.querySelector('.kozyr-sticky-cta');
+    if (!cta) return;
+
+    /* Базовый отступ панели от низа (совпадает с CSS: 20px деск / 12px моб). */
+    function baseBottom() {
+      return window.innerWidth <= 640 ? 12 : 20;
+    }
+
+    /* Поднимаем панель ровно над баннером: измеряем его реальную высоту
+       (она зависит от контента и вьюпорта) и добавляем зазор. Фиксированное
+       значение не годится — на мобильном баннер высокий и прячет панель. */
+    function lift() {
+      var bar = document.querySelector('.kz-consent-bar');
+      if (!bar) return;
+      var h = bar.getBoundingClientRect().height || 0;
+      var gap = 14;
+      cta.classList.add('kz-cta-above-consent');
+      cta.style.bottom = (baseBottom() + h + gap) + 'px';
+    }
+    function drop() {
+      cta.classList.remove('kz-cta-above-consent');
+      cta.style.bottom = '';   /* вернуть к CSS-значению */
+    }
+
+    /* Пересчёт при ресайзе/повороте, пока баннер виден. */
+    function onResize() {
+      if (document.querySelector('.kz-consent-bar')) lift();
+    }
+
+    /* Если баннер уже на экране — сразу поднимаем панель. */
+    if (document.querySelector('.kz-consent-bar')) {
+      /* даём баннеру отрисоваться, чтобы высота была корректной */
+      requestAnimationFrame(lift);
+    } else {
+      /* Баннер мог ещё не вставиться (consent.js грузится отдельно).
+         Коротко наблюдаем за его появлением. */
+      var appearObs = new MutationObserver(function () {
+        if (document.querySelector('.kz-consent-bar')) {
+          requestAnimationFrame(lift);
+          appearObs.disconnect();
+        }
+      });
+      appearObs.observe(document.body, { childList: true, subtree: false });
+      /* перестраховка: не наблюдаем вечно */
+      setTimeout(function () { appearObs.disconnect(); }, 8000);
+    }
+
+    window.addEventListener('resize', onResize, { passive: true });
+
+    /* Когда пользователь сделал выбор — баннер уезжает, опускаем панель. */
+    window.addEventListener('kozyr:consent-ready', function () {
+      /* небольшая задержка под анимацию ухода баннера (~300ms) */
+      setTimeout(drop, 320);
+    });
+  }
+
   function init() {
     injectSuits();
     mobileDefaults();
     mobileTOC();
     renderAcceptanceMarkers();
+    manageStickyCtaConsent();
     /* Если гео ещё не пришло — перерендерим по приходу */
     if (window.KozyrGeo) {
       window.KozyrGeo.onReady(function () { renderAcceptanceMarkers(); });

@@ -533,40 +533,135 @@ a.card:hover,
 .data-table td:first-child { color: var(--ink, #0A1128) !important; font-weight: 600 !important; }
 .data-table th { color: var(--ink-3, #8B90A5) !important; }
 
-/* --- #9 Липкая кнопка «Начать игру» (следует за пользователем) --- */
+/* --- #9 Липкая панель «Войти в клуб / Начать игру» (следует за пользователем) ---
+   Качество блоговой панели: стеклянный фон, логотип площадки, название,
+   инфо-подзаголовок (рейкбек/бонус) и яркая кнопка действия.
+   Разметка на странице:
+     <a class="kozyr-sticky-cta" data-cta-variant="gold|blue" ...>
+       <span class="kzc__logo"><img src="…"><span class="kzc__dot"></span></span>
+       <span class="kzc__txt">
+         <span class="kzc__name">KlubOk</span>
+         <span class="kzc__sub">рейкбек до 40%</span>
+       </span>
+       <span class="kzc__cta">Войти <svg>…</svg></span>
+     </a>
+   Старый однострочный вид (<span>Текст</span> + svg) тоже поддержан ниже. */
 .kozyr-sticky-cta {
   position: fixed;
   right: 20px; bottom: 20px;
   z-index: 90;
-  display: inline-flex; align-items: center; gap: 8px;
-  background: linear-gradient(135deg, var(--kz-gold), var(--kz-gold-deep));
-  color: #fff !important;
-  padding: 14px 24px;
-  border-radius: 999px;
-  font-family: 'Inter', system-ui, sans-serif;
-  font-weight: 700; font-size: 15px;
+  display: inline-flex; align-items: center; gap: 14px;
+  padding: 10px 10px 10px 12px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.96);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border: 1px solid rgba(184, 132, 28, 0.28);
+  box-shadow: 0 12px 34px rgba(10, 17, 40, 0.16), 0 2px 8px rgba(184, 132, 28, 0.14);
   text-decoration: none !important;
-  box-shadow: 0 10px 28px rgba(184, 132, 28, 0.40);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  transition: transform 0.2s cubic-bezier(0.2, 0.7, 0.3, 1),
+              box-shadow 0.24s, bottom 0.28s cubic-bezier(0.2, 0.7, 0.3, 1);
   animation: kzCtaIn 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 .kozyr-sticky-cta:hover {
   transform: translateY(-3px);
-  box-shadow: 0 14px 34px rgba(184, 132, 28, 0.5);
+  box-shadow: 0 18px 44px rgba(10, 17, 40, 0.22), 0 4px 12px rgba(184, 132, 28, 0.2);
 }
-.kozyr-sticky-cta svg { width: 16px; height: 16px; }
+/* Синий вариант каймы (для рума без рейкбека) */
+.kozyr-sticky-cta[data-cta-variant="blue"] {
+  border-color: rgba(38, 104, 255, 0.28);
+  box-shadow: 0 12px 34px rgba(10, 17, 40, 0.16), 0 2px 8px rgba(38, 104, 255, 0.14);
+}
+.kozyr-sticky-cta[data-cta-variant="blue"]:hover {
+  box-shadow: 0 18px 44px rgba(10, 17, 40, 0.22), 0 4px 12px rgba(38, 104, 255, 0.2);
+}
+
+/* Логотип площадки + точка «онлайн» */
+.kozyr-sticky-cta .kzc__logo {
+  width: 42px; height: 42px; flex: 0 0 42px;
+  border-radius: 12px; overflow: hidden; position: relative;
+  border: 1px solid var(--border, #E5E7EE); background: #fff;
+}
+.kozyr-sticky-cta .kzc__logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.kozyr-sticky-cta .kzc__dot {
+  position: absolute; top: -1px; right: -1px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: #22C55E; border: 2.5px solid #fff;
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+  animation: kzcPulse 2.2s infinite;
+}
+@keyframes kzcPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55); }
+  70%  { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+/* Тексты: название + подзаголовок */
+.kozyr-sticky-cta .kzc__txt {
+  display: flex; flex-direction: column; line-height: 1.12; padding-right: 2px; min-width: 0;
+}
+.kozyr-sticky-cta .kzc__name {
+  font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700;
+  font-size: 15px; color: var(--ink, #0A1128); white-space: nowrap;
+}
+.kozyr-sticky-cta .kzc__sub {
+  font-size: 12px; font-weight: 600; color: var(--kz-gold-deep, #7E5512);
+  margin-top: 2px; white-space: nowrap;
+}
+.kozyr-sticky-cta[data-cta-variant="blue"] .kzc__sub { color: var(--accent-deep, #1E52D9); }
+
+/* Кнопка действия справа */
+.kozyr-sticky-cta .kzc__cta {
+  display: inline-flex; align-items: center; gap: 7px; flex: 0 0 auto;
+  background: linear-gradient(135deg, #E0A93B, var(--kz-gold-deep, #7E5512));
+  color: #fff;
+  font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 14px;
+  padding: 11px 20px; border-radius: 100px; white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(184, 132, 28, 0.4);
+  transition: gap 0.2s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.kozyr-sticky-cta[data-cta-variant="blue"] .kzc__cta {
+  background: linear-gradient(135deg, #3B82FF, var(--accent-deep, #1E52D9));
+  box-shadow: 0 4px 14px rgba(38, 104, 255, 0.34);
+}
+.kozyr-sticky-cta:hover .kzc__cta { gap: 11px; }
+.kozyr-sticky-cta .kzc__cta svg { width: 15px; height: 15px; }
+
+/* Fallback: старый однострочный вид (<span>Текст</span> + svg напрямую) */
+.kozyr-sticky-cta > span:not([class]),
+.kozyr-sticky-cta > svg { color: var(--kz-gold-deep, #7E5512); }
+.kozyr-sticky-cta:not(:has(.kzc__cta)) {
+  padding: 14px 24px;
+  background: linear-gradient(135deg, var(--kz-gold), var(--kz-gold-deep));
+  border-color: transparent;
+  color: #fff !important;
+  font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: 15px;
+}
+.kozyr-sticky-cta:not(:has(.kzc__cta)) > span:not([class]),
+.kozyr-sticky-cta:not(:has(.kzc__cta)) > svg { color: #fff; }
+.kozyr-sticky-cta:not(:has(.kzc__cta)) > svg { width: 16px; height: 16px; }
+
 @keyframes kzCtaIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+
+/* На мобильном — панель растягивается на всю ширину внизу */
 @media (max-width: 640px) {
   .kozyr-sticky-cta {
     left: 12px; right: 12px; bottom: 12px;
-    justify-content: center;
-    padding: 15px 20px;
-    font-size: 16px;
+    justify-content: space-between;
+    padding: 8px 8px 8px 10px;
   }
+  .kozyr-sticky-cta .kzc__name { font-size: 14.5px; }
+  .kozyr-sticky-cta .kzc__cta { padding: 11px 18px; }
 }
+
+/* Конфликт с cookie-баннером: пока баннер в DOM, поднимаем панель выше него.
+   Точное значение bottom вычисляет kozyr-enhance.js по реальной высоте
+   баннера (inline-стиль). Класс — только маркер состояния для читаемости. */
+.kozyr-sticky-cta.kz-cta-above-consent { /* bottom задаётся из JS */ }
+
 @media (prefers-reduced-motion: reduce) {
   .kozyr-sticky-cta { animation: none; }
   .kozyr-sticky-cta:hover { transform: none; }
+  .kozyr-sticky-cta .kzc__dot { animation: none; }
 }
 
 /* --- #6 Таблица сравнения PokerBet/KlubOk на телефоне: красивее --- */
