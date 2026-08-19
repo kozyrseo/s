@@ -1,0 +1,60 @@
+name: Parse partner description
+
+on:
+  workflow_dispatch:
+    inputs:
+      chat_id:
+        description: 'Telegram chat_id (куда прислать сводку)'
+        required: true
+        type: string
+      input_path:
+        description: 'Путь к файлу с описанием (.bot_state/partner_input/{chat}.txt)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: parse-partner
+  cancel-in-progress: false
+
+jobs:
+  parse:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r automation/requirements.txt
+
+      - name: Parse description
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ github.event.inputs.chat_id }}
+          INPUT_PATH: ${{ github.event.inputs.input_path }}
+        run: |
+          python automation/parse_partner.py \
+            --text-file "$INPUT_PATH" \
+            --chat-id "$CHAT_ID"
+
+      - name: Commit draft
+        run: |
+          git config user.name "kozyr-bot"
+          git config user.email "bot@kozyr.club"
+          git add _partner_drafts/ || true
+          if git diff --staged --quiet; then
+            echo "Нет нового черновика"
+          else
+            git commit -m "partner: draft parsed"
+            git push
+          fi
