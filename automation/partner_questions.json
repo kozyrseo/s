@@ -1,0 +1,80 @@
+{
+  "_meta": {
+    "purpose": "Анкета для добавления нового партнёра на KOZYR. Заполняется в Telegram-боте, ответы → Claude Code генерирует страницу.",
+    "version": "1.0",
+    "sections": 6
+  },
+  "sections": [
+    {
+      "id": "basic",
+      "title": "1. Базовое",
+      "questions": [
+        {"key": "id", "q": "ID партнёра (латиницей, без пробелов, напр. pokerbet)", "type": "slug", "required": true, "validate": "^[a-z0-9-]+$"},
+        {"key": "name", "q": "Название партнёра (как на сайте, напр. PokerBet)", "type": "text", "required": true},
+        {"key": "type", "q": "Тип партнёра", "type": "choice", "options": ["room", "club"], "labels": ["Покер-рум", "Приватный клуб"], "required": true},
+        {"key": "score", "q": "Оценка KOZYR Score (0-10, напр. 8.2)", "type": "number", "required": true}
+      ]
+    },
+    {
+      "id": "geo",
+      "title": "2. География",
+      "questions": [
+        {"key": "country", "q": "Основная страна (код: ua/pl/kz...)", "type": "text", "required": true, "default": "ua"},
+        {"key": "countries", "q": "В каких странах представлен (коды через запятую, для фильтра каталога)", "type": "list", "required": true, "default": "ua"},
+        {"key": "acceptedCountries", "q": "Из каких стран ПРИНИМАЕТ игроков (коды через запятую)", "type": "list", "required": true, "default": "ua"}
+      ]
+    },
+    {
+      "id": "platform",
+      "title": "3. Платформа (сеть/приложение)",
+      "questions": [
+        {"key": "network", "q": "Сеть/приложение. Для рума — своя (pokerbet). Для клуба — приложение (clubgg/pppoker/xpoker/pokerbros/upoker)", "type": "text", "required": true},
+        {"key": "network_label", "q": "Название сети для показа (напр. 'ClubGG', 'PPPoker')", "type": "text", "required": true},
+        {"key": "access", "q": "Тип доступа", "type": "choice", "options": ["direct", "club"], "labels": ["Прямой (рум)", "Через клуб/агента"], "required": true},
+        {"key": "club_id", "q": "[только клуб] ID клуба в приложении (если есть)", "type": "text", "required": false, "only_if": {"type": "club"}},
+        {"key": "union", "q": "[только клуб] Юнион/союз (напр. Massive, Flamingoo), если есть", "type": "text", "required": false, "only_if": {"type": "club"}}
+      ]
+    },
+    {
+      "id": "money",
+      "title": "4. Деньги",
+      "questions": [
+        {"key": "currency", "q": "Валюта расчётов (UAH/USD/EUR)", "type": "text", "required": true, "default": "UAH"},
+        {"key": "rake", "q": "Рейкбек: число процентов (напр. 40) ИЛИ 'none' если нет", "type": "text", "required": true},
+        {"key": "rakeLabel", "q": "Как показать рейкбек (напр. 'до 40%', 'нет — только бонусы')", "type": "text", "required": true},
+        {"key": "payments", "q": "Способы оплаты (через запятую: card/bank/crypto/ewallet)", "type": "list", "required": true},
+        {"key": "payoutHours", "q": "Скорость выплаты в часах (число, напр. 2)", "type": "number", "required": true},
+        {"key": "payoutLabel", "q": "Как показать срок (напр. '1–2 часа', '15–60 минут')", "type": "text", "required": true},
+        {"key": "minDeposit", "q": "Минимальный депозит (напр. '300 ₴')", "type": "text", "required": false}
+      ]
+    },
+    {
+      "id": "game",
+      "title": "5. Игра",
+      "questions": [
+        {"key": "license", "q": "Лицензия/юрисдикция (напр. 'Лицензия Curaçao', 'Офшорная юрисдикция')", "type": "text", "required": true},
+        {"key": "games", "q": "Форматы игр (через запятую: cash/mtt/spins/sng/aof)", "type": "list", "required": true},
+        {"key": "limits", "q": "Лимиты (через запятую: NL10,NL25,NL50,NL100)", "type": "list", "required": true},
+        {"key": "software", "q": "Платформы (через запятую: win/mac/android/ios/web/hud)", "type": "list", "required": true},
+        {"key": "bonus", "q": "Бонусы (через запятую: welcome/freeroll/rakerace/rakeback)", "type": "list", "required": true},
+        {"key": "traffic", "q": "Уровень трафика/полей (напр. 'мягкие поля', 'средний трафик')", "type": "text", "required": false}
+      ]
+    },
+    {
+      "id": "content",
+      "title": "6. Контент для страницы",
+      "questions": [
+        {"key": "note", "q": "Краткое описание (1-2 предложения для карточки)", "type": "textarea", "required": true},
+        {"key": "about", "q": "Подробно 'О партнёре' (2-4 абзаца для страницы)", "type": "textarea", "required": true},
+        {"key": "pros", "q": "Плюсы (через ; каждый с новой мысли)", "type": "list_semicolon", "required": true},
+        {"key": "cons", "q": "Минусы (через ;)", "type": "list_semicolon", "required": true},
+        {"key": "how_join", "q": "Как начать/присоединиться (пошагово, через ;)", "type": "list_semicolon", "required": true},
+        {"key": "faq", "q": "FAQ: вопрос|ответ, каждая пара с новой строки", "type": "faq", "required": false},
+        {"key": "logo_from", "q": "Цвет логотипа (градиент от, hex напр. #2668FF)", "type": "text", "required": true},
+        {"key": "logo_to", "q": "Цвет логотипа (градиент до, hex)", "type": "text", "required": true},
+        {"key": "logo_img", "q": "Путь к лого-картинке (или загрузи файл в бот)", "type": "text", "required": false},
+        {"key": "dark_card", "q": "Тёмная карточка партнёра?", "type": "choice", "options": ["true", "false"], "required": true, "default": "false"}
+      ]
+    }
+  ]
+}

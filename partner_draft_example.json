@@ -1,0 +1,42 @@
+{
+  "id": "royalclub",
+  "name": "RoyalClub",
+  "type": "club",
+  "score": 7.5,
+  "country": "ua",
+  "languages": ["ru", "uk"],
+  "countries": ["ua"],
+  "acceptedCountries": ["ua", "pl", "de"],
+  "network": "pppoker",
+  "networkLabel": "PPPoker",
+  "access": "club",
+  "clubId": "123456",
+  "union": "Flamingoo",
+  "currency": "UAH",
+  "rake": 35,
+  "rakeLabel": "до 35%",
+  "payments": ["card", "crypto"],
+  "payoutHours": 2,
+  "payoutLabel": "30–90 минут",
+  "minDeposit": "500 ₴",
+  "license": "Офшорная юрисдикция",
+  "games": ["cash", "mtt"],
+  "limits": ["NL10", "NL25", "NL50"],
+  "software": ["ios", "android"],
+  "bonus": ["rakerace"],
+  "traffic": "мягкие поля вечером",
+  "note": "Приватный клуб в PPPoker с рейкбеком до 35% и расчётами в гривне.",
+  "about": [
+    "RoyalClub — приватный покерный клуб в приложении PPPoker.",
+    "Расчёты в гривне через агента, мягкие поля в вечернее время."
+  ],
+  "pros": ["Рейкбек до 35%", "Гривна через агента", "Мягкие поля"],
+  "cons": ["Нужен агент для входа", "Меньше трафика днём"],
+  "howJoin": ["Написать в Telegram агенту", "Получить ID клуба", "Внести депозит"],
+  "faq": [
+    {"q": "Как вступить в RoyalClub?", "a": "Через агента в Telegram, он выдаёт ID клуба."},
+    {"q": "Какой рейкбек?", "a": "До 35% в зависимости от объёма игры."}
+  ],
+  "logo": {"from": "#8B2FC9", "to": "#5A1B8A"},
+  "card": {"logoImg": "/ua/blog/logos/royalclub.webp", "dark": true}
+}

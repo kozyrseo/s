@@ -1,0 +1,58 @@
+{
+  "_meta": {
+    "purpose": "Справочник приложений/сетей для партнёров KOZYR. Клуб может быть в любом из этих приложений. Добавляешь новое приложение → одна запись → доступно всем партнёрам.",
+    "usage": "network в partners.js ссылается на ключ отсюда. Генератор берёт label и особенности."
+  },
+  "networks": {
+    "pokerbet": {
+      "label": "PokerBet",
+      "type": "room",
+      "kind_ru": "Покер-рум",
+      "note": "Собственный рум-партнёр с лицензией."
+    },
+    "clubgg": {
+      "label": "ClubGG",
+      "type": "club",
+      "kind_ru": "Приватный клуб · ClubGG",
+      "currency_note": "Расчёты в фишках с привязкой 1 фишка = 1 ₴, через хоста в Telegram.",
+      "platforms": ["ios", "android", "win"],
+      "join_via": "агент/хост"
+    },
+    "pppoker": {
+      "label": "PPPoker",
+      "type": "club",
+      "kind_ru": "Приватный клуб · PPPoker",
+      "currency_note": "Внутренняя валюта клуба, расчёты через агента.",
+      "platforms": ["ios", "android", "win"],
+      "join_via": "агент"
+    },
+    "xpoker": {
+      "label": "X-Poker",
+      "type": "club",
+      "kind_ru": "Приватный клуб · X-Poker",
+      "platforms": ["ios", "android"],
+      "join_via": "агент"
+    },
+    "pokerbros": {
+      "label": "PokerBros",
+      "type": "club",
+      "kind_ru": "Приватный клуб · PokerBros",
+      "platforms": ["ios", "android", "win"],
+      "join_via": "агент/юнион"
+    },
+    "upoker": {
+      "label": "Upoker",
+      "type": "club",
+      "kind_ru": "Приватный клуб · Upoker",
+      "platforms": ["ios", "android"],
+      "join_via": "агент"
+    },
+    "suprema": {
+      "label": "Suprema (GGNetwork)",
+      "type": "club",
+      "kind_ru": "Клуб · Suprema Poker",
+      "platforms": ["ios", "android", "win", "web"],
+      "join_via": "агент/союз"
+    }
+  }
+}
