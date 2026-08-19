@@ -1,0 +1,67 @@
+name: Generate partner page
+
+on:
+  workflow_dispatch:
+    inputs:
+      partner_id:
+        description: 'ID партнёра из _partner_drafts/ (напр. royalclub)'
+        required: true
+        type: string
+      publish:
+        description: 'Сразу в прод? (иначе в _pending_partner)'
+        required: false
+        default: 'false'
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: generate-partner
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r automation/requirements.txt
+
+      - name: Generate partner page
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PARTNER_ID: ${{ github.event.inputs.partner_id }}
+          PUBLISH: ${{ github.event.inputs.publish }}
+        run: |
+          if [ "$PUBLISH" = "true" ]; then
+            echo "Publish mode: $PARTNER_ID → прод"
+            python automation/generate_partner.py --id "$PARTNER_ID" --publish
+          else
+            echo "Preview mode: $PARTNER_ID → _pending_partner"
+            python automation/generate_partner.py --id "$PARTNER_ID"
+          fi
+
+      - name: Rebuild partners.js
+        run: python automation/build_partners.py
+
+      - name: Commit changes
+        run: |
+          git config user.name "kozyr-bot"
+          git config user.email "bot@kozyr.club"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "Нет изменений для коммита"
+          else
+            git commit -m "partner: ${{ github.event.inputs.partner_id }}"
+            git push
+          fi
