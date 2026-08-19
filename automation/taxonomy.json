@@ -56,7 +56,9 @@
         "topic:beginners",
         "audience:beginner"
       ],
-      "summary_for_related": "Что такое рейкбек в покере простыми словами: как считается рейк, какие модели возврата бывают и на что смотреть при выборе рума."
+      "summary_for_related": "Что такое рейкбек в покере простыми словами: как считается рейк, какие модели возврата бывают и на что смотреть при выборе рума.",
+      "performance_category": "flat",
+      "performance_updated": "2026-08-19T06:54:11.924531+00:00"
     },
     "pokerbet-ili-klubok-sravnenie": {
       "title": "PokerBet или KlubOk: где играть в Украине",
@@ -67,7 +69,9 @@
         "topic:room-review",
         "audience:regular"
       ],
-      "summary_for_related": "Сравнение PokerBet и KlubOk: покер-рум на гривны (Curaçao) против приватного клуба в ClubGG. Поля, выплаты, кому что подходит."
+      "summary_for_related": "Сравнение PokerBet и KlubOk: покер-рум на гривны (Curaçao) против приватного клуба в ClubGG. Поля, выплаты, кому что подходит.",
+      "performance_category": "flat",
+      "performance_updated": "2026-08-19T06:54:11.924531+00:00"
     },
     "kak-rabotayut-privatnye-pokerclubi": {
       "title": "Как работают приватные покерные клубы в ClubGG",
@@ -78,7 +82,9 @@
         "platform:clubgg",
         "audience:beginner"
       ],
-      "summary_for_related": "Приватный покерный клуб в ClubGG простыми словами: доступ по инвайту, расчёты через хоста, мягкие поля, рейкбек и реальные риски."
+      "summary_for_related": "Приватный покерный клуб в ClubGG простыми словами: доступ по инвайту, расчёты через хоста, мягкие поля, рейкбек и реальные риски.",
+      "performance_category": "flat",
+      "performance_updated": "2026-08-19T06:54:11.924531+00:00"
     },
     "chto-takoe-bedbid-dzhekpot-v-pokere": {
       "title": "Что такое бэдбит джекпот покер и как его выиграть",
@@ -89,7 +95,9 @@
         "platform:klubok",
         "audience:regular"
       ],
-      "summary_for_related": "Как сработает бэдбит джекпот в покере: правила, условия и распределение призов. Где играть с Bad Beat Jackpot в Украине — разбор механики."
+      "summary_for_related": "Как сработает бэдбит джекпот в покере: правила, условия и распределение призов. Где играть с Bad Beat Jackpot в Украине — разбор механики.",
+      "performance_category": "flat",
+      "performance_updated": "2026-08-19T06:54:11.924531+00:00"
     },
     "pokernyy-klub-clubgg-ukraina": {
       "title": "Покерный клуб ClubGG Украина: вступление и рейкбек до 65%",
@@ -100,7 +108,9 @@
         "platform:clubgg",
         "audience:beginner"
       ],
-      "summary_for_related": "Как присоединиться к приватным покерным клубам ClubGG игрокам из Украины. Рейкбек до 65%, мягкие поля, союзы Massive и Flamingoo."
+      "summary_for_related": "Как присоединиться к приватным покерным клубам ClubGG игрокам из Украины. Рейкбек до 65%, мягкие поля, союзы Massive и Flamingoo.",
+      "performance_category": "flat",
+      "performance_updated": "2026-08-19T06:54:11.924531+00:00"
     },
     "klubok-reykbek-clubgg-ukraina": {
       "title": "KlubOk — огляд приватного покерного клубу з рейкбеком до 40%",
@@ -112,7 +122,9 @@
         "platform:clubgg",
         "audience:regular"
       ],
-      "summary_for_related": "Детальний огляд KlubOk — приватного покерного клубу в ClubGG з рейкбеком до 40%, розрахунками в гривні через Telegram та м'якими полями."
+      "summary_for_related": "Детальний огляд KlubOk — приватного покерного клубу в ClubGG з рейкбеком до 40%, розрахунками в гривні через Telegram та м'якими полями.",
+      "performance_category": "flat",
+      "performance_updated": "2026-08-19T06:54:11.924531+00:00"
     }
   }
 }

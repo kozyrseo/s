@@ -1,21 +1,305 @@
 {
   "lang": "ru",
-  "articles": [],
+  "articles": [
+    {
+      "slug": "chto-takoe-reykbek-v-pokere",
+      "title": "Что такое рейкбек в покере и как на нём не потеряться",
+      "url": "https://kozyr.club/ua/blog/chto-takoe-reykbek-v-pokere/",
+      "category": "flat",
+      "stats": {
+        "impressions": 0,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": null
+      },
+      "top_queries": [],
+      "published_at": null,
+      "tags": [
+        "format:mixed",
+        "topic:rakeback",
+        "topic:beginners",
+        "audience:beginner"
+      ],
+      "behavior": {},
+      "conversions": {},
+      "conv_rate": 0.0
+    },
+    {
+      "slug": "pokerbet-ili-klubok-sravnenie",
+      "title": "PokerBet или KlubOk: где играть в Украине",
+      "url": "https://kozyr.club/ua/blog/pokerbet-ili-klubok-sravnenie/",
+      "category": "flat",
+      "stats": {
+        "impressions": 1,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 16
+      },
+      "top_queries": [],
+      "published_at": null,
+      "tags": [
+        "format:mixed",
+        "topic:comparison",
+        "topic:room-review",
+        "audience:regular"
+      ],
+      "behavior": {},
+      "conversions": {},
+      "conv_rate": 0.0
+    },
+    {
+      "slug": "kak-rabotayut-privatnye-pokerclubi",
+      "title": "Как работают приватные покерные клубы в ClubGG",
+      "url": "https://kozyr.club/ua/blog/kak-rabotayut-privatnye-pokerclubi/",
+      "category": "flat",
+      "stats": {
+        "impressions": 9,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 6.2
+      },
+      "top_queries": [],
+      "published_at": null,
+      "tags": [
+        "format:mixed",
+        "topic:club-review",
+        "platform:clubgg",
+        "audience:beginner"
+      ],
+      "behavior": {},
+      "conversions": {},
+      "conv_rate": 0.0
+    },
+    {
+      "slug": "chto-takoe-bedbid-dzhekpot-v-pokere",
+      "title": "Что такое бэдбит джекпот покер и как его выиграть",
+      "url": "https://kozyr.club/ua/blog/chto-takoe-bedbid-dzhekpot-v-pokere/",
+      "category": "flat",
+      "stats": {
+        "impressions": 0,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": null
+      },
+      "top_queries": [],
+      "published_at": null,
+      "tags": [
+        "format:nlh",
+        "topic:bonuses",
+        "platform:klubok",
+        "audience:regular"
+      ],
+      "behavior": {},
+      "conversions": {},
+      "conv_rate": 0.0
+    },
+    {
+      "slug": "pokernyy-klub-clubgg-ukraina",
+      "title": "Покерный клуб ClubGG Украина: вступление и рейкбек до 65%",
+      "url": "https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/",
+      "category": "flat",
+      "stats": {
+        "impressions": 1,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 9
+      },
+      "top_queries": [],
+      "published_at": null,
+      "tags": [
+        "format:mixed",
+        "topic:club-review",
+        "platform:clubgg",
+        "audience:beginner"
+      ],
+      "behavior": {},
+      "conversions": {},
+      "conv_rate": 0.0
+    },
+    {
+      "slug": "klubok-reykbek-clubgg-ukraina",
+      "title": "KlubOk — огляд приватного покерного клубу з рейкбеком до 40%",
+      "url": "https://kozyr.club/ua/blog/klubok-reykbek-clubgg-ukraina/",
+      "category": "flat",
+      "stats": {
+        "impressions": 0,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": null
+      },
+      "top_queries": [],
+      "published_at": null,
+      "tags": [
+        "format:mixed",
+        "topic:club-review",
+        "platform:klubok",
+        "platform:clubgg",
+        "audience:regular"
+      ],
+      "behavior": {},
+      "conversions": {},
+      "conv_rate": 0.0
+    }
+  ],
   "by_category": {
     "winners": [],
     "needs_boost": [],
-    "flat": [],
+    "flat": [
+      {
+        "slug": "chto-takoe-reykbek-v-pokere",
+        "title": "Что такое рейкбек в покере и как на нём не потеряться",
+        "url": "https://kozyr.club/ua/blog/chto-takoe-reykbek-v-pokere/",
+        "category": "flat",
+        "stats": {
+          "impressions": 0,
+          "clicks": 0,
+          "ctr": 0.0,
+          "position": null
+        },
+        "top_queries": [],
+        "published_at": null,
+        "tags": [
+          "format:mixed",
+          "topic:rakeback",
+          "topic:beginners",
+          "audience:beginner"
+        ],
+        "behavior": {},
+        "conversions": {},
+        "conv_rate": 0.0
+      },
+      {
+        "slug": "pokerbet-ili-klubok-sravnenie",
+        "title": "PokerBet или KlubOk: где играть в Украине",
+        "url": "https://kozyr.club/ua/blog/pokerbet-ili-klubok-sravnenie/",
+        "category": "flat",
+        "stats": {
+          "impressions": 1,
+          "clicks": 0,
+          "ctr": 0.0,
+          "position": 16
+        },
+        "top_queries": [],
+        "published_at": null,
+        "tags": [
+          "format:mixed",
+          "topic:comparison",
+          "topic:room-review",
+          "audience:regular"
+        ],
+        "behavior": {},
+        "conversions": {},
+        "conv_rate": 0.0
+      },
+      {
+        "slug": "kak-rabotayut-privatnye-pokerclubi",
+        "title": "Как работают приватные покерные клубы в ClubGG",
+        "url": "https://kozyr.club/ua/blog/kak-rabotayut-privatnye-pokerclubi/",
+        "category": "flat",
+        "stats": {
+          "impressions": 9,
+          "clicks": 0,
+          "ctr": 0.0,
+          "position": 6.2
+        },
+        "top_queries": [],
+        "published_at": null,
+        "tags": [
+          "format:mixed",
+          "topic:club-review",
+          "platform:clubgg",
+          "audience:beginner"
+        ],
+        "behavior": {},
+        "conversions": {},
+        "conv_rate": 0.0
+      },
+      {
+        "slug": "chto-takoe-bedbid-dzhekpot-v-pokere",
+        "title": "Что такое бэдбит джекпот покер и как его выиграть",
+        "url": "https://kozyr.club/ua/blog/chto-takoe-bedbid-dzhekpot-v-pokere/",
+        "category": "flat",
+        "stats": {
+          "impressions": 0,
+          "clicks": 0,
+          "ctr": 0.0,
+          "position": null
+        },
+        "top_queries": [],
+        "published_at": null,
+        "tags": [
+          "format:nlh",
+          "topic:bonuses",
+          "platform:klubok",
+          "audience:regular"
+        ],
+        "behavior": {},
+        "conversions": {},
+        "conv_rate": 0.0
+      },
+      {
+        "slug": "pokernyy-klub-clubgg-ukraina",
+        "title": "Покерный клуб ClubGG Украина: вступление и рейкбек до 65%",
+        "url": "https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/",
+        "category": "flat",
+        "stats": {
+          "impressions": 1,
+          "clicks": 0,
+          "ctr": 0.0,
+          "position": 9
+        },
+        "top_queries": [],
+        "published_at": null,
+        "tags": [
+          "format:mixed",
+          "topic:club-review",
+          "platform:clubgg",
+          "audience:beginner"
+        ],
+        "behavior": {},
+        "conversions": {},
+        "conv_rate": 0.0
+      },
+      {
+        "slug": "klubok-reykbek-clubgg-ukraina",
+        "title": "KlubOk — огляд приватного покерного клубу з рейкбеком до 40%",
+        "url": "https://kozyr.club/ua/blog/klubok-reykbek-clubgg-ukraina/",
+        "category": "flat",
+        "stats": {
+          "impressions": 0,
+          "clicks": 0,
+          "ctr": 0.0,
+          "position": null
+        },
+        "top_queries": [],
+        "published_at": null,
+        "tags": [
+          "format:mixed",
+          "topic:club-review",
+          "platform:klubok",
+          "platform:clubgg",
+          "audience:regular"
+        ],
+        "behavior": {},
+        "conversions": {},
+        "conv_rate": 0.0
+      }
+    ],
     "new": []
   },
   "ga4": {
     "available": true,
-    "totals": {},
+    "totals": {
+      "users": 0,
+      "views": 0,
+      "sessions": 0
+    },
     "behavior_by_page": {},
     "conversions_by_page": {},
     "traffic_sources": {},
-    "collected_at": "2026-08-19T06:38:47.473817+00:00"
+    "collected_at": "2026-08-19T06:54:11.924481+00:00"
   },
-  "period_label": "последний месяц",
-  "period_days": 30,
-  "collected_at": "2026-08-19T06:38:47.473830+00:00"
+  "period_label": "последняя неделя",
+  "period_days": 7,
+  "collected_at": "2026-08-19T06:54:11.924531+00:00"
 }
