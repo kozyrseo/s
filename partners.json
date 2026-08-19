@@ -1,0 +1,197 @@
+{
+  "_meta": {
+    "purpose": "KOZYR — ЕДИНАЯ точка правды о партнёрах. Редактируй ТОЛЬКО этот файл. partners.js генерируется автоматически через build_partners.py.",
+    "version": "2.0",
+    "count": 2,
+    "warning": "НЕ редактируй partners.js вручную — он пересобирается из этого файла!"
+  },
+  "partners": [
+    {
+      "id": "pokerbet",
+      "name": "PokerBet",
+      "logo": {
+        "text": "PB",
+        "from": "#2668FF",
+        "to": "#1E52D9"
+      },
+      "score": 8.2,
+      "rake": "none",
+      "currency": "UAH",
+      "license": "Лицензия Curaçao",
+      "url": "/ua/rooms/pokerbet/",
+      "access": "direct",
+      "countries": [
+        "ua"
+      ],
+      "acceptedCountries": [
+        "ua"
+      ],
+      "limits": [
+        "NL10",
+        "NL25",
+        "NL50",
+        "NL100",
+        "NL200"
+      ],
+      "games": [
+        "cash",
+        "mtt",
+        "spins"
+      ],
+      "network": "pokerbet",
+      "payments": [
+        "card",
+        "bank"
+      ],
+      "software": [
+        "win",
+        "android",
+        "ios",
+        "web",
+        "hud"
+      ],
+      "bonus": [
+        "welcome",
+        "freeroll"
+      ],
+      "payoutHours": 2,
+      "payoutLabel": "1–2 часа",
+      "note": "Покер-рум на гривны с лицензией Curaçao. Рейкбека нет — только бонусы.",
+      "card": {
+        "logoText": "P",
+        "logoImg": "/ua/blog/logos/pokerbet.webp",
+        "kind": "Покер-рум · Curaçao",
+        "dark": false,
+        "rows": [
+          [
+            "Рейкбек",
+            "rake"
+          ],
+          [
+            "Валюта",
+            "гривна (UAH)",
+            false
+          ],
+          [
+            "Welcome-бонус",
+            "до 40 000 ₴",
+            true
+          ],
+          [
+            "Мин. депозит",
+            "300 ₴",
+            false
+          ],
+          [
+            "Форматы",
+            "Hold'em, Omaha, Short Deck, MTT",
+            false
+          ]
+        ]
+      },
+      "type": "room",
+      "networkLabel": "PokerBet",
+      "country": "ua"
+    },
+    {
+      "id": "klubok",
+      "name": "KlubOk",
+      "logo": {
+        "text": "KO",
+        "from": "#D9A93B",
+        "to": "#7E5512"
+      },
+      "score": 7.9,
+      "rake": 40,
+      "currency": "UAH",
+      "license": "Офшорная юрисдикция",
+      "url": "/ua/clubs/klubok/",
+      "access": "club",
+      "countries": [
+        "ua"
+      ],
+      "acceptedCountries": [
+        "ua",
+        "pl",
+        "de",
+        "cz",
+        "it",
+        "es",
+        "ro",
+        "sk",
+        "md",
+        "at",
+        "fr",
+        "gb",
+        "nl",
+        "pt",
+        "hu",
+        "be",
+        "lt",
+        "lv",
+        "ee"
+      ],
+      "limits": [
+        "NL10",
+        "NL25",
+        "NL50",
+        "NL100"
+      ],
+      "games": [
+        "cash",
+        "mtt"
+      ],
+      "network": "clubgg",
+      "payments": [
+        "card",
+        "bank"
+      ],
+      "software": [
+        "ios",
+        "android",
+        "win"
+      ],
+      "bonus": [
+        "rakerace"
+      ],
+      "payoutHours": 1,
+      "payoutLabel": "15–60 минут",
+      "note": "Приватный клуб в ClubGG. Мягкие поля, расчёты в гривне через Telegram.",
+      "card": {
+        "logoText": "K",
+        "logoImg": "/ua/blog/logos/klubok.webp",
+        "kind": "Приватный клуб · ClubGG",
+        "dark": true,
+        "rows": [
+          [
+            "Рейкбек",
+            "rake"
+          ],
+          [
+            "Валюта",
+            "гривна (UAH)",
+            false
+          ],
+          [
+            "Welcome-бонус",
+            "100% на депозит",
+            true
+          ],
+          [
+            "Доступ",
+            "по инвайту",
+            false
+          ],
+          [
+            "Верификация",
+            "не требуется",
+            false
+          ]
+        ]
+      },
+      "type": "club",
+      "networkLabel": "ClubGG",
+      "country": "ua"
+    }
+  ]
+}
