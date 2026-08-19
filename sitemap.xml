@@ -35,6 +35,42 @@
     </image:image>
   </url>
   <url>
+    <loc>https://kozyr.club/ua/rooms/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/rooms/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/rooms/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+  </url>
+  <url>
+    <loc>https://kozyr.club/ua/clubs/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/clubs/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/clubs/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+  </url>
+  <url>
+    <loc>https://kozyr.club/ua/uk/rooms/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/rooms/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/rooms/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+  </url>
+  <url>
+    <loc>https://kozyr.club/ua/uk/clubs/</loc>
+    <lastmod>2026-08-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/clubs/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/clubs/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+  </url>
+  <url>
     <loc>https://kozyr.club/ua/rooms/pokerbet/</loc>
     <lastmod>2026-08-05</lastmod>
     <changefreq>weekly</changefreq>
