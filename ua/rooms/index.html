@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="index, follow, max-image-preview:large">
-<meta name="theme-color" content="#2668FF">
+<meta name="theme-color" content="#070C18">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -30,7 +30,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/ua/blog/kozyr-blog.css">
 
-<!-- Breadcrumbs Schema -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -43,150 +42,341 @@
 </script>
 
 <style>
-/* ── Каталог: локальные стили поверх kozyr-blog.css ── */
-.cat-nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.9);
-  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border); }
-.cat-nav__in { max-width: 1180px; margin: 0 auto; height: 68px; padding: 0 24px;
+:root {
+  --surface-dark: #070C18;
+  --accent: #2E6BFF; --accent-deep: #1B4FD9; --accent-tint: #E7EEFF;
+  --gold: #9C6A18; --gold-deep: #7E5512;
+  --ink: #0A1128; --ink-2: #495168; --ink-3: #626B80;
+  --border: #E3E7F1; --border-2: #C9D0E0;
+  --surface: #FFFFFF; --surface-alt: #EEF1F8;
+  --ease: cubic-bezier(.22,1,.36,1);
+  --w: 1200px;
+  /* Шрифты — те же, что на главной (дублируем явно, чтобы var() всегда работал) */
+  --f-display: 'Space Grotesk', system-ui, sans-serif;
+  --f-body: 'Inter', system-ui, sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --f-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --r: 10px; --r-lg: 18px; --r-xl: 28px; --r-card: 16px;
+}
+
+/* ===== НАВИГАЦИЯ (тёмная, поверх hero) ===== */
+.cx-nav { position: absolute; top: 0; left: 0; right: 0; z-index: 50; }
+.cx-nav__in { max-width: var(--w); margin: 0 auto; height: 76px; padding: 0 24px;
   display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-.cat-nav__logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
-  font-family: var(--f-display); font-weight: 700; font-size: 19px; color: var(--ink); }
-.cat-nav__logo svg { width: 30px; height: 30px; }
-.cat-nav__links { display: flex; gap: 30px; font-size: 14.5px; font-weight: 500; }
-.cat-nav__links a { color: var(--ink-2); text-decoration: none; transition: color .15s; }
-.cat-nav__links a:hover, .cat-nav__links a[aria-current="page"] { color: var(--ink); }
-.cat-nav__cta { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px;
-  background: linear-gradient(135deg,#3B82FF,var(--accent-deep)); color: #fff; text-decoration: none;
-  font-family: var(--f-display); font-weight: 700; font-size: 14.5px; border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(38,104,255,.32); transition: transform .2s, box-shadow .24s; }
-.cat-nav__cta:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(38,104,255,.42); }
-@media (max-width: 720px) { .cat-nav__links { display: none; } .cat-nav__cta { padding: 10px 16px; } }
+.cx-logo { display: inline-flex; align-items: center; gap: 11px; text-decoration: none;
+  font-family: var(--f-display); font-weight: 700; font-size: 20px; color: #fff; letter-spacing: -.01em; }
+.cx-logo svg { width: 32px; height: 32px; }
+.cx-links { display: flex; gap: 30px; font-size: 14.5px; font-weight: 500; }
+.cx-links a { color: rgba(255,255,255,.72); text-decoration: none; transition: color .15s; }
+.cx-links a:hover, .cx-links a[aria-current="page"] { color: #fff; }
+.cx-actions { display: flex; align-items: center; gap: 16px; }
+.cx-lang { display: inline-flex; padding: 2px; background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.14); border-radius: 999px;
+  font-family: var(--f-mono); font-size: 11px; font-weight: 600; letter-spacing: .06em; }
+.cx-lang a { display: inline-flex; align-items: center; justify-content: center; min-width: 34px;
+  padding: 5px 10px; border-radius: 999px; color: rgba(255,255,255,.6); text-decoration: none; transition: .15s; }
+.cx-lang a:hover { color: #fff; }
+.cx-lang a[aria-current="page"] { color: #0A1128; background: #fff; }
+.cx-tg { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.16); color: #fff;
+  text-decoration: none; font-family: var(--f-display); font-weight: 600; font-size: 14px;
+  border-radius: 12px; transition: background .2s, border-color .2s; }
+.cx-tg:hover { background: rgba(255,255,255,.18); border-color: rgba(255,255,255,.3); }
+.cx-tg svg { width: 16px; height: 16px; }
+@media (max-width: 860px) { .cx-links { display: none; } .cx-tg span { display: none; } .cx-tg { padding: 10px; } }
 
-.cat-wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
-.cat-crumbs { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
-  color: var(--ink-3); padding: 22px 0 0; }
-.cat-crumbs a { color: var(--ink-3); text-decoration: none; }
-.cat-crumbs a:hover { color: var(--accent); }
+/* ===== ТЁМНЫЙ HERO с мастями ===== */
+.cx-hero { position: relative; background: var(--surface-dark); color: #fff; overflow: hidden;
+  padding: 138px 0 88px; }
+.cx-hero::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(1000px 560px at 10% -10%, rgba(46,107,255,.22), transparent 58%),
+    radial-gradient(760px 520px at 96% 8%, rgba(46,107,255,.10), transparent 55%); }
+.cx-suits { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.cx-suits svg { position: absolute; opacity: .05; fill: #fff; }
+.cx-suits .s1 { width: 260px; height: 260px; top: -40px; right: 6%; transform: rotate(14deg); }
+.cx-suits .s2 { width: 180px; height: 180px; bottom: -30px; right: 22%; opacity: .04; transform: rotate(-10deg); }
+.cx-suits .s3 { width: 140px; height: 140px; top: 40%; right: 40%; opacity: .03; }
+.cx-suits .s4 { width: 120px; height: 120px; bottom: 20%; left: 4%; opacity: .04; transform: rotate(8deg); }
+.cx-hero__in { position: relative; max-width: var(--w); margin: 0 auto; padding: 0 24px; z-index: 2; }
+.cx-crumbs { font-family: var(--f-mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,.5); margin-bottom: 26px; }
+.cx-crumbs a { color: rgba(255,255,255,.5); text-decoration: none; }
+.cx-crumbs a:hover { color: #fff; }
+.cx-tag { display: inline-flex; align-items: center; gap: 8px; padding: 7px 15px; border-radius: 100px;
+  background: rgba(46,107,255,.16); border: 1px solid rgba(46,107,255,.34);
+  font-family: var(--f-mono); font-size: 12px; font-weight: 600; letter-spacing: .04em; color: #9FC0FF;
+  margin-bottom: 22px; }
+.cx-hero h1 { font-family: var(--f-display); font-weight: 700; font-size: clamp(34px, 6vw, 60px);
+  line-height: 1.02; letter-spacing: -.025em; margin: 0 0 22px; max-width: 15ch; }
+.cx-hero h1 em { font-family: var(--f-serif); font-style: italic; font-weight: 400; color: #6FA0FF; }
+.cx-hero__lead { font-size: 18.5px; line-height: 1.6; color: rgba(255,255,255,.76);
+  max-width: 60ch; margin: 0 0 40px; }
+.cx-metrics { display: flex; flex-wrap: wrap; gap: 40px; }
+.cx-metric__num { font-family: var(--f-display); font-weight: 700; font-size: 40px; line-height: 1;
+  letter-spacing: -.02em; color: #fff; display: flex; align-items: baseline; gap: 4px; }
+.cx-metric__num .u { font-size: 22px; color: #6FA0FF; }
+.cx-metric__num.gold { color: #E8B84B; }
+.cx-metric__label { font-size: 13.5px; color: rgba(255,255,255,.6); margin-top: 8px; }
+@media (max-width: 640px) { .cx-metrics { gap: 26px; } .cx-metric__num { font-size: 32px; } }
 
-.cat-hero { padding: 34px 0 30px; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
-.cat-hero h1 { font-family: var(--f-display); font-weight: 700; font-size: clamp(30px, 5vw, 46px);
-  line-height: 1.06; letter-spacing: -.02em; color: var(--ink); margin: 0 0 18px; max-width: 15ch; }
-.cat-hero h1 em { font-family: var(--f-serif); font-style: italic; color: var(--accent); font-weight: 400; }
-.cat-hero__lead { font-size: 17px; line-height: 1.6; color: var(--ink-2); max-width: 62ch; margin: 0; }
-.cat-hero__meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
-.cat-chip { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 100px;
-  background: var(--surface-alt); border: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--ink-2); }
-.cat-chip b { color: var(--ink); }
-
-.cat-section-h { font-family: var(--f-display); font-weight: 700; font-size: 22px; color: var(--ink);
-  margin: 0 0 6px; letter-spacing: -.01em; }
-.cat-section-sub { font-size: 14.5px; color: var(--ink-3); margin: 0 0 24px; }
-
-/* Сетка каталога — использует .pcard из kozyr-blog.css */
-.partners.cat-grid { display: grid; gap: 20px; margin: 0 0 56px; }
-@media (max-width: 900px) { .partners.cat-grid { grid-template-columns: 1fr 1fr !important; } }
-@media (max-width: 620px) { .partners.cat-grid { grid-template-columns: 1fr !important; } }
-
-/* Интро-текст (SEO) */
-.cat-intro { max-width: 74ch; margin: 0 0 56px; }
-.cat-intro h2 { font-family: var(--f-display); font-weight: 700; font-size: 24px; color: var(--ink);
-  margin: 40px 0 14px; letter-spacing: -.01em; }
-.cat-intro h2:first-child { margin-top: 0; }
-.cat-intro p { font-size: 16px; line-height: 1.7; color: var(--ink-2); margin: 0 0 16px; }
-.cat-intro a { color: var(--accent); text-decoration: none; font-weight: 500; }
-.cat-intro a:hover { text-decoration: underline; }
-.cat-intro ul { margin: 0 0 16px; padding-left: 22px; }
-.cat-intro li { font-size: 16px; line-height: 1.7; color: var(--ink-2); margin-bottom: 8px; }
-
-/* FAQ */
-.cat-faq { max-width: 74ch; margin: 0 0 60px; }
-.cat-faq__item { border-bottom: 1px solid var(--border); padding: 20px 0; }
-.cat-faq__q { font-family: var(--f-display); font-weight: 700; font-size: 17px; color: var(--ink); margin: 0 0 10px; }
-.cat-faq__a { font-size: 15.5px; line-height: 1.65; color: var(--ink-2); margin: 0; }
-.cat-faq__a a { color: var(--accent); text-decoration: none; }
-
-.cat-disclaimer { max-width: 74ch; margin: 0 0 50px; padding: 18px 22px; background: var(--surface-alt);
-  border: 1px solid var(--border); border-radius: var(--r-lg,16px); font-size: 13.5px; line-height: 1.6; color: var(--ink-3); }
+/* ===== СВЕТЛАЯ ЧАСТЬ ===== */
+.cx-body { background: #F6F7FB; position: relative; }
+.cx-body::before { content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(900px 500px at 90% 0%, rgba(46,107,255,.05), transparent 55%); }
+.cx-wrap { position: relative; z-index: 1; max-width: var(--w); margin: 0 auto; padding: 0 24px; }
+.cx-section { padding: 64px 0 0; }
+.cx-section:last-of-type { padding-bottom: 8px; }
+.cx-shead { display: flex; align-items: baseline; gap: 14px; margin-bottom: 8px; }
+.cx-shead h2 { font-family: var(--f-display); font-weight: 700; font-size: 26px; color: var(--ink);
+  margin: 0; letter-spacing: -.015em; }
+.cx-shead__count { font-family: var(--f-mono); font-size: 13px; color: var(--ink-3);
+  padding: 3px 10px; background: var(--surface-alt); border-radius: 100px; }
+.cx-ssub { font-size: 15px; color: var(--ink-3); margin: 0 0 26px; }
+.partners.cx-grid { display: grid; gap: 22px; margin: 0; }
+.partners.cx-grid .pcard { padding: 28px; }
+@media (max-width: 900px) { .partners.cx-grid { grid-template-columns: 1fr 1fr !important; } }
+@media (max-width: 640px) { .partners.cx-grid { grid-template-columns: 1fr !important; } }
+.cx-compare { margin-top: 40px; display: none; }
+.cx-compare.is-visible { display: block; }
+.cx-compare table { width: 100%; border-collapse: collapse; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; }
+.cx-compare th, .cx-compare td { padding: 15px 18px; text-align: left; font-size: 14.5px;
+  border-bottom: 1px solid var(--border); }
+.cx-compare th { font-family: var(--f-mono); font-size: 12px; text-transform: uppercase;
+  letter-spacing: .04em; color: var(--ink-3); background: var(--surface-alt); font-weight: 600; }
+.cx-compare td { color: var(--ink); }
+.cx-compare tr:last-child td { border-bottom: none; }
+.cx-content { max-width: 76ch; }
+.cx-content h3 { font-family: var(--f-display); font-weight: 700; font-size: 21px; color: var(--ink);
+  margin: 36px 0 14px; letter-spacing: -.01em; }
+.cx-content h3:first-child { margin-top: 0; }
+.cx-content p { font-size: 16.5px; line-height: 1.72; color: var(--ink-2); margin: 0 0 16px; }
+.cx-content a { color: var(--accent); text-decoration: none; font-weight: 500; }
+.cx-content a:hover { text-decoration: underline; }
+.cx-crit { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 6px 0 8px; }
+@media (max-width: 720px) { .cx-crit { grid-template-columns: 1fr; } }
+.cx-crit__item { display: flex; gap: 14px; align-items: flex-start; padding: 18px 20px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); }
+.cx-crit__ic { flex: 0 0 40px; width: 40px; height: 40px; border-radius: 11px;
+  display: grid; place-items: center; background: var(--accent-tint); font-size: 20px; }
+.cx-crit__t { font-family: var(--f-display); font-weight: 700; font-size: 15.5px; color: var(--ink); margin: 0 0 3px; }
+.cx-crit__d { font-size: 14.5px; line-height: 1.55; color: var(--ink-2); margin: 0; }
+.cx-faq { max-width: 76ch; }
+.cx-faq__item { border-bottom: 1px solid var(--border); padding: 22px 0; }
+.cx-faq__item:first-child { border-top: 1px solid var(--border); }
+.cx-faq__q { font-family: var(--f-display); font-weight: 700; font-size: 17.5px; color: var(--ink); margin: 0 0 10px; }
+.cx-faq__a { font-size: 15.5px; line-height: 1.68; color: var(--ink-2); margin: 0; }
+.cx-faq__a a { color: var(--accent); text-decoration: none; }
+.cx-disc { max-width: 76ch; margin: 44px 0 0; padding: 20px 24px; background: var(--surface-alt);
+  border: 1px solid var(--border); border-radius: var(--r-lg); font-size: 13.5px; line-height: 1.65; color: var(--ink-3); }
+.cx-disc b { color: var(--ink-2); }
+.cx-foot { background: var(--surface-dark); color: rgba(255,255,255,.6); padding: 48px 0; margin-top: 64px; }
+.cx-foot__in { max-width: var(--w); margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.cx-foot__links { display: flex; gap: 24px; font-size: 14px; flex-wrap: wrap; }
+.cx-foot__links a { color: rgba(255,255,255,.6); text-decoration: none; }
+.cx-foot__links a:hover { color: #fff; }
+.cx-foot__copy { font-size: 13px; color: rgba(255,255,255,.4); }
 </style>
 </head>
 <body>
 
-<nav class="cat-nav">
-  <div class="cat-nav__in">
-    <a class="cat-nav__logo" href="/ua/">
-      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 8h9v20l18-20h11L36 30l16 26H41L26 34v22h-9V8z" fill="#2668FF"/></svg>
-      KOZYR
-    </a>
-    <div class="cat-nav__links">
-      <a href="/ua/#partners">Сделки</a>
-      <a href="/ua/rooms/" aria-current="page">Румы</a>
-      <a href="/ua/clubs/">Клубы</a>
-      <a href="/ua/#faq">FAQ</a>
-      <a href="/ua/blog/">Блог</a>
-    </div>
-    <a class="cat-nav__cta" href="/ua/#partners">Активировать сделку</a>
+<section class="cx-hero">
+  <div class="cx-suits" aria-hidden="true">
+    <svg class="s1" viewBox="0 0 24 24"><path d="M12 2C9 6 4 8 4 13a4 4 0 0 0 7 3c-.3 2-1 3.5-2 5h6c-1-1.5-1.7-3-2-5a4 4 0 0 0 7-3c0-5-5-7-8-11z"/></svg>
+    <svg class="s2" viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-10a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 5.5-8 10-8 10z"/></svg>
+    <svg class="s3" viewBox="0 0 24 24"><path d="M12 2 L20 12 L12 22 L4 12 Z"/></svg>
+    <svg class="s4" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><circle cx="7.5" cy="14" r="4"/><circle cx="16.5" cy="14" r="4"/><rect x="11" y="13" width="2" height="7"/></svg>
   </div>
-</nav>
 
-<div class="cat-wrap">
-  <div class="cat-crumbs"><a href="/ua/">Главная</a> / Румы</div>
+  <nav class="cx-nav">
+    <div class="cx-nav__in">
+      <a class="cx-logo" href="/ua/">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="ki1" x1="505" y1="628" x2="596" y2="628" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#14358F"/><stop offset="1" stop-color="#2A6BFF"/></linearGradient></defs><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 587 1 1071 0 1076 -3 16
+-32 42 583 -519 198 -180 547 -499 775 -709 228 -209 547 -501 708 -649 l294
+-267 905 0 c497 0 904 2 904 4 0 5 18 -12 -530 502 -228 214 -562 526 -740
+694 -425 398 -844 786 -1006 931 -71 63 -228 203 -349 310 -376 334 -500 446
+-581 524 l-79 75 66 63 c339 322 703 669 789 752 58 55 197 188 310 295 113
+107 311 296 440 420 129 124 368 351 530 505 162 154 389 370 505 481 115 110
+308 292 428 404 119 113 217 208 217 212 0 4 -405 8 -901 8 l-901 0 -132 -128
+c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36
+-66 -58 -66 -51 1 8 0 517 0 1132 l-2 1117 -650 0 -650 0 0 -3090z" fill="#2668FF"/></g><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59 c39 -33 78 -61 88 -63
+18 -2 41 33 41 63 0 22 39 74 55 74 7 0 16 7 19 16 10 25 47 72 99 125 26 27
+47 55 47 63 0 21 49 76 67 76 17 0 93 79 93 96 0 7 17 27 38 46 21 19 42 42
+45 52 4 9 15 20 24 23 21 8 52 43 53 59 0 6 18 32 40 57 31 35 40 53 40 82 0
+31 7 44 42 76 23 21 47 35 52 32 6 -3 -3 9 -21 27 -32 34 -32 34 -268 -196
+-490 -475 -535 -517 -551 -504 -19 16 -19 192 0 315 8 50 17 126 20 170 9 121
+16 187 23 215 6 25 7 33 17 120 2 25 7 61 11 80 4 19 8 51 10 70 2 19 7 53 10
+75 3 22 8 76 10 120 3 44 8 91 11 105 15 55 22 109 29 220 2 41 9 104 15 140
+6 36 13 77 15 91 2 14 -1 31 -6 36 -7 7 -4 16 11 26 12 8 19 20 15 27 -4 6 -1
+17 5 25 28 34 -2 8 -132 -113z" fill="#14358F"/></g></g></svg>
+        KOZYR
+      </a>
+      <div class="cx-links">
+        <a href="/ua/#partners">Сделки</a>
+        <a href="/ua/rooms/" aria-current="page">Румы</a>
+        <a href="/ua/clubs/">Клубы</a>
+        <a href="/ua/#faq">FAQ</a>
+        <a href="/ua/blog/">Блог</a>
+      </div>
+      <div class="cx-actions">
+        <div class="cx-lang" role="group" aria-label="Выбор языка">
+          <a href="/ua/rooms/" hreflang="ru-UA" lang="ru" aria-current="page">RU</a>
+          <a href="/ua/uk/rooms/" hreflang="uk-UA" lang="uk">UA</a>
+        </div>
+        <a class="cx-tg" href="https://t.me/kozyr_support" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3l-3.3 15.5c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6.4 13.6l-4.8-1.5c-1-.3-1.1-1 .2-1.5l18.7-7.2c.9-.3 1.6.2 1.4 1z"/></svg>
+          <span>Telegram</span>
+        </a>
+      </div>
+    </div>
+  </nav>
 
-  <header class="cat-hero">
+  <div class="cx-hero__in">
+    <div class="cx-crumbs"><a href="/ua/">Главная</a> &nbsp;/&nbsp; Румы</div>
+    <span class="cx-tag">♦ ПОКЕР-РУМЫ · УКРАИНА</span>
     <h1>Покерные румы <em>на гривны</em></h1>
-    <p class="cat-hero__lead">Проверенные покер-румы для игроков из Украины: игра и расчёты в гривне, рейкбек, понятные лицензии, депозиты картой, через P2P или в криптовалюте. KOZYR показывает честные условия сделки и передаёт тебя в рум напрямую.</p>
-    <div class="cat-hero__meta">
-      <span class="cat-chip">🎯 Рейкбек и бонусы</span>
-      <span class="cat-chip">💳 Гривна · карта · P2P</span>
-      <span class="cat-chip">🛡 Лицензированные площадки</span>
+    <p class="cx-hero__lead">Проверенные покер-румы для игроков из Украины: игра и расчёты в гривне, рейкбек, понятные лицензии, депозиты картой, через P2P или в криптовалюте. KOZYR показывает честные условия и передаёт тебя в рум напрямую.</p>
+    <div class="cx-metrics">
+      <div class="cx-metric">
+        <div class="cx-metric__num" data-count-rooms>1</div>
+        <div class="cx-metric__label">рум в каталоге</div>
+      </div>
+      <div class="cx-metric">
+        <div class="cx-metric__num">UAH</div>
+        <div class="cx-metric__label">игра на гривны</div>
+      </div>
+      <div class="cx-metric">
+        <div class="cx-metric__num">1–2<span class="u">ч</span></div>
+        <div class="cx-metric__label">скорость выплат</div>
+      </div>
     </div>
-  </header>
+  </div>
+</section>
 
-  <h2 class="cat-section-h">Румы в каталоге</h2>
-  <p class="cat-section-sub">Отсортированы по рейтингу KOZYR. Нажми на карточку — полный обзор условий.</p>
+<div class="cx-body">
+  <div class="cx-wrap">
 
-  <!-- Карточки рендерятся из partners.js по типу "room". Добавишь рум в PARTNERS → появится здесь. -->
-  <div class="partners cat-grid" data-partners data-partner-type="room" data-limit="0"></div>
+    <section class="cx-section">
+      <div class="cx-shead">
+        <h2>Румы в каталоге</h2>
+        <span class="cx-shead__count" data-count-rooms-badge>1</span>
+      </div>
+      <p class="cx-ssub">Отсортированы по рейтингу KOZYR. Нажми на карточку — полный обзор условий.</p>
 
-  <div class="cat-intro">
-    <h2>Как выбрать покерный рум для игры на гривны</h2>
-    <p>Главное отличие румов от приватных клубов — открытая регистрация: не нужен инвайт, доступ к столам сразу после депозита. Для игроков из Украины ключевые критерии выбора — это возможность вносить и выводить деньги в гривне (картой или через P2P), наличие лицензии и размер рейкбека или приветственного бонуса.</p>
-    <p>При сравнении румов обращай внимание на:</p>
-    <ul>
-      <li><b>Валюту и платёжки</b> — расчёты в гривне снимают проблему конвертации; карта и P2P удобнее криптовалюты для большинства.</li>
-      <li><b>Лицензию</b> — площадки с лицензией (например, Curaçao) дают больше гарантий по выплатам.</li>
-      <li><b>Рейкбек и бонусы</b> — рум либо возвращает часть рейка, либо даёт welcome-бонус на депозит; считай, что выгоднее под твой объём игры.</li>
-      <li><b>Скорость вывода</b> — от пары часов до суток; чем быстрее, тем лучше.</li>
-      <li><b>Форматы игры</b> — кэш, турниры (MTT), спины; выбирай рум под свою дисциплину.</li>
-    </ul>
+      <div class="partners cx-grid" data-partners data-partner-type="room" data-limit="0"></div>
 
-    <h2>Рум или приватный клуб — что выбрать</h2>
-    <p>Румы — это открытые площадки с лицензией и мгновенным доступом. Приватные <a href="/ua/clubs/">клубы в ClubGG</a> дают мягкие поля и высокий рейкбек, но требуют инвайт и работают в серой правовой зоне. Если хочешь простой старт и юридические гарантии — выбирай рум. Если готов к клубному формату ради мягких оппонентов — смотри каталог клубов.</p>
-    <p>Разобраться в деталях помогут материалы в <a href="/ua/blog/">блоге</a> — там есть сравнения площадок, разбор рейкбека и гайды по выбору.</p>
+      <div class="cx-compare" data-compare-rooms>
+        <div class="cx-shead" style="margin-top:8px"><h2>Сравнение румов</h2></div>
+        <p class="cx-ssub">Ключевые условия площадок бок о бок.</p>
+        <div data-compare-table></div>
+      </div>
+    </section>
+
+    <section class="cx-section">
+      <div class="cx-shead"><h2>Как выбрать покерный рум</h2></div>
+      <p class="cx-ssub">На что смотреть игроку из Украины.</p>
+      <div class="cx-content">
+        <p>Главное отличие румов от приватных клубов — открытая регистрация: не нужен инвайт, доступ к столам сразу после депозита. Для игроков из Украины ключевые критерии — расчёты в гривне, наличие лицензии и размер рейкбека или приветственного бонуса.</p>
+        <div class="cx-crit">
+          <div class="cx-crit__item">
+            <div class="cx-crit__ic">💳</div>
+            <div><p class="cx-crit__t">Валюта и платёжки</p><p class="cx-crit__d">Расчёты в гривне снимают проблему конвертации; карта и P2P удобнее криптовалюты.</p></div>
+          </div>
+          <div class="cx-crit__item">
+            <div class="cx-crit__ic">🛡</div>
+            <div><p class="cx-crit__t">Лицензия</p><p class="cx-crit__d">Площадки с лицензией (например, Curaçao) дают больше гарантий по выплатам.</p></div>
+          </div>
+          <div class="cx-crit__item">
+            <div class="cx-crit__ic">🎯</div>
+            <div><p class="cx-crit__t">Рейкбек и бонусы</p><p class="cx-crit__d">Рум возвращает часть рейка либо даёт welcome-бонус; считай, что выгоднее.</p></div>
+          </div>
+          <div class="cx-crit__item">
+            <div class="cx-crit__ic">⚡</div>
+            <div><p class="cx-crit__t">Скорость вывода</p><p class="cx-crit__d">От пары часов до суток — чем быстрее, тем лучше.</p></div>
+          </div>
+        </div>
+        <h3>Рум или приватный клуб</h3>
+        <p>Румы — открытые площадки с лицензией и мгновенным доступом. Приватные <a href="/ua/clubs/">клубы в ClubGG</a> дают мягкие поля и высокий рейкбек, но требуют инвайт. Если хочешь простой старт и юридические гарантии — выбирай рум. Разобраться в деталях помогут материалы в <a href="/ua/blog/">блоге</a>.</p>
+      </div>
+    </section>
+
+    <section class="cx-section">
+      <div class="cx-shead"><h2>Частые вопросы</h2></div>
+      <p class="cx-ssub">&nbsp;</p>
+      <div class="cx-faq">
+        <div class="cx-faq__item">
+          <p class="cx-faq__q">Можно ли играть в покер на гривны легально?</p>
+          <p class="cx-faq__a">Румы с международной лицензией (например, Curaçao) принимают игроков из Украины и позволяют вносить депозиты в гривне. KOZYR показывает площадки с понятным юридическим статусом — детали в обзоре каждого рума.</p>
+        </div>
+        <div class="cx-faq__item">
+          <p class="cx-faq__q">Что такое рейкбек и как он работает?</p>
+          <p class="cx-faq__a">Рейкбек — это возврат части комиссии (рейка), которую ты платишь руму с каждой раздачи. Начисляет и выплачивает его сам рум. Подробнее — в <a href="/ua/blog/chto-takoe-reykbek-v-pokere/">статье про рейкбек</a>.</p>
+        </div>
+        <div class="cx-faq__item">
+          <p class="cx-faq__q">Как быстро приходят выплаты?</p>
+          <p class="cx-faq__a">Зависит от рума и метода вывода — от 1–2 часов до суток. Скорость выплат указана в карточке каждой площадки.</p>
+        </div>
+      </div>
+
+      <div class="cx-disc">
+        <b>18+ / 21+. Играй ответственно.</b> KOZYR — витрина партнёрских сделок, а не оператор азартных игр. Все расчёты, депозиты и выплаты проходят напрямую между тобой и румом. Азартные игры могут вызывать зависимость — играй в пределах бюджета.
+      </div>
+    </section>
+
   </div>
 
-  <section class="cat-faq" aria-label="Частые вопросы">
-    <h2 class="cat-section-h">Частые вопросы</h2>
-    <p class="cat-section-sub">&nbsp;</p>
-    <div class="cat-faq__item">
-      <p class="cat-faq__q">Можно ли играть в покер на гривны легально?</p>
-      <p class="cat-faq__a">Румы с международной лицензией (например, Curaçao) принимают игроков из Украины и позволяют вносить депозиты в гривне. KOZYR показывает площадки с понятным юридическим статусом — детали смотри в обзоре каждого рума.</p>
+  <footer class="cx-foot">
+    <div class="cx-foot__in">
+      <div class="cx-foot__links">
+        <a href="/ua/">Главная</a>
+        <a href="/ua/rooms/">Румы</a>
+        <a href="/ua/clubs/">Клубы</a>
+        <a href="/ua/blog/">Блог</a>
+        <a href="/ua/legal/">Правовая информация</a>
+      </div>
+      <div class="cx-foot__copy">© 2026 KOZYR · Играй ответственно 18+</div>
     </div>
-    <div class="cat-faq__item">
-      <p class="cat-faq__q">Что такое рейкбек и как он работает в румах?</p>
-      <p class="cat-faq__a">Рейкбек — это возврат части комиссии (рейка), которую ты платишь руму с каждой раздачи. Начисляет и выплачивает его сам рум. Подробнее — в <a href="/ua/blog/chto-takoe-reykbek-v-pokere/">статье про рейкбек</a>.</p>
-    </div>
-    <div class="cat-faq__item">
-      <p class="cat-faq__q">Как быстро приходят выплаты?</p>
-      <p class="cat-faq__a">Зависит от рума и метода вывода — от 1–2 часов до суток. Скорость выплат указана в карточке каждой площадки.</p>
-    </div>
-  </section>
-
-  <div class="cat-disclaimer">
-    <b>18+ / 21+. Играй ответственно.</b> KOZYR — это витрина партнёрских сделок, а не оператор азартных игр. Все расчёты, депозиты и выплаты проходят напрямую между тобой и румом. Азартные игры могут вызывать зависимость — играй в пределах бюджета.
-  </div>
+  </footer>
 </div>
 
 <script src="/analytics.js" defer></script>
 <script src="https://kozyr.club/partners.js" defer></script>
+<script>
+(function () {
+  function init() {
+    var P = window.KOZYR_PARTNERS;
+    if (!P) { return setTimeout(init, 120); }
+    var rooms = P.filter(function (p) { return p.access !== "club"; });
+    var n = rooms.length;
+    document.querySelectorAll("[data-count-rooms]").forEach(function (el) { el.textContent = n; });
+    document.querySelectorAll("[data-count-rooms-badge]").forEach(function (el) { el.textContent = n; });
+    if (n >= 2) {
+      var box = document.querySelector("[data-compare-rooms]");
+      var tableWrap = document.querySelector("[data-compare-table]");
+      if (box && tableWrap) {
+        var rakeText = function (p) {
+          if (p.rake === "none") return "нет";
+          return (p.rake == null) ? "уточняется" : (p.rake + "% еженедельно");
+        };
+        var rows = rooms.map(function (p) {
+          return "<tr><td><strong>" + p.name + "</strong></td>" +
+            "<td>" + rakeText(p) + "</td><td>" + (p.currency || "—") + "</td>" +
+            "<td>" + (p.license || "—") + "</td><td>" + (p.payoutLabel || "—") + "</td></tr>";
+        }).join("");
+        tableWrap.innerHTML =
+          '<table><thead><tr><th>Рум</th><th>Рейкбек</th><th>Валюта</th><th>Лицензия</th><th>Выплаты</th></tr></thead><tbody>' +
+          rows + "</tbody></table>";
+        box.classList.add("is-visible");
+      }
+    }
+  }
+  if (document.readyState === "loading") { document.addEventListener("DOMContentLoaded", init); }
+  else { init(); }
+})();
+</script>
 </body>
 </html>
