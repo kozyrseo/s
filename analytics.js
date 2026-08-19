@@ -32,15 +32,9 @@
     return;
   }
 
-  // Уважаем Do Not Track.
+  // Уважаем Do Not Track (явный сигнал браузера).
   if (navigator.doNotTrack === '1' || window.doNotTrack === '1') {
     return;
-  }
-
-  // --- Cookie consent (GDPR / ePrivacy) ---
-  // Не грузим GA4 без явного согласия пользователя на аналитику.
-  function hasAnalyticsConsent() {
-    return window.KozyrConsent && window.KozyrConsent.hasConsent('analytics');
   }
 
   function initGA() {
@@ -54,19 +48,8 @@
     });
   }
 
-  // Если консент уже дан — грузим сразу
-  if (hasAnalyticsConsent()) {
-    initGA();
-  } else {
-    // Ждём консент — banner отправит событие, если пользователь согласится
-    window.addEventListener('kozyr:consent-ready', function (e) {
-      if (e.detail && e.detail.categories && e.detail.categories.analytics === true) {
-        initGA();
-      }
-    });
-    // Если пользователь отклонил — тихо ничего не делаем, GA не грузится.
-    // gtag()-события всё равно пушатся в dataLayer — но никуда не уходят.
-  }
+  // Грузим аналитику сразу (cookie-баннер убран). IP анонимизируется.
+  initGA();
 
   // --- Трекинг кликов по партнёрским ссылкам ---
   // Ловим на этапе всплытия, чтобы не мешать переходу.

@@ -390,49 +390,57 @@ def format_markdown_report(analytics: dict) -> str:
     lines.append(f"_Период: {analytics.get('period_label', f'последние {LOOKBACK_DAYS} дней')}_")
     lines.append("")
 
-    cats = analytics.get("by_category", {})
-    lines.append(f"## Сводка")
-    lines.append(f"- 🟢 Winners: **{len(cats.get('winners', []))}**")
-    lines.append(f"- 🟡 Needs boost: **{len(cats.get('needs_boost', []))}**")
-    lines.append(f"- 🔴 Flat: **{len(cats.get('flat', []))}**")
-    lines.append(f"- ⚫ New (< {NEW_ARTICLE_MAX_AGE_DAYS} дней): **{len(cats.get('new', []))}**")
+    articles = analytics.get("articles", [])
+
+    # Суммарные показатели
+    sum_impr = sum(a.get("stats", {}).get("impressions", 0) for a in articles)
+    sum_clk = sum(a.get("stats", {}).get("clicks", 0) for a in articles)
+    ctr = (sum_clk / sum_impr * 100) if sum_impr else 0.0
+    lines.append("## Сводка")
+    lines.append(f"- 📝 Статей отслеживается: **{len(articles)}**")
+    lines.append(f"- 🔍 Показы в поиске: **{sum_impr}**")
+    lines.append(f"- 🖱 Клики: **{sum_clk}** (CTR {ctr:.1f}%)")
     lines.append("")
 
-    def render_group(title: str, items: list[dict], limit: int = 15) -> None:
-        if not items:
-            return
-        lines.append(f"## {title} (топ {min(limit, len(items))})")
+    # ── Все статьи одной таблицей, по убыванию показов ──
+    def _impr(a): return a.get("stats", {}).get("impressions", 0)
+    def _pos(a):
+        p = a.get("stats", {}).get("position")
+        return p if p is not None else 999
+    ranked = sorted(articles, key=lambda a: (-_impr(a), _pos(a)))
+
+    if ranked:
+        lines.append("## Все статьи (по показам)")
         lines.append("")
         lines.append("| Статья | Показы | Клики | CTR | Позиция |")
         lines.append("|---|---:|---:|---:|---:|")
-        for it in items[:limit]:
+        for it in ranked:
             s = it["stats"]
             title_short = it["title"][:60]
+            pos = s.get("position")
+            pos_str = f"{pos:.1f}" if isinstance(pos, (int, float)) else "—"
             lines.append(
                 f"| [{title_short}]({it['url']}) "
                 f"| {s.get('impressions', 0)} "
                 f"| {s.get('clicks', 0)} "
                 f"| {s.get('ctr', 0) * 100:.1f}% "
-                f"| {s.get('position', '—')} |"
+                f"| {pos_str} |"
             )
         lines.append("")
 
-    render_group("🟢 Winners — работают, не трогаем", cats.get("winners", []))
-    render_group("🟡 Needs boost — есть места 10-25, можно докрутить", cats.get("needs_boost", []))
-    render_group("🔴 Flat — не пошли, рассмотреть переписывание", cats.get("flat", []))
-
-    # Топ-запросы по needs_boost — это чистый материал для «дожимающих» статей
-    if cats.get("needs_boost"):
-        lines.append("## Топ-запросы для 'дожатия' (материал для новых статей)")
+    # ── Топ-запросы по каждой статье (материал для оптимизации) ──
+    has_queries = any(a.get("top_queries") for a in ranked)
+    if has_queries:
+        lines.append("## Топ поисковых запросов по статьям")
         lines.append("")
-        for it in cats["needs_boost"][:5]:
-            if not it["top_queries"]:
+        for it in ranked:
+            if not it.get("top_queries"):
                 continue
             lines.append(f"**{it['title'][:70]}**")
             for q in it["top_queries"]:
                 lines.append(
                     f"- `{q['query']}` — {q['impressions']} показов, "
-                    f"поз. {q['position']}"
+                    f"поз. {q.get('position', '—')}"
                 )
             lines.append("")
 
@@ -532,18 +540,18 @@ SOURCE_LABELS = {
 
 def format_telegram_report(analytics: dict) -> str:
     """
-    Мощная сводка для Telegram (лимит 4096, Markdown v1).
-    Секции:
-      1. Итоги за период (трафик + конверсии) — если есть GA4
-      2. SEO-классы (winners/needs_boost/flat/new)
-      3. 🔥 Конверсия: топ статей по переходам к партнёрам
-      4. Что конвертит: разбивка кликов по блокам (виджет/панель/CTA)
-      5. ⚠️ Читают, но не кликают — где чинить виджет/CTA
-      6. Источники трафика
-      7. Топ для SEO-дожатия
-    Если GA4 недоступен — секции 1,3,4,5,6 тихо пропускаются, остаётся SEO.
+    Подробная сводка для Telegram (лимит 4096, Markdown v1).
+    Без категорий winners/flat — показываем ВСЕ статьи по реальным метрикам,
+    отсортированные по показам. Секции:
+      1. Итоги за период (трафик + конверсии)
+      2. Все статьи: показы / клики / CTR / позиция (+ GA4 поведение)
+      3. Топ поисковых запросов (по статьям)
+      4. Топ по переходам к партнёрам
+      5. Что конвертит: разбивка по блокам (виджет/панель/CTA)
+      6. Читают, но не кликают
+      7. Источники трафика
+    GA4-секции тихо пропускаются, если GA4 пуст. SEO-часть есть всегда.
     """
-    cats = analytics.get("by_category", {})
     ga4 = analytics.get("ga4", {})
     ga4_on = ga4.get("available", False)
     articles = analytics.get("articles", [])
@@ -551,55 +559,91 @@ def format_telegram_report(analytics: dict) -> str:
     L: list[str] = ["📊 *Аналитика KOZYR*",
                     f"_{analytics.get('period_label', f'последние {LOOKBACK_DAYS} дней')}_", ""]
 
-    # ── 1. ИТОГИ ЗА ПЕРИОД ──────────────────────────────────────────────
+    sum_impr = sum(a.get("stats", {}).get("impressions", 0) for a in articles)
+    sum_clicks_seo = sum(a.get("stats", {}).get("clicks", 0) for a in articles)
+    seo_ctr = (sum_clicks_seo / sum_impr) if sum_impr else 0.0
+
+    # ── 1. ИТОГИ ЗА ПЕРИОД ──
+    L.append("*⚡ Итоги за период*")
     if ga4_on:
         t = ga4.get("totals", {})
-        # суммарные клики к партнёрам по всем статьям
         total_clicks = sum(a.get("conversions", {}).get("total", 0) for a in articles)
         total_views = t.get("views", 0)
         site_cr = (total_clicks / total_views) if total_views else 0.0
         L += [
-            "*⚡ Итоги за период*",
-            f"👥 Пользователи: *{t.get('users', 0)}*",
-            f"👁 Просмотры: *{total_views}*",
-            f"🎯 Переходы к партнёрам: *{total_clicks}*",
-            f"📈 Конверсия сайта: *{_pct(site_cr)}*",
-            "",
+            f"👥 Пользователи: *{t.get('users', 0)}*  ·  🖥 Сессии: *{t.get('sessions', 0)}*",
+            f"👁 Просмотры (GA4): *{total_views}*",
+            f"🎯 Переходы к партнёрам: *{total_clicks}*  ·  📈 Конв.: *{_pct(site_cr)}*",
         ]
-    else:
-        L += [
-            "_GA4 не подключён — показаны только SEO-данные из Search "
-            "Console. Подключи GA4 (GA4\\_PROPERTY\\_ID) для конверсий и "
-            "поведения._",
-            "",
-        ]
-
-    # ── 2. SEO-КЛАССЫ ───────────────────────────────────────────────────
     L += [
-        "*🔍 SEO-статус статей*",
-        f"🟢 Winners: *{len(cats.get('winners', []))}*  "
-        f"🟡 Boost: *{len(cats.get('needs_boost', []))}*  "
-        f"🔴 Flat: *{len(cats.get('flat', []))}*  "
-        f"⚫ New: *{len(cats.get('new', []))}*",
+        f"🔍 Показы в поиске: *{sum_impr}*  ·  🖱 Клики: *{sum_clicks_seo}*  ·  CTR *{_pct(seo_ctr)}*",
+        f"📝 Статей отслеживается: *{len(articles)}*",
         "",
     ]
+    if not ga4_on:
+        L += ["_GA4 пуст (нет визитов или данные ещё идут). SEO ниже — из Search Console._", ""]
 
-    # ── 3. КОНВЕРСИЯ: топ статей по переходам к партнёрам ────────────────
+    # ── 2. ВСЕ СТАТЬИ ПО МЕТРИКАМ ──
+    def _impr(a): return a.get("stats", {}).get("impressions", 0)
+    def _pos(a):
+        p = a.get("stats", {}).get("position")
+        return p if p is not None else 999
+    ranked = sorted(articles, key=lambda a: (-_impr(a), _pos(a)))
+
+    if ranked:
+        L.append("*📄 Статьи — показы · клики · CTR · позиция*")
+        for a in ranked:
+            s = a.get("stats", {})
+            impr = s.get("impressions", 0)
+            clk = s.get("clicks", 0)
+            ctr = s.get("ctr", 0.0)
+            pos = s.get("position")
+            pos_str = f"{pos:.1f}" if isinstance(pos, (int, float)) else "—"
+            title = escape_md(a["title"][:40])
+            line = f"• {title}\n   {impr} 👁 · {clk} 🖱 · {_pct(ctr)} · поз. {pos_str}"
+            if ga4_on:
+                b = a.get("behavior", {})
+                gv = b.get("views", 0)
+                eng = b.get("avg_engagement_s", 0)
+                conv = a.get("conversions", {}).get("total", 0)
+                if gv or conv:
+                    line += f"\n   GA4: {gv} просм · {eng}s вовлеч · {conv} перех."
+            L.append(line)
+        L.append("")
+
+    # ── 3. ТОП ПОИСКОВЫХ ЗАПРОСОВ ──
+    queries_block = []
+    for a in ranked:
+        tq = a.get("top_queries", [])
+        if not tq:
+            continue
+        qparts = []
+        for q in tq[:2]:
+            qtext = q.get("query", "")
+            qimpr = q.get("impressions", 0)
+            if qtext:
+                qparts.append(f"{escape_md(qtext[:30])} ({qimpr})")
+        if qparts:
+            queries_block.append(f"• {escape_md(a['title'][:32])}: " + ", ".join(qparts))
+    if queries_block:
+        L.append("*🔎 Топ запросов (показы)*")
+        L += queries_block[:8]
+        L.append("")
+
+    # ── 4. ТОП ПО ПЕРЕХОДАМ ──
     if ga4_on:
         by_conv = sorted(
             [a for a in articles if a.get("conversions", {}).get("total", 0) > 0],
             key=lambda a: -a["conversions"]["total"])
         if by_conv:
             L.append("*🔥 Топ по переходам к партнёрам*")
-            for a in by_conv[:5]:
+            for a in by_conv[:6]:
                 c = a["conversions"]["total"]
                 cr = a.get("conv_rate", 0)
-                L.append(
-                    f"• {escape_md(a['title'][:48])} — *{c}* переходов "
-                    f"({_pct(cr)})")
+                L.append(f"• {escape_md(a['title'][:44])} — *{c}* ({_pct(cr)})")
             L.append("")
 
-    # ── 4. ЧТО КОНВЕРТИТ: разбивка по блокам ────────────────────────────
+    # ── 5. ЧТО КОНВЕРТИТ ──
     if ga4_on:
         source_totals: dict[str, int] = {}
         for a in articles:
@@ -612,53 +656,40 @@ def format_telegram_report(analytics: dict) -> str:
                 L.append(f"• {label}: *{n}*")
             L.append("")
 
-    # ── 5. ЧИТАЮТ, НО НЕ КЛИКАЮТ (проблемные) ───────────────────────────
+    # ── 6. ЧИТАЮТ, НО НЕ КЛИКАЮТ ──
     if ga4_on:
-        # много просмотров, но конверсия низкая → чинить виджет/CTA
         problem = []
         for a in articles:
             b = a.get("behavior", {})
             views = b.get("views", 0)
             cr = a.get("conv_rate", 0)
-            # порог: заметный трафик, но конверсия ниже 1%
-            if views >= 30 and cr < 0.01:
+            if views >= 20 and cr < 0.01:
                 problem.append((a, views, cr))
         problem.sort(key=lambda x: -x[1])
         if problem:
             L.append("*⚠️ Читают, но не кликают* (чинить виджет/CTA)")
             for a, views, cr in problem[:5]:
-                L.append(
-                    f"• {escape_md(a['title'][:48])} — {views} просм., "
-                    f"конв. {_pct(cr)}")
+                L.append(f"• {escape_md(a['title'][:44])} — {views} просм., {_pct(cr)}")
             L.append("")
 
-    # ── 6. ИСТОЧНИКИ ТРАФИКА ────────────────────────────────────────────
+    # ── 7. ИСТОЧНИКИ ТРАФИКА ──
     if ga4_on:
         src = ga4.get("traffic_sources", {})
         if src:
-            top = sorted(src.items(), key=lambda x: -x[1])[:5]
-            parts = [f"{k}: {v}" for k, v in top]
-            L.append("*🚦 Источники трафика:* " + escape_md(", ".join(parts)))
+            top = sorted(src.items(), key=lambda x: -x[1])[:6]
+            L.append("*🚦 Источники трафика*")
+            for k, v in top:
+                L.append(f"• {escape_md(str(k))}: *{v}*")
             L.append("")
-
-    # ── 7. SEO-ДОЖАТИЕ ──────────────────────────────────────────────────
-    if cats.get("needs_boost"):
-        L.append("*🟡 Дожать в топ (высокий потенциал):*")
-        for it in cats["needs_boost"][:5]:
-            s = it["stats"]
-            L.append(
-                f"• {escape_md(it['title'][:48])} — {s.get('impressions', 0)} "
-                f"показов · поз. {s.get('position', '—')}")
-        L.append("")
 
     L.append("Полный отчёт: `analytics/report.md`")
     L.append("Команды: /analytics · /suggested · /queue · /help")
 
     text = "\n".join(L)
-    # страховка от лимита Telegram (4096)
     if len(text) > 4000:
-        text = text[:3980] + "\n…(обрезано)"
+        text = text[:3980] + "\n…(обрезано, полный — в report.md)"
     return text
+
 
 
 def escape_md(text: str) -> str:

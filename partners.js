@@ -98,6 +98,30 @@
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
     });
   }
+
+  /* Язык текущей страницы: 'uk' для украинских страниц, иначе 'ru'.
+     Определяем по <html lang> и по пути (/ua/uk/...). */
+  function pageLang() {
+    var htmlLang = (document.documentElement.getAttribute("lang") || "").toLowerCase();
+    if (htmlLang.indexOf("uk") === 0) return "uk";
+    if (/\/ua\/uk(\/|$)/.test(location.pathname)) return "uk";
+    return "ru";
+  }
+
+  /* URL партнёра с учётом языка страницы.
+     Приоритет: явный p.urlUk (если задан) → авто-локализация /ua/ → /ua/uk/.
+     Для нового партнёра достаточно задать обычный url (/ua/...) — на UK-страницах
+     ссылка локализуется автоматически, если UK-версия страницы существует по
+     стандартному пути. Если структура нестандартная — задай p.urlUk явно. */
+  function partnerUrl(p) {
+    if (pageLang() !== "uk") return p.url;
+    if (p.urlUk) return p.urlUk;
+    // /ua/rooms/pokerbet/ → /ua/uk/rooms/pokerbet/  (но не трогаем уже-uk)
+    if (/^\/ua\/(?!uk\/)/.test(p.url)) {
+      return p.url.replace(/^\/ua\//, "/ua/uk/");
+    }
+    return p.url;
+  }
   function cardHTML(p) {
     var c = p.card || {};
     var rows = (c.rows || []).map(function (r) {
@@ -116,7 +140,7 @@
       logo = '<div class="pcard__logo" style="background:linear-gradient(135deg,' +
         esc(p.logo.from) + "," + esc(p.logo.to) + ')">' + esc(c.logoText || p.logo.text) + "</div>";
     }
-    return '<a href="' + esc(p.url) + '" rel="sponsored" class="pcard ' + (c.dark ? "pcard--club" : "pcard--room") + '">' +
+    return '<a href="' + esc(partnerUrl(p)) + '" rel="sponsored" class="pcard ' + (c.dark ? "pcard--club" : "pcard--room") + '">' +
       '<div class="pcard__top">' + logo +
       '<div><div class="pcard__name">' + esc(p.name) + "</div>" +
       '<div class="pcard__badge">' + esc(c.kind || "") + "</div></div></div>" +
@@ -128,6 +152,19 @@
     if (!boxes.length) return;
     boxes.forEach(function (box) {
       var list = PARTNERS.slice();
+
+      // Фильтр по ТИПУ партнёра (для страниц-каталогов):
+      //   data-partner-type="club"  → только клубы (access === "club")
+      //   data-partner-type="room"  → только румы (всё остальное)
+      // Масштабирование: добавляешь партнёра в PARTNERS выше — он автоматически
+      // попадает в нужный каталог по своему access, без правки страниц.
+      var ptype = (box.getAttribute("data-partner-type") || "").trim();
+      if (ptype === "club") {
+        list = list.filter(function (p) { return p.access === "club"; });
+      } else if (ptype === "room") {
+        list = list.filter(function (p) { return p.access !== "club"; });
+      }
+
       var ids = (box.getAttribute("data-ids") || "").trim();
       if (ids) {
         var order = ids.split(",").map(function (s) { return s.trim(); });
@@ -137,9 +174,16 @@
       } else {
         list.sort(function (a, b) { return (b.score || 0) - (a.score || 0); });
       }
-      var limit = parseInt(box.getAttribute("data-limit") || "2", 10);
-      list = list.slice(0, limit).filter(function (p) { return p.card; });
-      box.style.gridTemplateColumns = "repeat(" + Math.min(list.length, 2) + ",1fr)";
+      // data-limit="0" или отсутствие → показать ВСЕХ (для каталога).
+      // Иначе — ограничить (для блока «топ-2» на главной/в блоге).
+      var limitAttr = box.getAttribute("data-limit");
+      var limit = limitAttr === null ? 0 : parseInt(limitAttr, 10);
+      if (limit > 0) list = list.slice(0, limit);
+      list = list.filter(function (p) { return p.card; });
+
+      // Сетка: каталог (много карточек) — до 3 колонок; блок — до 2.
+      var cols = ptype ? Math.min(list.length, 3) : Math.min(list.length, 2);
+      box.style.gridTemplateColumns = "repeat(" + Math.max(cols, 1) + ",1fr)";
       box.innerHTML = list.map(cardHTML).join("");
     });
   }
@@ -238,7 +282,7 @@
       logo = '<div class="pcard__logo" style="background:linear-gradient(135deg,' +
         esc(p.logo.from) + "," + esc(p.logo.to) + ')">' + esc(c.logoText || p.logo.text) + "</div>";
     }
-    return '<a href="' + esc(p.url) + '" rel="sponsored" class="pcard side-pcard ' +
+    return '<a href="' + esc(partnerUrl(p)) + '" rel="sponsored" class="pcard side-pcard ' +
       (c.dark ? "pcard--club" : "pcard--room") + '">' +
       '<div class="pcard__top">' + logo +
       '<div><div class="pcard__name">' + esc(p.name) + "</div>" +
@@ -341,7 +385,7 @@
     bar.className = "partner-bar";
     bar.setAttribute("data-partner-bar", "");
     bar.innerHTML =
-      '<a href="' + esc(p.url) + '" rel="sponsored" class="pbar__inner">' +
+      '<a href="' + esc(partnerUrl(p)) + '" rel="sponsored" class="pbar__inner">' +
       '<span class="pbar__info">' + logo +
       '<span class="pbar__txt"><span class="pbar__name">' + esc(p.name) + "</span>" + sub + "</span></span>" +
       '<span class="pbar__cta">Играть →</span></a>';
