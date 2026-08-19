@@ -372,6 +372,15 @@ async function handleCallback(cb, env) {
     return;
   }
 
+  // === Разделы дашборда (каждый — НОВОЕ сообщение, история сохраняется) ===
+  // an_section:{articles|partners|dynamics|queries|traffic|ga4}
+  if (action === "an_section") {
+    const which = segments[1] || "articles";
+    await answerCallback(cb.id, env, "📂 Открываю раздел...");
+    await sendAnalyticsSection(cb.message.chat.id, which, env);
+    return;
+  }
+
   // v2 multilang UI: menu_action от кнопок "⚙️ Ещё"
   if (action === "menu_action") {
     const which = segments[1];
@@ -464,7 +473,7 @@ async function cmdHelp(chatId, args, msg, env) {
 *🎛 Главные кнопки (снизу чата):*
   📝 Темы — предложенные темы (кнопки «в очередь / генерить / отклонить»)
   ⚡ Сгенерить — статья из очереди
-  📊 Аналитика — мгновенная сводка (SEO + конверсии) + кнопки: собрать за неделю/месяц/квартал/год/60 дней, полный отчёт, обновить
+  📊 Аналитика — мгновенная сводка + разделы по кнопкам (📄 Статьи · 🎯 Партнёры · 📈 Динамика · 🔎 Запросы · 🌍 Трафик · ⚙️ GA4), выбор периода, полный отчёт
   📋 Pending — статьи на ревью по всем языкам
   🌍 Страны — список настроенных стран и их языков
   ⚙️ Ещё — research, обновить темы, аналитика за период, статус, translate, A/B
@@ -717,21 +726,396 @@ async function showAnalyticsDashboard(chatId, env) {
   const report = await ghReadJSON("analytics/report.json", env);
   const summary = renderInstantSummary(report);
   const kb = [
+    // Разделы дашборда — каждый открывается новым сообщением
+    [
+      { text: "📄 Статьи", callback_data: "an_section:articles" },
+      { text: "🎯 Партнёры", callback_data: "an_section:partners" },
+    ],
+    [
+      { text: "📈 Динамика", callback_data: "an_section:dynamics" },
+      { text: "🔎 Запросы", callback_data: "an_section:queries" },
+    ],
+    [
+      { text: "🌍 Трафик", callback_data: "an_section:traffic" },
+      { text: "⚙️ GA4-поведение", callback_data: "an_section:ga4" },
+    ],
+    // Свежий сбор за период
     [{ text: "📊 Собрать за 60 дней", callback_data: "an_period:default" }],
     [
       { text: "🗓 Неделя", callback_data: "an_period:week" },
       { text: "🗓 Месяц", callback_data: "an_period:month" },
-    ],
-    [
       { text: "🗓 Квартал", callback_data: "an_period:quarter" },
-      { text: "🗓 Год", callback_data: "an_period:year" },
     ],
     [
       { text: "📄 Полный отчёт", callback_data: "an_full" },
-      { text: "🔄 Обновить сводку", callback_data: "an_refresh" },
+      { text: "🔄 Обновить", callback_data: "an_refresh" },
     ],
   ];
   await sendMessage(chatId, env, summary, kb);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  РАЗДЕЛЫ ДАШБОРДА — каждый приходит отдельным сообщением
+//  Читают analytics/report.json (текущий) и report_prev.json (для динамики).
+// ═══════════════════════════════════════════════════════════════════
+async function sendAnalyticsSection(chatId, which, env) {
+  const report = await ghReadJSON("analytics/report.json", env);
+  if (!report || !report.articles) {
+    await sendMessage(chatId, env,
+      "📊 Отчёта пока нет. Нажми «📊 Собрать за 60 дней», бот соберёт данные.");
+    return;
+  }
+  let text;
+  const back = [[{ text: "◀️ К дашборду", callback_data: "an_refresh" }]];
+  switch (which) {
+    case "articles":  text = renderSectionArticles(report); break;
+    case "partners":  text = renderSectionPartners(report); break;
+    case "dynamics":  text = await renderSectionDynamics(report, env); break;
+    case "queries":   text = renderSectionQueries(report); break;
+    case "traffic":   text = renderSectionTraffic(report); break;
+    case "ga4":       text = renderSectionGA4(report); break;
+    default:          text = "Неизвестный раздел.";
+  }
+  if (text.length > 3900) text = text.slice(0, 3880) + "\n…(обрезано)";
+  await sendMessage(chatId, env, text, back);
+}
+
+function _secImpr(a) { return (a.stats && a.stats.impressions) || 0; }
+function _secClk(a) { return (a.stats && a.stats.clicks) || 0; }
+function _secPos(a) {
+  const p = a.stats && a.stats.position;
+  return (p === null || p === undefined) ? null : p;
+}
+function _secRankedByImpr(articles) {
+  return articles.slice().sort((a, b) => {
+    const di = _secImpr(b) - _secImpr(a);
+    if (di) return di;
+    return (_secPos(a) ?? 999) - (_secPos(b) ?? 999);
+  });
+}
+
+// ── 📄 СТАТЬИ: показы / клики / CTR / позиция ──
+function renderSectionArticles(report) {
+  const articles = report.articles || [];
+  const site = report.site || {};
+  const ranked = _secRankedByImpr(articles);
+  const L = ["📄 *Статьи — показы · клики · CTR · позиция*", ""];
+
+  // Если есть данные по всему сайту — показываем ИХ (полная картина).
+  const sitePages = Array.isArray(site.pages) ? site.pages.filter(p => (p.impressions || 0) > 0) : [];
+  if (sitePages.length) {
+    const st = site.totals || {};
+    L.push(`Σ по сайту: показы *${st.impressions || 0}* · клики *${st.clicks || 0}* · CTR *${((st.ctr || 0) * 100).toFixed(2)}%*`);
+    L.push(`Страниц с трафиком: *${sitePages.length}*`);
+    L.push("");
+    L.push("*Все страницы сайта (по показам):*");
+    for (const p of sitePages.slice(0, 20)) {
+      const pos = (typeof p.position === "number") ? p.position.toFixed(1) : "—";
+      const c = (p.ctr || 0) * 100;
+      const label = p.title && p.title !== p.path ? p.title : p.path;
+      L.push(`• ${escapeMd(String(label).slice(0, 44))}`);
+      L.push(`   ${p.impressions || 0} 👁 · ${p.clicks || 0} 🖱 · ${c.toFixed(1)}% · поз. ${pos}`);
+    }
+    return L.join("\n");
+  }
+
+  // Фолбэк: старая логика по 6 статьям taxonomy.
+  const sumI = articles.reduce((s, a) => s + _secImpr(a), 0);
+  const sumC = articles.reduce((s, a) => s + _secClk(a), 0);
+  const ctr = sumI ? (sumC / sumI * 100) : 0;
+  L.push(`Σ показы: *${sumI}* · клики: *${sumC}* · CTR *${ctr.toFixed(2)}%*`);
+  L.push("");
+  for (const a of ranked) {
+    const s = a.stats || {};
+    const pos = (typeof s.position === "number") ? s.position.toFixed(1) : "—";
+    const c = (s.ctr || 0) * 100;
+    L.push(`• ${escapeMd(String(a.title || "").slice(0, 44))}`);
+    L.push(`   ${s.impressions || 0} 👁 · ${s.clicks || 0} 🖱 · ${c.toFixed(1)}% · поз. ${pos}`);
+  }
+  return L.join("\n");
+}
+
+// ── 🎯 ПАРТНЁРЫ: переходы к PokerBet / KlubOk (по данным GA4-событий) ──
+function renderSectionPartners(report) {
+  const ga4 = report.ga4 || {};
+  const articles = report.articles || [];
+  const L = ["🎯 *Переходы к партнёрам*", ""];
+
+  if (!ga4.available) {
+    L.push("_GA4 ещё не отдаёт данные (нужны визиты + 24–48ч)._");
+    L.push("");
+    L.push("Как только пойдёт трафик, здесь появится:");
+    L.push("• сколько человек ушло на *каждого* партнёра");
+    L.push("• откуда кликнули (виджет / CTA / карточка / панель)");
+    L.push("• с какой страницы шёл переход");
+    L.push("• внешние переходы (outbound) vs на страницу-обзор");
+    return L.join("\n");
+  }
+
+  const byPartner = {};   // partner → total (из link_label)
+  const bySource = {};    // источник блока → total
+  const byEvent = { affiliate_click: 0, partner_page_click: 0 };
+  const byPage = {};      // страница → total
+
+  for (const a of articles) {
+    const conv = a.conversions || {};
+    const total = conv.total || 0;
+    if (!total) continue;
+    byPage[a.title || a.slug] = (byPage[a.title || a.slug] || 0) + total;
+    for (const [src, n] of Object.entries(conv.by_source || {})) {
+      bySource[src] = (bySource[src] || 0) + n;
+    }
+    for (const [ev, n] of Object.entries(conv.by_event || {})) {
+      byEvent[ev] = (byEvent[ev] || 0) + n;
+    }
+  }
+  const convByPage = ga4.conversions_by_page || {};
+  for (const rec of Object.values(convByPage)) {
+    for (const [label, n] of Object.entries(rec.by_label || {})) {
+      byPartner[label] = (byPartner[label] || 0) + n;
+    }
+  }
+
+  const totalClicks = articles.reduce((s, a) => s + ((a.conversions && a.conversions.total) || 0), 0);
+  const totalViews = (ga4.totals && ga4.totals.views) || 0;
+  const cr = totalViews ? (totalClicks / totalViews * 100) : 0;
+  L.push(`Всего переходов: *${totalClicks}* · конверсия *${cr.toFixed(2)}%*`);
+  L.push(`Внешние: *${byEvent.affiliate_click || 0}* · на обзор: *${byEvent.partner_page_click || 0}*`);
+  L.push("");
+
+  const partners = Object.entries(byPartner).sort((a, b) => b[1] - a[1]);
+  if (partners.length) {
+    L.push("*По партнёрам:*");
+    for (const [p, n] of partners) {
+      const share = totalClicks ? (n / totalClicks * 100).toFixed(0) : 0;
+      L.push(`• ${escapeMd(p)}: *${n}* (${share}%)`);
+    }
+    L.push("");
+  }
+
+  const sources = Object.entries(bySource).sort((a, b) => b[1] - a[1]);
+  if (sources.length) {
+    L.push("*Откуда кликают (блок):*");
+    for (const [src, n] of sources) {
+      L.push(`• ${SECTION_SRC_LABELS[src] || src}: *${n}*`);
+    }
+    L.push("");
+  }
+
+  const pages = Object.entries(byPage).sort((a, b) => b[1] - a[1]).slice(0, 6);
+  if (pages.length) {
+    L.push("*Страницы, дающие переходы:*");
+    for (const [pg, n] of pages) {
+      L.push(`• ${escapeMd(String(pg).slice(0, 40))} — *${n}*`);
+    }
+  }
+  return L.join("\n");
+}
+
+// ── 📈 ДИНАМИКА: сравнение с прошлым сбором ──
+async function renderSectionDynamics(report, env) {
+  const prev = await ghReadJSON("analytics/report_prev.json", env);
+  const L = ["📈 *Динамика vs прошлый период*", ""];
+  if (!prev || !prev.articles) {
+    L.push("_Нет предыдущего снимка для сравнения._");
+    L.push("");
+    L.push("Динамика появится со *второго* сбора: бот сохраняет прошлый");
+    L.push("отчёт в `report_prev.json` и сравнивает показы, клики и позиции.");
+    return L.join("\n");
+  }
+
+  const cur = report.articles || [];
+  const old = prev.articles || [];
+  const oldBySlug = {};
+  for (const a of old) oldBySlug[a.slug] = a;
+
+  const sumI = cur.reduce((s, a) => s + _secImpr(a), 0);
+  const sumIold = old.reduce((s, a) => s + _secImpr(a), 0);
+  const sumC = cur.reduce((s, a) => s + _secClk(a), 0);
+  const sumCold = old.reduce((s, a) => s + _secClk(a), 0);
+  L.push(`Показы: *${sumI}* ${_secDelta(sumI, sumIold)}`);
+  L.push(`Клики: *${sumC}* ${_secDelta(sumC, sumCold)}`);
+  L.push("");
+
+  const moved = [];
+  for (const a of cur) {
+    const o = oldBySlug[a.slug];
+    if (!o) continue;
+    const pNew = _secPos(a), pOld = _secPos(o);
+    if (pNew === null || pOld === null) continue;
+    const diff = pOld - pNew; // >0 = поднялась в выдаче
+    if (Math.abs(diff) >= 0.5) moved.push({ title: a.title, diff, pNew });
+  }
+  moved.sort((a, b) => b.diff - a.diff);
+
+  const up = moved.filter(m => m.diff > 0).slice(0, 5);
+  const down = moved.filter(m => m.diff < 0).slice(0, 5);
+  if (up.length) {
+    L.push("*⬆️ Растут в выдаче:*");
+    for (const m of up) L.push(`• ${escapeMd(String(m.title).slice(0, 40))} — поз. ${m.pNew.toFixed(1)} (↑${m.diff.toFixed(1)})`);
+    L.push("");
+  }
+  if (down.length) {
+    L.push("*⬇️ Падают в выдаче:*");
+    for (const m of down) L.push(`• ${escapeMd(String(m.title).slice(0, 40))} — поз. ${m.pNew.toFixed(1)} (↓${Math.abs(m.diff).toFixed(1)})`);
+    L.push("");
+  }
+  const newOnes = cur.filter(a => !oldBySlug[a.slug] && _secImpr(a) > 0);
+  if (newOnes.length) {
+    L.push("*🆕 Начали показываться:*");
+    for (const a of newOnes.slice(0, 5)) L.push(`• ${escapeMd(String(a.title).slice(0, 40))} — ${_secImpr(a)} 👁`);
+  }
+  return L.join("\n");
+}
+
+// ── 🔎 ЗАПРОСЫ: топ + на грани топ-10 ──
+function renderSectionQueries(report) {
+  const articles = report.articles || [];
+  const site = report.site || {};
+  const L = ["🔎 *Поисковые запросы*", ""];
+
+  // Приоритет: запросы по всему сайту (site.top_queries). Фолбэк — из статей.
+  let allQ = [];
+  if (Array.isArray(site.top_queries) && site.top_queries.length) {
+    allQ = site.top_queries.map(q => ({
+      q: q.query, impr: q.impressions || 0, clk: q.clicks || 0, pos: q.position,
+    }));
+  } else {
+    for (const a of articles) {
+      for (const q of (a.top_queries || [])) {
+        if (q.query) allQ.push({ q: q.query, impr: q.impressions || 0, clk: q.clicks || 0, pos: q.position });
+      }
+    }
+  }
+  allQ.sort((a, b) => b.impr - a.impr);
+
+  if (allQ.length) {
+    L.push("*Топ запросов (показы · клики):*");
+    for (const q of allQ.slice(0, 12)) {
+      const pos = (typeof q.pos === "number") ? ` · поз. ${q.pos.toFixed(1)}` : "";
+      const clk = q.clk ? ` · ${q.clk} 🖱` : "";
+      L.push(`• ${escapeMd(q.q.slice(0, 34))} — ${q.impr} 👁${clk}${pos}`);
+    }
+    L.push("");
+  }
+
+  const edge = allQ.filter(q => typeof q.pos === "number" && q.pos > 10 && q.pos <= 20);
+  edge.sort((a, b) => a.pos - b.pos);
+  if (edge.length) {
+    L.push("*🎯 На грани топ-10 (дожать):*");
+    for (const q of edge.slice(0, 8)) {
+      L.push(`• ${escapeMd(q.q.slice(0, 32))} — поз. ${q.pos.toFixed(1)} (${q.impr} 👁)`);
+    }
+    L.push("");
+    L.push("_Оптимизируй страницы под эти запросы — они близко к первой странице._");
+  }
+  if (!allQ.length) {
+    L.push("_Запросов пока нет — Search Console наберёт данные за несколько дней._");
+  }
+  return L.join("\n");
+}
+
+// ── 🌍 ТРАФИК: источники + страны + устройства ──
+function renderSectionTraffic(report) {
+  const ga4 = report.ga4 || {};
+  const L = ["🌍 *Источники трафика*", ""];
+  if (!ga4.available) {
+    L.push("_GA4 ещё не отдаёт данные. Появится: каналы, страны, устройства._");
+    return L.join("\n");
+  }
+  const src = ga4.traffic_sources || {};
+  const entries = Object.entries(src).sort((a, b) => b[1] - a[1]);
+  if (entries.length) {
+    L.push("*Каналы (пользователи):*");
+    for (const [k, v] of entries.slice(0, 8)) {
+      L.push(`• ${escapeMd(String(k))}: *${v}*`);
+    }
+    L.push("");
+  }
+  const geo = ga4.by_country || {};
+  const geoE = Object.entries(geo).sort((a, b) => b[1] - a[1]).slice(0, 6);
+  if (geoE.length) {
+    L.push("*Страны:*");
+    for (const [k, v] of geoE) L.push(`• ${escapeMd(String(k))}: *${v}*`);
+    L.push("");
+  }
+  const dev = ga4.by_device || {};
+  const devE = Object.entries(dev).sort((a, b) => b[1] - a[1]);
+  if (devE.length) {
+    L.push("*Устройства:*");
+    for (const [k, v] of devE) L.push(`• ${escapeMd(String(k))}: *${v}*`);
+  }
+  if (!entries.length && !geoE.length && !devE.length) {
+    L.push("_Данных пока нет._");
+  }
+  return L.join("\n");
+}
+
+// ── ⚙️ GA4-ПОВЕДЕНИЕ: вовлечённость, отказы, время ──
+function renderSectionGA4(report) {
+  const ga4 = report.ga4 || {};
+  const articles = report.articles || [];
+  const L = ["⚙️ *GA4 — поведение на страницах*", ""];
+  if (!ga4.available) {
+    L.push("_GA4 ещё не отдаёт данные (нужны визиты + 24–48ч)._");
+    L.push("");
+    L.push("Появится по каждой странице:");
+    L.push("• просмотры и пользователи");
+    L.push("• вовлечённость (engagement rate)");
+    L.push("• показатель отказов (bounce rate)");
+    L.push("• среднее время вовлечения");
+    return L.join("\n");
+  }
+  const t = ga4.totals || {};
+  L.push(`👥 Пользователи: *${t.users || 0}* · 🖥 Сессии: *${t.sessions || 0}* · 👁 Просмотры: *${t.views || 0}*`);
+  L.push("");
+
+  const beh = ga4.behavior_by_page || {};
+  const rows = Object.entries(beh)
+    .map(([path, b]) => ({ path, ...b }))
+    .sort((a, b) => (b.views || 0) - (a.views || 0))
+    .slice(0, 8);
+  if (rows.length) {
+    L.push("*По страницам (просмотры · вовлеч. · отказы):*");
+    for (const r of rows) {
+      const eng = (r.engagement_rate != null) ? `${(r.engagement_rate * 100).toFixed(0)}%` : "—";
+      const bounce = (r.bounce_rate != null) ? `${(r.bounce_rate * 100).toFixed(0)}%` : "—";
+      L.push(`• ${escapeMd(String(r.path).slice(0, 36))}`);
+      L.push(`   ${r.views || 0} 👁 · вовлеч. ${eng} · отказы ${bounce}`);
+    }
+    L.push("");
+  }
+
+  const problem = [];
+  for (const a of articles) {
+    const views = (a.behavior && a.behavior.views) || 0;
+    const cr = a.conv_rate || 0;
+    if (views >= 20 && cr < 0.01) problem.push({ title: a.title, views, cr });
+  }
+  problem.sort((a, b) => b.views - a.views);
+  if (problem.length) {
+    L.push("*⚠️ Читают, но не кликают:*");
+    for (const p of problem.slice(0, 5)) {
+      L.push(`• ${escapeMd(String(p.title).slice(0, 40))} — ${p.views} 👁, ${(p.cr * 100).toFixed(1)}%`);
+    }
+  }
+  return L.join("\n");
+}
+
+// helpers для разделов дашборда
+const SECTION_SRC_LABELS = {
+  side_widget: "Боковой виджет",
+  mobile_bar: "Моб. панель",
+  final_cta: "Финальный CTA",
+  partner_card: "Карточка партнёра",
+  link: "Ссылка в тексте",
+};
+function _secDelta(cur, old) {
+  const d = cur - old;
+  if (d === 0) return "→ 0";
+  const arrow = d > 0 ? "⬆️" : "⬇️";
+  const pct = old ? ` (${d > 0 ? "+" : ""}${(d / old * 100).toFixed(0)}%)` : "";
+  return `${arrow} ${d > 0 ? "+" : ""}${d}${pct}`;
 }
 
 // Рендер компактной сводки из structured report.json.
@@ -788,12 +1172,24 @@ function renderInstantSummary(report) {
     L.push("");
   }
 
+  // ── Поиск по ВСЕМУ САЙТУ (Search Console, все страницы) ──
+  const site = report.site || {};
+  const st = site.totals || null;
+  if (st && (st.impressions || st.clicks)) {
+    const sctr = (st.ctr || 0) * 100;
+    const spos = (typeof st.position === "number") ? st.position.toFixed(1) : "—";
+    L.push("*🔍 Поиск по всему сайту*");
+    L.push(`👁 Показы: *${st.impressions || 0}*  ·  🖱 Клики: *${st.clicks || 0}*  ·  CTR *${sctr.toFixed(1)}%*`);
+    L.push(`📍 Средняя позиция: *${spos}*  ·  📄 Страниц с трафиком: *${site.pages_count || 0}*`);
+    L.push("");
+  }
+
   // ── SEO-статус ──
   const w = (cats.winners || []).length;
   const b = (cats.needs_boost || []).length;
   const f = (cats.flat || []).length;
   const n = (cats.new || []).length;
-  L.push("*🔍 SEO-статус статей*");
+  L.push("*🔍 SEO-статус статей блога*");
   L.push(`🟢 Winners: *${w}*  ·  🟡 Boost: *${b}*  ·  🔴 Flat: *${f}*  ·  ⚫ New: *${n}*`);
 
   // ── Что дожать в топ ──

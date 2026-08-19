@@ -69,7 +69,10 @@ except ImportError:
 
 # За какой период считаем трафик статьи
 LOOKBACK_DAYS = 60
-
+# Search Console обрабатывает данные с задержкой 2-3 дня: за самые свежие
+# сутки статистики ещё нет. Сдвигаем конец окна на столько дней назад, чтобы
+# не занижать показатели «пустым» хвостом. Меняется здесь при желании.
+GSC_LAG_DAYS = 3
 # Пороги классификации (подстроишь под свой сайт после первых прогонов)
 WINNERS_MIN_IMPRESSIONS = 500
 WINNERS_MIN_CTR = 0.05
@@ -173,6 +176,111 @@ def fetch_top_queries_for_page(service, site_url: str, page_url: str,
     ]
 
 
+def fetch_all_pages(service, site_url: str,
+                    start_date=None, end_date=None,
+                    limit: int = 500) -> list[dict]:
+    """
+    Достаёт ВСЕ страницы сайта с трафиком за период (один запрос к GSC,
+    dimension=page, без фильтра). Так отчёт покрывает весь сайт, а не только
+    статьи из taxonomy: каталоги, страницы партнёров, UK-версии, подкатегории.
+    Возвращает список dict: {url, impressions, clicks, ctr, position}.
+    """
+    if end_date is None:
+        end_date = datetime.now(timezone.utc).date() - timedelta(days=GSC_LAG_DAYS)
+    if start_date is None:
+        start_date = end_date - timedelta(days=LOOKBACK_DAYS)
+
+    body = {
+        "startDate": start_date.isoformat(),
+        "endDate": end_date.isoformat(),
+        "dimensions": ["page"],
+        "rowLimit": limit,
+        "type": "web",
+    }
+    try:
+        resp = service.searchanalytics().query(siteUrl=site_url, body=body).execute()
+    except Exception as e:
+        print(f"⚠️  fetch_all_pages: {str(e)[:200]}")
+        return []
+    out = []
+    for r in resp.get("rows", []):
+        imp = r.get("impressions", 0)
+        cl = r.get("clicks", 0)
+        out.append({
+            "url": r["keys"][0],
+            "impressions": imp,
+            "clicks": cl,
+            "ctr": round((cl / imp) if imp else 0, 4),
+            "position": round(r.get("position", 0), 1),
+        })
+    # По убыванию показов — самые заметные страницы первыми
+    out.sort(key=lambda x: -x["impressions"])
+    return out
+
+
+def fetch_site_totals(service, site_url: str,
+                      start_date=None, end_date=None) -> dict:
+    """Суммарные показатели по всему сайту за период (без разбивки)."""
+    if end_date is None:
+        end_date = datetime.now(timezone.utc).date() - timedelta(days=GSC_LAG_DAYS)
+    if start_date is None:
+        start_date = end_date - timedelta(days=LOOKBACK_DAYS)
+    body = {
+        "startDate": start_date.isoformat(),
+        "endDate": end_date.isoformat(),
+        "type": "web",
+    }
+    try:
+        resp = service.searchanalytics().query(siteUrl=site_url, body=body).execute()
+    except Exception as e:
+        print(f"⚠️  fetch_site_totals: {str(e)[:200]}")
+        return {"impressions": 0, "clicks": 0, "ctr": 0.0, "position": None}
+    rows = resp.get("rows", [])
+    if not rows:
+        return {"impressions": 0, "clicks": 0, "ctr": 0.0, "position": None}
+    r = rows[0]
+    imp = r.get("impressions", 0)
+    cl = r.get("clicks", 0)
+    return {
+        "impressions": imp,
+        "clicks": cl,
+        "ctr": round((cl / imp) if imp else 0, 4),
+        "position": round(r.get("position", 0), 1),
+    }
+
+
+def fetch_top_queries_site(service, site_url: str,
+                           start_date=None, end_date=None,
+                           limit: int = 25) -> list[dict]:
+    """Топ поисковых запросов по ВСЕМУ сайту (без фильтра по странице)."""
+    if end_date is None:
+        end_date = datetime.now(timezone.utc).date() - timedelta(days=GSC_LAG_DAYS)
+    if start_date is None:
+        start_date = end_date - timedelta(days=LOOKBACK_DAYS)
+    body = {
+        "startDate": start_date.isoformat(),
+        "endDate": end_date.isoformat(),
+        "dimensions": ["query"],
+        "rowLimit": limit,
+        "type": "web",
+    }
+    try:
+        resp = service.searchanalytics().query(siteUrl=site_url, body=body).execute()
+    except Exception as e:
+        print(f"⚠️  fetch_top_queries_site: {str(e)[:200]}")
+        return []
+    out = []
+    for r in resp.get("rows", []):
+        out.append({
+            "query": r["keys"][0],
+            "impressions": r.get("impressions", 0),
+            "clicks": r.get("clicks", 0),
+            "position": round(r.get("position", 0), 1),
+        })
+    out.sort(key=lambda x: -x["impressions"])
+    return out
+
+
 # ==== Классификация ====
 
 def classify_article(stats: dict, published_at: datetime | None) -> str:
@@ -239,10 +347,16 @@ def resolve_period(days=None, date_from=None, date_to=None, period=None):
       3. days                 — последние N дней
       4. дефолт LOOKBACK_DAYS
     Возвращает (start_date, end_date, label, n_days).
+
+    Данные Search Console отстают на 2-3 дня: за самые свежие дни статистики
+    ещё нет. Поэтому конец периода сдвигаем на GSC_LAG_DAYS назад — иначе окно
+    включает «пустые» последние дни и занижает показы/клики.
     """
     today = datetime.now(timezone.utc).date()
+    # Конец окна с поправкой на задержку GSC (кроме точного диапазона).
+    anchor = today - timedelta(days=GSC_LAG_DAYS)
 
-    # 1. Точный диапазон
+    # 1. Точный диапазон (пользователь задал явно — не трогаем)
     if date_from and date_to:
         try:
             start = datetime.strptime(date_from, "%Y-%m-%d").date()
@@ -256,23 +370,23 @@ def resolve_period(days=None, date_from=None, date_to=None, period=None):
             print(f"⚠️  Неверный формат дат ({date_from}..{date_to}), "
                   f"нужен YYYY-MM-DD. Использую последние {LOOKBACK_DAYS} дней.")
 
-    # 2. Пресеты
+    # 2. Пресеты (конец окна = anchor, с учётом лага GSC)
     presets = {"week": 7, "month": 30, "quarter": 90, "year": 365}
     if period and period in presets:
         n = presets[period]
-        start = today - timedelta(days=n)
+        start = anchor - timedelta(days=n)
         ru = {"week": "последняя неделя", "month": "последний месяц",
               "quarter": "последний квартал", "year": "последний год"}
-        return start, today, ru[period], n
+        return start, anchor, ru[period], n
 
     # 3. N дней
     if days and days > 0:
-        start = today - timedelta(days=days)
-        return start, today, f"последние {days} дней", days
+        start = anchor - timedelta(days=days)
+        return start, anchor, f"последние {days} дней", days
 
     # 4. Дефолт
-    start = today - timedelta(days=LOOKBACK_DAYS)
-    return start, today, f"последние {LOOKBACK_DAYS} дней", LOOKBACK_DAYS
+    start = anchor - timedelta(days=LOOKBACK_DAYS)
+    return start, anchor, f"последние {LOOKBACK_DAYS} дней", LOOKBACK_DAYS
 
 
 def collect_analytics(lang: str = "ru", start_date=None, end_date=None,
@@ -375,8 +489,44 @@ def collect_analytics(lang: str = "ru", start_date=None, end_date=None,
             clicks = c.get("total", 0)
             r["conv_rate"] = round(clicks / views, 4) if views else 0.0
 
+    # ── Данные по ВСЕМУ САЙТУ (не только taxonomy-статьи) ───────────────────
+    # Один запрос к GSC возвращает все страницы с трафиком: каталоги, партнёров,
+    # UK-версии, подкатегории, главные. Плюс общий топ запросов по сайту.
+    site_pages = fetch_all_pages(service, site_url,
+                                 start_date=start_date, end_date=end_date)
+    site_totals = fetch_site_totals(service, site_url,
+                                    start_date=start_date, end_date=end_date)
+    site_queries = fetch_top_queries_site(service, site_url,
+                                          start_date=start_date, end_date=end_date)
+
+    # Помечаем каждую страницу: это отслеживаемая статья или «прочее»
+    # (каталог/партнёр/etc). Для читаемых заголовков подтягиваем title из
+    # taxonomy по совпадению пути.
+    slug_by_path = {}
+    for slug, entry in articles.items():
+        p = f"{cfg['url_prefix']}/{slug}/"
+        slug_by_path[p] = entry.get("title", slug)
+        slug_by_path[p.rstrip("/")] = entry.get("title", slug)
+
+    def _short_path(url: str) -> str:
+        # https://kozyr.club/ua/rooms/ → /ua/rooms/
+        return url.replace(SITE_URL, "") or url
+
+    for pg in site_pages:
+        sp = _short_path(pg["url"])
+        pg["path"] = sp
+        pg["title"] = slug_by_path.get(sp) or slug_by_path.get(sp.rstrip("/")) or sp
+
+    site = {
+        "totals": site_totals,
+        "pages": site_pages,
+        "top_queries": site_queries,
+        "pages_count": len(site_pages),
+    }
+
     return {"lang": lang, "articles": results, "by_category": by_category,
             "ga4": ga4,
+            "site": site,
             "period_label": period_label,
             "period_days": n_days,
             "collected_at": datetime.now(timezone.utc).isoformat()}
