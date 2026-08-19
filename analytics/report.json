@@ -8,9 +8,14 @@
     "new": []
   },
   "ga4": {
-    "available": false
+    "available": true,
+    "totals": {},
+    "behavior_by_page": {},
+    "conversions_by_page": {},
+    "traffic_sources": {},
+    "collected_at": "2026-08-19T06:38:47.473817+00:00"
   },
-  "period_label": "последние 60 дней",
-  "period_days": 60,
-  "collected_at": "2026-08-18T11:49:23.418977+00:00"
+  "period_label": "последний месяц",
+  "period_days": 30,
+  "collected_at": "2026-08-19T06:38:47.473830+00:00"
 }
