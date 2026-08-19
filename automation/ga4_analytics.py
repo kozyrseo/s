@@ -172,6 +172,7 @@ def fetch_conversions_by_page(days: int = LOOKBACK_DAYS) -> dict[str, dict]:
         Dimension(name="pagePath"),
         Dimension(name="eventName"),
         Dimension(name="customEvent:link_source"),
+        Dimension(name="customEvent:link_label"),
     ]
     dims_plain = [
         Dimension(name="pagePath"),
@@ -207,16 +208,19 @@ def fetch_conversions_by_page(days: int = LOOKBACK_DAYS) -> dict[str, dict]:
         path = dv[0]
         event = dv[1]
         source = dv[2] if have_source and len(dv) > 2 else None
+        label = dv[3] if have_source and len(dv) > 3 else None
         count = int(float(row.metric_values[0].value or 0))
 
         rec = out.setdefault(path, {
-            "total": 0, "by_source": {}, "by_event": {}})
+            "total": 0, "by_source": {}, "by_event": {}, "by_label": {}})
         rec["total"] += count
         rec["by_event"][event] = rec["by_event"].get(event, 0) + count
         if source:
             # '(not set)' → 'link' (клики без явного источника)
             src = source if source and source != "(not set)" else "link"
             rec["by_source"][src] = rec["by_source"].get(src, 0) + count
+        if label and label != "(not set)":
+            rec["by_label"][label] = rec["by_label"].get(label, 0) + count
     return out
 
 
@@ -275,6 +279,60 @@ def fetch_totals(days: int = LOOKBACK_DAYS) -> dict:
     }
 
 
+def fetch_by_country(days: int = LOOKBACK_DAYS) -> dict[str, int]:
+    """Пользователи по странам (топ гео-источников трафика)."""
+    client = _get_ga4_client()
+    prop = _property()
+    if not client or not prop:
+        return {}
+    try:
+        req = RunReportRequest(
+            property=prop,
+            date_ranges=[_date_range(days)],
+            dimensions=[Dimension(name="country")],
+            metrics=[Metric(name="activeUsers")],
+            limit=15,
+        )
+        resp = client.run_report(req)
+        out = {}
+        for row in resp.rows:
+            country = row.dimension_values[0].value or "—"
+            n = int(float(row.metric_values[0].value or 0))
+            if n > 0:
+                out[country] = n
+        return out
+    except Exception as e:
+        print(f"⚠️  GA4 by_country: {e}")
+        return {}
+
+
+def fetch_by_device(days: int = LOOKBACK_DAYS) -> dict[str, int]:
+    """Пользователи по типу устройства (desktop / mobile / tablet)."""
+    client = _get_ga4_client()
+    prop = _property()
+    if not client or not prop:
+        return {}
+    try:
+        req = RunReportRequest(
+            property=prop,
+            date_ranges=[_date_range(days)],
+            dimensions=[Dimension(name="deviceCategory")],
+            metrics=[Metric(name="activeUsers")],
+            limit=10,
+        )
+        resp = client.run_report(req)
+        out = {}
+        for row in resp.rows:
+            dev = row.dimension_values[0].value or "—"
+            n = int(float(row.metric_values[0].value or 0))
+            if n > 0:
+                out[dev] = n
+        return out
+    except Exception as e:
+        print(f"⚠️  GA4 by_device: {e}")
+        return {}
+
+
 def collect_ga4(days: int = LOOKBACK_DAYS) -> dict:
     """
     Собирает всё из GA4 в один словарь. Безопасно: если GA4 недоступен —
@@ -289,6 +347,8 @@ def collect_ga4(days: int = LOOKBACK_DAYS) -> dict:
         "behavior_by_page": fetch_behavior_by_page(days),
         "conversions_by_page": fetch_conversions_by_page(days),
         "traffic_sources": fetch_traffic_sources(days),
+        "by_country": fetch_by_country(days),
+        "by_device": fetch_by_device(days),
         "collected_at": datetime.now(timezone.utc).isoformat(),
     }
 

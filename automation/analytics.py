@@ -790,6 +790,15 @@ def main() -> None:
 
     # Сохраняем сырые данные
     args.save_json.parent.mkdir(parents=True, exist_ok=True)
+    # Перед перезаписью — сохраняем прошлый снимок для раздела «Динамика».
+    # Копируем только если текущий отчёт уже существует (со 2-го сбора).
+    if args.save_json.exists():
+        prev_path = args.save_json.with_name("report_prev.json")
+        try:
+            prev_path.write_text(
+                args.save_json.read_text(encoding="utf-8"), encoding="utf-8")
+        except Exception as e:
+            print(f"⚠️  Не удалось сохранить report_prev.json: {e}")
     args.save_json.write_text(
         json.dumps(analytics, indent=2, ensure_ascii=False), encoding="utf-8"
     )
