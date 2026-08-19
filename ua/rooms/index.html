@@ -214,9 +214,23 @@ body { margin: 0; font-family: var(--f-body); color: var(--ink); background: #F6
 .cx-callout__d { font-size: 14.5px; line-height: 1.6; color: var(--ink-2); margin: 0; }
 .cx-callout__d a { color: var(--accent); text-decoration: none; font-weight: 500; }
 
-/* ===== FAQ АККОРДЕОН ===== */
-.cx-faq { max-width: 800px; }
+/* ===== FAQ АККОРДЕОН (двухколоночный, как на главной) ===== */
+.cx-faq-inner { display: grid; grid-template-columns: 1fr 1.5fr; gap: 80px; align-items: start; }
+@media (max-width: 900px) { .cx-faq-inner { grid-template-columns: 1fr; gap: 40px; } }
+.cx-faq-side h2 { font-family: var(--f-display); font-weight: 700; font-size: clamp(34px, 4vw, 50px);
+  line-height: 1.0; letter-spacing: -.03em; color: var(--ink); margin: 0 0 20px; }
+.cx-faq-side h2 em { font-family: var(--f-serif); font-style: italic; font-weight: 400; color: var(--accent); }
+.cx-faq-side p { font-size: 16px; line-height: 1.6; color: var(--ink-2); margin: 0 0 28px; max-width: 42ch; }
+.cx-faq-btn { display: inline-flex; align-items: center; gap: 9px; padding: 14px 26px;
+  background: linear-gradient(135deg,#3B82FF,var(--accent-deep)); color: #fff; text-decoration: none;
+  font-family: var(--f-display); font-weight: 700; font-size: 15px; border-radius: 13px;
+  box-shadow: 0 8px 22px rgba(38,104,255,.34); transition: transform .2s var(--ease), box-shadow .24s; }
+.cx-faq-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(38,104,255,.44); }
+.cx-faq-btn svg { width: 16px; height: 16px; transition: transform .2s var(--ease); }
+.cx-faq-btn:hover svg { transform: translateX(3px); }
+.cx-faq { max-width: none; }
 .cx-faq__item { border-bottom: 1px solid var(--border); }
+.cx-faq__item:first-child { border-top: 1px solid var(--border); }
 .cx-faq__q { width: 100%; padding: 26px 0; display: flex; align-items: center; justify-content: space-between;
   gap: 24px; text-align: left; background: none; border: none; cursor: pointer;
   font-family: var(--f-display); font-weight: 700; font-size: 20px; letter-spacing: -.015em;
@@ -233,14 +247,47 @@ body { margin: 0; font-family: var(--f-body); color: var(--ink); background: #F6
   border: 1px solid var(--border); border-radius: var(--r-lg); font-size: 13.5px; line-height: 1.65; color: var(--ink-3); }
 .cx-disc b { color: var(--ink-2); }
 
-/* Футер */
-.cx-foot { background: var(--surface-dark); color: rgba(255,255,255,.6); padding: 52px 0; margin-top: 80px; }
-.cx-foot__in { max-width: var(--w); margin: 0 auto; padding: 0 24px; display: flex;
-  align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-.cx-foot__links { display: flex; gap: 24px; font-size: 14px; flex-wrap: wrap; }
-.cx-foot__links a { color: rgba(255,255,255,.6); text-decoration: none; }
-.cx-foot__links a:hover { color: #fff; }
-.cx-foot__copy { font-size: 13px; color: rgba(255,255,255,.4); }
+/* Футер — многоколоночный, как на главной */
+.cx-foot { background: var(--surface-dark); color: rgba(255,255,255,.6); padding: 72px 0 40px; margin-top: 88px; position: relative; overflow: hidden; }
+.cx-foot__suits { display: flex; justify-content: center; gap: 40px; padding-bottom: 48px; }
+.cx-foot__suits svg { width: 26px; height: 26px; color: rgba(255,255,255,.1); }
+.cx-foot__in { max-width: var(--w); margin: 0 auto; padding: 0 24px; }
+.cx-foot__grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr; gap: 48px;
+  padding-bottom: 44px; border-bottom: 1px solid rgba(255,255,255,.08); }
+@media (max-width: 900px) { .cx-foot__grid { grid-template-columns: 1fr 1fr; gap: 36px; } }
+@media (max-width: 560px) { .cx-foot__grid { grid-template-columns: 1fr; } }
+.cx-foot__brand-logo { display: inline-flex; align-items: center; gap: 11px; text-decoration: none;
+  font-family: var(--f-display); font-weight: 700; font-size: 20px; color: #fff; margin-bottom: 20px; }
+.cx-foot__brand-logo .lm { width: 30px; height: 30px; display: inline-flex; }
+.cx-foot__brand-logo .lm svg { width: 100%; height: 100%; }
+.cx-foot__brand p { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,.5); margin: 0 0 26px; max-width: 280px; }
+.cx-foot__social { display: flex; gap: 8px; }
+.cx-foot__social a { width: 40px; height: 40px; background: rgba(255,255,255,.06); border-radius: var(--r);
+  display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.7); transition: all .15s; }
+.cx-foot__social a:hover { background: var(--accent); color: #fff; }
+.cx-foot__social svg { width: 16px; height: 16px; }
+.cx-foot__col h4 { font-family: var(--f-display); font-weight: 600; font-size: 12px; color: #fff;
+  letter-spacing: .08em; text-transform: uppercase; margin: 0 0 20px; }
+.cx-foot__col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; margin: 0; padding: 0; }
+.cx-foot__col a { font-size: 14px; color: rgba(255,255,255,.55); text-decoration: none; transition: color .15s; }
+.cx-foot__col a:hover { color: #fff; }
+.cx-foot__bottom { padding-top: 30px; display: flex; justify-content: space-between; align-items: center;
+  gap: 16px; flex-wrap: wrap; font-family: var(--f-mono); font-size: 11px; color: rgba(255,255,255,.35); letter-spacing: .04em; }
+
+/* Плавающая Telegram-кнопка */
+.cx-fab { position: fixed; right: 22px; bottom: 22px; z-index: 90;
+  display: inline-flex; align-items: center; gap: 10px; padding: 13px 20px 13px 15px;
+  background: linear-gradient(135deg,#3B82FF,var(--accent-deep)); color: #fff; text-decoration: none;
+  font-family: var(--f-display); font-weight: 600; font-size: 14.5px; border-radius: 100px;
+  box-shadow: 0 10px 30px rgba(38,104,255,.42), 0 2px 8px rgba(10,17,40,.2);
+  transition: transform .22s var(--ease), box-shadow .24s;
+  animation: cxFabIn .4s var(--ease) both; }
+.cx-fab:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(38,104,255,.52); }
+.cx-fab__ic { width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,.18);
+  display: grid; place-items: center; flex-shrink: 0; }
+.cx-fab__ic svg { width: 17px; height: 17px; }
+@keyframes cxFabIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 560px) { .cx-fab__txt { display: none; } .cx-fab { padding: 13px; } }
 </style>
 </head>
 <body>
@@ -275,7 +322,26 @@ body { margin: 0; font-family: var(--f-body); color: var(--ink); background: #F6
   <nav class="cx-nav">
     <div class="cx-nav__in">
       <a class="cx-logo" href="/ua/">
-        <span class="lm" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M12 8h9v20l18-20h11L36 30l16 26H41L26 34v22h-9V8z" fill="#2E6BFF"/></svg></span>
+        <span class="lm" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="ki1" x1="505" y1="628" x2="596" y2="628" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#14358F"/><stop offset="1" stop-color="#2A6BFF"/></linearGradient></defs><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 587 1 1071 0 1076 -3 16
+-32 42 583 -519 198 -180 547 -499 775 -709 228 -209 547 -501 708 -649 l294
+-267 905 0 c497 0 904 2 904 4 0 5 18 -12 -530 502 -228 214 -562 526 -740
+694 -425 398 -844 786 -1006 931 -71 63 -228 203 -349 310 -376 334 -500 446
+-581 524 l-79 75 66 63 c339 322 703 669 789 752 58 55 197 188 310 295 113
+107 311 296 440 420 129 124 368 351 530 505 162 154 389 370 505 481 115 110
+308 292 428 404 119 113 217 208 217 212 0 4 -405 8 -901 8 l-901 0 -132 -128
+c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36
+-66 -58 -66 -51 1 8 0 517 0 1132 l-2 1117 -650 0 -650 0 0 -3090z" fill="#2668FF"/></g><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59 c39 -33 78 -61 88 -63
+18 -2 41 33 41 63 0 22 39 74 55 74 7 0 16 7 19 16 10 25 47 72 99 125 26 27
+47 55 47 63 0 21 49 76 67 76 17 0 93 79 93 96 0 7 17 27 38 46 21 19 42 42
+45 52 4 9 15 20 24 23 21 8 52 43 53 59 0 6 18 32 40 57 31 35 40 53 40 82 0
+31 7 44 42 76 23 21 47 35 52 32 6 -3 -3 9 -21 27 -32 34 -32 34 -268 -196
+-490 -475 -535 -517 -551 -504 -19 16 -19 192 0 315 8 50 17 126 20 170 9 121
+16 187 23 215 6 25 7 33 17 120 2 25 7 61 11 80 4 19 8 51 10 70 2 19 7 53 10
+75 3 22 8 76 10 120 3 44 8 91 11 105 15 55 22 109 29 220 2 41 9 104 15 140
+6 36 13 77 15 91 2 14 -1 31 -6 36 -7 7 -4 16 11 26 12 8 19 20 15 27 -4 6 -1
+17 5 25 28 34 -2 8 -132 -113z" fill="#14358F"/></g></g></svg></span>
         KOZYR
       </a>
       <div class="cx-links">
@@ -413,26 +479,30 @@ body { margin: 0; font-family: var(--f-body); color: var(--ink); background: #F6
 <!-- ===== FAQ ===== -->
 <div class="cx-wrap">
   <section class="cx-section">
-    <span class="cx-eyebrow"><svg><use href="#i-heart"/></svg> Вопросы</span>
-    <div class="cx-shead"><h2>Частые <em>вопросы</em></h2></div>
-    <p class="cx-ssub">Коротко о главном — остальное в обзорах площадок и блоге.</p>
-
-    <div class="cx-faq">
-      <div class="cx-faq__item">
-        <button class="cx-faq__q">Можно ли играть в покер на гривны легально?<svg class="cx-faq__ic"><use href="#i-plus"/></svg></button>
-        <div class="cx-faq__a"><p>Румы с международной лицензией (например, Curaçao) принимают игроков из Украины и позволяют вносить депозиты в гривне. KOZYR показывает площадки с понятным юридическим статусом — детали в обзоре каждого рума.</p></div>
+    <span class="cx-eyebrow"><svg><use href="#i-heart"/></svg> FAQ · Часто задаваемые</span>
+    <div class="cx-faq-inner">
+      <div class="cx-faq-side">
+        <h2>Всё, что нужно знать <em>до</em> первой сделки.</h2>
+        <p>Если ответа нет — пиши в Telegram @kozyr_support, отвечаем за 15 минут в любое время суток.</p>
+        <a class="cx-faq-btn" href="https://t.me/kozyr_support" target="_blank" rel="noopener">Написать в Telegram <svg><use href="#i-arrow"/></svg></a>
       </div>
-      <div class="cx-faq__item">
-        <button class="cx-faq__q">Что такое рейкбек и как он работает?<svg class="cx-faq__ic"><use href="#i-plus"/></svg></button>
-        <div class="cx-faq__a"><p>Рейкбек — это возврат части комиссии (рейка), которую ты платишь руму с каждой раздачи. Начисляет и выплачивает его сам рум. Подробнее — в <a href="/ua/blog/chto-takoe-reykbek-v-pokere/">статье про рейкбек</a>.</p></div>
-      </div>
-      <div class="cx-faq__item">
-        <button class="cx-faq__q">Как быстро приходят выплаты?<svg class="cx-faq__ic"><use href="#i-plus"/></svg></button>
-        <div class="cx-faq__a"><p>Зависит от рума и метода вывода — от 1–2 часов до суток. Скорость выплат указана в карточке каждой площадки.</p></div>
-      </div>
-      <div class="cx-faq__item">
-        <button class="cx-faq__q">Чем рум отличается от приватного клуба?<svg class="cx-faq__ic"><use href="#i-plus"/></svg></button>
-        <div class="cx-faq__a"><p>Рум — открытая лицензированная площадка с мгновенным доступом. Клуб закрыт (нужен инвайт), даёт мягкие поля и высокий рейкбек, но работает в серой зоне. Подробнее — в <a href="/ua/blog/kak-rabotayut-privatnye-pokerclubi/">статье про приватные клубы</a>.</p></div>
+      <div class="cx-faq">
+        <div class="cx-faq__item">
+          <button class="cx-faq__q">Можно ли играть в покер на гривны легально?<svg class="cx-faq__ic"><use href="#i-plus"/></svg></button>
+          <div class="cx-faq__a"><p>Румы с международной лицензией (например, Curaçao) принимают игроков из Украины и позволяют вносить депозиты в гривне. KOZYR показывает площадки с понятным юридическим статусом — детали в обзоре каждого рума.</p></div>
+        </div>
+        <div class="cx-faq__item">
+          <button class="cx-faq__q">Что такое рейкбек и как он работает?<svg class="cx-faq__ic"><use href="#i-plus"/></svg></button>
+          <div class="cx-faq__a"><p>Рейкбек — это возврат части комиссии (рейка), которую ты платишь руму с каждой раздачи. Начисляет и выплачивает его сам рум. Подробнее — в <a href="/ua/blog/chto-takoe-reykbek-v-pokere/">статье про рейкбек</a>.</p></div>
+        </div>
+        <div class="cx-faq__item">
+          <button class="cx-faq__q">Как быстро приходят выплаты?<svg class="cx-faq__ic"><use href="#i-plus"/></svg></button>
+          <div class="cx-faq__a"><p>Зависит от рума и метода вывода — от 1–2 часов до суток. Скорость выплат указана в карточке каждой площадки.</p></div>
+        </div>
+        <div class="cx-faq__item">
+          <button class="cx-faq__q">Чем рум отличается от приватного клуба?<svg class="cx-faq__ic"><use href="#i-plus"/></svg></button>
+          <div class="cx-faq__a"><p>Рум — открытая лицензированная площадка с мгновенным доступом. Клуб закрыт (нужен инвайт), даёт мягкие поля и высокий рейкбек, но работает в серой зоне. Подробнее — в <a href="/ua/blog/kak-rabotayut-privatnye-pokerclubi/">статье про приватные клубы</a>.</p></div>
+        </div>
       </div>
     </div>
 
@@ -443,17 +513,89 @@ body { margin: 0; font-family: var(--f-body); color: var(--ink); background: #F6
 </div>
 
 <footer class="cx-foot">
+  <div class="cx-foot__suits" aria-hidden="true">
+    <svg><use href="#i-spade"/></svg>
+    <svg><use href="#i-heart"/></svg>
+    <svg><use href="#i-diamond"/></svg>
+    <svg><use href="#i-club"/></svg>
+  </div>
   <div class="cx-foot__in">
-    <div class="cx-foot__links">
-      <a href="/ua/">Главная</a>
-      <a href="/ua/rooms/">Румы</a>
-      <a href="/ua/clubs/">Клубы</a>
-      <a href="/ua/blog/">Блог</a>
-      <a href="/ua/legal/">Правовая информация</a>
+    <div class="cx-foot__grid">
+      <div class="cx-foot__brand">
+        <a class="cx-foot__brand-logo" href="/ua/">
+          <span class="lm" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="ki1" x1="505" y1="628" x2="596" y2="628" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#14358F"/><stop offset="1" stop-color="#2A6BFF"/></linearGradient></defs><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 587 1 1071 0 1076 -3 16
+-32 42 583 -519 198 -180 547 -499 775 -709 228 -209 547 -501 708 -649 l294
+-267 905 0 c497 0 904 2 904 4 0 5 18 -12 -530 502 -228 214 -562 526 -740
+694 -425 398 -844 786 -1006 931 -71 63 -228 203 -349 310 -376 334 -500 446
+-581 524 l-79 75 66 63 c339 322 703 669 789 752 58 55 197 188 310 295 113
+107 311 296 440 420 129 124 368 351 530 505 162 154 389 370 505 481 115 110
+308 292 428 404 119 113 217 208 217 212 0 4 -405 8 -901 8 l-901 0 -132 -128
+c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36
+-66 -58 -66 -51 1 8 0 517 0 1132 l-2 1117 -650 0 -650 0 0 -3090z" fill="#2668FF"/></g><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
+fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59 c39 -33 78 -61 88 -63
+18 -2 41 33 41 63 0 22 39 74 55 74 7 0 16 7 19 16 10 25 47 72 99 125 26 27
+47 55 47 63 0 21 49 76 67 76 17 0 93 79 93 96 0 7 17 27 38 46 21 19 42 42
+45 52 4 9 15 20 24 23 21 8 52 43 53 59 0 6 18 32 40 57 31 35 40 53 40 82 0
+31 7 44 42 76 23 21 47 35 52 32 6 -3 -3 9 -21 27 -32 34 -32 34 -268 -196
+-490 -475 -535 -517 -551 -504 -19 16 -19 192 0 315 8 50 17 126 20 170 9 121
+16 187 23 215 6 25 7 33 17 120 2 25 7 61 11 80 4 19 8 51 10 70 2 19 7 53 10
+75 3 22 8 76 10 120 3 44 8 91 11 105 15 55 22 109 29 220 2 41 9 104 15 140
+6 36 13 77 15 91 2 14 -1 31 -6 36 -7 7 -4 16 11 26 12 8 19 20 15 27 -4 6 -1
+17 5 25 28 34 -2 8 -132 -113z" fill="#14358F"/></g></g></svg></span>
+          KOZYR
+        </a>
+        <p>Платформа сделок в покер-румах. Возвращаем игрокам рейкбек через прозрачный калькулятор.</p>
+        <div class="cx-foot__social">
+          <a href="https://t.me/kozyr_support" target="_blank" rel="noopener" aria-label="Telegram">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3l-3.3 15.5c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6.4 13.6l-4.8-1.5c-1-.3-1.1-1 .2-1.5l18.7-7.2c.9-.3 1.6.2 1.4 1z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="cx-foot__col">
+        <h4>Разделы</h4>
+        <ul>
+          <li><a href="/ua/#partners">Сделки</a></li>
+          <li><a href="/ua/rooms/">Румы</a></li>
+          <li><a href="/ua/clubs/">Клубы</a></li>
+          <li><a href="/ua/blog/">Блог</a></li>
+        </ul>
+      </div>
+      <div class="cx-foot__col">
+        <h4>Партнёры</h4>
+        <ul>
+          <li><a href="/ua/rooms/pokerbet/">PokerBet</a></li>
+          <li><a href="/ua/clubs/klubok/">KlubOk (ClubGG)</a></li>
+        </ul>
+      </div>
+      <div class="cx-foot__col">
+        <h4>Помощь</h4>
+        <ul>
+          <li><a href="/ua/blog/">Блог</a></li>
+          <li><a href="/ua/#faq">FAQ</a></li>
+          <li><a href="https://t.me/kozyr_support" target="_blank" rel="noopener">Telegram-поддержка</a></li>
+        </ul>
+      </div>
+      <div class="cx-foot__col">
+        <h4>Юридическое</h4>
+        <ul>
+          <li><a href="/ua/legal/#terms">Пользовательское соглашение</a></li>
+          <li><a href="/ua/legal/#privacy">Приватность</a></li>
+          <li><a href="/ua/legal/">Ответственная игра</a></li>
+        </ul>
+      </div>
     </div>
-    <div class="cx-foot__copy">© 2026 KOZYR · Играй ответственно 18+</div>
+    <div class="cx-foot__bottom">
+      <span>© 2026 KOZYR · Играй ответственно 18+</span>
+      <span>Только для лиц старше 21 года</span>
+    </div>
   </div>
 </footer>
+
+<a class="cx-fab" href="https://t.me/kozyr_support" target="_blank" rel="noopener" aria-label="Написать в Telegram @kozyr_support">
+  <span class="cx-fab__ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3l-3.3 15.5c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-5 9.1-8.2c.4-.4-.1-.6-.6-.2L6.4 13.6l-4.8-1.5c-1-.3-1.1-1 .2-1.5l18.7-7.2c.9-.3 1.6.2 1.4 1z"/></svg></span>
+  <span class="cx-fab__txt">Вопрос? Напишите нам</span>
+</a>
 
 <script src="/analytics.js" defer></script>
 <script src="https://kozyr.club/partners.js" defer></script>
