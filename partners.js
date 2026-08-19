@@ -281,11 +281,45 @@ window.KOZYR_PARTNERS = PARTNERS;
 
       var ids = (box.getAttribute("data-ids") || "").trim();
       if (ids) {
+        // Явный список id перебивает фильтр (ручное переопределение для лендинга).
         var order = ids.split(",").map(function (s) { return s.trim(); });
         list = order.map(function (id) {
           return PARTNERS.filter(function (p) { return p.id === id; })[0];
         }).filter(Boolean);
       } else {
+        // Фильтр по СВОЙСТВАМ (для лендингов — авто-наполнение).
+        //   data-filter="currency:UAH"      → партнёры с валютой UAH
+        //   data-filter="limit:NL10"        → у кого есть лимит NL10 (для новичков)
+        //   data-filter="software:ios"      → у кого есть iOS (мобильные)
+        //   data-filter="payments:crypto"   → кто принимает крипту
+        //   data-filter="games:spins"       → у кого есть Spin&Go
+        // Несколько условий через ; — все должны выполняться (AND).
+        // Масштабирование: новый партнёр с currency=UAH сам появится на «на гривну».
+        var filter = (box.getAttribute("data-filter") || "").trim();
+        if (filter) {
+          var conds = filter.split(";").map(function (s) { return s.trim(); }).filter(Boolean);
+          // Алиасы: удобно писать в единственном числе, данные — во множественном.
+          var KEY_ALIAS = { limit: "limits", game: "games", payment: "payments",
+                            soft: "software", bonuses: "bonus" };
+          list = list.filter(function (p) {
+            return conds.every(function (cond) {
+              var parts = cond.split(":");
+              var key = (parts[0] || "").trim();
+              var want = (parts[1] || "").trim();
+              if (!key || !want) return true;
+              key = KEY_ALIAS[key] || key;
+              var val = p[key];
+              // Массивы (limits, software, games, payments, bonus) — ищем вхождение.
+              if (Array.isArray(val)) {
+                return val.some(function (x) {
+                  return String(x).toLowerCase() === want.toLowerCase();
+                });
+              }
+              // Скаляр (currency, type, access) — сравниваем.
+              return String(val == null ? "" : val).toLowerCase() === want.toLowerCase();
+            });
+          });
+        }
         list.sort(function (a, b) { return (b.score || 0) - (a.score || 0); });
       }
       // data-limit="0" или отсутствие → показать ВСЕХ (для каталога).

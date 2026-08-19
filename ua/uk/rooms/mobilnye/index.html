@@ -14,263 +14,409 @@
 <link rel="alternate" hreflang="uk-UA" href="https://kozyr.club/ua/uk/rooms/mobilnye/">
 <link rel="alternate" hreflang="x-default" href="https://kozyr.club/ua/rooms/mobilnye/">
 
+<!-- Favicon -->
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 
+<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="KOZYR">
-<meta property="og:title" content="Покер на телефоні 2026">
-<meta property="og:description" content="Застосунки для iOS і Android з повноцінною грою в покер. Депозит з картки, виведення на картку.">
+<meta property="og:title" content="Покер на телефоні 2026 — найкращі мобільні руми">
+<meta property="og:description" content="Застосунки для iOS і Android з повноцінною грою в покер. Депозит з картки, виведення на картку, підтримка кешу та МТТ.">
 <meta property="og:image" content="https://kozyr.club/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:url" content="https://kozyr.club/ua/uk/rooms/mobilnye/">
 <meta property="og:locale" content="uk_UA">
+
+<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Покер на телефоні 2026 — найкращі мобільні руми">
+<meta name="twitter:description" content="Застосунки для iOS і Android з повноцінною грою в покер. Депозит з картки, виведення на картку, підтримка кешу та МТТ.">
+<meta name="twitter:image" content="https://kozyr.club/og-image.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="stylesheet" href="/assets/kozyr-enhance.css?v=12">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
+<link rel="stylesheet" href="/ua/blog/kozyr-blog.css?v=20260808">
+<link rel="stylesheet" href="/assets/kozyr-enhance.css?v=11">
 
-<link rel="stylesheet" href="/assets/rooms.css?v=20260816">
+<style>
+/* Локальные стили landing-страницы */
+.landing-hero {
+  padding: 64px 0 40px;
+  text-align: left;
+  max-width: 800px;
+}
+.landing-hero .eyebrow {
+  font-family: var(--f-mono, ui-monospace, monospace);
+  font-size: 11px;
+  color: var(--accent, #2668FF);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: inline-block;
+}
+.landing-hero h1 {
+  font-family: var(--f-display, 'Space Grotesk', system-ui, sans-serif);
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  margin: 0 0 20px;
+}
+.landing-hero h1 em {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent, #2668FF);
+}
+.landing-hero .lede {
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--fg-mute, #5C6580);
+  margin: 0;
+}
+.landing-section {
+  padding: 48px 0;
+}
+.landing-section h2 {
+  font-family: var(--f-display, 'Space Grotesk', system-ui, sans-serif);
+  font-size: clamp(24px, 3.5vw, 34px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 24px;
+}
+.landing-section p {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--fg-mute, #5C6580);
+  margin: 0 0 16px;
+  max-width: 780px;
+}
+.landing-section p:last-child { margin-bottom: 0; }
+.landing-section strong { color: var(--fg, #0A1128); font-weight: 600; }
+.landing-section em { font-style: italic; }
+
+/* Шаги «как выбрать» */
+.landing-steps {
+  display: grid;
+  gap: 16px;
+  margin-top: 8px;
+}
+.landing-step {
+  display: flex;
+  gap: 18px;
+  padding: 20px 22px;
+  background: var(--surface, #FFF);
+  border: 1px solid var(--border, #E2E7F0);
+  border-radius: 12px;
+}
+.landing-step__num {
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--accent-tint, #E8F0FF);
+  color: var(--accent, #2668FF);
+  font-family: var(--f-display, 'Space Grotesk', system-ui, sans-serif);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+.landing-step__body h3 {
+  font-family: var(--f-display, 'Space Grotesk', system-ui, sans-serif);
+  font-size: 17px;
+  font-weight: 600;
+  margin: 4px 0 6px;
+  letter-spacing: -0.01em;
+}
+.landing-step__body p {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--fg-mute, #5C6580);
+  margin: 0;
+}
+
+/* Партнёры (карточки из partners.js) */
+.landing-partners {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 24px;
+}
+@media (max-width: 720px) {
+  .landing-partners { grid-template-columns: 1fr; }
+}
+
+/* FAQ */
+.landing-faq { display: grid; gap: 10px; margin-top: 12px; max-width: 900px; }
+.landing-faq-item {
+  background: var(--surface, #FFF);
+  border: 1px solid var(--border, #E2E7F0);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.landing-faq-item summary {
+  cursor: pointer;
+  padding: 16px 20px;
+  font-family: var(--f-display, 'Space Grotesk', system-ui, sans-serif);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--fg, #0A1128);
+  list-style: none;
+  position: relative;
+  padding-right: 44px;
+  transition: color 0.15s;
+}
+.landing-faq-item summary::-webkit-details-marker { display: none; }
+.landing-faq-item summary::after {
+  content: '+';
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: var(--accent, #2668FF);
+  transition: transform 0.2s;
+}
+.landing-faq-item[open] summary::after { content: '−'; }
+.landing-faq-item summary:hover { color: var(--accent, #2668FF); }
+.landing-faq-a {
+  padding: 0 20px 18px;
+}
+.landing-faq-a p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--fg-mute, #5C6580);
+  margin: 0;
+}
+
+/* CTA-блок */
+.landing-cta {
+  margin-top: 32px;
+  padding: 40px;
+  background: linear-gradient(135deg, var(--accent, #2668FF), var(--accent-deep, #1E52D9));
+  border-radius: 16px;
+  color: #FFF;
+  text-align: center;
+}
+.landing-cta h2 {
+  color: #FFF;
+  margin: 0 0 12px;
+}
+.landing-cta p {
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 auto 24px;
+  max-width: 560px;
+}
+.landing-cta .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: #FFF;
+  color: var(--accent, #2668FF);
+  border-radius: 999px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  transition: transform 0.15s;
+}
+.landing-cta .btn:hover { transform: translateY(-2px); }
+
+/* Breadcrumbs — используем существующий класс из блога */
+</style>
 
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "@id": "https://kozyr.club/#organization", "name": "KOZYR", "url": "https://kozyr.club/", "logo": {"@type": "ImageObject", "url": "https://kozyr.club/icon-512.png", "width": 512, "height": 512}}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Мобільні покер-руми 2026 — грати в покер з телефону", "description": "Мобільні покер-руми та клуби для iOS і Android з підтримкою українських карток. Повноцінні застосунки без обмежень веб-версії.", "url": "https://kozyr.club/ua/uk/rooms/mobilnye/", "inLanguage": "uk-UA", "isPartOf": {"@id": "https://kozyr.club/#organization"}}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Чи є застосунок в App Store / Google Play?", "acceptedAnswer": {"@type": "Answer", "text": "iOS-версії українських покерних застосунків є в App Store для українського акаунта. Android — складніше: Google Play у більшості випадків блокує покерні застосунки, тому руми віддають APK безпосередньо з сайту."}}, {"@type": "Question", "name": "Чи можна грати на планшеті?", "acceptedAnswer": {"@type": "Answer", "text": "Так, iPad та Android-планшети підтримуються повноцінно. На планшеті грати комфортніше — більший екран, легше розрізняти масті, поміщається 2–4 столи одночасно."}}, {"@type": "Question", "name": "Чи працюють застосунки на старих пристроях?", "acceptedAnswer": {"@type": "Answer", "text": "На iPhone SE 2020+ працюють. На iPhone 5/6 — вже ні, iOS 14+ обов'язковий. Для Android мінімум версії 8.0 (Oreo, 2017) — на старіших застосунок або не встановиться, або крашитиметься."}}, {"@type": "Question", "name": "Що робити, якщо застосунок вилітає?", "acceptedAnswer": {"@type": "Answer", "text": "Основні причини: слабкий інтернет — спробуй по Wi-Fi замість LTE; стара версія ОС — онови iOS/Android; переповнена пам'ять — видали непотрібні застосунки і залиш мінімум 2 ГБ вільного місця."}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Чи є застосунок в App Store / Google Play?", "acceptedAnswer": {"@type": "Answer", "text": "iOS-версії українських покерних застосунків є в App Store для українського акаунта. Android — складніше: Google Play у більшості випадків блокує покерні застосунки, тому руми віддають APK безпосередньо з сайту. При встановленні потрібно дозволити «Встановлення з невідомих джерел» у налаштуваннях Android."}}, {"@type": "Question", "name": "Чи можна грати на планшеті?", "acceptedAnswer": {"@type": "Answer", "text": "Так, iPad та Android-планшети підтримуються повноцінно. Ба більше, на планшеті грати комфортніше — більший екран, легше розрізняти масті, поміщається 2-4 столи одночасно."}}, {"@type": "Question", "name": "Чи працюють мобільні покерні застосунки на iPhone SE / старих Android?", "acceptedAnswer": {"@type": "Answer", "text": "На iPhone SE 2020+ працюють. На iPhone 5/6 — вже ні, iOS 14+ обов'язковий. Для Android мінімум версії 8.0 (Oreo, 2017) — на старіших застосунок або не встановиться, або крашитиметься."}}, {"@type": "Question", "name": "Що робити, якщо застосунок вилітає?", "acceptedAnswer": {"@type": "Answer", "text": "Основні причини: 1) слабкий інтернет — спробуй по Wi-Fi замість LTE; 2) стара версія ОС — онови iOS/Android; 3) переповнена пам'ять — видали непотрібні застосунки і залиш мінімум 2 ГБ вільного місця. Якщо проблема залишається — пиши в підтримку рума з моделлю телефону і версією системи."}}]}</script>
 </head>
-<body data-no-tg-widget>
+<body>
 
-<header class="lp-header" role="banner">
-  <div class="lp-wrap lp-header-inner">
-    <a href="/ua/uk/" class="lp-logo">
-      <span class="lp-logo-mark" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 587 1 1071 0 1076 -3 16 -32 42 583 -519 198 -180 547 -499 775 -709 228 -209 547 -501 708 -649 l294 -267 905 0 c497 0 904 2 904 4 0 5 18 -12 -530 502 -228 214 -562 526 -740 694 -425 398 -844 786 -1006 931 -71 63 -228 203 -349 310 -376 334 -500 446 -581 524 l-79 75 66 63 c339 322 703 669 789 752 58 55 197 188 310 295 113 107 311 296 440 420 129 124 368 351 530 505 162 154 389 370 505 481 115 110 308 292 428 404 119 113 217 208 217 212 0 4 -405 8 -901 8 l-901 0 -132 -128 c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36 -66 -58 -66 -51 1 8 0 517 0 1132 l-2 1117 -650 0 -650 0 0 -3090z" fill="#2668FF"/></g></g></svg></span><span class="lp-logo-text">KOZYR</span>
+<a class="skip-link" href="#main">Перейти до основного вмісту</a>
+
+<header class="header" role="banner">
+  <div class="container header-inner">
+    <a href="/ua/uk/" class="logo" aria-label="KOZYR — на головну">
+      <span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="ki1" x1="505" y1="628" x2="596" y2="628" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#14358F"/><stop offset="1" stop-color="#2A6BFF"/></linearGradient></defs><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 587 1 1071 0 1076 -3 16 -32 42 583 -519 198 -180 547 -499 775 -709 228 -209 547 -501 708 -649 l294 -267 905 0 c497 0 904 2 904 4 0 5 18 -12 -530 502 -228 214 -562 526 -740 694 -425 398 -844 786 -1006 931 -71 63 -228 203 -349 310 -376 334 -500 446 -581 524 l-79 75 66 63 c339 322 703 669 789 752 58 55 197 188 310 295 113 107 311 296 440 420 129 124 368 351 530 505 162 154 389 370 505 481 115 110 308 292 428 404 119 113 217 208 217 212 0 4 -405 8 -901 8 l-901 0 -132 -128 c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36 -66 -58 -66 -51 1 8 0 517 0 1132 l-2 1117 -650 0 -650 0 0 -3090z" fill="#2668FF"/></g></g></svg></span>
+      <span class="logo-text">KOZYR</span>
     </a>
-    <nav class="lp-nav" aria-label="Основная навигация">
-      <a href="/ua/uk/#partners">Каталог</a>
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-hidden="true">
+    <label for="nav-toggle" class="nav-burger" aria-label="Відкрити меню" role="button" tabindex="0">
+      <span class="nav-burger-line" aria-hidden="true"></span>
+      <span class="nav-burger-line" aria-hidden="true"></span>
+      <span class="nav-burger-line" aria-hidden="true"></span>
+    </label>
+    <label for="nav-toggle" class="nav-backdrop" aria-hidden="true"></label>
+    <nav class="nav" aria-label="Основна навігація">
+      <a href="/ua/uk/">Каталог</a>
+      <a href="/ua/uk/#rakeback">Рейкбек</a>
       <a href="/ua/uk/#compare">Порівняння</a>
       <a href="/ua/uk/rooms/pokerbet/">PokerBet</a>
       <a href="/ua/uk/clubs/klubok/">KlubOk</a>
-      <a href="/ua/uk/blog/">Блог</a>
     </nav>
-    <div class="lp-lang" role="group">
-      <a href="/ua/rooms/mobilnye/" hreflang="ru-UA" lang="ru">RU</a>
-      <a href="/ua/uk/rooms/mobilnye/" hreflang="uk-UA" lang="uk" aria-current="page">UA</a>
-    </div>
-    <a href="/ua/uk/" class="lp-header-cta">Відкрити каталог</a>
+    <div class="lang" role="group" aria-label="Вибір мови"><a href="/ua/rooms/mobilnye/" hreflang="ru-UA" lang="ru">RU</a><a href="/ua/uk/rooms/mobilnye/" hreflang="uk-UA" lang="uk" aria-current="page">UA</a></div>
+    <a href="/ua/uk/" class="header-cta">Відкрити каталог</a>
   </div>
 </header>
 
-<nav class="lp-crumbs" aria-label="Breadcrumbs">
-  <div class="lp-wrap">
+<nav class="breadcrumbs" aria-label="Хлібні крихти">
+  <div class="container">
     <ol>
       <li><a href="/ua/uk/">Головна</a></li>
-      <li><a href="/ua/uk/#partners">Каталог</a></li>
-      <li aria-current="page">Грай у покер з телефону</li>
+      <li><a href="/ua/uk/">Каталог</a></li>
+      <li aria-current="page">Мобільні покер-руми   2026</li>
     </ol>
   </div>
 </nav>
 
 <main id="main">
 
-  <section class="lp-hero lp-hero--spade">
-    <div class="lp-wrap">
-      <div class="lp-eyebrow">Гайд · Мобільні застосунки · 2026</div>
-      <h1>Грай у покер<br><em>з телефону</em><br>без компромісів</h1>
-      <p class="lp-hero-lede">Партнери KOZYR з повноцінними мобільними застосунками для iOS і Android. Усі перевірені на реальних пристроях, підтримують українські картки та перекази у гривні.</p>
-      <div class="lp-hero-ctas">
-        <a href="#partners" class="lp-btn lp-btn--primary">
-          Дивитися партнерів
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
-        <a href="#faq" class="lp-btn lp-btn--ghost">Читати гайд</a>
-      </div>
-      <div class="lp-hero-stats"><div><div class="lp-hero-stat-num">iOS+And</div><div class="lp-hero-stat-lbl">Обидві платформи</div></div><div><div class="lp-hero-stat-num">UAH</div><div class="lp-hero-stat-lbl">Прямі платежі</div></div><div><div class="lp-hero-stat-num">4–6</div><div class="lp-hero-stat-lbl">Столів одночасно</div></div></div>
-    </div>
-  </section>
-
-  <section class="lp-section" id="partners">
-    <div class="lp-wrap">
-      <div class="lp-section-tag">● Партнери</div>
-      <h2>З <em>мобільними</em> застосунками</h2>
-      <p class="lp-section-lede">PokerBet — з застосунком з App Store і APK для Android. KlubOk — лише мобільна гра через ClubGG (нативно iOS/Android, десктопа немає).</p>
-      <div class="lp-partners">
-        <article class="lp-tcard lp-tcard--blue">
-      <div class="lp-tcard-corner">
-        <span class="lp-tcard-rank">01</span>
-        <svg class="lp-tcard-suit" viewBox="0 0 40 40" fill="currentColor"><path d="M20 4L28 20L20 36L12 20Z"/><circle cx="20" cy="20" r="3.5" fill="#fff" opacity="0.9"/></svg>
-      </div>
-      <div class="lp-tcard-head">
-        <img class="lp-tcard-logo" src="/ua/blog/logos/pokerbet.webp" alt="PokerBet" width="56" height="56" loading="lazy">
-        <div>
-          <h3 class="lp-tcard-name">PokerBet</h3>
-          <div class="lp-tcard-kind">Покер-рум на гривні · Curaçao (CGA)</div>
-        </div>
-      </div>
-      <div class="lp-tcard-score">
-        <span class="lp-tcard-score-lbl">Kozyr Score</span>
-        <span class="lp-tcard-score-num">8.2</span>
-      </div>
-      <div class="lp-tcard-facts">
-        <div class="lp-tcard-fact"><span>Рейкбек</span><strong>Немає</strong></div><div class="lp-tcard-fact"><span>Валюта</span><strong>UAH (гривня)</strong></div><div class="lp-tcard-fact"><span>Депозит від</span><strong>300 ₴</strong></div><div class="lp-tcard-fact"><span>Виплати</span><strong>~100 хвилин</strong></div>
-      </div>
-      <div class="lp-tcard-ctas">
-        <a href="/ua/uk/rooms/pokerbet/#cta" data-partner class="lp-btn lp-btn--primary klink" rel="nofollow noopener sponsored" target="_blank">
-          Почати грати
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
-        <a href="/ua/uk/rooms/pokerbet/" class="lp-btn lp-btn--ghost">Повний огляд</a>
-      </div>
-    </article>
-<article class="lp-tcard lp-tcard--gold">
-      <div class="lp-tcard-corner">
-        <span class="lp-tcard-rank">02</span>
-        <svg class="lp-tcard-suit" viewBox="0 0 40 40" fill="currentColor"><path d="M20 4C14 4 10 8 10 13c0 6 10 8 10 16 0-8 10-10 10-16 0-5-4-9-10-9zm-2 32h4l1 2h-6l1-2z"/></svg>
-      </div>
-      <div class="lp-tcard-head">
-        <img class="lp-tcard-logo" src="/ua/blog/logos/klubok.webp" alt="KlubOk" width="56" height="56" loading="lazy">
-        <div>
-          <h3 class="lp-tcard-name">KlubOk</h3>
-          <div class="lp-tcard-kind">Приватний клуб у ClubGG</div>
-        </div>
-      </div>
-      <div class="lp-tcard-score">
-        <span class="lp-tcard-score-lbl">Kozyr Score</span>
-        <span class="lp-tcard-score-num">7.9</span>
-      </div>
-      <div class="lp-tcard-facts">
-        <div class="lp-tcard-fact"><span>Рейкбек</span><strong>до 40%</strong></div><div class="lp-tcard-fact"><span>Валюта</span><strong>UAH (1 фішка = 1 ₴)</strong></div><div class="lp-tcard-fact"><span>Депозит від</span><strong>100 ₴</strong></div><div class="lp-tcard-fact"><span>Виплати</span><strong>15–60 хвилин</strong></div>
-      </div>
-      <div class="lp-tcard-ctas">
-        <a href="https://uaklb.space/z1161J4h" data-partner class="lp-btn lp-btn--primary klink" rel="nofollow noopener sponsored" target="_blank">
-          Увійти в клуб
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
-        <a href="/ua/uk/clubs/klubok/" class="lp-btn lp-btn--ghost">Повний огляд</a>
-      </div>
-    </article>
+  <!-- ==== HERO ==== -->
+  <section class="landing-section landing-hero-section">
+    <div class="container">
+      <div class="landing-hero">
+        <span class="eyebrow">Гайд · Мобільні застосунки</span>
+        <h1>Мобільні <em>покер-руми · 2026</em></h1>
+        <p class="lede">Повний список румів і клубів з повноцінними мобільними застосунками для iOS і Android. Всі партнери перевірені на реальних пристроях, підтримують українські картки і перекази у гривні.</p>
       </div>
     </div>
   </section>
 
-  <section class="lp-section" style="background: var(--surface); padding-top: 0;">
-    <div class="lp-wrap">
-      <div class="lp-section-tag">● Особливості</div>
-      <h2>Що треба знати <em>про мобілку</em></h2>
-      <div class="lp-why" style="margin-top: 40px;">
-        <div class="lp-why-item">
-          <div class="lp-why-num">01</div>
-          <h3>Повноцінний формат</h3>
-          <p>Мобільний покер сьогодні — повноцінна альтернатива десктопу. Клуби у ClubGG взагалі існують лише в мобільному форматі. Легальні українські руми роблять мобільні застосунки пріоритетом — 70%+ трафіку йде з телефонів.</p>
-        </div>
-<div class="lp-why-item">
-          <div class="lp-why-num">02</div>
-          <h3>Менше столів одночасно</h3>
-          <p>На десктопі професіонали грають 8–16 столів разом; на iPhone / Android максимум 4–6, і то з сильними компромісами щодо інтерфейсу. Для регулярної гри це суттєво, для рекреаційної — не важливо.</p>
-        </div>
-<div class="lp-why-item">
-          <div class="lp-why-num">03</div>
-          <h3>Без HUD і трекерів</h3>
-          <p>Жоден мобільний клієнт не підтримує Hold'em Manager, PokerTracker або Hand2Note. Якщо ти граєш зі статою — мобілка лише для дороги, основна гра на десктопі.</p>
-        </div>
+  <!-- ==== ПАРТНЁРЫ (карточки из partners.js) ==== -->
+  <section class="landing-section" id="partners" style="padding-top: 0;">
+    <div class="container">
+      <h2>Наші мобільні партнери</h2>
+      <p>Обидва партнери в каталозі підтримують iOS і Android. PokerBet — із застосунком з App Store і APK для Android. KlubOk — лише мобільна гра через ClubGG (нативно iOS/Android, десктопа немає).</p>
+      <div class="landing-partners partners" data-partners data-filter="soft:ios"></div>
+    </div>
+  </section>
+
+  <!-- ==== ПОЧЕМУ ЭТО ВАЖНО (SEO-текст) ==== -->
+  <section class="landing-section">
+    <div class="container">
+      <h2>Особливості мобільного покеру</h2>
+      <div>
+        <p>Мобільний покер сьогодні — не «спрощена версія для тицьнути в метро», а <strong>повноцінний формат</strong>. Клуби в ClubGG взагалі існують лише в мобільному форматі, десктопної версії немає. Легальні українські руми роблять мобільні застосунки пріоритетом — за статистикою, 70%+ трафіку йде з телефонів.</p>
+        <p>Ключове обмеження мобільного покеру — <strong>менше столів одночасно</strong>. На десктопі професіонали грають 8-16 столів разом; на iPhone / Android максимум 4-6, і то з сильними компромісами щодо інтерфейсу. Для регулярної гри це суттєво, для рекреаційної — не важливо.</p>
+        <p>Друге — <strong>відсутність HUD і трекерів</strong>. Жоден мобільний клієнт не підтримує Hold'em Manager, PokerTracker або Hand2Note. Якщо ти граєш зі статою — мобілка лише для дороги, основна гра на десктопі.</p>
       </div>
     </div>
   </section>
 
-  <section class="lp-section">
-    <div class="lp-wrap">
-      <div class="lp-section-tag">● Чек-лист</div>
-      <h2>На що <em>дивитися</em></h2>
-      <div class="lp-checklist">
-        <div class="lp-check-item">
-          <div class="lp-check-num">1</div>
-          <div>
-            <h3>Повноцінний застосунок</h3>
+  <!-- ==== ЧЕК-ЛИСТ (шаги) ==== -->
+  <section class="landing-section">
+    <div class="container">
+      <h2>На що дивитися при виборі мобільного рума</h2>
+      <div class="landing-steps">
+        <div class="landing-step">
+          <div class="landing-step__num">1</div>
+          <div class="landing-step__body">
+            <h3>Повноцінний застосунок, а не веб-адаптив</h3>
             <p>Справжній iOS/Android клієнт з App Store / Google Play або пряма .apk від рума. Не «сайт відкривається на телефоні» — там зникне push-сповіщення про блайнди, глючитиме клавіатура в чаті, відвалюватимуться сесії.</p>
           </div>
         </div>
-<div class="lp-check-item">
-          <div class="lp-check-num">2</div>
-          <div>
+        <div class="landing-step">
+          <div class="landing-step__num">2</div>
+          <div class="landing-step__body">
             <h3>Підтримка Android APK</h3>
-            <p>В офіційному Google Play українських покерних застосунків часто немає через політику Google. Легальні українські руми віддають APK безпосередньо з сайту. iOS простіше — є в App Store.</p>
+            <p>В офіційному Google Play російських і часто українських покерних застосунків немає через політику Google. Легальні українські руми віддають APK безпосередньо з сайту. iOS простіше — є в App Store.</p>
           </div>
         </div>
-<div class="lp-check-item">
-          <div class="lp-check-num">3</div>
-          <div>
+        <div class="landing-step">
+          <div class="landing-step__num">3</div>
+          <div class="landing-step__body">
             <h3>Оптимізація під маленький екран</h3>
             <p>Хороший клієнт дає великі кнопки бет-сайзингу, читабельні карти, автоцентрування стола. Поганий — мікро-кнопки, промахи по фолду/коллу, неможливість грати 2+ столи.</p>
           </div>
         </div>
-<div class="lp-check-item">
-          <div class="lp-check-num">4</div>
-          <div>
+        <div class="landing-step">
+          <div class="landing-step__num">4</div>
+          <div class="landing-step__body">
             <h3>Витрата батареї</h3>
-            <p>Деякі клієнти за 2 години гри з'їдають 40–50% заряду. Перевір до депозиту — грати без розетки може бути проблематично.</p>
+            <p>Деякі клієнти за 2 години гри з'їдають 40-50% заряду. Перевір до депозиту — грати без розетки може бути проблематично.</p>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="lp-section" id="faq" style="background: var(--surface); padding-top: 0;">
-    <div class="lp-wrap">
-      <div class="lp-section-tag">● FAQ</div>
-      <h2>Що <em>ще</em> запитують</h2>
-      <div class="lp-faq">
-        <details class="lp-faq-item">
+  <!-- ==== FAQ ==== -->
+  <section class="landing-section" id="faq">
+    <div class="container">
+      <h2>FAQ</h2>
+      <div class="landing-faq">
+        <details class="landing-faq-item">
           <summary>Чи є застосунок в App Store / Google Play?</summary>
-          <div class="lp-faq-a"><p>iOS-версії українських покерних застосунків є в App Store для українського акаунта. Android — складніше: Google Play у більшості випадків блокує покерні застосунки, тому руми віддають APK безпосередньо з сайту.</p></div>
+          <div class="landing-faq-a"><p>iOS-версії українських покерних застосунків є в App Store для українського акаунта. Android — складніше: Google Play у більшості випадків блокує покерні застосунки, тому руми віддають APK безпосередньо з сайту. При встановленні потрібно дозволити «Встановлення з невідомих джерел» у налаштуваннях Android.</p></div>
         </details>
-<details class="lp-faq-item">
+        <details class="landing-faq-item">
           <summary>Чи можна грати на планшеті?</summary>
-          <div class="lp-faq-a"><p>Так, iPad та Android-планшети підтримуються повноцінно. На планшеті грати комфортніше — більший екран, легше розрізняти масті, поміщається 2–4 столи одночасно.</p></div>
+          <div class="landing-faq-a"><p>Так, iPad та Android-планшети підтримуються повноцінно. Ба більше, на планшеті грати комфортніше — більший екран, легше розрізняти масті, поміщається 2-4 столи одночасно.</p></div>
         </details>
-<details class="lp-faq-item">
-          <summary>Чи працюють застосунки на старих пристроях?</summary>
-          <div class="lp-faq-a"><p>На iPhone SE 2020+ працюють. На iPhone 5/6 — вже ні, iOS 14+ обов'язковий. Для Android мінімум версії 8.0 (Oreo, 2017) — на старіших застосунок або не встановиться, або крашитиметься.</p></div>
+        <details class="landing-faq-item">
+          <summary>Чи працюють мобільні покерні застосунки на iPhone SE / старих Android?</summary>
+          <div class="landing-faq-a"><p>На iPhone SE 2020+ працюють. На iPhone 5/6 — вже ні, iOS 14+ обов'язковий. Для Android мінімум версії 8.0 (Oreo, 2017) — на старіших застосунок або не встановиться, або крашитиметься.</p></div>
         </details>
-<details class="lp-faq-item">
+        <details class="landing-faq-item">
           <summary>Що робити, якщо застосунок вилітає?</summary>
-          <div class="lp-faq-a"><p>Основні причини: слабкий інтернет — спробуй по Wi-Fi замість LTE; стара версія ОС — онови iOS/Android; переповнена пам'ять — видали непотрібні застосунки і залиш мінімум 2 ГБ вільного місця.</p></div>
+          <div class="landing-faq-a"><p>Основні причини: 1) слабкий інтернет — спробуй по Wi-Fi замість LTE; 2) стара версія ОС — онови iOS/Android; 3) переповнена пам'ять — видали непотрібні застосунки і залиш мінімум 2 ГБ вільного місця. Якщо проблема залишається — пиши в підтримку рума з моделлю телефону і версією системи.</p></div>
         </details>
       </div>
     </div>
   </section>
 
-  <section class="lp-final">
-    <div class="lp-wrap">
-      <div class="lp-section-tag">● Готовий грати</div>
-      <h2>Гра <em>з будь-якого місця</em></h2>
-      <p class="lp-final-lede">Усі партнери KOZYR підтримують iOS та Android. Завантаження застосунку — 30 секунд, реєстрація — 5 хвилин.</p>
-      <a class="lp-btn" href="/ua/uk/#partners">Дивитися каталог →</a>
+  <!-- ==== CTA ==== -->
+  <section class="landing-section">
+    <div class="container">
+      <div class="landing-cta">
+        <h2>Відкрити повний каталог</h2>
+        <p>В основному каталозі у кожного рума позначено які пристрої він підтримує — Windows / Mac / iOS / Android / Web.</p>
+        <a class="btn" href="/ua/uk/#partners">Дивитися партнерів →</a>
+      </div>
     </div>
   </section>
 
 </main>
 
-<footer class="lp-footer" role="contentinfo">
-  <div class="lp-wrap lp-footer-inner">
-    <div class="lp-footer-brand">
-      <div class="lp-logo" style="margin-bottom:14px"><span class="lp-logo-mark" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 587 1 1071 0 1076 -3 16 -32 42 583 -519 198 -180 547 -499 775 -709 228 -209 547 -501 708 -649 l294 -267 905 0 c497 0 904 2 904 4 0 5 18 -12 -530 502 -228 214 -562 526 -740 694 -425 398 -844 786 -1006 931 -71 63 -228 203 -349 310 -376 334 -500 446 -581 524 l-79 75 66 63 c339 322 703 669 789 752 58 55 197 188 310 295 113 107 311 296 440 420 129 124 368 351 530 505 162 154 389 370 505 481 115 110 308 292 428 404 119 113 217 208 217 212 0 4 -405 8 -901 8 l-901 0 -132 -128 c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36 -66 -58 -66 -51 1 8 0 517 0 1132 l-2 1117 -650 0 -650 0 0 -3090z" fill="#2668FF"/></g></g></svg></span><span class="lp-logo-text">KOZYR</span></div>
-      <p>KOZYR — вітрина рейкбек-угод. Каталог румів та клубів, чесні умови, прямі партнерські посилання.</p>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="logo" style="margin-bottom:14px">
+          <span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="ki1" x1="505" y1="628" x2="596" y2="628" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#14358F"/><stop offset="1" stop-color="#2A6BFF"/></linearGradient></defs><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 587 1 1071 0 1076 -3 16 -32 42 583 -519 198 -180 547 -499 775 -709 228 -209 547 -501 708 -649 l294 -267 905 0 c497 0 904 2 904 4 0 5 18 -12 -530 502 -228 214 -562 526 -740 694 -425 398 -844 786 -1006 931 -71 63 -228 203 -349 310 -376 334 -500 446 -581 524 l-79 75 66 63 c339 322 703 669 789 752 58 55 197 188 310 295 113 107 311 296 440 420 129 124 368 351 530 505 162 154 389 370 505 481 115 110 308 292 428 404 119 113 217 208 217 212 0 4 -405 8 -901 8 l-901 0 -132 -128 c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36 -66 -58 -66 -51 1 8 0 517 0 1132 l-2 1117 -650 0 -650 0 0 -3090z" fill="#2668FF"/></g></g></svg></span>
+          <span class="logo-text">KOZYR</span>
+        </div>
+        <p>KOZYR — вітрина рейкбек-угод. Каталог румів та клубів, чесні умови, прямі партнерські посилання. Рейкбек нараховує і виплачує сам рум або клуб.</p>
+      </div>
+      <div>
+        <h4>Розділи</h4>
+        <p><a href="/ua/uk/">Каталог угод</a></p>
+        <p><a href="/ua/uk/rooms/pokerbet/">PokerBet</a></p>
+        <p><a href="/ua/uk/clubs/klubok/">KlubOk</a></p>
+        <p><a href="/ua/uk/#compare">Порівняння</a></p>
+      </div>
+      <div>
+        <h4>Проєкт</h4>
+        <p><a href="/ua/uk/blog/">Блог</a></p>
+        <p><a href="/ua/uk/#faq">FAQ</a></p>
+        <p><a href="/ua/uk/legal/">Правова інформація</a></p>
+      </div>
     </div>
-    <div class="lp-footer-col"><h4>Розділи</h4><a href="/ua/uk/">Каталог</a>
-        <a href="/ua/uk/rooms/pokerbet/">PokerBet</a>
-        <a href="/ua/uk/clubs/klubok/">KlubOk</a>
-        <a href="/ua/uk/#compare">Порівняння</a></div>
-    <div class="lp-footer-col"><h4>Проєкт</h4><a href="/ua/uk/blog/">Блог</a>
-        <a href="/ua/uk/#faq">FAQ</a>
-        <a href="/ua/uk/legal/">Правова інформація</a> · <a href="/ua/uk/legal/#partners">Як ми заробляємо</a></div>
+    <div class="footer-bottom">© 2026 KOZYR · Вітрина рейкбек-угод</div>
   </div>
-  <div class="lp-footer-bottom"><div class="lp-wrap">© 2026 KOZYR · Вітрина рейкбек-угод</div></div>
 </footer>
 
 <script defer src="/partners.js?v=1"></script>
-<script defer src="/assets/kozyr-geo.js?v=12"></script>
-<script defer src="/assets/kozyr-enhance.js?v=12"></script>
+<script defer src="/assets/kozyr-geo.js?v=1"></script>
+<script defer src="/assets/kozyr-enhance.js?v=11"></script>
 </body>
 </html>

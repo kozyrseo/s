@@ -150,7 +150,8 @@ def render_footer(lang):
 LANDINGS = [
     {
         'slug': 'na-grivnu',
-        'partners': 'pokerbet,klubok',   # оба принимают гривну
+        'partners': 'pokerbet,klubok',   # ручное переопределение (fallback)
+        'filter': 'currency:UAH',        # АВТО: партнёры с гривной сами попадают сюда
         'ru': {
             'title': 'Покер-румы с игрой в гривне 2026 — где играть в Украине | KOZYR',
             'description': 'Покер-румы и клубы с депозитом и выплатой в гривне (UAH) без обменников. Legally, safely, с прямыми банковскими выплатами через Monobank и ПриватБанк.',
@@ -226,7 +227,8 @@ LANDINGS = [
     },
     {
         'slug': 'dlya-novichkov',
-        'partners': 'pokerbet,klubok',
+        'partners': 'pokerbet,klubok',   # ручное переопределение (fallback)
+        'filter': 'limit:NL10',          # АВТО: у кого есть NL10 (низкий вход)
         'ru': {
             'title': 'Покер-румы для начинающих 2026 — где играть новичку в Украине | KOZYR',
             'description': 'Гид для начинающих: где играть в онлайн-покер новичку в Украине. Микро-лимиты от NL2, лёгкий вход, welcome-бонусы. Все партнёры проверены.',
@@ -304,7 +306,8 @@ LANDINGS = [
     },
     {
         'slug': 'mobilnye',
-        'partners': 'pokerbet,klubok',
+        'partners': 'pokerbet,klubok',   # ручное переопределение (fallback)
+        'filter': 'soft:ios',            # АВТО: у кого есть мобильное приложение
         'ru': {
             'title': 'Мобильные покер-румы 2026 — играть в покер с телефона | KOZYR',
             'description': 'Мобильные покер-румы и клубы для iOS и Android с поддержкой украинских карт. Полноценные приложения без ограничений веб-версии.',
@@ -390,6 +393,15 @@ LANDINGS = [
 def render_page(cfg, lang):
     slug = cfg['slug']
     c = cfg[lang]
+    # Партнёры на лендинге: приоритет АВТО-фильтру по свойствам (data-filter),
+    # иначе — ручной список (data-ids). Фильтр = масштабируемо: новый партнёр
+    # с нужным свойством (currency=UAH и т.п.) сам появится на лендинге.
+    if cfg.get('filter'):
+        partners_attr = f' data-filter="{cfg["filter"]}"'
+    elif cfg.get('partners'):
+        partners_attr = f' data-ids="{cfg["partners"]}"'
+    else:
+        partners_attr = ''
     is_uk = lang == 'uk'
     lang_code = 'uk' if is_uk else 'ru'
     hreflang_self = 'uk-UA' if is_uk else 'ru-UA'
@@ -733,7 +745,7 @@ def render_page(cfg, lang):
     <div class="container">
       <h2>{c['partners_h']}</h2>
       <p>{c['partners_lede']}</p>
-      <div class="landing-partners partners" data-partners data-ids="{cfg['partners']}"></div>
+      <div class="landing-partners partners" data-partners{partners_attr}></div>
     </div>
   </section>
 
