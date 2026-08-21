@@ -48,6 +48,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 REVIEWS_JSON = ROOT / "reviews.json"
+JS_FILE = ROOT / "assets" / "kozyr-reviews.js"
+PARTNER_DISPLAY = {"pokerbet": "PokerBet", "klubok": "KlubOk"}
 
 # (partner_id, lang, путь к странице)
 PAGES = [
@@ -255,6 +257,40 @@ def inject_div(page_html: str, attr: str, partner: str, marker: str, inner: str)
     return pat.sub(lambda m: m.group(1) + wrapped + m.group(2), page_html, count=1)
 
 
+# ── kozyr-reviews.js (клиентский рендер для JS-пользователей) ───────────────
+def js_escape(s: str) -> str:
+    """Экранирование для одинарных JS-строк: \\ и '."""
+    return s.replace("\\", "\\\\").replace("'", "\\'")
+
+
+def render_js_array(reviews: list[dict]) -> str:
+    """Собирает `var REVIEWS = [...]` из reviews.json (тот же порядок/группировка)."""
+    from collections import OrderedDict
+    groups: "OrderedDict[tuple, list]" = OrderedDict()
+    for r in reviews:
+        groups.setdefault((r["partner"], r["lang"]), []).append(r)
+    out = ["var REVIEWS = ["]
+    for (partner, lang), items in groups.items():
+        disp = PARTNER_DISPLAY.get(partner, partner)
+        out.append(f"    /* ================ {disp} · {lang.upper()} ================ */")
+        for r in items:
+            verified = "true" if r.get("verified") else "false"
+            out.append("    {")
+            out.append(f"      id: '{r['id']}', partner: '{r['partner']}', lang: '{r['lang']}',")
+            out.append(f"      author: '{js_escape(r['author'])}', rating: {r['rating']}, "
+                       f"date: '{r['date']}', verified: {verified}, country: '{r.get('country', 'ua')}',")
+            out.append(f"      text: '{js_escape(r['text'])}'")
+            out.append("    },")
+    out.append("  ];")
+    return "\n".join(out)
+
+
+def rewrite_js(js_text: str, reviews: list[dict]) -> str:
+    """Заменяет тело массива REVIEWS. Идемпотентно (тот же вход → тот же выход)."""
+    new_array = render_js_array(reviews)
+    return re.sub(r'var REVIEWS = \[[\s\S]*?\n  \];', new_array, js_text, count=1)
+
+
 def process_page(partner: str, lang: str, reviews: list[dict], page_html: str) -> str:
     lab = I18N[lang]
     part = [r for r in reviews if r["partner"] == partner and r["lang"] == lang]
@@ -307,13 +343,27 @@ def main() -> int:
                 changed += 1
                 print(f"✓ обновлено: {path.relative_to(ROOT)}")
 
+    # kozyr-reviews.js — рендер для JS-пользователей: держим тексты из reviews.json
+    if JS_FILE.exists():
+        cur_js = JS_FILE.read_text(encoding="utf-8")
+        new_js = rewrite_js(cur_js, reviews)
+        if new_js != cur_js:
+            if args.check:
+                drift = True
+                print("⚠️  assets/kozyr-reviews.js разошёлся с reviews.json; "
+                      "запусти: python automation/build_reviews.py")
+            else:
+                JS_FILE.write_text(new_js, encoding="utf-8")
+                changed += 1
+                print("✓ обновлено: assets/kozyr-reviews.js")
+
     if args.check:
         if drift:
             return 1
         print("✓ Отзывы и aggregateRating на всех страницах актуальны.")
         return 0
 
-    print(f"Готово. Изменено страниц: {changed}.")
+    print(f"Готово. Изменено файлов: {changed}.")
     return 0
 
 
