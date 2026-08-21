@@ -81,3 +81,12 @@
 # ─── HTML: короткий кэш, чтобы правки быстро долетали ──────────────────────
 /*.html
   Cache-Control: public, max-age=300
+
+# ─── Sitemap / robots: явный Content-Type (nosniff требует точный тип) ──────
+/sitemap.xml
+  Content-Type: application/xml; charset=utf-8
+  Cache-Control: public, max-age=3600
+
+/robots.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=3600
