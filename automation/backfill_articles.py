@@ -90,19 +90,31 @@ def fix_author_schema(html: str, cfg: dict) -> str:
 
 
 def link_byline(html: str, cfg: dict) -> str:
-    """Имя в байлайне <span>NAME</span> → ссылка. Идемпотентно."""
-    name = re.escape(cfg["name"])
+    """Имя автора в байлайне и блоке -> ссылка с ПРАВИЛЬНЫМ для языка написанием.
+    Устойчиво к обоим написаниям (часть старых UK-страниц содержит русское
+    «Никита» в байлайне при украинском «Микита» в схеме) и чинит alt фото."""
     url = cfg["author_url"]
-    # post-hero байлайн: ...loading="lazy"><span>NAME</span></span>
-    html = re.sub(
-        r'(<span class="post-hero__author">.*?loading="lazy">)<span>' + name + r'</span>(</span>)',
-        lambda m: f'{m.group(1)}<a href="{url}" rel="author">{cfg["name"]}</a>{m.group(2)}',
-        html, flags=re.S)
-    # блок автора: <div class="author-premium__name">NAME</div>
-    html = re.sub(
-        r'(<div class="author-premium__name">)' + name + r'(</div>)',
-        lambda m: f'{m.group(1)}<a href="{url}" rel="author">{cfg["name"]}</a>{m.group(2)}',
-        html)
+    correct = cfg["name"]
+    link = f'<a href="{url}" rel="author">{correct}</a>'
+    all_names = ["Никита Волошин", "Микита Волошин"]
+    for nm in all_names:
+        n = re.escape(nm)
+        # 1) alt фото автора -> имя языка
+        html = re.sub(
+            r'(<img src="/ua/blog/authors/nikita\.webp" alt=")' + n + r'(")',
+            lambda m: m.group(1) + correct + m.group(2), html)
+        # 2) байлайн: <span>NAME</span> -> ссылка
+        html = re.sub(
+            r'(<span class="post-hero__author">.*?loading="lazy">)<span>' + n + r'</span>(</span>)',
+            lambda m: m.group(1) + link + m.group(2), html, flags=re.S)
+        # 3) байлайн уже ссылка (любое написание) -> нормализуем имя/href
+        html = re.sub(
+            r'(<span class="post-hero__author">.*?loading="lazy">)<a\b[^>]*>' + n + r'</a>(</span>)',
+            lambda m: m.group(1) + link + m.group(2), html, flags=re.S)
+        # 4) premium name: обычный текст или уже ссылка -> ссылка
+        html = re.sub(
+            r'(<div class="author-premium__name">)(?:<a\b[^>]*>)?' + n + r'(?:</a>)?(</div>)',
+            lambda m: m.group(1) + link + m.group(2), html)
     return html
 
 
