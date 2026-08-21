@@ -231,6 +231,18 @@ def evaluate_technical(article: dict, topic: dict, markdown_body: str, lang: str
         "score": 3 if target_present else 0,
         "detail": f"Target {target_page} {'✓ found' if target_present else '✗ missing'}",
     }
+
+    # 8b. External authoritative source link present (3 pts, E-E-A-T / GEO)
+    # Внешняя ссылка на первоисточник — markdown-ссылка на http(s), не на свой домен.
+    external_links = [
+        u for u in re.findall(r'\]\((https?://[^)]+)\)', markdown_body)
+        if "kozyr.club" not in u
+    ]
+    scores["external_source_link"] = {
+        "max": 3,
+        "score": 3 if len(external_links) >= 1 else 0,
+        "detail": f"{len(external_links)} external source link(s) (target: ≥1)",
+    }
     
     # 9. Primary keyword in title + H1 + first paragraph (4 pts)
     primary_kw = str(topic.get("primary_keyword", "")).strip().lower()

@@ -1620,6 +1620,10 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     blog_url_full = f"{SITE_URL}{lang_cfg['blog_url']}"
     # /about/ for EN, /pt/about/ for PT — used in author Person schema
     about_url_full = f"{SITE_URL}{lang_cfg['home_url']}about/"
+    # Автор-энтити (№5): реальная страница автора, куда указывают schema и байлайн.
+    author_url_full = f"{SITE_URL}{lang_cfg['blog_url']}authors/nikita/"
+    # jobTitle без " · KOZYR" (организация покрыта worksFor)
+    author_jobtitle = ui.get("author_role", "Рейкбек-аналитик").split("·")[0].strip()
 
     # ----- in-language code for JSON-LD inLanguage (BCP-47) -----
     in_language = {"ru": "ru-UA"}.get(lang, "ru-UA")
@@ -1715,6 +1719,11 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         "{{BLOG_URL_FULL}}": blog_url_full,
         "{{SITE_ORIGIN}}": SITE_URL,
         "{{ABOUT_URL}}": about_url_full,
+        "{{AUTHOR_URL}}": author_url_full,
+        "{{UI_AUTHOR_JOBTITLE}}": author_jobtitle,
+        "{{UI_LAST_UPDATED}}": ui.get("last_updated", "Обновлено"),
+        "{{UI_AUTHOR_PROFILE_LINK}}": ui.get("author_profile_link", "Об авторе →"),
+        "{{DATE_MODIFIED_DISPLAY}}": format_date_human(date_modified, lang),
         "{{NLH_URL}}": nlh_url,
         "{{PLO_URL}}": plo_url,
         "{{SHORT_DECK_URL}}": short_deck_url,

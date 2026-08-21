@@ -51,11 +51,12 @@
   "dateModified": "{{DATE_MODIFIED}}",
   "author": {
     "@type": "Person",
-    "@id": "{{SITE_ORIGIN}}/ua/#about",
-    "name": "KOZYR",
-    "jobTitle": "Аналитик рейкбека",
+    "@id": "{{AUTHOR_URL}}#person",
+    "name": "{{UI_AUTHOR_NAME}}",
+    "jobTitle": "{{UI_AUTHOR_JOBTITLE}}",
     "description": "Разбор условий покерных румов и клубов: рейкбек, лимиты, выводы.",
-    "url": "{{ABOUT_URL}}",
+    "url": "{{AUTHOR_URL}}",
+    "image": "{{SITE_ORIGIN}}/ua/blog/authors/nikita.webp",
     "knowsAbout": ["Покерный рейкбек", "Обзоры румов", "Обзоры клубов", "Лимиты и выводы"],
     "worksFor": {
       "@type": "Organization",
@@ -370,10 +371,9 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
           <p class="post-hero__lede">{{LEDE}}</p>
           <div class="post-hero__meta">
             <span class="tag">{{ARTICLE_TAG}}</span><span class="dot"></span>
-            <span class="post-hero__author"><img src="/ua/blog/authors/nikita.webp" alt="{{UI_AUTHOR_NAME}}" width="28" height="28" loading="lazy"><span>{{UI_AUTHOR_NAME}}</span></span><span class="dot"></span>
-            <time datetime="{{DATE_PUBLISHED}}">{{DATE_PUBLISHED_DISPLAY}}</time><span class="dot"></span>
+            <span class="post-hero__author"><img src="/ua/blog/authors/nikita.webp" alt="{{UI_AUTHOR_NAME}}" width="28" height="28" loading="lazy"><a href="{{AUTHOR_URL}}" rel="author">{{UI_AUTHOR_NAME}}</a></span><span class="dot"></span>
+            <time datetime="{{DATE_MODIFIED}}">{{UI_LAST_UPDATED}} {{DATE_MODIFIED_DISPLAY}}</time><span class="dot"></span>
             <span>{{READING_TIME}} {{UI_MIN_READ}}</span>
-            {{LAST_UPDATED_BLOCK}}
           </div>
         </div>
       </div>
@@ -398,9 +398,10 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <div class="author-premium reveal">
         <div class="author-premium__ava"><img src="/ua/blog/authors/nikita.webp" alt="{{UI_AUTHOR_NAME}}" width="72" height="72" loading="lazy"></div>
         <div>
-          <div class="author-premium__name">{{UI_AUTHOR_NAME}}</div>
+          <div class="author-premium__name"><a href="{{AUTHOR_URL}}" rel="author">{{UI_AUTHOR_NAME}}</a></div>
           <div class="author-premium__role">{{UI_AUTHOR_ROLE}}</div>
           <p class="author-premium__bio">{{UI_AUTHOR_BIO}}</p>
+          <a class="author-premium__link" href="{{AUTHOR_URL}}">{{UI_AUTHOR_PROFILE_LINK}}</a>
         </div>
       </div>
 
