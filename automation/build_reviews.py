@@ -40,6 +40,7 @@ JSON-LD переписывается через json-round-trip. Повторн�
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html as html_mod
 import json
 import re
@@ -291,6 +292,19 @@ def rewrite_js(js_text: str, reviews: list[dict]) -> str:
     return re.sub(r'var REVIEWS = \[[\s\S]*?\n  \];', new_array, js_text, count=1)
 
 
+def js_cache_version(js_text: str) -> str:
+    """Cache-buster = 8 символов md5 содержимого JS.
+    При любой правке отзывов версия меняется → Cloudflare/браузер тянут свежий
+    файл; при неизменном содержимом версия та же → идемпотентно."""
+    return hashlib.md5(js_text.encode("utf-8")).hexdigest()[:8]
+
+
+def bump_cache_buster(page_html: str, version: str) -> str:
+    """Проставляет ?v=<version> у ссылок на kozyr-reviews.js в странице."""
+    return re.sub(r'(kozyr-reviews\.js\?v=)[A-Za-z0-9._-]+',
+                  lambda m: m.group(1) + version, page_html)
+
+
 def process_page(partner: str, lang: str, reviews: list[dict], page_html: str) -> str:
     lab = I18N[lang]
     part = [r for r in reviews if r["partner"] == partner and r["lang"] == lang]
@@ -327,16 +341,27 @@ def main() -> int:
     drift = False
     changed = 0
 
+    # Сначала считаем новый JS и его версию (хеш) — она пойдёт в cache-buster
+    # ссылок на страницах, чтобы кеш гарантированно сбросился при правке отзывов.
+    cur_js = new_js = None
+    js_ver = None
+    if JS_FILE.exists():
+        cur_js = JS_FILE.read_text(encoding="utf-8")
+        new_js = rewrite_js(cur_js, reviews)
+        js_ver = js_cache_version(new_js)
+
     for partner, lang, path in PAGES:
         if not path.exists():
             print(f"⚠️  нет страницы: {path}")
             continue
         cur = path.read_text(encoding="utf-8")
         new = process_page(partner, lang, reviews, cur)
+        if js_ver:
+            new = bump_cache_buster(new, js_ver)
         if new != cur:
             if args.check:
                 drift = True
-                print(f"⚠️  {path.relative_to(ROOT)} — отзывы/aggregateRating "
+                print(f"⚠️  {path.relative_to(ROOT)} — отзывы/aggregateRating/версия "
                       f"разошлись; запусти: python automation/build_reviews.py")
             else:
                 path.write_text(new, encoding="utf-8")
@@ -344,23 +369,20 @@ def main() -> int:
                 print(f"✓ обновлено: {path.relative_to(ROOT)}")
 
     # kozyr-reviews.js — рендер для JS-пользователей: держим тексты из reviews.json
-    if JS_FILE.exists():
-        cur_js = JS_FILE.read_text(encoding="utf-8")
-        new_js = rewrite_js(cur_js, reviews)
-        if new_js != cur_js:
-            if args.check:
-                drift = True
-                print("⚠️  assets/kozyr-reviews.js разошёлся с reviews.json; "
-                      "запусти: python automation/build_reviews.py")
-            else:
-                JS_FILE.write_text(new_js, encoding="utf-8")
-                changed += 1
-                print("✓ обновлено: assets/kozyr-reviews.js")
+    if new_js is not None and new_js != cur_js:
+        if args.check:
+            drift = True
+            print("⚠️  assets/kozyr-reviews.js разошёлся с reviews.json; "
+                  "запусти: python automation/build_reviews.py")
+        else:
+            JS_FILE.write_text(new_js, encoding="utf-8")
+            changed += 1
+            print(f"✓ обновлено: assets/kozyr-reviews.js (v={js_ver})")
 
     if args.check:
         if drift:
             return 1
-        print("✓ Отзывы и aggregateRating на всех страницах актуальны.")
+        print("✓ Отзывы, aggregateRating и cache-buster актуальны.")
         return 0
 
     print(f"Готово. Изменено файлов: {changed}.")
