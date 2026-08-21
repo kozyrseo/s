@@ -1,0 +1,34 @@
+name: Check llms.txt sync
+
+# Страховка от рассинхрона: llms.txt / llms-full.txt должны всегда совпадать
+# с тем, что генерируется из partners.json + taxonomy. Если кто-то поправил
+# их руками (и, например, снова вписал ложное «КРАИЛ») — этот джоб упадёт и
+# подскажет запустить генератор.
+
+on:
+  pull_request:
+    paths:
+      - "llms.txt"
+      - "llms-full.txt"
+      - "partners.json"
+      - "automation/taxonomy.json"
+      - "automation/taxonomy.uk.json"
+      - "automation/build_llms.py"
+      - "ua/blog/**"
+      - "ua/uk/blog/**"
+  workflow_dispatch:
+
+jobs:
+  check-llms:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify llms files are in sync with partners.json
+        run: python automation/build_llms.py --check
