@@ -1829,6 +1829,16 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     # Note: IndexNow ping happens AFTER Netlify deploy in the workflow,
     # not here. We only update files here.
 
+    # Пересобираем llms.txt/llms-full.txt из partners.json + taxonomy, чтобы
+    # ИИ-файлы всегда отражали реальность (лицензии/рейкбек) и попадали в тот
+    # же коммит. Не роняем публикацию, если генератор почему-то упал.
+    try:
+        import build_llms
+        p1, p2 = build_llms.write_files()
+        print(f"✅ Regenerated {p1.name} + {p2.name} from partners.json")
+    except Exception as e:
+        print(f"⚠️  build_llms failed (article still OK): {type(e).__name__}: {e}")
+
     print(f"\n✅ Article ready for commit: {canonical_url}")
     return 0
 
