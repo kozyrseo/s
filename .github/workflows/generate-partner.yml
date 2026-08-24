@@ -39,7 +39,7 @@ jobs:
 
       - name: Generate partner page
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           PARTNER_ID: ${{ github.event.inputs.partner_id }}
           PUBLISH: ${{ github.event.inputs.publish }}
         run: |
