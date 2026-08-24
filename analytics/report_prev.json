@@ -297,9 +297,252 @@
     "behavior_by_page": {},
     "conversions_by_page": {},
     "traffic_sources": {},
-    "collected_at": "2026-08-19T09:03:02.919345+00:00"
+    "by_country": {},
+    "by_device": {},
+    "collected_at": "2026-08-19T09:46:39.748347+00:00"
   },
-  "period_label": "последняя неделя",
-  "period_days": 7,
-  "collected_at": "2026-08-19T09:03:02.919382+00:00"
+  "site": {
+    "totals": {
+      "impressions": 60,
+      "clicks": 14,
+      "ctr": 0.2333,
+      "position": 15.2
+    },
+    "pages": [
+      {
+        "url": "https://kozyr.club/ua/clubs/klubok/",
+        "impressions": 27,
+        "clicks": 3,
+        "ctr": 0.1111,
+        "position": 5.9,
+        "path": "/ua/clubs/klubok/",
+        "title": "/ua/clubs/klubok/"
+      },
+      {
+        "url": "https://kozyr.club/ua/",
+        "impressions": 15,
+        "clicks": 9,
+        "ctr": 0.6,
+        "position": 7.7,
+        "path": "/ua/",
+        "title": "/ua/"
+      },
+      {
+        "url": "https://kozyr.club/ua/uk/",
+        "impressions": 13,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 28,
+        "path": "/ua/uk/",
+        "title": "/ua/uk/"
+      },
+      {
+        "url": "https://kozyr.club/ua/rooms/dlya-novichkov/",
+        "impressions": 10,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 5.2,
+        "path": "/ua/rooms/dlya-novichkov/",
+        "title": "/ua/rooms/dlya-novichkov/"
+      },
+      {
+        "url": "https://kozyr.club/ua/blog/kak-rabotayut-privatnye-pokerclubi/",
+        "impressions": 9,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 6.2,
+        "path": "/ua/blog/kak-rabotayut-privatnye-pokerclubi/",
+        "title": "Как работают приватные покерные клубы в ClubGG"
+      },
+      {
+        "url": "https://kozyr.club/ua/rooms/na-grivnu/",
+        "impressions": 9,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 6.7,
+        "path": "/ua/rooms/na-grivnu/",
+        "title": "/ua/rooms/na-grivnu/"
+      },
+      {
+        "url": "https://kozyr.club/ua/uk/rooms/na-grivnu/",
+        "impressions": 7,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 36.9,
+        "path": "/ua/uk/rooms/na-grivnu/",
+        "title": "/ua/uk/rooms/na-grivnu/"
+      },
+      {
+        "url": "https://kozyr.club/ua/legal/",
+        "impressions": 5,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 5,
+        "path": "/ua/legal/",
+        "title": "/ua/legal/"
+      },
+      {
+        "url": "https://kozyr.club/",
+        "impressions": 3,
+        "clicks": 3,
+        "ctr": 1.0,
+        "position": 1,
+        "path": "/",
+        "title": "/"
+      },
+      {
+        "url": "https://kozyr.club/ua/rooms/pokerbet/",
+        "impressions": 3,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 4.3,
+        "path": "/ua/rooms/pokerbet/",
+        "title": "/ua/rooms/pokerbet/"
+      },
+      {
+        "url": "https://kozyr.club/ua/uk/rooms/dlya-novichkov/",
+        "impressions": 3,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 33.7,
+        "path": "/ua/uk/rooms/dlya-novichkov/",
+        "title": "/ua/uk/rooms/dlya-novichkov/"
+      },
+      {
+        "url": "https://kozyr.club/ua/uk/rooms/mobilnye/",
+        "impressions": 3,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 14,
+        "path": "/ua/uk/rooms/mobilnye/",
+        "title": "/ua/uk/rooms/mobilnye/"
+      },
+      {
+        "url": "https://kozyr.club/ua/uk/blog/pokernyy-klub-clubgg-ukraina/",
+        "impressions": 2,
+        "clicks": 1,
+        "ctr": 0.5,
+        "position": 5.5,
+        "path": "/ua/uk/blog/pokernyy-klub-clubgg-ukraina/",
+        "title": "/ua/uk/blog/pokernyy-klub-clubgg-ukraina/"
+      },
+      {
+        "url": "https://kozyr.club/ua/uk/clubs/klubok/",
+        "impressions": 2,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 5.5,
+        "path": "/ua/uk/clubs/klubok/",
+        "title": "/ua/uk/clubs/klubok/"
+      },
+      {
+        "url": "https://kozyr.club/ua/uk/rooms/pokerbet/",
+        "impressions": 2,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 22.5,
+        "path": "/ua/uk/rooms/pokerbet/",
+        "title": "/ua/uk/rooms/pokerbet/"
+      },
+      {
+        "url": "https://kozyr.club/ua/blog/pokerbet-ili-klubok-sravnenie/",
+        "impressions": 1,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 16,
+        "path": "/ua/blog/pokerbet-ili-klubok-sravnenie/",
+        "title": "PokerBet или KlubOk: где играть в Украине"
+      },
+      {
+        "url": "https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/",
+        "impressions": 1,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 9,
+        "path": "/ua/blog/pokernyy-klub-clubgg-ukraina/",
+        "title": "Покерный клуб ClubGG Украина: вступление и рейкбек до 65%"
+      },
+      {
+        "url": "https://kozyr.club/ua/rooms/mobilnye/",
+        "impressions": 1,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 7,
+        "path": "/ua/rooms/mobilnye/",
+        "title": "/ua/rooms/mobilnye/"
+      },
+      {
+        "url": "https://kozyr.club/ua/uk/blog/kak-rabotayut-privatnye-pokerclubi/",
+        "impressions": 1,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 17,
+        "path": "/ua/uk/blog/kak-rabotayut-privatnye-pokerclubi/",
+        "title": "/ua/uk/blog/kak-rabotayut-privatnye-pokerclubi/"
+      },
+      {
+        "url": "https://kozyr.club/ua/uk/legal/",
+        "impressions": 1,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 6,
+        "path": "/ua/uk/legal/",
+        "title": "/ua/uk/legal/"
+      }
+    ],
+    "top_queries": [
+      {
+        "query": "klubok покер",
+        "impressions": 4,
+        "clicks": 1,
+        "position": 14
+      },
+      {
+        "query": "покер онлайн на гривні",
+        "impressions": 3,
+        "clicks": 0,
+        "position": 48
+      },
+      {
+        "query": "покер руми україни",
+        "impressions": 3,
+        "clicks": 0,
+        "position": 57.7
+      },
+      {
+        "query": "українські покер руми",
+        "impressions": 3,
+        "clicks": 0,
+        "position": 43
+      },
+      {
+        "query": "кейсур",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 6
+      },
+      {
+        "query": "покер руми україна",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 40
+      },
+      {
+        "query": "покербет промокод 2024",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 36
+      },
+      {
+        "query": "рейкбек",
+        "impressions": 1,
+        "clicks": 0,
+        "position": 10
+      }
+    ],
+    "pages_count": 20
+  },
+  "period_label": "последние 60 дней",
+  "period_days": 60,
+  "collected_at": "2026-08-19T09:46:39.976344+00:00"
 }
