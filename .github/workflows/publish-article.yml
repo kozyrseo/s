@@ -48,11 +48,17 @@ jobs:
           for path in ua/blog _pending sitemap.xml automation/taxonomy.json; do
             if [ -e "$path" ]; then git add -A -f "$path" || true; fi
           done
+          # Подхватываем ВСЁ, включая файлы, которые publish.py генерирует попутно
+          # (partners.js, llms.txt, llms-full.txt и т.п.), иначе git pull --rebase
+          # падает на "You have unstaged changes".
+          git add -A
           if git diff --staged --quiet; then
             echo "Нет изменений для коммита."
           else
             git commit -m "Publish [ru]: ${{ inputs.slug }}"
-            git pull --rebase origin main || true
-            git push
+            # Забираем свежие изменения из main перед пушем.
+            git pull --rebase origin main
+            # Ретрай пуша на случай гонки с параллельным коммитом.
+            git push || (git pull --rebase origin main && git push)
           fi
           echo "✅ Запушено. Cloudflare Pages задеплоит автоматически."
