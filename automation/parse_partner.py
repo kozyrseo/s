@@ -12,7 +12,7 @@ Claude API извлекает из него структурированные �
     python automation/parse_partner.py --text-file /tmp/partner_desc.txt
     python automation/parse_partner.py --text "RoyalClub — клуб в PPPoker..."
 
-Требует: ANTHROPIC_API_KEY.
+Требует: OPENROUTER_API_KEY.
 """
 from __future__ import annotations
 import argparse
@@ -24,7 +24,7 @@ import urllib.request
 import urllib.error
 from pathlib import Path
 
-from anthropic import Anthropic
+from openai import OpenAI
 
 AUTOMATION = Path(__file__).resolve().parent
 REPO_ROOT = AUTOMATION.parent
@@ -32,7 +32,8 @@ NETWORKS_FILE = AUTOMATION / "networks.json"
 QUESTIONS_FILE = AUTOMATION / "partner_questions.json"
 DRAFTS_DIR = REPO_ROOT / "_partner_drafts"
 
-MODEL = "claude-sonnet-4-5"
+MODEL = "anthropic/claude-opus-4.8"
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 MAX_TOKENS = 4000
 
 
@@ -262,14 +263,19 @@ def main():
     questions = json.loads(QUESTIONS_FILE.read_text(encoding="utf-8"))
     system_prompt = build_parse_prompt(networks, questions)
 
-    client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-    response = client.messages.create(
+    client = OpenAI(
+        api_key=os.environ["OPENROUTER_API_KEY"],
+        base_url=OPENROUTER_BASE_URL,
+    )
+    response = client.chat.completions.create(
         model=MODEL,
         max_tokens=MAX_TOKENS,
-        system=system_prompt,
-        messages=[{"role": "user", "content": f"Описание партнёра:\n\n{description}"}],
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"Описание партнёра:\n\n{description}"},
+        ],
     )
-    raw = "\n".join(b.text for b in response.content if hasattr(b, "text") and b.text).strip()
+    raw = (response.choices[0].message.content or "").strip()
     draft = parse_json_response(raw)
 
     # Валидация id

@@ -1,5 +1,6 @@
-# Existing core dependencies (do not remove — required by generate.py, publish.py, image_gen.py)
-anthropic>=0.40.0
+# Core dependencies. Text generation goes through OpenRouter via the OpenAI SDK
+# (base_url=https://openrouter.ai/api/v1). The `anthropic` package is no longer
+# used and can be removed; kept here only if other local scripts still import it.
 openai>=1.59.0
 httpx>=0.27.0
 Pillow>=10.0.0

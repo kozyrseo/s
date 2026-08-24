@@ -45,13 +45,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from anthropic import Anthropic
+from openai import OpenAI
 
 from lang_config import get_cfg
 
 
-MODEL = "claude-sonnet-4-5"
+# Перевод через OpenRouter. Без ":online" — веб-поиск для перевода не нужен.
+MODEL = "anthropic/claude-opus-4.8"
 MAX_TOKENS = 16000
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
 # Инструкции для переводчика — общие для всех целевых языков.
 # Специфика конкретного языка (диалект, тональность, локальные термины)
@@ -134,7 +136,10 @@ def load_article_json(pending_dir: Path) -> dict:
 
 def translate_article_json(article: dict, source_lang: str, target_lang: str) -> dict:
     """Отправляет Claude, получает переведённый JSON, парсит и возвращает."""
-    client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+    client = OpenAI(
+        api_key=os.environ["OPENROUTER_API_KEY"],
+        base_url=OPENROUTER_BASE_URL,
+    )
 
     system_prompt = TRANSLATOR_SYSTEM_PROMPT.format(
         source_lang=_lang_name(source_lang),
@@ -151,16 +156,17 @@ def translate_article_json(article: dict, source_lang: str, target_lang: str) ->
         article_for_translation, ensure_ascii=False, indent=2
     )
 
-    print(f"🌐 Перевод {source_lang} → {target_lang} (Claude {MODEL})...")
-    response = client.messages.create(
+    print(f"🌐 Перевод {source_lang} → {target_lang} (OpenRouter {MODEL})...")
+    response = client.chat.completions.create(
         model=MODEL,
         max_tokens=MAX_TOKENS,
-        system=system_prompt,
-        messages=[{"role": "user", "content": user_msg}],
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_msg},
+        ],
     )
 
-    text_parts = [b.text for b in response.content if hasattr(b, "text") and b.text]
-    raw = "\n".join(text_parts).strip()
+    raw = (response.choices[0].message.content or "").strip()
 
     # Снимаем возможные code fences
     if raw.startswith("```"):

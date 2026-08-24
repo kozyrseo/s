@@ -143,49 +143,53 @@ def generate_post(post_type: str, topic_banks: dict, recent: list[str],
     regex repair can't safely fix.
     """
     try:
-        from anthropic import Anthropic
+        from openai import OpenAI
     except ImportError:
-        raise RuntimeError("anthropic package not installed. pip install anthropic")
+        raise RuntimeError("openai package not installed. pip install openai")
 
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    api_key = os.environ.get("OPENROUTER_API_KEY")
     if not api_key:
-        raise RuntimeError("ANTHROPIC_API_KEY not set")
+        raise RuntimeError("OPENROUTER_API_KEY not set")
 
     system_prompt = POST_PROMPT_PATH.read_text(encoding="utf-8")
     user_message = build_user_message(post_type, topic_banks, recent, article)
 
-    client = Anthropic(api_key=api_key)
-    print(f"🤖 Generating post (type={post_type}) with Claude...")
-    response = client.messages.create(
-        model="claude-sonnet-4-5",
+    client = OpenAI(api_key=api_key, base_url="https://openrouter.ai/api/v1")
+    print(f"🤖 Generating post (type={post_type}) with OpenRouter...")
+    response = client.chat.completions.create(
+        model="anthropic/claude-opus-4.8",
         max_tokens=4000,
-        system=system_prompt,
-        messages=[{"role": "user", "content": user_message}],
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_message},
+        ],
     )
-    raw = response.content[0].text.strip()
+    raw = (response.choices[0].message.content or "").strip()
 
     try:
         return parse_json_response(raw)
     except RuntimeError as e:
-        # Retry: ask Claude to repair its own broken JSON
-        print(f"⚠️  Initial parse failed ({e}); asking Claude to repair...")
-        repair_response = client.messages.create(
-            model="claude-sonnet-4-5",
+        # Retry: ask the model to repair its own broken JSON
+        print(f"⚠️  Initial parse failed ({e}); asking model to repair...")
+        repair_response = client.chat.completions.create(
+            model="anthropic/claude-opus-4.8",
             max_tokens=4000,
-            system=(
-                "You are a JSON repair tool. The user will paste a broken JSON "
-                "object. Return the SAME content as valid JSON. Replace any "
-                "unescaped double quotes inside string values with single quotes. "
-                "Replace any raw newlines inside string values with \\n. Do not "
-                "change the meaning of the content. Output JSON only — no "
-                "explanation, no code fences."
-            ),
-            messages=[{
-                "role": "user",
-                "content": f"Repair this JSON:\n\n{raw}",
-            }],
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are a JSON repair tool. The user will paste a broken JSON "
+                        "object. Return the SAME content as valid JSON. Replace any "
+                        "unescaped double quotes inside string values with single quotes. "
+                        "Replace any raw newlines inside string values with \\n. Do not "
+                        "change the meaning of the content. Output JSON only — no "
+                        "explanation, no code fences."
+                    ),
+                },
+                {"role": "user", "content": f"Repair this JSON:\n\n{raw}"},
+            ],
         )
-        repaired_raw = repair_response.content[0].text.strip()
+        repaired_raw = (repair_response.choices[0].message.content or "").strip()
         return parse_json_response(repaired_raw)
 
 
@@ -372,36 +376,38 @@ def translate_to_russian(english_body: str) -> str:
         return ""
 
     try:
-        from anthropic import Anthropic
+        from openai import OpenAI
     except ImportError:
-        print("⚠️  anthropic missing — skipping translation, preview will be EN")
+        print("⚠️  openai missing — skipping translation, preview will be EN")
         return english_body
 
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    api_key = os.environ.get("OPENROUTER_API_KEY")
     if not api_key:
-        print("⚠️  ANTHROPIC_API_KEY missing — skipping translation")
+        print("⚠️  OPENROUTER_API_KEY missing — skipping translation")
         return english_body
 
     system_prompt = TRANSLATE_PROMPT_PATH.read_text(encoding="utf-8")
-    client = Anthropic(api_key=api_key)
+    client = OpenAI(api_key=api_key, base_url="https://openrouter.ai/api/v1")
     try:
         print("🌐 Translating to Russian for preview...")
-        response = client.messages.create(
-            model="claude-sonnet-4-5",
+        response = client.chat.completions.create(
+            model="anthropic/claude-opus-4.8",
             max_tokens=3000,
-            system=system_prompt,
-            messages=[{
-                "role": "user",
-                "content": (
-                    "Translate the following English post body into Russian per the rules. "
-                    "Output the translated text only, nothing else.\n\n"
-                    "---\n"
-                    f"{english_body}\n"
-                    "---"
-                ),
-            }],
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {
+                    "role": "user",
+                    "content": (
+                        "Translate the following English post body into Russian per the rules. "
+                        "Output the translated text only, nothing else.\n\n"
+                        "---\n"
+                        f"{english_body}\n"
+                        "---"
+                    ),
+                },
+            ],
         )
-        ru = response.content[0].text.strip()
+        ru = (response.choices[0].message.content or "").strip()
         # Strip a leading "---" if Claude echoed it back
         ru = re.sub(r"^---\s*", "", ru)
         ru = re.sub(r"\s*---\s*$", "", ru)
@@ -641,27 +647,29 @@ def cmd_generate_pinned() -> int:
     config = load_config()
 
     try:
-        from anthropic import Anthropic
+        from openai import OpenAI
     except ImportError:
-        print("❌ anthropic package not installed")
+        print("❌ openai package not installed")
         return 1
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    api_key = os.environ.get("OPENROUTER_API_KEY")
     if not api_key:
-        print("❌ ANTHROPIC_API_KEY not set")
+        print("❌ OPENROUTER_API_KEY not set")
         return 1
 
     system_prompt = PINNED_PROMPT_PATH.read_text(encoding="utf-8")
     user_msg = "Generate the pinned post for the PokerNet AI Telegram channel. Return JSON per the schema."
 
-    client = Anthropic(api_key=api_key)
-    print("🤖 Generating pinned post with Claude...")
-    response = client.messages.create(
-        model="claude-sonnet-4-5",
+    client = OpenAI(api_key=api_key, base_url="https://openrouter.ai/api/v1")
+    print("🤖 Generating pinned post with OpenRouter...")
+    response = client.chat.completions.create(
+        model="anthropic/claude-opus-4.8",
         max_tokens=2000,
-        system=system_prompt,
-        messages=[{"role": "user", "content": user_msg}],
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_msg},
+        ],
     )
-    data = parse_json_response_loose(response.content[0].text.strip())
+    data = parse_json_response_loose((response.choices[0].message.content or "").strip())
 
     body_with_substitutions = (
         data["body"]

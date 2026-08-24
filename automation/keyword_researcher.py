@@ -22,7 +22,7 @@ KOZYR — Модуль анализа ключевых запросов и ав�
   - GOOGLE_SERVICE_ACCOUNT_JSON — тот же, что в generate.py
   - GOOGLE_SHEETS_ID              — та же таблица
   - GSC_SITE_URL                  — sc-domain:kozyr.club или https://kozyr.club/
-  - ANTHROPIC_API_KEY             — для кластеризации + web_search
+  - OPENROUTER_API_KEY            — для кластеризации + web_search (:online)
 """
 
 from __future__ import annotations
@@ -39,7 +39,7 @@ from pathlib import Path
 from typing import Any
 
 import gspread
-from anthropic import Anthropic
+from openai import OpenAI
 from google.oauth2.service_account import Credentials
 
 # Google Search Console — опционально: если модуль не установлен,
@@ -79,7 +79,8 @@ except Exception:
 
 # ==== Конфигурация ====
 
-MODEL = "claude-sonnet-4-5"
+MODEL = "anthropic/claude-opus-4.8"
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 MAX_TOKENS = 8000
 
 # GSC: сколько дней назад брать данные
@@ -432,7 +433,10 @@ def cluster_and_generate_topics(
     Отправляет GSC-запросы в Claude, при желании подключает web_search,
     получает 5-8 готовых тем. Промпт и стоп-фильтр строятся из partners.js.
     """
-    client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+    client = OpenAI(
+        api_key=os.environ["OPENROUTER_API_KEY"],
+        base_url=OPENROUTER_BASE_URL,
+    )
 
     # Партнёры из единой точки правды (partners.js).
     partners = load_partners()
@@ -490,21 +494,20 @@ EXISTING_TOPICS (уже есть в очереди или опубликован
 питай темы ими.
 """
 
-    tools = []
-    if do_web_search:
-        tools = [{"type": "web_search_20250305", "name": "web_search", "max_uses": 5}]
+    # На OpenRouter веб-поиск включается суффиксом ":online" к имени модели.
+    model_id = f"{MODEL}:online" if do_web_search else MODEL
 
-    print(f"🤖 Кластеризация тем (Claude {MODEL}, web_search={'on' if do_web_search else 'off'})")
-    response = client.messages.create(
-        model=MODEL,
+    print(f"🤖 Кластеризация тем (OpenRouter {model_id}, web_search={'on' if do_web_search else 'off'})")
+    response = client.chat.completions.create(
+        model=model_id,
         max_tokens=MAX_TOKENS,
-        system=system_prompt,
-        tools=tools,
-        messages=[{"role": "user", "content": user_msg}],
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_msg},
+        ],
     )
 
-    text_parts = [b.text for b in response.content if hasattr(b, "text") and b.text]
-    raw = "\n".join(text_parts).strip()
+    raw = (response.choices[0].message.content or "").strip()
 
     # Убираем возможные code fences
     if raw.startswith("```"):

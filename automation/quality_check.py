@@ -28,13 +28,15 @@ import re
 from datetime import datetime
 from typing import Any
 
-# Anthropic is required for content evaluation. If unavailable, content
+# OpenRouter (OpenAI SDK) is required for content evaluation. If unavailable, content
 # check returns score 0 and the technical check stands alone.
 try:
-    from anthropic import Anthropic
+    from openai import OpenAI
     HAS_ANTHROPIC = True
 except ImportError:
     HAS_ANTHROPIC = False
+
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
 
 # Threshold for verdict mapping. Tune these as needed.
@@ -45,7 +47,7 @@ VERDICT_THRESHOLDS = {
     "REJECT": 0,           # <50: auto-reject (not implemented yet — see flag)
 }
 
-CONTENT_EVAL_MODEL = "claude-sonnet-4-5"
+CONTENT_EVAL_MODEL = "anthropic/claude-opus-4.8"
 CONTENT_EVAL_MAX_TOKENS = 4000
 
 
@@ -436,7 +438,7 @@ def evaluate_content(article: dict, topic: dict, markdown_body: str, lang: str) 
             "percent": 0,
             "error": "anthropic library not installed",
         }
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    api_key = os.environ.get("OPENROUTER_API_KEY")
     if not api_key:
         return {
             "tier": "content",
@@ -444,19 +446,19 @@ def evaluate_content(article: dict, topic: dict, markdown_body: str, lang: str) 
             "total": 0,
             "max": 50,
             "percent": 0,
-            "error": "ANTHROPIC_API_KEY not set",
+            "error": "OPENROUTER_API_KEY not set",
         }
     
-    client = Anthropic(api_key=api_key)
+    client = OpenAI(api_key=api_key, base_url=OPENROUTER_BASE_URL)
     prompt = build_content_eval_prompt(article, topic, markdown_body, lang)
     
     try:
-        response = client.messages.create(
+        response = client.chat.completions.create(
             model=CONTENT_EVAL_MODEL,
             max_tokens=CONTENT_EVAL_MAX_TOKENS,
             messages=[{"role": "user", "content": prompt}],
         )
-        raw = response.content[0].text.strip()
+        raw = (response.choices[0].message.content or "").strip()
         # Strip code fences if present
         if raw.startswith("```"):
             raw = re.sub(r"^```(?:json)?\s*\n?", "", raw)
@@ -526,7 +528,7 @@ def evaluate_article(article: dict, topic: dict, markdown_body: str,
         }
     
     If skip_content=True, only technical evaluation runs (useful for testing
-    or when ANTHROPIC_API_KEY is missing).
+    or when OPENROUTER_API_KEY is missing).
     """
     tech = evaluate_technical(article, topic, markdown_body, lang)
     

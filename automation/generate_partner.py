@@ -12,7 +12,7 @@ KOZYR — генератор страницы партнёра через Anthro
     python automation/generate_partner.py --id royalclub
     python automation/generate_partner.py --id royalclub --publish  # сразу в прод
 
-Требует: ANTHROPIC_API_KEY в окружении (как generate.py).
+Требует: OPENROUTER_API_KEY в окружении (как generate.py).
 """
 from __future__ import annotations
 import argparse
@@ -22,7 +22,7 @@ import re
 import sys
 from pathlib import Path
 
-from anthropic import Anthropic
+from openai import OpenAI
 
 # ── Пути ──
 AUTOMATION = Path(__file__).resolve().parent
@@ -34,7 +34,8 @@ DRAFTS_DIR = REPO_ROOT / "_partner_drafts"
 PENDING_DIR = REPO_ROOT / "_pending_partner"
 
 # ── Модель (как в generate.py) ──
-MODEL = "claude-sonnet-4-5"
+MODEL = "anthropic/claude-opus-4.8"
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 MAX_TOKENS = 32000  # страница большая (~2000 строк), нужен запас
 
 # Маркеры HTML в ответе AI
@@ -233,17 +234,22 @@ def main():
     print(f"Модель: {MODEL}, max_tokens: {MAX_TOKENS}")
 
     # Вызов API (как generate.py)
-    client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+    client = OpenAI(
+        api_key=os.environ["OPENROUTER_API_KEY"],
+        base_url=OPENROUTER_BASE_URL,
+    )
     user_message = build_user_message(draft, reference, networks)
 
-    response = client.messages.create(
+    response = client.chat.completions.create(
         model=MODEL,
         max_tokens=MAX_TOKENS,
-        system=system_prompt,
-        messages=[{"role": "user", "content": user_message}],
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_message},
+        ],
     )
 
-    raw = "\n".join(b.text for b in response.content if hasattr(b, "text") and b.text).strip()
+    raw = (response.choices[0].message.content or "").strip()
     html = parse_html_response(raw)
 
     # Валидация

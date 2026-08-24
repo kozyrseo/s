@@ -23,7 +23,7 @@ from datetime import datetime, timezone
 from pathlib import Path
  
 import gspread
-from anthropic import Anthropic
+from openai import OpenAI
 from google.oauth2.service_account import Credentials
 from slugify import slugify
 
@@ -38,8 +38,11 @@ from quality_check import evaluate_article
  
  
 # ==== Configuration ====
-MODEL = "claude-sonnet-4-5"
+# Через OpenRouter. Суффикс ":online" включает веб-поиск во время генерации
+# (замена нативного web_search Anthropic, который через OpenRouter не работает).
+MODEL = "anthropic/claude-opus-4.8:online"
 MAX_TOKENS = 16000
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
 # Note: PENDING_DIR and PROMPT_PATH used to be module-level constants.
 # They are now derived from the --lang flag at runtime via lang_config.
@@ -219,26 +222,26 @@ def clean_citation_artifacts(text: str) -> str:
  
 def generate_article(topic: dict, lang_cfg) -> dict:
     """Send request to Claude and return dict with metadata + markdown_body."""
-    client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+    client = OpenAI(
+        api_key=os.environ["OPENROUTER_API_KEY"],
+        base_url=OPENROUTER_BASE_URL,
+    )
     system_prompt = load_system_prompt(lang_cfg)
     user_message = build_user_message(topic, lang_cfg)
  
     print(f"Generating article for topic: {topic.get('topic')!r}")
     print(f"Model: {MODEL}, max_tokens: {MAX_TOKENS}")
  
-    response = client.messages.create(
+    response = client.chat.completions.create(
         model=MODEL,
         max_tokens=MAX_TOKENS,
-        system=system_prompt,
-        tools=[{"type": "web_search_20250305", "name": "web_search", "max_uses": 6}],
-        messages=[{"role": "user", "content": user_message}],
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_message},
+        ],
     )
  
-    text_parts = []
-    for block in response.content:
-        if hasattr(block, "text") and block.text:
-            text_parts.append(block.text)
-    raw_text = "\n".join(text_parts).strip()
+    raw_text = (response.choices[0].message.content or "").strip()
  
     try:
         metadata, markdown_body = parse_response(raw_text)

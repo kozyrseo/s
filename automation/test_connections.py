@@ -8,7 +8,7 @@ import os
 import json
 import sys
 import requests
-from anthropic import Anthropic
+from openai import OpenAI
 import gspread
 from google.oauth2.service_account import Credentials
 
@@ -27,17 +27,20 @@ def send_telegram_message(text: str) -> None:
 
 
 def test_anthropic() -> str:
-    """Test Anthropic API by making a simple request."""
-    client = Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-    message = client.messages.create(
-        model="claude-sonnet-4-5",
+    """Test OpenRouter API by making a simple request."""
+    client = OpenAI(
+        api_key=os.environ["OPENROUTER_API_KEY"],
+        base_url="https://openrouter.ai/api/v1",
+    )
+    message = client.chat.completions.create(
+        model="anthropic/claude-opus-4.8",
         max_tokens=50,
         messages=[
             {"role": "user", "content": "Reply with exactly: OK"}
         ],
     )
-    reply = message.content[0].text.strip()
-    return f"Anthropic: ✅ Connected (reply: {reply!r})"
+    reply = (message.choices[0].message.content or "").strip()
+    return f"OpenRouter: ✅ Connected (reply: {reply!r})"
 
 
 def test_google_sheets() -> str:
