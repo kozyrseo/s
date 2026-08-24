@@ -152,11 +152,12 @@
         "win"
       ],
       "bonus": [
+        "welcome",
         "rakerace"
       ],
       "payoutHours": 1,
       "payoutLabel": "15–60 минут",
-      "note": "Приватный клуб в ClubGG. Мягкие поля, расчёты в гривне через Telegram.",
+      "note": "Приватный клуб в ClubGG. Мягкие поля, расчёты в гривне через Telegram. Welcome-бонус 100% к первому депозиту.",
       "card": {
         "logoText": "K",
         "logoImg": "/ua/blog/logos/klubok.webp",
