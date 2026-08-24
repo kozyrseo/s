@@ -1,18 +1,7 @@
 {
-  "collected_at": "2026-08-24T19:10:09.889050+00:00",
+  "collected_at": "2026-08-24T19:16:27.700910+00:00",
   "status": "queued",
   "rows": [
-    {
-      "status": "queued",
-      "lang": "ru",
-      "topic": "Как выводить выигрыш в гривне: способы, сроки и минимальные суммы",
-      "primary_keyword": "вывод в гривне покер",
-      "secondary_keywords": "вывод денег гривна;сроки вывода покер;минимальный вывод покер",
-      "intent": "informational",
-      "target_page": "/ua/blog/",
-      "notes": "Кластер: платёжки/гривна. ИНФО-статья (НЕ дубль каталога na-grivnu). Вывод в UAH: Monobank/ПриватБанк, сроки, минималки у PokerBet и KlubOk. Внутри ССЫЛКА на /ua/rooms/na-grivnu/ (усиливает каталог).",
-      "_row": 3
-    },
     {
       "status": "queued",
       "lang": "ru",
