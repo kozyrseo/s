@@ -7,7 +7,7 @@
  *
  * Callback-схема (совпадает с automation/generate.py):
  *   publish:{slug}     → publish-article.yml  (input: slug)
- *   regenerate:{slug}  → generate-article.yml (перегенерация)
+ *   regenerate:{slug}  → generate-multilang.yml (перегенерит все языки)
  *   reject:{slug}      → reject-article.yml    (архивирует _pending, опционально)
  *   fulltext:{slug}    → читает _pending/{slug}/body.md и присылает в чат
  *
@@ -28,10 +28,10 @@ const ACTIONS = {
     validate: (slug) => /^[a-z0-9-]+$/.test(slug),
   },
   regenerate: {
-    workflow: "generate-article.yml",
-    label: "Перегенерируется",
-    // generate-article.yml принимает topic_file; при перегенерации берём тему по slug.
-    inputs: (slug) => ({ topic_file: `automation/topics/${slug}.json` }),
+    workflow: "generate-multilang.yml",
+    label: "Перегенерируется (все языки)",
+    // Мультиязычно: перегенерит все языки темы (для ua — RU + UK).
+    inputs: (slug) => ({ topic_file: `automation/topics/${slug}.json`, country: "", langs: "" }),
     validate: (slug) => /^[a-z0-9-]+$/.test(slug),
   },
   reject: {

@@ -12,7 +12,7 @@
  *
  * Callback-схема (обратная совместимость с v1 сохранена):
  *   publish:{slug}         → publish-article.yml
- *   regenerate:{slug}      → generate-article.yml (перегенерирует по темe slug)
+ *   regenerate:{slug}      → generate-multilang.yml (перегенерит все языки темы)
  *   reject:{slug}          → reject-article.yml
  *   fulltext:{slug}        → присылает body.md в чат
  *   sources:{slug}         → присылает meta.json + логи генерации (v2)
@@ -49,9 +49,10 @@ const ACTIONS = {
     validate: (slug) => /^[a-z0-9-]+$/.test(slug),
   },
   regenerate: {
-    workflow: "generate-article.yml",
-    label: "Перегенерируется",
-    inputs: (slug) => ({ topic_file: `automation/topics/${slug}.json` }),
+    // Мультиязычно: перегенерит все языки темы (для ua — RU + UK).
+    workflow: "generate-multilang.yml",
+    label: "Перегенерируется (все языки)",
+    inputs: (slug) => ({ topic_file: `automation/topics/${slug}.json`, country: "", langs: "" }),
     validate: (slug) => /^[a-z0-9-]+$/.test(slug),
   },
   reject: {
@@ -500,9 +501,12 @@ async function cmdGenerate(chatId, args, msg, env) {
   // /generate       → без аргументов, генератор возьмёт первую queued тему из таблицы
   // /generate N     → генерировать по строке N (dump-topic-file + запуск)
   if (args.length === 0) {
-    const ok = await triggerWorkflow("generate-article.yml", { topic_file: "" }, env);
+    // Мультиязычная генерация: берёт первую queued тему из очереди и генерит
+    // все языки страны (для ua — RU + перевод на UK). Превью придёт с кнопками
+    // обоих языков и кнопкой «Опубликовать все языки».
+    const ok = await triggerWorkflow("generate-multilang.yml", { country: "", langs: "" }, env);
     await sendMessage(chatId, env, ok
-      ? "⏳ Запустил генерацию из очереди. Превью придёт как обычно."
+      ? "⏳ Запустил генерацию из очереди (RU + UK). Превью придёт с обоими языками."
       : "❌ Не удалось запустить workflow. Проверь GITHUB_TOKEN.");
     return;
   }
