@@ -79,10 +79,13 @@ jobs:
             if [ -d "$d" ]; then git add -A -f "$d" || true; fi
           done
           if [ -d "automation/topics" ]; then git add -A -f automation/topics/ || true; fi
+          # Подхватываем ВСЁ (partners.js, llms.txt и прочее), иначе
+          # git pull --rebase падает на unstaged changes.
+          git add -A
           if git diff --staged --quiet; then
             echo "Nothing to commit."
           else
             git commit -m "Generate multilang article (pending review)"
-            git pull --rebase origin main || true
-            git push
+            git pull --rebase origin main
+            git push || (git pull --rebase origin main && git push)
           fi
