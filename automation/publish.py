@@ -1623,12 +1623,11 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     # Автор-энтити (№5): реальная страница автора, куда указывают schema и байлайн.
     author_url_full = f"{SITE_URL}{lang_cfg['blog_url']}authors/nikita/"
     # jobTitle без " · KOZYR" (организация покрыта worksFor)
+    ui = lang_cfg["ui"]
     author_jobtitle = ui.get("author_role", "Рейкбек-аналитик").split("·")[0].strip()
 
     # ----- in-language code for JSON-LD inLanguage (BCP-47) -----
     in_language = {"ru": "ru-UA"}.get(lang, "ru-UA")
-
-    ui = lang_cfg["ui"]
 
     # v2 multilang: если у этой статьи есть перевод — переключатель ведёт
     # на конкретную статью-перевод, а не на дефолтную главную из UI.
