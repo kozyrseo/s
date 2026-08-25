@@ -242,6 +242,19 @@ body { margin: 0; font-family: var(--f-body); color: var(--ink); background: #F6
 .cx-cmp tbody tr:last-child td{border-bottom:none;}
 .cx-cmp .ok{color:#0A7C4A;font-weight:600;}
 .cx-cmp .mid{color:#9C6A18;font-weight:600;}
+
+/* Карточки-фичи (в стиле cx) */
+.cx-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:20px;}
+@media(max-width:720px){.cx-cards{grid-template-columns:1fr;}}
+.cx-card{padding:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--shadow-sm);transition:border-color .2s var(--ease),transform .2s var(--ease);}
+.cx-card:hover{border-color:var(--border-2);transform:translateY(-2px);}
+.cx-card__ic{width:40px;height:40px;border-radius:10px;background:var(--gold-tint);color:var(--gold-deep);display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-family:var(--f-display);font-weight:700;font-size:18px;}
+.cx-card__t{font-family:var(--f-display);font-size:17px;font-weight:600;color:var(--ink);margin:0 0 8px;letter-spacing:-.01em;}
+.cx-card__d{font-size:14.5px;line-height:1.6;color:var(--ink-2);margin:0;}
+/* Платёжки-чипы */
+.cx-pays{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+.cx-pay{padding:10px 18px;background:var(--surface-alt);border:1px solid var(--border);border-radius:999px;font-size:14px;font-weight:500;color:var(--ink);font-family:var(--f-body);}
+.cx-pay b{color:var(--gold-deep);font-weight:600;}
 </style>
 <script type="application/ld+json">
 {
@@ -402,6 +415,44 @@ body { margin: 0; font-family: var(--f-body); color: var(--ink); background: #F6
   </section>
 </div>
 
+<div class="cx-wrap">
+  <section class="cx-section">
+    <span class="cx-eyebrow"><svg><use href="#i-diamond"/></svg> Платежи</span>
+    <div class="cx-shead"><h2>Способы пополнения и вывода в гривне</h2></div>
+    <p class="cx-ssub">Гривневые румы и клубы работают напрямую с украинскими банками — без обменников и посредников.</p>
+    <div class="cx-cards">
+      <div class="cx-card">
+        <div class="cx-card__ic">₴</div>
+        <div class="cx-card__t">Карты Monobank и ПриватБанк</div>
+        <p class="cx-card__d">Основной способ. Пополнение с карты Visa/Mastercard украинского банка напрямую в гривнах, без комиссии на депозит у большинства румов. Вывод — на ту же карту.</p>
+      </div>
+      <div class="cx-card">
+        <div class="cx-card__ic">P2P</div>
+        <div class="cx-card__t">P2P-переводы</div>
+        <p class="cx-card__d">У части румов доступны P2P-платежи между игроками — быстро и в гривне. Удобно, когда прямая карта временно недоступна. Лимиты и условия смотри в кассе рума.</p>
+      </div>
+      <div class="cx-card">
+        <div class="cx-card__ic">₿</div>
+        <div class="cx-card__t">Криптовалюта (опционально)</div>
+        <p class="cx-card__d">Некоторые площадки (например, Grombet) дают крипто-депозит: USDT, BTC, ETH. Это альтернатива для тех, кто предпочитает крипту, но для игры в гривне она не обязательна.</p>
+      </div>
+      <div class="cx-card">
+        <div class="cx-card__ic">15м</div>
+        <div class="cx-card__t">Скорость вывода</div>
+        <p class="cx-card__d">У локальных гривневых румов вывод на карту — от 15 минут до нескольких часов. В клубах ClubGG расчёты идут через агента в Telegram, тоже быстро. Пройди верификацию заранее.</p>
+      </div>
+    </div>
+    <div class="cx-pays">
+      <span class="cx-pay"><b>Monobank</b></span>
+      <span class="cx-pay"><b>ПриватБанк</b></span>
+      <span class="cx-pay">Visa / Mastercard</span>
+      <span class="cx-pay">P2P</span>
+      <span class="cx-pay">USDT / BTC / ETH</span>
+      <span class="cx-pay">Telegram-агент (клубы)</span>
+    </div>
+  </section>
+</div>
+
 <section class="cx-dark">
   <div class="cx-dark__in">
     <span class="cx-eyebrow"><svg><use href="#i-diamond"/></svg> Как это работает</span>
@@ -443,6 +494,36 @@ body { margin: 0; font-family: var(--f-body); color: var(--ink); background: #F6
     </div>
   </div>
 </section>
+
+<div class="cx-wrap">
+  <section class="cx-section">
+    <span class="cx-eyebrow"><svg><use href="#i-spade"/></svg> Почему гривна</span>
+    <div class="cx-shead"><h2>Почему играть в гривне выгоднее</h2></div>
+    <p class="cx-ssub">Четыре причины, по которым локальный гривневый счёт удобнее международного долларового.</p>
+    <div class="cx-cards">
+      <div class="cx-card">
+        <div class="cx-card__ic">%</div>
+        <div class="cx-card__t">Нет потерь на конвертации</div>
+        <p class="cx-card__d">В международных румах гривна часто только на депозите, а счёт в долларах — при выводе теряешь 2–3% на курсе. Гривневый рум держит весь банкролл в ₴, без скрытых потерь.</p>
+      </div>
+      <div class="cx-card">
+        <div class="cx-card__ic">₴</div>
+        <div class="cx-card__t">Понятный банкролл</div>
+        <p class="cx-card__d">Бай-ины, бонусы и рейкбек — всё в гривне. Не нужно держать в голове курс доллара и пересчитывать: видишь ₴ — сразу понимаешь свои деньги и лимиты.</p>
+      </div>
+      <div class="cx-card">
+        <div class="cx-card__ic">🏦</div>
+        <div class="cx-card__t">Родные банки без вопросов</div>
+        <p class="cx-card__d">Прямая интеграция с Monobank и ПриватБанк. Никаких переводов на непонятные международные адреса, из-за которых банк может задать вопросы или заблокировать операцию.</p>
+      </div>
+      <div class="cx-card">
+        <div class="cx-card__ic">⚡</div>
+        <div class="cx-card__t">Быстрый вывод на карту</div>
+        <p class="cx-card__d">Деньги приходят обратно на украинскую карту за минуты-часы, а не дни. Для casual-игры и регулярного вывода выигрыша это заметно удобнее международных площадок.</p>
+      </div>
+    </div>
+  </section>
+</div>
 
 <div class="cx-wrap">
   <section class="cx-section">
