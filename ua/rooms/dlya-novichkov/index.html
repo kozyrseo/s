@@ -373,7 +373,7 @@ body { margin: 0; font-family: var(--f-body); color: var(--ink); background: #F6
     <p class="cx-hero__lead">Румы, где комфортно начать с нуля: микролимиты от NL2, депозит от 200 ₴, простая верификация и слабое поле с любителями. Место, где можно учиться, а не бояться слить банкролл. KOZYR показывает условия честно.</p>
     <div class="cx-metrics">
       <div class="cx-metric">
-        <div class="cx-metric__num" data-count-nl>2</div>
+        <div class="cx-metric__num">2</div>
         <div class="cx-metric__label">рума для старта</div>
       </div>
       <div class="cx-metric">
@@ -393,7 +393,7 @@ body { margin: 0; font-family: var(--f-body); color: var(--ink); background: #F6
     <span class="cx-eyebrow"><svg><use href="#i-spade"/></svg> Румы для старта</span>
     <div class="cx-shead">
       <h2>Румы, где стоит начать</h2>
-      <span class="cx-shead__count" data-count-uah-badge>2</span>
+      <span class="cx-shead__count">2</span>
     </div>
     <p class="cx-ssub">Отсортированы по рейтингу KOZYR. Нажми на карточку — полный обзор лимитов, бонусов и условий для старта.</p>
 
@@ -642,36 +642,15 @@ body { margin: 0; font-family: var(--f-body); color: var(--ink); background: #F6
 <script src="https://kozyr.club/partners.js" defer></script>
 <script>
 (function () {
-  function initData() {
-    var P = window.KOZYR_PARTNERS;
-    if (!P) { return setTimeout(initData, 120); }
-    var clubs = P.filter(function (p) { return p.access === "club"; });
-    var n = clubs.length;
-    document.querySelectorAll("[data-count-nl]").forEach(function (el) { el.textContent = n; });
-    document.querySelectorAll("[data-count-nl-badge]").forEach(function (el) { el.textContent = n; });
-    if (n >= 2) {
-      var box = document.querySelector("[data-compare-clubs]");
-      var tw = document.querySelector("[data-compare-table]");
-      if (box && tw) {
-        var rt = function (p) { return p.rake === "none" ? "нет" : (p.rake == null ? "уточняется" : p.rake + "% еженедельно"); };
-        var rows = clubs.map(function (p) {
-          return "<tr><td><strong>" + p.name + "</strong></td><td>" + rt(p) + "</td><td>" +
-            (p.currency || "—") + "</td><td>" + (p.network || "—") + "</td><td>" + (p.payoutLabel || "—") + "</td></tr>";
-        }).join("");
-        tw.innerHTML = '<table><thead><tr><th>Клуб</th><th>Рейкбек</th><th>Валюта</th><th>Сеть</th><th>Выплаты</th></tr></thead><tbody>' + rows + "</tbody></table>";
-        box.classList.add("is-visible");
-      }
-    }
-  }
   function initFaq() {
     document.querySelectorAll(".cx-faq__item").forEach(function (item) {
       var q = item.querySelector(".cx-faq__q");
-      q.addEventListener("click", function () { item.classList.toggle("open"); });
+      if (q) q.addEventListener("click", function () { item.classList.toggle("open"); });
     });
   }
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () { initData(); initFaq(); });
-  } else { initData(); initFaq(); }
+    document.addEventListener("DOMContentLoaded", initFaq);
+  } else { initFaq(); }
 })();
 </script>
 </body>
