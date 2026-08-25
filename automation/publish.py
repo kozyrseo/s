@@ -51,7 +51,9 @@ from body_enhance import enhance_body_html
 # ==== Configuration ====
 # Шаблон рядом с этим файлом → устойчиво к рабочей директории запуска
 TEMPLATE_PATH = Path(__file__).resolve().parent / "templates" / "article.html"
-SITEMAP_PATH = Path("sitemap.xml")
+# Cloudflare-функция functions/sitemap.xml.js отдаёт по /sitemap.xml именно
+# этот файл, поэтому публикация должна писать в него, а не в sitemap.xml.
+SITEMAP_PATH = Path("sitemap-raw.xml")
 INDEXNOW_KEY_FILE_PATTERN = "*.indexnow.txt"  # the key file lives in repo root
 
 # Stage 3 i18n: PENDING_DIR, BLOG_DIR, BLOG_INDEX_PATH, TAXONOMY_PATH used to
