@@ -63,9 +63,18 @@ def crosslink_translations(pending_versions: dict[str, Path]) -> None:
         meta_path = pending_dir / "meta.json"
         meta = json.loads(meta_path.read_text(encoding="utf-8"))
 
-        # Все другие языки — в translation_of
-        translation_of = {other: slug_map[other]
-                          for other in slug_map if other != lang}
+        # Начинаем с уже прописанных связей (translator.py проставляет пары,
+        # и там могут быть языки, которые УЖЕ опубликованы и отсутствуют в
+        # текущем pending — их нельзя терять, иначе переключатель на такой
+        # язык уйдёт на дефолтную главную).
+        existing = meta.get("translation_of")
+        translation_of = dict(existing) if isinstance(existing, dict) else {}
+
+        # Дополняем/обновляем языками из текущей публикации.
+        for other in slug_map:
+            if other != lang:
+                translation_of[other] = slug_map[other]
+
         meta["translation_of"] = translation_of
         # Явно проставляем lang в meta, чтобы publish.py не пришлось
         # догадываться (у него была legacy-логика auto-detect).
