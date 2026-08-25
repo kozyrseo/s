@@ -233,11 +233,90 @@
 .landing-cta .btn:hover { transform: translateY(-2px); }
 
 /* Breadcrumbs — используем существующий класс из блога */
+
+/* Сравнительная таблица */
+.landing-table-wrap { overflow-x: auto; margin-top: 8px; border: 1px solid var(--border,#E2E7F0); border-radius: 12px; }
+.landing-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
+.landing-table th, .landing-table td { padding: 13px 16px; text-align: left; border-bottom: 1px solid var(--border,#E2E7F0); }
+.landing-table thead th { background: var(--accent-tint,#E8F0FF); color: var(--fg,#0A1128); font-family: var(--f-display,'Space Grotesk',sans-serif); font-weight: 600; font-size: 13px; }
+.landing-table tbody tr:last-child td { border-bottom: none; }
+.landing-table td strong { color: var(--fg,#0A1128); font-weight: 600; }
+.landing-table .yes { color: #1A9955; font-weight: 600; }
+.landing-table .no { color: #C0392B; font-weight: 600; }
+.landing-table .mid { color: #C77700; font-weight: 600; }
+.landing-benefits { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-top: 8px; }
+@media (max-width: 720px){ .landing-benefits { grid-template-columns: 1fr; } }
+.landing-benefit { padding: 18px 20px; background: var(--surface,#FFF); border: 1px solid var(--border,#E2E7F0); border-radius: 12px; }
+.landing-benefit h3 { font-family: var(--f-display,'Space Grotesk',sans-serif); font-size: 16px; font-weight:600; margin:0 0 6px; letter-spacing:-0.01em; }
+.landing-benefit p { font-size: 14px; line-height:1.55; color: var(--fg-mute,#5C6580); margin:0; }
+.landing-note { margin-top:18px; padding:14px 18px; background:var(--accent-tint,#E8F0FF); border-radius:10px; font-size:13.5px; line-height:1.55; color:var(--fg-mute,#5C6580); }
+.landing-note strong{ color:var(--fg,#0A1128); }
 </style>
 
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "@id": "https://kozyr.club/#organization", "name": "KOZYR", "url": "https://kozyr.club/", "logo": {"@type": "ImageObject", "url": "https://kozyr.club/icon-512.png", "width": 512, "height": 512}}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Мобильные покер-румы 2026 — играть в покер с телефона", "description": "Мобильные покер-румы и клубы для iOS и Android с поддержкой украинских карт. Полноценные приложения без ограничений веб-версии.", "url": "https://kozyr.club/ua/rooms/mobilnye/", "inLanguage": "ru-UA", "isPartOf": {"@id": "https://kozyr.club/#organization"}}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Есть ли приложение в App Store / Google Play?", "acceptedAnswer": {"@type": "Answer", "text": "iOS-версии украинских покерных приложений есть в App Store для украинского аккаунта. Android — сложнее: Google Play в большинстве случаев блокирует покерные приложения, поэтому румы отдают APK напрямую с сайта. При установке нужно разрешить «Установку из неизвестных источников» в настройках Android."}}, {"@type": "Question", "name": "Можно ли играть на планшете?", "acceptedAnswer": {"@type": "Answer", "text": "Да, iPad и Android-планшеты поддерживаются полноценно. Более того, на планшете играть комфортнее — больше экран, легче отличать масти, помещается 2-4 стола одновременно."}}, {"@type": "Question", "name": "Работают ли мобильные покерные приложения на iPhone SE / старых Android?", "acceptedAnswer": {"@type": "Answer", "text": "На iPhone SE 2020+ работают. На iPhone 5/6 — уже нет, iOS 14+ обязателен. Для Android минимум версии 8.0 (Oreo, 2017) — на более старых приложение либо не установится, либо будет крашиться."}}, {"@type": "Question", "name": "Что делать, если приложение вылетает?", "acceptedAnswer": {"@type": "Answer", "text": "Основные причины: 1) слабый интернет — попробуй по Wi-Fi вместо LTE; 2) старая версия ОС — обнови iOS/Android; 3) переполненная память — удали ненужные приложения и оставь минимум 2 ГБ свободного места. Если проблема остаётся — пиши в поддержку рума с моделью телефона и версией системы."}}]}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Есть ли приложение в App Store / Google Play?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "iOS-версии украинских покерных приложений есть в App Store для украинского аккаунта. Android — сложнее: Google Play в большинстве случаев блокирует покерные приложения, поэтому румы отдают APK напрямую с сайта. При установке нужно разрешить «Установку из неизвестных источников» в настройках Android."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Можно ли играть на планшете?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Да, iPad и Android-планшеты поддерживаются полноценно. Более того, на планшете играть комфортнее — больше экран, легче отличать масти, помещается 2-4 стола одновременно."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Работают ли мобильные покерные приложения на iPhone SE / старых Android?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "На iPhone SE 2020+ работают. На iPhone 5/6 — уже нет, iOS 14+ обязателен. Для Android минимум версии 8.0 (Oreo, 2017) — на более старых приложение либо не установится, либо будет крашиться."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Что делать, если приложение вылетает?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Основные причины: 1) слабый интернет — попробуй по Wi-Fi вместо LTE; 2) старая версия ОС — обнови iOS/Android; 3) переполненная память — удали ненужные приложения и оставь минимум 2 ГБ свободного места. Если проблема остаётся — пиши в поддержку рума с моделью телефона и версией системы."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Почему покерных приложений нет в App Store и Google Play?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Из-за политики сторов по азартным играм многие покер-румы нельзя выложить напрямую. Легальные способы: APK для Android с официального сайта, веб-приложение для iPhone, либо клубные приложения вроде ClubGG."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Безопасно ли устанавливать APK покер-рума?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Если APK скачан с официального сайта рума — да. Опасность только в поддельных зеркалах. Все партнёры в нашем каталоге проверены, мы даём ссылки на официальные источники."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Можно ли играть с телефона на гривны?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Да. Мобильные партнёры из каталога поддерживают украинские карты и пополнение в гривне прямо в приложении. Депозит и вывод через Monobank или ПриватБанк работают как в десктоп-версии."
+      }
+    }
+  ]
+}</script>
 </head>
 <body>
 
@@ -350,6 +429,40 @@
   </section>
 
   <!-- ==== FAQ ==== -->
+  <!-- ==== СРАВНЕНИЕ СПОСОБОВ ИГРЫ С ТЕЛЕФОНА ==== -->
+  <section class="landing-section">
+    <div class="container">
+      <h2>Приложение, браузер или клуб — как играть с телефона</h2>
+      <p>Мобильный покер бывает разным: нативное приложение, игра через браузер и клубные приложения. Они отличаются удобством, доступностью в сторах и функциями. Вот сравнение.</p>
+      <div class="landing-table-wrap">
+        <table class="landing-table">
+          <thead>
+            <tr><th>Способ</th><th>Удобство</th><th>Установка</th><th>Функции</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Нативное приложение (iOS/Android)</strong></td><td class="yes">Максимум</td><td class="mid">APK / TestFlight</td><td class="yes">Полный функционал</td></tr>
+            <tr><td><strong>Браузерная версия</strong></td><td class="mid">Среднее</td><td class="yes">Ничего ставить не надо</td><td class="mid">Базовые</td></tr>
+            <tr><td><strong>Клубное приложение (ClubGG)</strong></td><td class="yes">Высокое</td><td class="yes">Есть в сторах</td><td class="yes">Заточено под моб.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="landing-note"><strong>Важно:</strong> покерные приложения часто <strong>нельзя скачать напрямую из App Store / Google Play</strong> из-за политики сторов по азартным играм. Легальные решения — APK для Android с официального сайта, веб-приложение для iPhone или клубные приложения вроде ClubGG, которые в сторах есть. Все партнёры в нашем каталоге проверены и поддерживают украинские карты.</div>
+    </div>
+  </section>
+
+  <!-- ==== НА ЧТО ВАЖНО СМОТРЕТЬ В МОБИЛЬНОМ РУМЕ ==== -->
+  <section class="landing-section">
+    <div class="container">
+      <h2>Что делает мобильный рум удобным</h2>
+      <div class="landing-benefits">
+        <div class="landing-benefit"><h3>Стабильность клиента</h3><p>Мобильная игра требует надёжного соединения. Хорошее приложение не вылетает при переключении сети (Wi-Fi ↔ мобильный интернет) и не отключает от стола в важный момент раздачи.</p></div>
+        <div class="landing-benefit"><h3>Быстрый вход и касса</h3><p>Депозит и вывод прямо в приложении, с поддержкой украинских карт (Monobank, ПриватБанк). Заходить на сайт с компьютера ради пополнения — неудобно, всё должно работать с телефона.</p></div>
+        <div class="landing-benefit"><h3>Мультитейблинг и портрет-режим</h3><p>Продвинутые приложения дают играть несколько столов и удобный вертикальный режим одной рукой. Для casual-игры на ходу это заметно повышает комфорт.</p></div>
+        <div class="landing-benefit"><h3>Все форматы под рукой</h3><p>Кеш, турниры, Spin &amp; Go, Омаха — полноценное приложение не урезает форматы по сравнению с десктопом. Проверь, что нужный тебе формат доступен в мобильной версии.</p></div>
+      </div>
+    </div>
+  </section>
+
   <section class="landing-section" id="faq">
     <div class="container">
       <h2>FAQ</h2>
@@ -370,7 +483,19 @@
           <summary>Что делать, если приложение вылетает?</summary>
           <div class="landing-faq-a"><p>Основные причины: 1) слабый интернет — попробуй по Wi-Fi вместо LTE; 2) старая версия ОС — обнови iOS/Android; 3) переполненная память — удали ненужные приложения и оставь минимум 2 ГБ свободного места. Если проблема остаётся — пиши в поддержку рума с моделью телефона и версией системы.</p></div>
         </details>
-      </div>
+              <details class="landing-faq-item">
+          <summary>Почему покерных приложений нет в App Store и Google Play?</summary>
+          <div class="landing-faq-a"><p>Из-за политики сторов по азартным играм многие покер-румы нельзя выложить напрямую. Легальные способы: APK для Android с официального сайта рума, веб-приложение (ярлык на экран) для iPhone, либо клубные приложения вроде ClubGG, которые в сторах присутствуют.</p></div>
+        </details>
+        <details class="landing-faq-item">
+          <summary>Безопасно ли устанавливать APK покер-рума?</summary>
+          <div class="landing-faq-a"><p>Если APK скачан с официального сайта рума — да. Опасность только в поддельных «зеркалах» и сторонних сайтах. Все партнёры в нашем каталоге проверены, и мы даём ссылки на официальные источники. Не скачивай клиенты с сомнительных ресурсов.</p></div>
+        </details>
+        <details class="landing-faq-item">
+          <summary>Можно ли играть с телефона на гривны?</summary>
+          <div class="landing-faq-a"><p>Да. Мобильные партнёры из нашего каталога поддерживают украинские карты и пополнение в гривне прямо в приложении. Депозит и вывод через Monobank или ПриватБанк работают так же, как в десктоп-версии.</p></div>
+        </details>
+</div>
     </div>
   </section>
 

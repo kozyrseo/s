@@ -233,11 +233,90 @@
 .landing-cta .btn:hover { transform: translateY(-2px); }
 
 /* Breadcrumbs — используем существующий класс из блога */
+
+/* Сравнительная таблица */
+.landing-table-wrap { overflow-x: auto; margin-top: 8px; border: 1px solid var(--border,#E2E7F0); border-radius: 12px; }
+.landing-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
+.landing-table th, .landing-table td { padding: 13px 16px; text-align: left; border-bottom: 1px solid var(--border,#E2E7F0); }
+.landing-table thead th { background: var(--accent-tint,#E8F0FF); color: var(--fg,#0A1128); font-family: var(--f-display,'Space Grotesk',sans-serif); font-weight: 600; font-size: 13px; }
+.landing-table tbody tr:last-child td { border-bottom: none; }
+.landing-table td strong { color: var(--fg,#0A1128); font-weight: 600; }
+.landing-table .yes { color: #1A9955; font-weight: 600; }
+.landing-table .no { color: #C0392B; font-weight: 600; }
+.landing-table .mid { color: #C77700; font-weight: 600; }
+.landing-benefits { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-top: 8px; }
+@media (max-width: 720px){ .landing-benefits { grid-template-columns: 1fr; } }
+.landing-benefit { padding: 18px 20px; background: var(--surface,#FFF); border: 1px solid var(--border,#E2E7F0); border-radius: 12px; }
+.landing-benefit h3 { font-family: var(--f-display,'Space Grotesk',sans-serif); font-size: 16px; font-weight:600; margin:0 0 6px; letter-spacing:-0.01em; }
+.landing-benefit p { font-size: 14px; line-height:1.55; color: var(--fg-mute,#5C6580); margin:0; }
+.landing-note { margin-top:18px; padding:14px 18px; background:var(--accent-tint,#E8F0FF); border-radius:10px; font-size:13.5px; line-height:1.55; color:var(--fg-mute,#5C6580); }
+.landing-note strong{ color:var(--fg,#0A1128); }
 </style>
 
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "@id": "https://kozyr.club/#organization", "name": "KOZYR", "url": "https://kozyr.club/", "logo": {"@type": "ImageObject", "url": "https://kozyr.club/icon-512.png", "width": 512, "height": 512}}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Покер-румы с игрой в гривне 2026 — где играть в Украине", "description": "Покер-румы и клубы с депозитом и выплатой в гривне (UAH) без обменников. Legally, safely, с прямыми банковскими выплатами через Monobank и ПриватБанк.", "url": "https://kozyr.club/ua/rooms/na-grivnu/", "inLanguage": "ru-UA", "isPartOf": {"@id": "https://kozyr.club/#organization"}}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Можно ли играть на гривны в GGPoker или PokerStars?", "acceptedAnswer": {"@type": "Answer", "text": "В GGPoker и PokerStars можно пополнить счёт с украинской карты, но внутренний баланс будет в долларах. При выводе — обратная конвертация по курсу оператора, обычно с потерей 1-3%. Если хочешь играть строго на гривны без конверсий — выбирай PokerBet (расчёты в UAH) или клубы в ClubGG с прямой гривневой моделью (KlubOk)."}}, {"@type": "Question", "name": "Обязательно ли платить налоги с выигрыша в гривнах?", "acceptedAnswer": {"@type": "Answer", "text": "PokerBet работает по лицензии Curaçao и не действует в рамках украинского лицензионного режима, поэтому не выполняет налоговых обязанностей украинского лицензированного оператора. Вопросы декларирования и уплаты налогов игрок решает самостоятельно исходя из своей ситуации. Мы не даём юридических консультаций."}}, {"@type": "Question", "name": "Что выгоднее — легальный рум или клуб?", "acceptedAnswer": {"@type": "Answer", "text": "Зависит от приоритетов. Открытый рум (PokerBet) — простой старт, расчёты в гривне, гибкие платежи; рейкбек-программы у него нет, но есть бонусы. Клуб (KlubOk) — обычно выше рейкбек (заявлено 40%) и мягче поля, но доступ по инвайту и расчёты через хоста."}}, {"@type": "Question", "name": "Есть ли лимит на депозит для украинских игроков?", "acceptedAnswer": {"@type": "Answer", "text": "В легальных румах — обычно нет верхнего лимита, но депозиты свыше 400 000 ₴ в месяц могут вызвать вопросы у банка по финмониторингу. В клубах лимиты устанавливает хост, обычно от 100 ₴ на депозит и от 500 ₴ на вывод."}}]}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Можно ли играть на гривны в GGPoker или PokerStars?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "В GGPoker и PokerStars можно пополнить счёт с украинской карты, но внутренний баланс будет в долларах. При выводе — обратная конвертация по курсу оператора, обычно с потерей 1-3%. Если хочешь играть строго на гривны без конверсий — выбирай PokerBet (расчёты в UAH) или клубы в ClubGG с прямой гривневой моделью (KlubOk)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Обязательно ли платить налоги с выигрыша в гривнах?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PokerBet работает по лицензии Curaçao и не действует в рамках украинского лицензионного режима, поэтому не выполняет налоговых обязанностей украинского лицензированного оператора. Вопросы декларирования и уплаты налогов игрок решает самостоятельно исходя из своей ситуации. Мы не даём юридических консультаций."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Что выгоднее — гривневый рум или клуб?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Зависит от приоритетов. Открытый рум (PokerBet) — простой старт, расчёты в гривне, гибкие платежи; рейкбек-программы у него нет, но есть бонусы. Клуб (KlubOk) — обычно выше рейкбек (заявлено 40%) и мягче поля, но доступ по инвайту и расчёты через хоста."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Есть ли лимит на депозит для украинских игроков?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "В румах верхний лимит обычно высокий, но депозиты и выводы на крупные суммы могут вызвать вопросы у банка по финмониторингу. В клубах лимиты устанавливает хост, обычно от 100 гривен на депозит и от 500 гривен на вывод."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Какая минимальная сумма депозита в гривне?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Зависит от рума. У большинства гривневых площадок депозит начинается от 200-300 гривен, а игра доступна с микролимитов NL2. Можно начать с небольшой суммы и освоиться."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Как быстро приходит вывод на украинскую карту?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "У локальных гривневых румов и клубов вывод обычно занимает от 15 минут до нескольких часов. Скорость зависит от верификации и метода. Пройди KYC заранее, чтобы первый вывод не задержался."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Чем гривневый рум лучше международного вроде PokerStars?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Главное — валюта счёта и локальные платёжки. В международных румах гривна часто только на депозите, а аккаунт в долларах: при выводе теряешь 2-3% на конвертации. Гривневый рум держит банкролл, бонусы и рейкбек в гривне."
+      }
+    }
+  ]
+}</script>
 </head>
 <body>
 
@@ -343,6 +422,43 @@
   </section>
 
   <!-- ==== FAQ ==== -->
+  <!-- ==== СРАВНЕНИЕ СПОСОБОВ ИГРЫ В ГРИВНЕ ==== -->
+  <section class="landing-section">
+    <div class="container">
+      <h2>Гривневый рум или клуб в ClubGG — что выбрать</h2>
+      <p>Играть в гривне можно двумя путями: через покерный рум с прямым UAH-депозитом или через приватный клуб в приложении ClubGG. Они отличаются рейкбеком, полем и порогом входа. Ниже — честное сравнение, чтобы ты понимал, за что платишь.</p>
+      <div class="landing-table-wrap">
+        <table class="landing-table">
+          <thead>
+            <tr><th>Параметр</th><th>Гривневый рум</th><th>Клуб в ClubGG</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Гривна на счёте</strong></td><td class="yes">Да, депозит с карты</td><td class="yes">Да (фишка = 1 ₴)</td></tr>
+            <tr><td><strong>Рейкбек</strong></td><td class="mid">Средний (до 40%)</td><td class="yes">Высокий (до 65%)</td></tr>
+            <tr><td><strong>Слабость поля</strong></td><td class="mid">Среднее</td><td class="yes">Мягкое (любители)</td></tr>
+            <tr><td><strong>Порог входа</strong></td><td class="yes">Низкий, регистрация</td><td class="mid">Инвайт + агент</td></tr>
+            <tr><td><strong>Пополнение / вывод</strong></td><td class="yes">Карта Monobank / ПриватБанк</td><td class="mid">Через хоста в Telegram</td></tr>
+            <tr><td><strong>Кому подходит</strong></td><td>Новичкам и casual</td><td>Гонящимся за рейкбеком</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="landing-note">Универсального «лучшего» варианта нет: <strong>для старта проще гривневый рум</strong> (регистрация без агента, депозит прямо с карты), а <strong>клуб выгоднее по рейкбеку</strong> и полю, но требует доверия к агенту и доступа по инвайту. KOZYR показывает условия честно по обоим путям.</div>
+    </div>
+  </section>
+
+  <!-- ==== КАК РАБОТАЕТ ДЕПОЗИТ/ВЫВОД ==== -->
+  <section class="landing-section">
+    <div class="container">
+      <h2>Как проходит депозит и вывод в гривне</h2>
+      <div class="landing-benefits">
+        <div class="landing-benefit"><h3>1. Пополнение с карты</h3><p>Заходишь в кассу рума, выбираешь карту Monobank или ПриватБанк, вводишь сумму в гривнах — деньги на счёте за пару минут, без комиссии на депозит у большинства румов.</p></div>
+        <div class="landing-benefit"><h3>2. Игра на гривны</h3><p>Столы, бай-ины, бонусы и рейкбек — всё в гривне. Не нужно держать в голове курс доллара или считать пересчёт. Видишь ₴ — понимаешь свой банкролл.</p></div>
+        <div class="landing-benefit"><h3>3. Вывод на карту</h3><p>Заявка на вывод в гривне обратно на ту же карту. У локальных румов — от 15 минут до нескольких часов. Верификацию (KYC) лучше пройти заранее, чтобы не ждать при первом выводе.</p></div>
+        <div class="landing-benefit"><h3>4. Что с налогами</h3><p>В румах и клубах с игрой в гривне вопрос налогообложения выигрыша игрок решает сам, исходя из своей ситуации. Мы не даём юридических консультаций, но советуем разобраться с этим заранее, до крупных выводов.</p></div>
+      </div>
+    </div>
+  </section>
+
   <section class="landing-section" id="faq">
     <div class="container">
       <h2>FAQ</h2>
@@ -356,14 +472,26 @@
           <div class="landing-faq-a"><p>PokerBet работает по лицензии Curaçao и не действует в рамках украинского лицензионного режима, поэтому не выполняет налоговых обязанностей украинского лицензированного оператора. Вопросы декларирования и уплаты налогов игрок решает самостоятельно исходя из своей ситуации. Мы не даём юридических консультаций.</p></div>
         </details>
         <details class="landing-faq-item">
-          <summary>Что выгоднее — легальный рум или клуб?</summary>
+          <summary>Что выгоднее — гривневый рум или клуб?</summary>
           <div class="landing-faq-a"><p>Зависит от приоритетов. Открытый рум (PokerBet) — простой старт, расчёты в гривне, гибкие платежи; рейкбек-программы у него нет, но есть бонусы. Клуб (KlubOk) — обычно выше рейкбек (заявлено 40%) и мягче поля, но доступ по инвайту и расчёты через хоста.</p></div>
         </details>
         <details class="landing-faq-item">
           <summary>Есть ли лимит на депозит для украинских игроков?</summary>
-          <div class="landing-faq-a"><p>В легальных румах — обычно нет верхнего лимита, но депозиты свыше 400 000 ₴ в месяц могут вызвать вопросы у банка по финмониторингу. В клубах лимиты устанавливает хост, обычно от 100 ₴ на депозит и от 500 ₴ на вывод.</p></div>
+          <div class="landing-faq-a"><p>В румах верхний лимит обычно высокий, но депозиты и выводы на крупные суммы могут вызвать вопросы у банка по финмониторингу — это нормальная практика. В клубах лимиты устанавливает хост, обычно от 100 ₴ на депозит и от 500 ₴ на вывод.</p></div>
         </details>
-      </div>
+              <details class="landing-faq-item">
+          <summary>Какая минимальная сумма депозита в гривне?</summary>
+          <div class="landing-faq-a"><p>Зависит от рума. У большинства гривневых площадок депозит начинается от 200–300 ₴, а игра доступна с микролимитов (NL2). Можно начать с небольшой суммы и освоиться без риска серьёзных потерь.</p></div>
+        </details>
+        <details class="landing-faq-item">
+          <summary>Как быстро приходит вывод на украинскую карту?</summary>
+          <div class="landing-faq-a"><p>У локальных гривневых румов и клубов вывод обычно занимает от 15 минут до нескольких часов. Скорость зависит от прохождения верификации и метода. Совет: пройди KYC заранее — тогда первый вывод не задержится.</p></div>
+        </details>
+        <details class="landing-faq-item">
+          <summary>Чем гривневый рум лучше международного вроде PokerStars?</summary>
+          <div class="landing-faq-a"><p>Главное — валюта счёта и локальные платёжки. В международных румах гривна часто только на депозите, а аккаунт в долларах: при выводе теряешь 2–3% на конвертации. Гривневый рум держит весь банкролл, бонусы и рейкбек в ₴ и работает напрямую с Monobank и ПриватБанк.</p></div>
+        </details>
+</div>
     </div>
   </section>
 

@@ -233,11 +233,90 @@
 .landing-cta .btn:hover { transform: translateY(-2px); }
 
 /* Breadcrumbs — используем существующий класс из блога */
+
+/* Сравнительная таблица */
+.landing-table-wrap { overflow-x: auto; margin-top: 8px; border: 1px solid var(--border,#E2E7F0); border-radius: 12px; }
+.landing-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
+.landing-table th, .landing-table td { padding: 13px 16px; text-align: left; border-bottom: 1px solid var(--border,#E2E7F0); }
+.landing-table thead th { background: var(--accent-tint,#E8F0FF); color: var(--fg,#0A1128); font-family: var(--f-display,'Space Grotesk',sans-serif); font-weight: 600; font-size: 13px; }
+.landing-table tbody tr:last-child td { border-bottom: none; }
+.landing-table td strong { color: var(--fg,#0A1128); font-weight: 600; }
+.landing-table .yes { color: #1A9955; font-weight: 600; }
+.landing-table .no { color: #C0392B; font-weight: 600; }
+.landing-table .mid { color: #C77700; font-weight: 600; }
+.landing-benefits { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; margin-top: 8px; }
+@media (max-width: 720px){ .landing-benefits { grid-template-columns: 1fr; } }
+.landing-benefit { padding: 18px 20px; background: var(--surface,#FFF); border: 1px solid var(--border,#E2E7F0); border-radius: 12px; }
+.landing-benefit h3 { font-family: var(--f-display,'Space Grotesk',sans-serif); font-size: 16px; font-weight:600; margin:0 0 6px; letter-spacing:-0.01em; }
+.landing-benefit p { font-size: 14px; line-height:1.55; color: var(--fg-mute,#5C6580); margin:0; }
+.landing-note { margin-top:18px; padding:14px 18px; background:var(--accent-tint,#E8F0FF); border-radius:10px; font-size:13.5px; line-height:1.55; color:var(--fg-mute,#5C6580); }
+.landing-note strong{ color:var(--fg,#0A1128); }
 </style>
 
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "@id": "https://kozyr.club/#organization", "name": "KOZYR", "url": "https://kozyr.club/", "logo": {"@type": "ImageObject", "url": "https://kozyr.club/icon-512.png", "width": 512, "height": 512}}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "CollectionPage", "name": "Покер-румы для начинающих 2026 — где играть новичку в Украине", "description": "Гид для начинающих: где играть в онлайн-покер новичку в Украине. Микро-лимиты от NL2, лёгкий вход, welcome-бонусы. Все партнёры проверены.", "url": "https://kozyr.club/ua/rooms/dlya-novichkov/", "inLanguage": "ru-UA", "isPartOf": {"@id": "https://kozyr.club/#organization"}}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Какой минимальный депозит нужен для старта?", "acceptedAnswer": {"@type": "Answer", "text": "На NL2 (лимиты 1¢/2¢) достаточно депозита $10-20 (примерно 400-800 ₴). Это даст 50-100 бай-инов — правильный банкролл-менеджмент для новичка. На NL5 — от 800 до 1500 ₴. Не депонируй больше, чем готов потерять — первые месяцы это скорее обучение, чем заработок."}}, {"@type": "Question", "name": "Стоит ли брать welcome-бонус на первом руме?", "acceptedAnswer": {"@type": "Answer", "text": "Обычно да, но с оговорками. Welcome-бонус обычно раскрывается постепенно (по 5-10% при накоплении рейка). Если ты не собираешься играть регулярно — большая часть бонуса просто сгорит. Читай условия «rollover» до депозита."}}, {"@type": "Question", "name": "Что важнее для новичка — рейкбек или бонус?", "acceptedAnswer": {"@type": "Answer", "text": "На старте — бонус (это гарантированные деньги на счёте). Рейкбек начинает окупаться при 100+ раздач в неделю. Первые 2-3 месяца ты будешь играть намного меньше — welcome-бонус даёт больший короткий импульс."}}, {"@type": "Question", "name": "Через сколько можно начать зарабатывать?", "acceptedAnswer": {"@type": "Answer", "text": "Реалистично — 6-12 месяцев регулярной игры и обучения до устойчивого плюса на NL10-NL25. Не верь блогерам, которые обещают «$1000 в месяц с нуля за 3 месяца» — это либо ложь, либо очень редкие случаи с крайне талантливыми игроками."}}]}</script>
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Какой минимальный депозит нужен для старта?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "На NL2 (лимиты 1¢/2¢) достаточно депозита $10-20 (примерно 400-800 ₴). Это даст 50-100 бай-инов — правильный банкролл-менеджмент для новичка. На NL5 — от 800 до 1500 ₴. Не депонируй больше, чем готов потерять — первые месяцы это скорее обучение, чем заработок."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Стоит ли брать welcome-бонус на первом руме?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Обычно да, но с оговорками. Welcome-бонус обычно раскрывается постепенно (по 5-10% при накоплении рейка). Если ты не собираешься играть регулярно — большая часть бонуса просто сгорит. Читай условия «rollover» до депозита."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Что важнее для новичка — рейкбек или бонус?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "На старте — бонус (это гарантированные деньги на счёте). Рейкбек начинает окупаться при 100+ раздач в неделю. Первые 2-3 месяца ты будешь играть намного меньше — welcome-бонус даёт больший короткий импульс."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Через сколько можно начать зарабатывать?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Реалистично — 6-12 месяцев регулярной игры и обучения до устойчивого плюса на NL10-NL25. Не верь блогерам, которые обещают «$1000 в месяц с нуля за 3 месяца» — это либо ложь, либо очень редкие случаи с крайне талантливыми игроками."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "С какой суммы можно начать играть новичку?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Комфортный старт — от 200-300 гривен. На микролимитах NL2 бай-ин около 200 гривен, а правило банкролла советует держать 20-30 бай-инов. Начинать с большой суммы не нужно."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Кеш или турниры — что выбрать для старта?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Для новичка лучше кеш на микролимитах: низкая дисперсия, много раздач для обучения, можно встать в любой момент. Турниры и Spin and Go имеют высокую дисперсию, что тяжелее на старте."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Нужна ли верификация в руме для новичка?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Да, почти везде при первом выводе нужно пройти KYC — загрузить фото документа и карты. Пройди верификацию сразу после регистрации, тогда первый вывод не задержится."
+      }
+    }
+  ]
+}</script>
 </head>
 <body>
 
@@ -350,6 +429,41 @@
   </section>
 
   <!-- ==== FAQ ==== -->
+  <!-- ==== СРАВНЕНИЕ ФОРМАТОВ ДЛЯ НОВИЧКА ==== -->
+  <section class="landing-section">
+    <div class="container">
+      <h2>С чего начать: форматы покера для новичка</h2>
+      <p>Новичку легко растеряться в форматах. Одни щадят банкролл и учат основам, другие сразу бросают в высокую дисперсию. Вот честное сравнение под старт с нуля.</p>
+      <div class="landing-table-wrap">
+        <table class="landing-table">
+          <thead>
+            <tr><th>Формат</th><th>Сложность</th><th>Дисперсия</th><th>Подходит новичку</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Кеш NL2–NL5</strong></td><td class="yes">Низкая</td><td class="yes">Низкая</td><td class="yes">Да — лучший старт</td></tr>
+            <tr><td><strong>Sit &amp; Go</strong></td><td class="mid">Средняя</td><td class="mid">Средняя</td><td class="yes">Да, для практики</td></tr>
+            <tr><td><strong>MTT-турниры</strong></td><td class="mid">Средняя</td><td class="no">Высокая</td><td class="mid">Позже, с опытом</td></tr>
+            <tr><td><strong>Spin &amp; Go</strong></td><td class="mid">Средняя</td><td class="no">Очень высокая</td><td class="no">Не для старта</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="landing-note"><strong>Совет:</strong> начни с кеша на микролимитах (NL2). Там дешёвые ошибки, много раздач для обучения и низкая дисперсия — банкролл не сгорит за вечер, пока ты осваиваешься. Играй ответственно и не поднимай лимиты, пока не почувствуешь уверенность.</div>
+    </div>
+  </section>
+
+  <!-- ==== ТИПИЧНЫЕ ОШИБКИ НОВИЧКА ==== -->
+  <section class="landing-section">
+    <div class="container">
+      <h2>Ошибки, которые сливают банкролл новичка</h2>
+      <div class="landing-benefits">
+        <div class="landing-benefit"><h3>Игра слишком высоко</h3><p>Садиться сразу за NL25–NL50 без опыта — верный способ потерять депозит. Правило банкролла: держи 20–30 бай-инов на выбранный лимит и не поднимайся раньше времени.</p></div>
+        <div class="landing-benefit"><h3>Игра слишком многих рук</h3><p>Новички играют почти каждую раздачу «на удачу». Сильный старт — это тайтовая игра: меньше рук, но в правильных позициях. Дисциплина важнее азарта.</p></div>
+        <div class="landing-benefit"><h3>Погоня за отыгрышем</h3><p>Проиграл — хочется отыграться немедленно, повышая ставки. Это тильт. Лучше закрыть сессию и вернуться на холодную голову. Игра на эмоциях = минус банкролл.</p></div>
+        <div class="landing-benefit"><h3>Игнор рейкбека</h3><p>Новички забывают, что часть проигранного рейка возвращается. На дистанции рейкбек — это реальные деньги. Выбирай рум с хорошим рейкбеком с самого старта.</p></div>
+      </div>
+    </div>
+  </section>
+
   <section class="landing-section" id="faq">
     <div class="container">
       <h2>FAQ</h2>
@@ -370,7 +484,19 @@
           <summary>Через сколько можно начать зарабатывать?</summary>
           <div class="landing-faq-a"><p>Реалистично — 6-12 месяцев регулярной игры и обучения до устойчивого плюса на NL10-NL25. Не верь блогерам, которые обещают «$1000 в месяц с нуля за 3 месяца» — это либо ложь, либо очень редкие случаи с крайне талантливыми игроками.</p></div>
         </details>
-      </div>
+              <details class="landing-faq-item">
+          <summary>С какой суммы можно начать играть новичку?</summary>
+          <div class="landing-faq-a"><p>Комфортный старт — от 200–300 ₴. На микролимитах (NL2) бай-ин составляет около 200 ₴, а правило банкролла советует держать 20–30 бай-инов. Начинать с большой суммы не нужно: важнее научиться, а не рисковать деньгами.</p></div>
+        </details>
+        <details class="landing-faq-item">
+          <summary>Кеш или турниры — что выбрать для старта?</summary>
+          <div class="landing-faq-a"><p>Для новичка лучше кеш на микролимитах: низкая дисперсия, много раздач для обучения, можно встать в любой момент. Турниры и особенно Spin &amp; Go имеют высокую дисперсию — банкролл там скачет резче, что тяжелее психологически на старте.</p></div>
+        </details>
+        <details class="landing-faq-item">
+          <summary>Нужна ли верификация в руме для новичка?</summary>
+          <div class="landing-faq-a"><p>Да, почти везде при первом выводе нужно пройти KYC — загрузить фото документа и карты. Совет: пройди верификацию сразу после регистрации, тогда первый вывод выигрыша не задержится. У румов для новичков процесс обычно простой.</p></div>
+        </details>
+</div>
     </div>
   </section>
 
