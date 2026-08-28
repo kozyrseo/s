@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-08-28T15:16:58.128751+00:00",
+  "collected_at": "2026-08-28T15:17:52.185408+00:00",
   "status": "suggested",
   "rows": [
     {
@@ -23,17 +23,6 @@
       "target_page": "/ua/blog/",
       "notes": "Кластер: форматы. Ниша, но у PokerBet есть Short Deck — прямая связка с партнёром. Ревью → queued.",
       "_row": 22
-    },
-    {
-      "status": "suggested",
-      "lang": "ru",
-      "topic": "Покерные термины — словарь новичка",
-      "primary_key": "покерные термины",
-      "secondary_key": "сленг покера, глоссарий, что значит",
-      "intent": "informational",
-      "target_page": "/ua/blog/",
-      "notes": "Кластер: обучение. Словарь терминов (фолд, колл, рейз, бэд-бит...). Хвостовой трафик, перелинковка-хаб. Ревью → queued.",
-      "_row": 23
     },
     {
       "status": "suggested",
