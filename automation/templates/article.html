@@ -85,13 +85,7 @@
 }
 </script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "{{UI_BREADCRUMB_HOME}}", "item": "{{HOME_URL_FULL}}"}, {"@type": "ListItem", "position": 2, "name": "{{UI_BREADCRUMB_BLOG}}", "item": "{{BLOG_URL_FULL}}"}, {"@type": "ListItem", "position": 3, "name": "{{H1_TITLE_JSON}}"}]}</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [{{FAQ_JSONLD}}]
-}
-</script>
+{{FAQ_SCHEMA_BLOCK}}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -343,7 +337,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     <nav class="nav" aria-label="{{UI_NAV_ARIA}}">
       <a href="{{HOME_URL}}">{{UI_NAV_AI_BOT}}</a>
       <a href="{{HOME_URL}}#how">{{UI_NAV_HOW}}</a>
-      <a href="{{HOME_URL}}#rakeback">{{UI_NAV_FEATURES}}</a>
+      <a href="{{HOME_URL}}#compare">{{UI_NAV_FEATURES}}</a>
       <a href="{{HOME_URL}}#compare">{{UI_NAV_COMPARE}}</a>
       <a href="{{NLH_URL}}">{{UI_NAV_CASES}}</a>
       <a href="{{PLO_URL}}">{{UI_NAV_REVIEWS}}</a>
@@ -458,18 +452,18 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
         <p>{{UI_FOOTER_TAGLINE}}</p>
       </div>
       <div>
-        <h4>{{UI_FOOTER_PRODUCT_H}}</h4>
-        <p><a href="{{HOME_URL}}#bot">{{UI_FOOTER_LINK_AI_BOT}}</a></p>
+        <h3>{{UI_FOOTER_PRODUCT_H}}</h3>
+        <p><a href="{{HOME_URL}}#how">{{UI_FOOTER_LINK_AI_BOT}}</a></p>
         <p><a href="{{NLH_URL}}">{{UI_FOOTER_LINK_NLH}}</a></p>
         <p><a href="{{PLO_URL}}">{{UI_FOOTER_LINK_PLO}}</a></p>
         <p><a href="{{SHORT_DECK_URL}}">{{UI_FOOTER_LINK_SHORT_DECK}}</a></p>
         <p><a href="{{HOME_URL}}#compare">{{UI_FOOTER_LINK_COMPARE}}</a></p>
       </div>
       <div>
-        <h4>{{UI_FOOTER_COMPANY_H}}</h4>
-        <p><a href="{{HOME_URL}}#cases">{{UI_FOOTER_LINK_CASES}}</a></p>
-        <p><a href="{{HOME_URL}}#reviews">{{UI_FOOTER_LINK_REVIEWS}}</a></p>
-        <p><a href="{{HOME_URL}}#pricing">{{UI_FOOTER_LINK_PRICING}}</a></p>
+        <h3>{{UI_FOOTER_COMPANY_H}}</h3>
+        <p><a href="{{HOME_URL}}#compare">{{UI_FOOTER_LINK_CASES}}</a></p>
+        <p><a href="{{HOME_URL}}#score">{{UI_FOOTER_LINK_REVIEWS}}</a></p>
+        <p><a href="{{HOME_URL}}#faq">{{UI_FOOTER_LINK_PRICING}}</a></p>
         <p><a href="{{HOME_URL}}legal/">Правовая информация</a></p>
       </div>
     </div>

@@ -1370,6 +1370,21 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     faq = meta.get("faq", [])
     faq_html = render_faq_html(faq, lang)
     faq_jsonld = render_faq_jsonld(faq)
+    # Весь <script type="application/ld+json"> с FAQPage вставляется ТОЛЬКО когда
+    # у статьи реально есть FAQ. Иначе — пустая строка (не пустой mainEntity: []),
+    # чтобы в HTML не оставалась бессмысленная FAQPage-разметка без вопросов.
+    if faq_jsonld:
+        faq_schema_block = (
+            '<script type="application/ld+json">\n'
+            '{\n'
+            '  "@context": "https://schema.org",\n'
+            '  "@type": "FAQPage",\n'
+            f'  "mainEntity": [{faq_jsonld}]\n'
+            '}\n'
+            '</script>'
+        )
+    else:
+        faq_schema_block = ""
 
     # Key takeaways
     key_takeaways_html = render_key_takeaways(meta, md_text)
@@ -1698,7 +1713,7 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         "{{KEY_TAKEAWAYS_BLOCK}}": key_takeaways_html,
         "{{ARTICLE_BODY_HTML}}": body_html,
         "{{FAQ_BLOCK}}": faq_html,
-        "{{FAQ_JSONLD}}": faq_jsonld,
+        "{{FAQ_SCHEMA_BLOCK}}": faq_schema_block,
         "{{CTA_KEYWORD}}": escape_html(cta_keyword),
         "{{RELATED_ARTICLES_HTML}}": related_html,
         "{{OG_IMAGE_URL}}": og_image_url,

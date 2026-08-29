@@ -130,11 +130,11 @@ def render_footer(lang):
         <p>{about}</p>
       </div>
       <div>
-        <h4>{h1_label}</h4>
+        <h3>{h1_label}</h3>
         {sec_html}
       </div>
       <div>
-        <h4>{h2_label}</h4>
+        <h3>{h2_label}</h3>
         {prj_html}
       </div>
     </div>
@@ -515,8 +515,8 @@ def render_page(cfg, lang):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap">
-<link rel="stylesheet" href="/ua/blog/kozyr-blog.css?v=20260808">
-<link rel="stylesheet" href="/assets/kozyr-enhance.css?v=11">
+<link rel="stylesheet" href="/ua/blog/kozyr-blog.css?v=20260829">
+<link rel="stylesheet" href="/assets/kozyr-enhance.css?v=20260829">
 
 <style>
 /* Локальные стили landing-страницы */
@@ -794,9 +794,9 @@ def render_page(cfg, lang):
 
 {render_footer(lang)}
 
-<script defer src="/partners.js?v=1"></script>
-<script defer src="/assets/kozyr-geo.js?v=1"></script>
-<script defer src="/assets/kozyr-enhance.js?v=11"></script>
+<script defer src="/partners.js?v=20260829"></script>
+<script defer src="/assets/kozyr-geo.js?v=20260829"></script>
+<script defer src="/assets/kozyr-enhance.js?v=20260829"></script>
 </body>
 </html>
 '''

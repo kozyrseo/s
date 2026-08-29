@@ -8,7 +8,7 @@ enhancer'ом. Тексты статей НЕ меняются — только 
 
 Запуск:  python3 automation/rerender_premium.py <slug> <lang>
 """
-import re, sys, html as htmlmod
+import re, sys, html as htmlmod, json
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -123,6 +123,30 @@ def build_faq(faq, lang):
             "<h2>%s</h2>\n%s</section>" % (label, items))
 
 
+def build_faq_schema(faq):
+    """Полный <script> с FAQPage JSON-LD. Пустая строка, если FAQ нет —
+    чтобы не оставлять бессмысленный mainEntity: [] в HTML."""
+    if not faq:
+        return ""
+    entities = []
+    for q, a in faq:
+        entities.append({
+            "@type": "Question",
+            "name": q,
+            "acceptedAnswer": {"@type": "Answer", "text": a},
+        })
+    main_entity = ",".join(json.dumps(e, ensure_ascii=False) for e in entities)
+    return (
+        '<script type="application/ld+json">\n'
+        '{\n'
+        '  "@context": "https://schema.org",\n'
+        '  "@type": "FAQPage",\n'
+        f'  "mainEntity": [{main_entity}]\n'
+        '}\n'
+        '</script>'
+    )
+
+
 def main():
     slug, lang = sys.argv[1], sys.argv[2]
     cfg = get_cfg(lang)
@@ -161,7 +185,7 @@ def main():
         "{{KEY_TAKEAWAYS_BLOCK}}": build_takeaways(d["takeaways"]),
         "{{ARTICLE_BODY_HTML}}": body_html,
         "{{FAQ_BLOCK}}": build_faq(d["faq"], lang),
-        "{{FAQ_JSONLD}}": "",
+        "{{FAQ_SCHEMA_BLOCK}}": build_faq_schema(d["faq"]),
         "{{RELATED_ARTICLES_HTML}}": "",
         "{{OG_IMAGE_URL}}": (site + canonical + "hero.jpg") if d["has_hero"] else (site + "/og-image.png"),
         "{{OG_IMAGE_WIDTH}}": "1536" if d["has_hero"] else "1200",
@@ -189,6 +213,16 @@ def main():
     reps["{{HREFLANG_SELF}}"] = cfg["hreflang_self"]
     reps["{{LANG_SELF}}"] = "ru" if lang == "ru" else "uk"
     reps["{{LANG_SWITCH_LANG}}"] = other
+    # SEO head-поля, которые иначе вычистились бы в пустоту при premium-re-render
+    reps["{{OG_LOCALE}}"] = cfg.get("og_locale", "ru_UA")
+    reps["{{OG_LOCALE_ALT}}"] = cfg.get("og_locale_alt", "uk_UA")
+    reps["{{IN_LANGUAGE}}"] = cfg["hreflang_self"]
+    reps["{{ARTICLE_SECTION}}"] = d.get("tag", "")
+    reps["{{AUTHOR_URL}}"] = "%s%sauthors/nikita/" % (site, cfg["blog_url"])
+    reps["{{HOME_URL_FULL}}"] = site + cfg["home_url"]
+    reps["{{BLOG_URL_FULL}}"] = site + cfg["blog_url"]
+    reps["{{KEYWORDS_JSON}}"] = ""
+    reps["{{WORD_COUNT}}"] = str(len(re.sub("<[^>]+>", "", d["body"]).split()))
     reps["{{UI_LANG_SELF_LABEL}}"] = {"ru": "RU", "uk": "UA"}.get(lang, "RU")
     reps["{{UI_LANG_SWITCH_LABEL}}"] = {"ru": "UA", "uk": "RU"}.get(lang, "UA")
     reps["{{UI_LANG_SWITCH_ARIA}}"] = "Выбор языка" if lang == "ru" else "Вибір мови"
@@ -205,8 +239,11 @@ def main():
     out = tpl
     for k, v in reps.items():
         out = out.replace(k, v)
-    # strip any remaining unknown placeholders to be safe
-    out = re.sub(r"\{\{[A-Z_]+\}\}", "", out)
+    # strip any remaining unknown placeholders to be safe.
+    # Паттерн включает цифры ([A-Z_0-9]+), иначе плейсхолдеры вроде
+    # {{KOZYR_I18N_BLOCK}} или {{H1_TITLE}} (с цифрой) не вычищаются и
+    # протекают в готовый HTML.
+    out = re.sub(r"\{\{[A-Z_0-9]+\}\}", "", out)
 
     dest = ROOT / d["sub"] / slug / "index.html"
     dest.write_text(out, encoding="utf-8")
