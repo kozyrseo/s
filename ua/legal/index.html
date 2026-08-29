@@ -62,8 +62,10 @@
   }
 }
 </script>
+<style>.skip-link{position:absolute;left:-9999px;top:0;z-index:9999;padding:10px 16px;background:#2668FF;color:#fff;border-radius:0 0 8px 0;font:600 14px/1.2 system-ui,sans-serif;text-decoration:none}.skip-link:focus{left:0}</style>
 </head>
 <body>
+<a href="#main" class="skip-link">Перейти к основному содержанию</a>
 
 <div class="compliance" role="region" aria-label="Правовое уведомление">
   <div class="compliance-inner">
@@ -133,7 +135,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     </ul>
   </aside>
 
-  <main class="legal-content">
+  <main id="main" class="legal-content">
 
     <!-- ============ TERMS OF USE ============ -->
     <article class="legal-doc" id="terms">
