@@ -168,7 +168,6 @@ details.faq-item .faq-answer {
   color: var(--fg-mute);
   font-style: italic;
 }
-}
 
 /* Автор в шапке статьи — усиленный CSS против наследования от .post-hero__meta */
 .post-hero__author {

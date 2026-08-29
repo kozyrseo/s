@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset
   xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
   <!-- ============================================================
        ROOT — region chooser (x-default)
        ============================================================ -->
   <url>
     <loc>https://kozyr.club/</loc>
-    <lastmod>2026-08-16</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
@@ -22,7 +23,7 @@
        ============================================================ -->
   <url>
     <loc>https://kozyr.club/ua/</loc>
-    <lastmod>2026-08-05</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/"/>
@@ -31,7 +32,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/rooms/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/rooms/"/>
@@ -40,7 +41,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/clubs/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/clubs/"/>
@@ -49,7 +50,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/rooms/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/rooms/"/>
@@ -58,7 +59,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/clubs/</loc>
-    <lastmod>2026-08-19</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/clubs/"/>
@@ -67,7 +68,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/rooms/pokerbet/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/rooms/pokerbet/"/>
@@ -76,7 +77,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/clubs/klubok/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/clubs/klubok/"/>
@@ -85,7 +86,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/legal/</loc>
-    <lastmod>2026-08-05</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/legal/"/>
@@ -98,7 +99,7 @@
        ============================================================ -->
   <url>
     <loc>https://kozyr.club/ua/uk/</loc>
-    <lastmod>2026-08-05</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/"/>
@@ -107,7 +108,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/rooms/pokerbet/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/rooms/pokerbet/"/>
@@ -116,7 +117,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/clubs/klubok/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/clubs/klubok/"/>
@@ -125,7 +126,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/legal/</loc>
-    <lastmod>2026-08-05</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/legal/"/>
@@ -134,25 +135,15 @@
   </url>
 
   <!-- ============================================================
-       INTERNATIONAL
+       INTERNATIONAL — noindex (Coming Soon заглушка, вернуть в sitemap после запуска)
        ============================================================ -->
-  <url>
-    <loc>https://kozyr.club/int/</loc>
-    <lastmod>2026-08-05</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en"        href="https://kozyr.club/int/"/>
-    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/"/>
-    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
-  </url>
 
   <!-- ============================================================
        COUNTRIES / REGIONS HUB
        ============================================================ -->
   <url>
     <loc>https://kozyr.club/countries/</loc>
-    <lastmod>2026-08-05</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -162,7 +153,7 @@
        ============================================================ -->
   <url>
     <loc>https://kozyr.club/ua/blog/</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/"/>
@@ -171,7 +162,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/blog/</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/"/>
@@ -184,7 +175,7 @@
        ============================================================ -->
   <url>
     <loc>https://kozyr.club/ua/blog/chto-takoe-reykbek-v-pokere/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/chto-takoe-reykbek-v-pokere/"/>
@@ -193,7 +184,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/blog/chto-takoe-reykbek-v-pokere/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/chto-takoe-reykbek-v-pokere/"/>
@@ -202,7 +193,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/blog/kak-rabotayut-privatnye-pokerclubi/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/kak-rabotayut-privatnye-pokerclubi/"/>
@@ -211,7 +202,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/blog/kak-rabotayut-privatnye-pokerclubi/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/kak-rabotayut-privatnye-pokerclubi/"/>
@@ -220,7 +211,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/blog/pokerbet-ili-klubok-sravnenie/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/pokerbet-ili-klubok-sravnenie/"/>
@@ -229,7 +220,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/blog/pokerbet-ili-klubok-sravnenie/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/pokerbet-ili-klubok-sravnenie/"/>
@@ -238,7 +229,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/blog/chto-takoe-bedbid-dzhekpot-v-pokere/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/chto-takoe-bedbid-dzhekpot-v-pokere/"/>
@@ -247,7 +238,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/blog/chto-takoe-bedbid-dzhekpot-v-pokere/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/chto-takoe-bedbid-dzhekpot-v-pokere/"/>
@@ -256,7 +247,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/"/>
@@ -265,7 +256,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/blog/pokernyy-klub-clubgg-ukraina/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/"/>
@@ -278,7 +269,7 @@
        ============================================================ -->
   <url>
     <loc>https://kozyr.club/ua/rooms/na-grivnu/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/rooms/na-grivnu/"/>
@@ -287,7 +278,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/rooms/na-grivnu/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/rooms/na-grivnu/"/>
@@ -296,7 +287,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/rooms/dlya-novichkov/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/rooms/dlya-novichkov/"/>
@@ -305,7 +296,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/rooms/dlya-novichkov/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/rooms/dlya-novichkov/"/>
@@ -314,7 +305,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/rooms/mobilnye/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/rooms/mobilnye/"/>
@@ -323,7 +314,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/rooms/mobilnye/</loc>
-    <lastmod>2026-08-09</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/rooms/mobilnye/"/>
@@ -333,7 +324,7 @@
 
     <url>
     <loc>https://kozyr.club/ua/blog/klubok-reykbek-clubgg-ukraina/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA" href="https://kozyr.club/ua/blog/klubok-reykbek-clubgg-ukraina/"/>
@@ -342,7 +333,7 @@
   </url>
     <url>
     <loc>https://kozyr.club/ua/uk/blog/klubok-reykbek-clubgg-ukraina/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA" href="https://kozyr.club/ua/blog/klubok-reykbek-clubgg-ukraina/"/>
@@ -351,7 +342,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/blog/authors/nikita/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.30</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/authors/nikita/"/>
@@ -360,7 +351,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/blog/authors/nikita/</loc>
-    <lastmod>2026-08-21</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.30</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/authors/nikita/"/>
@@ -370,7 +361,7 @@
 
   <url>
     <loc>https://kozyr.club/ua/blog/kak-schitat-effektivnyy-reykbek-formula-primery/</loc>
-    <lastmod>2026-08-25</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/kak-schitat-effektivnyy-reykbek-formula-primery/"/>
@@ -379,7 +370,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/blog/kak-schitat-effektivnyy-reykbek-formula-primery/</loc>
-    <lastmod>2026-08-25</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/kak-schitat-effektivnyy-reykbek-formula-primery/"/>
@@ -388,7 +379,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/blog/vyvod-v-grivne-poker-sposoby-sroki/</loc>
-    <lastmod>2026-08-25</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/vyvod-v-grivne-poker-sposoby-sroki/"/>
@@ -397,7 +388,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/blog/vyvod-v-grivne-poker-sposoby-sroki/</loc>
-    <lastmod>2026-08-25</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/vyvod-v-grivne-poker-sposoby-sroki/"/>
@@ -406,7 +397,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/blog/kak-vybrat-poker-rum-ukraina/</loc>
-    <lastmod>2026-08-26</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA" href="https://kozyr.club/ua/blog/kak-vybrat-poker-rum-ukraina/"/>
@@ -419,7 +410,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/blog/bonusy-poker-ukraina-2026-posle-zapreta-bezdepov/</loc>
-    <lastmod>2026-08-27</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA" href="https://kozyr.club/ua/blog/bonusy-poker-ukraina-2026-posle-zapreta-bezdepov/"/>
@@ -432,7 +423,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/blog/pokernye-kombinacii-po-starshinstvu/</loc>
-    <lastmod>2026-08-28</lastmod>
+    <lastmod>2026-08-29</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA" href="https://kozyr.club/ua/blog/pokernye-kombinacii-po-starshinstvu/"/>
