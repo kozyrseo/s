@@ -1,0 +1,198 @@
+{
+  "technical": {
+    "tier": "technical",
+    "scores": {
+      "title_length": {
+        "max": 5,
+        "score": 5,
+        "detail": "51 chars (target: 30-65)"
+      },
+      "desc_length": {
+        "max": 5,
+        "score": 5,
+        "detail": "131 chars (target: 130-160)"
+      },
+      "word_count": {
+        "max": 5,
+        "score": 3,
+        "detail": "1622 words (target: 1800-3500)"
+      },
+      "h2_count": {
+        "max": 5,
+        "score": 5,
+        "detail": "8 H2 headings (target: 7-12)"
+      },
+      "h3_count": {
+        "max": 3,
+        "score": 3,
+        "detail": "12 H3 headings (target: ≥3)"
+      },
+      "internal_links_count": {
+        "max": 5,
+        "score": 3,
+        "detail": "6 internal links (target: 3-5)"
+      },
+      "internal_links_diversity": {
+        "max": 3,
+        "score": 3,
+        "detail": "6 unique link targets"
+      },
+      "target_page_link": {
+        "max": 3,
+        "score": 3,
+        "detail": "Target /ua/blog/ ✓ found"
+      },
+      "external_source_link": {
+        "max": 3,
+        "score": 3,
+        "detail": "1 external source link(s) (target: ≥1)"
+      },
+      "primary_keyword": {
+        "max": 4,
+        "score": 0,
+        "detail": "no primary_keyword set in topic"
+      },
+      "secondary_keywords": {
+        "max": 4,
+        "score": 4,
+        "detail": "no secondaries set (skipped)"
+      },
+      "faq_count": {
+        "max": 4,
+        "score": 4,
+        "detail": "6 FAQ items (target: ≥6)"
+      },
+      "no_cliches": {
+        "max": 4,
+        "score": 4,
+        "detail": "clean"
+      },
+      "table_format": {
+        "max": 4,
+        "score": 4,
+        "detail": "2 table(s), all well-formed"
+      }
+    },
+    "total": 49,
+    "max": 57,
+    "percent": 86
+  },
+  "content": {
+    "tier": "content",
+    "scores": {
+      "eeat": {
+        "max": 4,
+        "score": 3,
+        "evidence": "«Числа и порядок действий — по официальным правилам»; ссылка на The Venetian",
+        "fix": "Добавить имя автора/эксперта или дату проверки правил"
+      },
+      "sourcing": {
+        "max": 4,
+        "score": 4,
+        "evidence": "KOZYR подан как каталог: «в каталоге рейкбек-сделок KOZYR»; без ложных выплат",
+        "fix": ""
+      },
+      "depth": {
+        "max": 4,
+        "score": 4,
+        "evidence": "Объясняет ПОЧЕМУ позиция важнее карт: «чем позже вы действуете, тем больше информации»",
+        "fix": ""
+      },
+      "concreteness": {
+        "max": 4,
+        "score": 4,
+        "evidence": "«при блайндах 50/100 первый игрок ставит 50 фишек»; таблицы этапов и позиций",
+        "fix": ""
+      },
+      "unique_angle": {
+        "max": 4,
+        "score": 3,
+        "evidence": "Связка правил с рейком/рейкбеком и типами клубов ClubGG",
+        "fix": "Добавить редкий угол: частые заблуждения регуляров или разбор ошибок на терне"
+      },
+      "intent_match": {
+        "max": 4,
+        "score": 4,
+        "evidence": "Информационный разбор правил по этапам полностью соответствует intent",
+        "fix": ""
+      },
+      "structure": {
+        "max": 3,
+        "score": 3,
+        "evidence": "H2 последовательно: цель → баттон → круги → действия → позиции → шоудаун",
+        "fix": ""
+      },
+      "readability": {
+        "max": 3,
+        "score": 3,
+        "evidence": "Короткие абзацы, списки, жирные термины, таблицы",
+        "fix": ""
+      },
+      "primary_kw_natural": {
+        "max": 3,
+        "score": 3,
+        "evidence": "Primary kw отсутствует; «правила техасского холдема» вплетено естественно",
+        "fix": ""
+      },
+      "secondary_coverage": {
+        "max": 3,
+        "score": 3,
+        "evidence": "Термины блайнды, флоп, терн, ривер, кикер раскрыты по делу",
+        "fix": ""
+      },
+      "link_context": {
+        "max": 3,
+        "score": 3,
+        "evidence": "Ссылки уместны: «таблицу покерных комбинаций», «эффективного рейкбека»",
+        "fix": ""
+      },
+      "faq_relevance": {
+        "max": 3,
+        "score": 3,
+        "evidence": "FAQ отвечает на реальные вопросы новичка: круги, блайнды, чек vs колл",
+        "fix": ""
+      },
+      "h2_clickability": {
+        "max": 3,
+        "score": 3,
+        "evidence": "«Баттон и блайнды: с чего начинается раздача», «почему они решают»",
+        "fix": ""
+      },
+      "no_filler": {
+        "max": 3,
+        "score": 3,
+        "evidence": "Без воды; конкретика в каждом блоке",
+        "fix": ""
+      },
+      "brand_voice": {
+        "max": 3,
+        "score": 3,
+        "evidence": "«Покер — не источник дохода… играйте на деньги, которые не жалко»",
+        "fix": ""
+      },
+      "conversion_bridge": {
+        "max": 3,
+        "score": 3,
+        "evidence": "«Сравните условия… в каталоге рейкбек-сделок KOZYR… с мягкими полями»",
+        "fix": ""
+      }
+    },
+    "total": 52,
+    "max": 54,
+    "percent": 96,
+    "top_3_strengths": [
+      "Высокая конкретность: реальные числа блайндов, таблицы этапов и позиций",
+      "Честная подача KOZYR как витрины каталога без ложных обещаний о выплатах",
+      "Естественный переход от теории правил к выбору площадки и рейкбеку"
+    ],
+    "top_3_issues": [
+      "Нет явного автора/эксперта или даты проверки — E-E-A-T можно усилить",
+      "Уникальный угол умеренный: тема правил холдема сильно затёрта конкурентами",
+      "Местами дублируются формулировки (официальные правила упомянуты дважды)"
+    ],
+    "verdict_explanation": "Сильная, точная и честная информационная статья с грамотным конверсионным мостом к каталогу KOZYR, теряющая единичные баллы лишь на авторстве и оригинальности угла."
+  },
+  "total": 91,
+  "verdict": "PUBLISH_READY",
+  "telegram_block": "🏆 *Качество: 91/100* 🟢 PUBLISH_READY\n   📊 Технически: 86/100 · 📝 Контент: 96/100\n\n✅ *Сильное:*\n   • Высокая конкретность: реальные числа блайндов, таблицы этапов и позиций\n   • Честная подача KOZYR как витрины каталога без ложных обещаний о выплатах\n   • Естественный переход от теории правил к выбору площадки и рейкбеку\n\n⚠️ *Что улучшить:*\n   • Нет явного автора/эксперта или даты проверки — E-E-A-T можно усилить\n   • Уникальный угол умеренный: тема правил холдема сильно затёрта конкурентами\n   • Местами дублируются формулировки (официальные правила упомянуты дважды)\n   • word\\_count: 1622 words (target: 1800-3500)\n   • internal\\_links\\_count: 6 internal links (target: 3-5)"
+}
