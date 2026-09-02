@@ -424,13 +424,42 @@ def date_to_iso_date(iso_datetime: str) -> str:
 
 # ==== Related articles ====
 
-def get_existing_blog_posts(blog_dir: Path, taxonomy_path: Path) -> list[dict]:
+# Language-aware tag labels for post-card pills ("Клубы"/"Клуби", "Новичкам"/"Новачкам").
+# Extend when adding a new language. Keys mirror the topic tag values in taxonomy.
+# Fallback to Russian if language not registered here.
+TAG_LABELS_BY_LANG: dict[str, dict[str, str]] = {
+    "ru": {
+        "rakeback": "Рейкбек", "clubs": "Клубы", "club-review": "Клубы",
+        "rooms": "Румы", "room-review": "Обзор", "comparison": "Сравнение",
+        "bankroll": "Банкролл", "strategy": "Стратегия", "beginners": "Новичкам",
+        "payments": "Платежи", "legal": "Легальность",
+    },
+    "uk": {
+        "rakeback": "Рейкбек", "clubs": "Клуби", "club-review": "Клуби",
+        "rooms": "Руми", "room-review": "Огляд", "comparison": "Порівняння",
+        "bankroll": "Банкрол", "strategy": "Стратегія", "beginners": "Новачкам",
+        "payments": "Платежі", "legal": "Легальність",
+    },
+}
+
+
+def get_tag_label(topic: str, lang: str, fallback: str = "Блог") -> str:
+    """Return localized tag label for a topic. Falls back to Russian if lang unknown,
+    then to `fallback` string if topic isn't in the label map."""
+    labels = TAG_LABELS_BY_LANG.get(lang, TAG_LABELS_BY_LANG["ru"])
+    return labels.get(topic, fallback)
+
+
+def get_existing_blog_posts(blog_dir: Path, taxonomy_path: Path, lang: str = "ru") -> list[dict]:
     """Scan a blog directory for existing posts and return {slug, title, date, description, tags}.
 
     Stage 3 i18n: `blog_dir` and `taxonomy_path` are per-language. EN scans
     `blog/`, PT scans `pt/blog/`, each with its own taxonomy. Tags come from
     the language-matched taxonomy — articles missing from taxonomy get []
     (still appear, but with weak relatedness scores).
+
+    `lang` controls the tag_label localization (post-card pills). Defaults to "ru"
+    for backward-compat with older callers.
     """
     tax = load_taxonomy(taxonomy_path)
     tax_articles = tax.get("articles", {})
@@ -475,11 +504,7 @@ def get_existing_blog_posts(blog_dir: Path, taxonomy_path: Path) -> list[dict]:
         # hero-фото для премиум-карточки related + короткий тег
         has_hero = (child / "hero.webp").exists()
         _topic = next((t.split(":", 1)[1] for t in tags if t.startswith("topic:")), "")
-        _tag_labels = {"rakeback": "Рейкбек", "clubs": "Клубы", "club-review": "Клубы",
-                       "rooms": "Румы", "room-review": "Обзор", "comparison": "Сравнение",
-                       "bankroll": "Банкролл", "strategy": "Стратегия", "beginners": "Новичкам",
-                       "payments": "Платежи", "legal": "Легальность"}
-        tag_label = _tag_labels.get(_topic, "Блог")
+        tag_label = get_tag_label(_topic, lang)
 
         posts.append({
             "slug": slug,
@@ -536,7 +561,12 @@ def render_related(
     for p in chosen:
         cover = ""
         if p.get("has_hero"):
-            cover = (f'<img src="{url_prefix}/{p["slug"]}/hero.webp" alt="" loading="lazy" '
+            # Hero thumbnails are consistently rendered at 1536×1024 by covers.py.
+            # alt uses article title for a11y + SEO context. Explicit width/height
+            # locks aspect ratio → prevents CLS while cover picture loads.
+            cover = (f'<img src="{url_prefix}/{p["slug"]}/hero.webp" '
+                     f'alt="{escape_html(p["title"])}" '
+                     f'width="1536" height="1024" loading="lazy" '
                      f'style="width:100%;height:100%;object-fit:cover;display:block">')
         tag_label = escape_html(p.get("tag_label", "Блог"))
         cards.append(
@@ -1423,10 +1453,15 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     # и CTA. Добавляешь партнёра → дописываешь одну строку сюда и объект в
     # partners.js. Логика ниже сама разложит его по статьям.
     _tags = meta.get("tags", []) or []  # теги статьи (platform:*, topic:*, ...)
+    # Partner URLs are relative to the article's language home. RU articles link
+    # to /ua/rooms/pokerbet/, UK articles link to /ua/uk/rooms/pokerbet/, etc.
+    # Prefix comes from lang_cfg["home_url"] (e.g. "/ua/" or "/ua/uk/") — keeps
+    # UK readers in the UK cluster instead of bouncing them to the RU version.
+    _lang_home = lang_cfg["home_url"].rstrip("/")  # "/ua" or "/ua/uk"
     _PARTNERS_META = [
-        # id,          network,     url,                      rake(%|None)
-        ("pokerbet",   "pokerbet",  "/ua/rooms/pokerbet/",    None),
-        ("klubok",     "clubgg",    "/ua/clubs/klubok/",      40),
+        # id,          network,     url,                                        rake(%|None)
+        ("pokerbet",   "pokerbet",  f"{_lang_home}/rooms/pokerbet/",            None),
+        ("klubok",     "clubgg",    f"{_lang_home}/clubs/klubok/",              40),
     ]
     # платформенные теги статьи: и id-партнёров, и сети (platform:clubgg и т.п.)
     _plat_tags = [t.split(":", 1)[1] for t in (_tags or [])
@@ -1528,12 +1563,8 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     # Короткий тег для пилюли в hero (из topic-тега, иначе — раздел).
     # (_tags уже определён выше, в блоке партнёров)
     _topic = next((t.split(":", 1)[1] for t in _tags if t.startswith("topic:")), "")
-    _tag_labels = {
-        "rakeback": "Рейкбек", "clubs": "Клубы", "rooms": "Румы",
-        "comparison": "Сравнение", "bankroll": "Банкролл", "strategy": "Стратегия",
-        "payments": "Платежи", "legal": "Легальность",
-    }
-    article_tag = _tag_labels.get(_topic, article_section.split()[0] if article_section else "Блог")
+    article_tag = get_tag_label(_topic, lang,
+                                fallback=article_section.split()[0] if article_section else "Блог")
 
     # Keywords for schema
     secondary_kw = topic_data.get("secondary_keywords", "")
@@ -1544,7 +1575,7 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     # and the list comes from blog/ (published names) — so we must pass the
     # published slug, not the pending-dir one.
     current_tags = meta.get("tags", [])
-    all_posts = get_existing_blog_posts(lang_cfg["blog_dir"], lang_cfg["taxonomy"])
+    all_posts = get_existing_blog_posts(lang_cfg["blog_dir"], lang_cfg["taxonomy"], lang)
     related_html = render_related(publish_slug, all_posts, lang_cfg, current_tags=current_tags)
 
     # Read template
@@ -1623,11 +1654,12 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     # настроен для каждого языка ("/ua/" для ru, "/ua/uk/" для uk и т.д.).
     # Убираем trailing slash чтобы конкатенация была корректной.
     _lang_prefix = lang_cfg["home_url"].rstrip("/") or "/ua"
-    # KOZYR: футерные ссылки ведут на реальные страницы сайта.
+    # KOZYR: футерные ссылки ведут на страницы в текущем языке пользователя.
+    # Раньше здесь был хардкод "/ua" (когда UK-версии страниц ещё не было).
+    # Теперь UK статьи линкуют на /ua/uk/rooms/… и /ua/uk/clubs/… — это держит
+    # пользователя в кластере его языка и не сливает PageRank в другой язык.
     # Имена плейсхолдеров исторические (NLH/PLO/SHORT_DECK), значения — KOZYR.
-    # Для uk-версии пока показываем те же страницы (главная страна одна),
-    # это нормально: свитчер и hreflang правильно расставят.
-    _rooms_prefix = "/ua"  # каталог/rooms/clubs пока живёт только на /ua
+    _rooms_prefix = _lang_prefix
     nlh_url = f"{_rooms_prefix}/rooms/pokerbet/"   # PokerBet
     plo_url = f"{_rooms_prefix}/clubs/klubok/"     # KlubOk
     short_deck_url = f"{_rooms_prefix}/#compare"   # Сравнение
@@ -1644,7 +1676,9 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     author_jobtitle = ui.get("author_role", "Рейкбек-аналитик").split("·")[0].strip()
 
     # ----- in-language code for JSON-LD inLanguage (BCP-47) -----
-    in_language = {"ru": "ru-UA"}.get(lang, "ru-UA")
+    # Reuse hreflang_self from lang_config (already BCP-47: "ru-UA", "uk-UA", etc.)
+    # This ensures schema inLanguage stays aligned with html lang and hreflang tags.
+    in_language = lang_cfg["hreflang_self"]
 
     # v2 multilang: если у этой статьи есть перевод — переключатель ведёт
     # на конкретную статью-перевод, а не на дефолтную главную из UI.
@@ -1724,7 +1758,10 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         "{{ARTICLE_TAG}}": escape_html(article_tag),
         "{{UI_IN_THIS_ARTICLE}}": ui.get("in_this_article", "В этой статье"),
         # ----- Stage 3 i18n placeholders -----
-        "{{HTML_LANG}}": lang_cfg["html_lang"],
+        # HTML lang attribute uses BCP-47 code (ru-UA, uk-UA) — must match hreflang.
+        # We use hreflang_self here rather than html_lang because html_lang is kept
+        # as internal short identifier ("ru", "uk") for language-detection logic.
+        "{{HTML_LANG}}": lang_cfg["hreflang_self"],
         "{{OG_LOCALE}}": lang_cfg["og_locale"],
         "{{OG_LOCALE_ALT}}": lang_cfg["og_locale_alt"],
         "{{HREFLANG_BLOCK}}": hreflang_block,
@@ -1830,7 +1867,7 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     update_blog_index(publish_slug, h1_title, meta_description, date_published, reading_time, lang_cfg, article_tag, has_hero)
 
     # Refresh Related blocks on this language's format pages
-    refreshed_posts = get_existing_blog_posts(lang_cfg["blog_dir"], lang_cfg["taxonomy"])
+    refreshed_posts = get_existing_blog_posts(lang_cfg["blog_dir"], lang_cfg["taxonomy"], lang)
     update_format_page_related_blocks(refreshed_posts, lang_cfg)
 
     # Remove _pending/{slug}/ (or _pending_pt/{slug}/)

@@ -196,7 +196,7 @@ def main():
     # UI + config placeholders
     for k, v in ui.items():
         reps["{{UI_%s}}" % k.upper()] = str(v)
-    reps["{{HTML_LANG}}"] = cfg["html_lang"]
+    reps["{{HTML_LANG}}"] = cfg["hreflang_self"]
     reps["{{HOME_URL}}"] = cfg["home_url"]
     reps["{{BLOG_URL}}"] = cfg["blog_url"]
     reps["{{SITE_ORIGIN}}"] = site
