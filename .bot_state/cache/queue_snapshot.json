@@ -1,18 +1,7 @@
 {
-  "collected_at": "2026-09-02T11:20:56.305065+00:00",
+  "collected_at": "2026-09-02T19:48:20.805719+00:00",
   "status": "queued",
   "rows": [
-    {
-      "status": "queued",
-      "lang": "ru",
-      "topic": "Как пополнить и вывести в покере",
-      "primary_key": "пополнение вывод покер",
-      "secondary_key": "как пополнить покер, карты UAH, крипта, кошельки",
-      "intent": "informational",
-      "target_page": "/ua/blog/",
-      "notes": "Кластер: платёжки. Методы пополнения/вывода: карты UAH, крипта, кошельки. Сроки, минималки. Сравнить PokerBet/KlubOk.",
-      "_row": 15
-    },
     {
       "status": "queued",
       "lang": "ru",
