@@ -486,4 +486,17 @@
       <image:title>Правила техасского холдема: этапы, блайнды, позиции</image:title>
     </image:image>
   </url>
+  <url>
+    <loc>https://kozyr.club/ua/uk/blog/pravila-tehasskogo-holdema/</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA" href="https://kozyr.club/ua/blog/pravila-tehasskogo-holdema/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA" href="https://kozyr.club/ua/uk/blog/pravila-tehasskogo-holdema/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/ua/blog/pravila-tehasskogo-holdema/"/>
+    <image:image>
+      <image:loc>https://kozyr.club/ua/uk/blog/pravila-tehasskogo-holdema/hero.jpg</image:loc>
+      <image:title>Правила техаського холдему: етапи, блайнди, позиції</image:title>
+    </image:image>
+  </url>
 </urlset>

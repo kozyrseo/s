@@ -25,17 +25,18 @@
 # Google may still have them in the index; 301 tells it to consolidate
 # link authority onto the canonical URL.
 #
-# IMPORTANT: /rooms/, /clubs/, /uk/rooms/, /uk/clubs/ don't have hub pages,
-# so bare directory URLs redirect to their flagship product page.
+# Bare hub URLs (/rooms/, /clubs/, /uk/rooms/, /uk/clubs/) redirect to the
+# corresponding HUB PAGE (which now exists at /ua/rooms/, /ua/clubs/, etc.).
+# Sub-paths like /rooms/pokerbet/ redirect through :splat to preserve deep links.
 
-# ---- /rooms/ tree (no hub page in /ua/rooms/) ----
-/rooms          /ua/rooms/pokerbet/          301
-/rooms/         /ua/rooms/pokerbet/          301
+# ---- /rooms/ tree ----
+/rooms          /ua/rooms/                   301
+/rooms/         /ua/rooms/                   301
 /rooms/*        /ua/rooms/:splat             301
 
-# ---- /clubs/ tree (no hub page in /ua/clubs/) ----
-/clubs          /ua/clubs/klubok/            301
-/clubs/         /ua/clubs/klubok/            301
+# ---- /clubs/ tree ----
+/clubs          /ua/clubs/                   301
+/clubs/         /ua/clubs/                   301
 /clubs/*        /ua/clubs/:splat             301
 
 # ---- /blog/ tree ----
@@ -46,11 +47,11 @@
 
 # ---- /uk/ locale (moved to /ua/uk/) ----
 /uk             /ua/uk/                      301
-# Bare hub redirects for /uk/rooms and /uk/clubs (no hub in /ua/uk/rooms/, /ua/uk/clubs/)
-/uk/rooms       /ua/uk/rooms/pokerbet/       301
-/uk/rooms/      /ua/uk/rooms/pokerbet/       301
-/uk/clubs       /ua/uk/clubs/klubok/         301
-/uk/clubs/      /ua/uk/clubs/klubok/         301
+# Bare hub redirects for /uk/rooms and /uk/clubs (hubs exist at /ua/uk/rooms/, /ua/uk/clubs/)
+/uk/rooms       /ua/uk/rooms/                301
+/uk/rooms/      /ua/uk/rooms/                301
+/uk/clubs       /ua/uk/clubs/                301
+/uk/clubs/      /ua/uk/clubs/                301
 # Everything else under /uk/ maps to /ua/uk/
 /uk/*           /ua/uk/:splat                301
 
