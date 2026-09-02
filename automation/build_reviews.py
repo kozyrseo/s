@@ -322,13 +322,58 @@ def process_page(partner: str, lang: str, reviews: list[dict], page_html: str) -
 
 # ── main ───────────────────────────────────────────────────────────────────
 def load_reviews() -> list[dict]:
+    """
+    Читает reviews.json и возвращает СПЛЮЩЕННЫЙ список записей per-language
+    (по одной записи на (id, lang)), совместимый с остальной частью пайплайна.
+
+    Формат reviews.json (дедуплицированный):
+      {"reviews": [
+        {"id": "r-2607", "partner": "pokerbet", "rating": 5, ...,
+         "author": {"ru": "...", "uk": "..."},
+         "text":   {"ru": "...", "uk": "..."}}
+      ]}
+
+    Возвращает плоский список:
+      [{"id": "r-2607", "lang": "ru", "author": "...", "text": "...", ...},
+       {"id": "r-2607-uk", "lang": "uk", "author": "...", "text": "...", ...}, ...]
+    """
     try:
         data = json.loads(REVIEWS_JSON.read_text(encoding="utf-8"))
     except FileNotFoundError:
         sys.exit(f"❌ Не найден {REVIEWS_JSON}")
     except json.JSONDecodeError as e:
         sys.exit(f"❌ Битый JSON в {REVIEWS_JSON}: {e}")
-    return data.get("reviews", [])
+
+    raw = data.get("reviews", [])
+    flat: list[dict] = []
+    shared_fields = ("partner", "rating", "date", "verified", "country")
+
+    for r in raw:
+        # Обратная совместимость: если это уже старый плоский формат — пропускаем как есть.
+        if isinstance(r.get("author"), str) and isinstance(r.get("text"), str):
+            flat.append(r)
+            continue
+
+        author = r.get("author", {})
+        text = r.get("text", {})
+        if not isinstance(author, dict) or not isinstance(text, dict):
+            sys.exit(f"❌ reviews.json / id={r.get('id')}: 'author' и 'text' должны быть "
+                     f"словарями вида {{'ru': ..., 'uk': ...}} (или строками в legacy-формате)")
+        langs = sorted(set(author.keys()) & set(text.keys()))
+        if not langs:
+            sys.exit(f"❌ reviews.json / id={r.get('id')}: нет пересечения языков "
+                     f"в author={list(author)} и text={list(text)}")
+
+        base_id = r["id"]
+        for i, lang in enumerate(langs):
+            flat.append({
+                "id": base_id if i == 0 else f"{base_id}-{lang}",
+                "lang": lang,
+                "author": author[lang],
+                "text": text[lang],
+                **{k: r[k] for k in shared_fields if k in r},
+            })
+    return flat
 
 
 def main() -> int:
