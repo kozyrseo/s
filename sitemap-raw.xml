@@ -153,7 +153,7 @@
        ============================================================ -->
   <url>
     <loc>https://kozyr.club/ua/blog/</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/"/>
@@ -162,7 +162,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/blog/</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/"/>
@@ -497,6 +497,19 @@
     <image:image>
       <image:loc>https://kozyr.club/ua/uk/blog/pravila-tehasskogo-holdema/hero.jpg</image:loc>
       <image:title>Правила техаського холдему: етапи, блайнди, позиції</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://kozyr.club/ua/blog/kak-popolnit-i-vyvesti-v-pokere/</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA" href="https://kozyr.club/ua/blog/kak-popolnit-i-vyvesti-v-pokere/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA" href="https://kozyr.club/ua/uk/blog/kak-popolnit-i-vyvesti-v-pokere/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/ua/blog/kak-popolnit-i-vyvesti-v-pokere/"/>
+    <image:image>
+      <image:loc>https://kozyr.club/ua/blog/kak-popolnit-i-vyvesti-v-pokere/hero.jpg</image:loc>
+      <image:title>Как пополнить и вывести в покере: методы и сроки</image:title>
     </image:image>
   </url>
 </urlset>
