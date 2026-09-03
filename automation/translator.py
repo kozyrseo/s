@@ -71,7 +71,7 @@ TRANSLATOR_SYSTEM_PROMPT = """Ты — переводчик статей бло�
 2. Массивы sections/faq/tags: длина не меняется. Порядок не меняется.
 3. Внутри sections[i] сохраняй heading, subheadings, list_items, table_rows,
    paragraphs — переводя каждое поле по отдельности.
-4. Внутренние URL (`/ua/`, `/ua/rooms/pokerbet/` и т.д.) НЕ переводить.
+4. Внутренние URL (`/ua/`, `/ua/rooms/pokerbet/` и т.д.) НЕ переводить — пост-процессинг сам перепишет /ua/ → /ua/uk/ для UK-перевода.
 5. Названия брендов (PokerBet, KlubOk, PokerStars, GGPoker, ClubGG) — как есть.
 6. Числа (цены, проценты, суммы), даты, суммы валют — как есть.
 7. Английские термины (rakeback, MTT, cash game, EV) — если в целевом языке
@@ -107,6 +107,50 @@ ADDITIONAL_INSTRUCTIONS_BY_LANG_PAIR = {
 - Не путай: «долі» (доли, части) vs «долі» (судьбы) — контекст.
 """,
 }
+
+
+def _rewrite_internal_links(text: str, source_lang: str, target_lang: str) -> str:
+    """Rewrite internal URLs from source-lang paths to target-lang paths.
+
+    For ru→uk: /ua/... → /ua/uk/... (except /ua/uk/... already, and asset URLs).
+    Runs on any string content — markdown, JSON values, faq answers, etc.
+
+    Assets to preserve as-is:
+        /ua/blog/authors/*.webp  (shared author photo)
+        Any *.webp / *.jpg / *.png / *.svg / *.css / *.js path
+    """
+    if source_lang == target_lang:
+        return text
+    if source_lang != "ru" or target_lang != "uk":
+        # Currently only ru→uk needs rewriting. Extend when adding other pairs.
+        return text
+
+    def replace(m):
+        url = m.group(0)
+        # Skip if already targeting uk
+        if url.startswith("/ua/uk/"):
+            return url
+        # Skip asset URLs (shared across languages)
+        if re.search(r"\.(webp|jpg|jpeg|png|svg|gif|ico|css|js|pdf)($|[?#])", url):
+            return url
+        # Rewrite /ua/... → /ua/uk/...
+        return "/ua/uk/" + url[len("/ua/"):]
+
+    # Match URLs in double-quoted strings, markdown links, and bare URLs
+    # Pattern matches /ua/ followed by path chars until whitespace, ), ", or end
+    return re.sub(r'/ua/[^\s\)"\'<>]+', replace, text)
+
+
+def _rewrite_links_in_json(obj, source_lang: str, target_lang: str):
+    """Recursively rewrite internal links in string values of a nested JSON structure."""
+    if isinstance(obj, str):
+        return _rewrite_internal_links(obj, source_lang, target_lang)
+    if isinstance(obj, list):
+        return [_rewrite_links_in_json(v, source_lang, target_lang) for v in obj]
+    if isinstance(obj, dict):
+        return {k: _rewrite_links_in_json(v, source_lang, target_lang) for k, v in obj.items()}
+    return obj
+
 
 
 def load_article_json(pending_dir: Path) -> dict:
@@ -183,6 +227,9 @@ def translate_article_json(article: dict, source_lang: str, target_lang: str) ->
         )
     try:
         translated = json.loads(raw[first:last + 1])
+        # Post-process: rewrite internal /ua/ links to /ua/uk/ in target lang.
+        # See _rewrite_internal_links for the rules.
+        translated = _rewrite_links_in_json(translated, source_lang, target_lang)
     except json.JSONDecodeError as e:
         raise ValueError(
             f"Невалидный JSON от Claude: {e}\n"

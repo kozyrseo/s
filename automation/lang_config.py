@@ -93,6 +93,7 @@ class LangCfg(TypedDict):
     hreflang_self: str
     hreflang_alt: str
     home_url: str
+    hero_alt_prefix: str  # Ru: "Иллюстрация к статье:", Uk: "Ілюстрація до статті:"
     blog_url: str
     system_prompt: Path
     taxonomy: Path
@@ -129,6 +130,7 @@ LANG_CONFIG: dict[str, LangCfg] = {
         "hreflang_self": "ru-UA",
         "hreflang_alt": "uk-UA",
         "home_url": "/ua/",
+        "hero_alt_prefix": "Иллюстрация к статье:",
         "blog_url": "/ua/blog/",
         "system_prompt": AUTOMATION_DIR / "prompts" / "system_prompt.md",
         "taxonomy": AUTOMATION_DIR / "taxonomy.json",
@@ -211,6 +213,7 @@ LANG_CONFIG: dict[str, LangCfg] = {
         "hreflang_self": "uk-UA",
         "hreflang_alt": "ru-UA",
         "home_url": "/ua/uk/",
+        "hero_alt_prefix": "Ілюстрація до статті:",
         "blog_url": "/ua/uk/blog/",
         # Промпт для перевода отдельный: translator.py прогоняет русскую
         # статью через Claude с этим system_prompt.

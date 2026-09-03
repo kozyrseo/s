@@ -1620,7 +1620,7 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
         og_image_width = "1536"
         og_image_height = "1024"
         # Localized alt text
-        alt_prefix = {"ru": "Иллюстрация к статье:"}.get(lang, "Иллюстрация к статье:")
+        alt_prefix = lang_cfg["hero_alt_prefix"]
         og_image_alt = f"{alt_prefix} {h1_title}"
         hero_media_block = (
             f'<div class="post-hero__media">'

@@ -261,6 +261,12 @@ def generate_hero_image(image_prompt: str, target_dir: Path) -> Path | None:
     return out_path
 
 
-def hero_alt_text(h1_title: str) -> str:
-    """Reasonable default alt text for a hero image. Used in HTML and og:image:alt."""
-    return f"Иллюстрация к статье: {h1_title}"
+def hero_alt_text(h1_title: str, lang: str = "ru") -> str:
+    """Reasonable default alt text for a hero image. Used in HTML and og:image:alt.
+
+    Language-aware: uses proper prefix for each language via lang_config.
+    Falls back to RU prefix if lang not registered.
+    """
+    from lang_config import LANG_CONFIG
+    prefix = LANG_CONFIG.get(lang, {}).get("hero_alt_prefix", "Иллюстрация к статье:")
+    return f"{prefix} {h1_title}"
