@@ -108,23 +108,36 @@ TRANSLATE_SYSTEM = """Ти — перекладач покерного сайт�
 Поверни ТІЛЬКИ валідний JSON з ТИМИ САМИМИ ключами. Без пояснень."""
 
 
-def translate_content(content_ru: dict) -> dict:
-    """Переводит content JSON ru→uk через LLM + переписывает внутренние ссылки."""
+def translate_content(content_ru: dict, draft: dict):
+    """Переводит контент + переводимые поля анкеты (pros/cons/faq) ru→uk.
+
+    Возвращает (content_uk, draft_uk): черновик с переведёнными pros/cons/faq,
+    чтобы плюсы/минусы/FAQ на украинской странице тоже были украинскими.
+    """
     from openai import OpenAI
     client = OpenAI(api_key=os.environ["OPENROUTER_API_KEY"], base_url=OPENROUTER_BASE_URL)
-    user = "JSON для перекладу:\n```json\n" + json.dumps(content_ru, ensure_ascii=False, indent=2) + "\n```"
-    print(f"  LLM: перевод контента ru→uk ({MODEL})…")
+    # бандл: контент + переводимые поля анкеты (ключи с __ — не контент)
+    bundle = dict(content_ru)
+    bundle["__pros"] = draft.get("pros", [])
+    bundle["__cons"] = draft.get("cons", [])
+    bundle["__faq"] = draft.get("faq", [])
+    user = "JSON для перекладу (переклади ВСІ значення, включно з масивами __pros/__cons/__faq):\n```json\n" + json.dumps(bundle, ensure_ascii=False, indent=2) + "\n```"
+    print(f"  LLM: перевод контента + анкеты ru→uk ({MODEL})…")
     resp = client.chat.completions.create(
         model=MODEL, max_tokens=MAX_TOKENS,
         messages=[{"role": "system", "content": TRANSLATE_SYSTEM},
                   {"role": "user", "content": user}],
     )
     uk = parse_content_json(resp.choices[0].message.content or "")
-    # переписываем внутренние ссылки в контенте
     for k, v in uk.items():
         uk[k] = rewrite_links_ru_uk(v)
+    content_uk = {k: v for k, v in uk.items() if not k.startswith("__")}
+    draft_uk = dict(draft)
+    draft_uk["pros"] = uk.get("__pros", draft.get("pros", []))
+    draft_uk["cons"] = uk.get("__cons", draft.get("cons", []))
+    draft_uk["faq"] = uk.get("__faq", draft.get("faq", []))
     print(f"  ✓ перевод получен ({len(json.dumps(uk, ensure_ascii=False))} симв.)")
-    return uk
+    return content_uk, draft_uk
 
 
 def partner_path(draft: dict, lang_prefix: str = "") -> str:
@@ -160,8 +173,8 @@ def main():
     print(f"✓ RU страница: {out_ru} ({len(html_ru)} символов)")
 
     # ── Украинская версия (перевод контента → тот же шаблон) ──
-    content_uk = translate_content(content_ru)
-    html_uk = build_page(draft, content_uk, lang="uk")
+    content_uk, draft_uk = translate_content(content_ru, draft)
+    html_uk = build_page(draft_uk, content_uk, lang="uk")
 
     if args.publish:
         out_uk = REPO_ROOT / partner_path(draft, lang_prefix="uk") / "index.html"
