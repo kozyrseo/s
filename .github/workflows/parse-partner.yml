@@ -53,8 +53,23 @@ jobs:
           git config user.email "bot@kozyr.club"
           git add _partner_drafts/ || true
           if git diff --staged --quiet; then
-            echo "Нет нового черновика"
-          else
-            git commit -m "partner: draft parsed"
-            git push
+            echo "Нет нового черновика — коммитить нечего"
+            exit 0
           fi
+          git commit -m "partner: draft parsed"
+          # Воркер (Cloudflare) параллельно коммитит состояние в main через
+          # GitHub Contents API (сессии партнёра, ввод и т.д.), поэтому main
+          # часто уезжает вперёд между checkout и push, и обычный push
+          # отклоняется (! [rejected] ... fetch first). Пушим с ретраями,
+          # перед каждой попыткой подтягивая remote ребейзом. Пути не
+          # пересекаются (_partner_drafts/ vs .bot_state/) — конфликтов нет.
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push; then
+              echo "Черновик запушен с попытки $attempt"
+              exit 0
+            fi
+            echo "Попытка $attempt не удалась, повтор через паузу..."
+            sleep $((RANDOM % 4 + 2))
+          done
+          echo "Не удалось запушить черновик после 5 попыток"
+          exit 1
