@@ -116,6 +116,60 @@ def parse_html_response(raw_text: str) -> str:
     return html.strip()
 
 
+def generate_html_with_continuation(client, system_prompt, user_message, max_parts=5):
+    """
+    Генерирует HTML устойчиво к обрыву по лимиту токенов.
+
+    Страница партнёра большая (~100 КБ / ~2000 строк), и один ответ модели
+    может не влезть в лимит вывода MAX_TOKENS — тогда он обрывается, не поставив
+    закрывающий маркер ---PARTNER-HTML-END---. Здесь мы это ловим: пока в
+    накопленном ответе нет END-маркера и модель обрывается по длине, просим её
+    ПРОДОЛЖИТЬ ровно с места обрыва и склеиваем куски (до max_parts частей).
+    Каждый вызов остаётся в пределах известного рабочего лимита 32000 токенов.
+    """
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_message},
+    ]
+    full = ""
+    for part in range(1, max_parts + 1):
+        resp = client.chat.completions.create(
+            model=MODEL,
+            max_tokens=MAX_TOKENS,
+            messages=messages,
+        )
+        choice = resp.choices[0]
+        chunk = choice.message.content or ""
+        full += chunk
+        print(f"  Часть {part}: +{len(chunk)} символов (всего {len(full)})")
+
+        if HTML_END in full:
+            break  # страница доведена до конца
+
+        finish = getattr(choice, "finish_reason", None)
+        # Если модель остановилась НЕ по длине (а END-маркера так и нет) —
+        # продолжать бессмысленно, что-то другое пошло не так.
+        if finish not in ("length", "max_tokens", None):
+            print(f"  Модель остановилась по причине '{finish}', END-маркера нет — прекращаю.")
+            break
+        if part == max_parts:
+            print("  Достигнут предел частей, END-маркера всё ещё нет.")
+            break
+
+        # Просим продолжить ровно с места обрыва, без повторов.
+        messages.append({"role": "assistant", "content": chunk})
+        messages.append({
+            "role": "user",
+            "content": (
+                "Ответ оборвался по лимиту. Продолжи HTML РОВНО с того места, "
+                "на котором остановился — ничего не повторяй и не начинай заново. "
+                f"Доведи страницу до конца и обязательно закрой её маркером {HTML_END} "
+                "на отдельной строке в самом конце."
+            ),
+        })
+    return full.strip()
+
+
 def validate_html(html: str, draft: dict, errors: list) -> None:
     """Базовые проверки сгенерированной страницы."""
     # Настоящий логотип (не примитивный)
@@ -259,16 +313,7 @@ def main():
     )
     user_message = build_user_message(draft, reference, networks)
 
-    response = client.chat.completions.create(
-        model=MODEL,
-        max_tokens=MAX_TOKENS,
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_message},
-        ],
-    )
-
-    raw = (response.choices[0].message.content or "").strip()
+    raw = generate_html_with_continuation(client, system_prompt, user_message)
     html = parse_html_response(raw)
 
     # Валидация
