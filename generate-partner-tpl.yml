@@ -1,0 +1,69 @@
+name: Generate partner page (template)
+
+on:
+  workflow_dispatch:
+    inputs:
+      partner_id:
+        description: "ID партнёра из _partner_drafts/"
+        required: true
+        type: string
+      publish:
+        description: "в прод? (иначе _pending_partner)"
+        required: false
+        default: "false"
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: generate-partner-tpl
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install openai jinja2
+
+      - name: Generate page from template
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          PARTNER_ID: ${{ github.event.inputs.partner_id }}
+          PUBLISH: ${{ github.event.inputs.publish }}
+        run: |
+          if [ "$PUBLISH" = "true" ]; then
+            python automation/generate_partner_tpl.py --id "$PARTNER_ID" --publish
+          else
+            python automation/generate_partner_tpl.py --id "$PARTNER_ID"
+          fi
+
+      - name: Commit changes
+        run: |
+          git config user.name "kozyr-bot"
+          git config user.email "bot@kozyr.club"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "Нет изменений"
+            exit 0
+          fi
+          git commit -m "partner (tpl): ${{ github.event.inputs.partner_id }}"
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push; then
+              echo "Запушено с попытки $attempt"
+              exit 0
+            fi
+            sleep $((RANDOM % 4 + 2))
+          done
+          exit 1
