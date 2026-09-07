@@ -49,7 +49,6 @@ const ACTIONS = {
     validate: (slug) => /^[a-z0-9-]+$/.test(slug),
   },
   regenerate: {
-    // Мультиязычно: перегенерит все языки темы (для ua — RU + UK).
     workflow: "generate-multilang.yml",
     label: "Перегенерируется (все языки)",
     inputs: (slug) => ({ topic_file: `automation/topics/${slug}.json`, country: "", langs: "" }),
@@ -123,7 +122,14 @@ async function handleMessage(message, env) {
   const chatId = message.chat.id;
   const text = (message.text || "").trim();
 
-  // Пустое сообщение (стикер/фото) — игнор.
+  // Логотип партнёра: фото или картинка-документ во время партнёрской сессии.
+  if (message.photo || message.document) {
+    const ps = await getPartnerSession(chatId, env);
+    if (ps) { await handlePartnerLogo(chatId, message, env); return; }
+    return; // фото вне партнёрской сессии — игнорируем
+  }
+
+  // Пустое сообщение (стикер и т.п.) — игнор.
   if (!text) return;
 
   // v2 multilang UI: перехватываем нажатия постоянной клавиатуры.
@@ -146,9 +152,19 @@ async function handleMessage(message, env) {
     return;
   }
 
-  // 1. Если открыта сессия редактирования — это ответ на неё
+  // 1. Если открыта какая-то сессия — это ответ на неё
   //    (кроме случая когда пришла команда, начинающаяся с /).
   if (!text.startsWith("/")) {
+    // 1a. Сессия добавления партнёра (анкета) — ПРИОРИТЕТ.
+    //     handlePartnerAnswer сам разберётся со стадией (await_text /
+    //     await_more / parsing / await_confirm). Свободный текст в любой
+    //     из этих стадий = ввод или дополнение анкеты.
+    const partnerSession = await getPartnerSession(chatId, env);
+    if (partnerSession) {
+      await handlePartnerAnswer(chatId, text, message, env);
+      return;
+    }
+    // 1b. Сессия правки meta.json статьи.
     const session = await getOpenEditSessionForChat(chatId, env);
     if (session) {
       await applyEditFromMessage(session, text, message, env);
@@ -198,6 +214,9 @@ function getCommandHandler(cmd) {
     "/countries":   cmdCountries,
     "/translate":   cmdTranslate,
     "/menu":        cmdMenu,
+    "/addpartner":  cmdAddPartner,
+    "/newpartner":  cmdAddPartner,   // алиас
+    "/partner":     cmdAddPartner,   // алиас
   };
   return handlers[cmd] || null;
 }
@@ -205,6 +224,7 @@ function getCommandHandler(cmd) {
 // v2 multilang UI: показ inline-меню "⚙️ Ещё" — редкие команды
 async function showMoreMenu(chatId, env) {
   const kb = [
+    [{ text: "➕ Добавить партнёра", callback_data: "menu_action:add_partner" }],
     [{ text: "🔍 Найти новые темы", callback_data: "menu_action:research" }],
     [{ text: "🔄 Обновить список тем", callback_data: "menu_action:refresh" }],
     [{ text: "📊 Аналитика: выбрать период", callback_data: "menu_action:analytics_period" }],
@@ -342,6 +362,25 @@ async function handleCallback(cb, env) {
     return;
   }
 
+  // ═══════════════════════════════════════════════════════════════════
+  //  ПАРТНЁРЫ — единый блок обработки (вынесен в handlePartnerCallback,
+  //  чтобы держать всю партнёрскую логику в одном месте).
+  //  Схема callback_data (совпадает с automation/parse_partner.py):
+  //    pcountry:{id}:{cc}  → выбрать основную страну, если парсер не понял
+  //    pconfirm:{id}       → generate-partner.yml (preview) — собрать страницу
+  //    pmore:{id}          → перевести сессию в режим «дополнить текстом»
+  //    pcancel             → отменить сессию + удалить черновик
+  //    ppublish:{id}       → generate-partner.yml (publish=true) — в прод
+  //    pshow:{id}          → показать сводку по конкретному черновику
+  //    pshow_latest        → показать последний черновик (если авто-сводка не дошла)
+  // ═══════════════════════════════════════════════════════════════════
+  if (action === "pcountry" || action === "pconfirm" || action === "pmore" ||
+      action === "pcancel" || action === "ppublish" ||
+      action === "pshow" || action === "pshow_latest") {
+    await handlePartnerCallback(action, segments, cb, env);
+    return;
+  }
+
   // === Пагинация /suggested ===
   if (action === "more_suggested") {
     const page = parseInt(segments[1] || "0", 10);
@@ -387,7 +426,9 @@ async function handleCallback(cb, env) {
     const which = segments[1];
     await answerCallback(cb.id, env, "");
     const chatId = cb.message.chat.id;
-    if (which === "research") {
+    if (which === "add_partner") {
+      await cmdAddPartner(chatId, [], cb.message, env);
+    } else if (which === "research") {
       await cmdResearch(chatId, [], cb.message, env);
     } else if (which === "refresh") {
       const ok = await triggerWorkflow("refresh-suggested.yml", {}, env);
@@ -477,7 +518,13 @@ async function cmdHelp(chatId, args, msg, env) {
   📊 Аналитика — мгновенная сводка + разделы по кнопкам (📄 Статьи · 🎯 Партнёры · 📈 Динамика · 🔎 Запросы · 🌍 Трафик · ⚙️ GA4), выбор периода, полный отчёт
   📋 Pending — статьи на ревью по всем языкам
   🌍 Страны — список настроенных стран и их языков
+  ➕ Партнёр — добавить покер-рум/клуб по свободному описанию
   ⚙️ Ещё — research, обновить темы, аналитика за период, статус, translate, A/B
+
+*➕ Добавление партнёра (авто):*
+  Нажми «➕ Партнёр» или /addpartner → опиши рум/клуб одним сообщением своими словами → бот распарсит через Claude, покажет «что понял» и кнопки:
+    ✅ Создать страницу · ✏️ Дополнить текстом · ❌ Отмена
+  Готовая страница появится в \`_pending_partner/{id}/\` — проверь и жми «🌐 Опубликовать».
 
 *🌍 Мульти-язык (автоматически):*
   Одна тема в Sheets = одна страна = все её языки. Указываешь \`country=ua\` в таблице — бот генерит русскую версию и переводит на украинскую, публикует обе одновременно.
@@ -490,7 +537,7 @@ async function cmdHelp(chatId, args, msg, env) {
   Отмена: /cancel
 
 *Основные команды (те же что кнопки):*
-  /suggested \`[page]\` · /generate \`[N]\` · /analytics \`[week|month|quarter|year|N]\` · /pending · /countries · /queue · /research · /status · /translate \`slug lang\` · /history \`slug\` · /edit \`slug\`
+  /suggested \`[page]\` · /generate \`[N]\` · /analytics \`[week|month|quarter|year|N]\` · /pending · /countries · /queue · /research · /status · /translate \`slug lang\` · /history \`slug\` · /edit \`slug\` · /addpartner
 
 Каждое действие запускает GitHub Actions — логи в \`Actions\`.`;
   // Отправляем и главную клавиатуру, чтобы она закрепилась у пользователя
@@ -501,9 +548,6 @@ async function cmdGenerate(chatId, args, msg, env) {
   // /generate       → без аргументов, генератор возьмёт первую queued тему из таблицы
   // /generate N     → генерировать по строке N (dump-topic-file + запуск)
   if (args.length === 0) {
-    // Мультиязычная генерация: берёт первую queued тему из очереди и генерит
-    // все языки страны (для ua — RU + перевод на UK). Превью придёт с кнопками
-    // обоих языков и кнопкой «Опубликовать все языки».
     const ok = await triggerWorkflow("generate-multilang.yml", { country: "", langs: "" }, env);
     await sendMessage(chatId, env, ok
       ? "⏳ Запустил генерацию из очереди (RU + UK). Превью придёт с обоими языками."
@@ -1374,14 +1418,20 @@ async function cmdPending(chatId, args, msg, env) {
       }
     }
   }
-  if (total === 0) {
-    await sendMessage(chatId, env, "📭 Ни в одном `_pending*/` ничего нет.");
+  // Партнёрские страницы на ревью (_pending_partner/) — покажем их ниже статей.
+  const pendingPartners = await ghListDir("_pending_partner", env);
+  const hasPartners = Array.isArray(pendingPartners) && pendingPartners.length > 0;
+
+  if (total === 0 && !hasPartners) {
+    await sendMessage(chatId, env, "📭 Ни в `_pending*/`, ни в `_pending_partner/` ничего нет.");
     return;
   }
 
-  // Заголовок
-  await sendMessage(chatId, env,
-    `📝 *Pending статей: ${total}* — по каждой есть кнопки быстрого действия ниже:`);
+  // Заголовок (только если есть статьи)
+  if (total > 0) {
+    await sendMessage(chatId, env,
+      `📝 *Pending статей: ${total}* — по каждой есть кнопки быстрого действия ниже:`);
+  }
 
   // Для каждой статьи — отдельное сообщение с инлайн-кнопками
   const slugs = Object.keys(slugToLangs).slice(0, 10); // не спамим
@@ -1427,6 +1477,23 @@ async function cmdPending(chatId, args, msg, env) {
   if (Object.keys(slugToLangs).length > 10) {
     await sendMessage(chatId, env,
       `… и ещё ${Object.keys(slugToLangs).length - 10} статей. Показал первые 10.`);
+  }
+
+  // ── Партнёрские страницы на ревью (_pending_partner/) ──
+  // Показываем ВСЕГДА, даже если оператор потерял сообщение с кнопкой
+  // «Опубликовать» из партнёрского флоу — отсюда партнёра можно довести до прода.
+  if (hasPartners) {
+    await sendMessage(chatId, env,
+      `🎯 *Партнёры на ревью: ${pendingPartners.length}* (\`_pending_partner/\`):`);
+    for (const item of pendingPartners.slice(0, 10)) {
+      const pid = item.name;
+      if (!validPartnerId(pid)) continue;
+      const kb = [
+        [{ text: "🌐 Опубликовать в прод", callback_data: `ppublish:${pid}` }],
+        [{ text: "🔁 Пересобрать превью", callback_data: `pconfirm:${pid}` }],
+      ];
+      await sendMessage(chatId, env, `🎯 \`${escapeMd(pid)}\``, kb);
+    }
   }
 }
 
@@ -1490,6 +1557,460 @@ async function cmdTranslate(chatId, args, msg, env) {
   await sendMessage(chatId, env, ok
     ? `🌐 Запустил перевод \`${escapeMd(slug)}\` → ${targetLang.toUpperCase()}. Через 1-2 минуты будет готово.`
     : "❌ Не удалось запустить translate-article.yml.");
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  ДОБАВЛЕНИЕ ПАРТНЁРА (свободный текст → Claude парсит → страница)
+// ═══════════════════════════════════════════════════════════════════════════
+//
+// Два независимых процесса общаются ТОЛЬКО через репозиторий и Telegram:
+//   • Worker (этот файл)  — держит сессию, пишет ввод, триггерит workflow,
+//                           обрабатывает кнопки.
+//   • parse-partner.yml   — читает ввод, зовёт Claude, коммитит черновик
+//     (parse_partner.py)    _partner_drafts/{id}.json и сам шлёт сводку
+//                           с кнопками pconfirm/pmore/pcountry/pcancel.
+//
+// Поэтому Worker НИКОГДА не полагается на то, что помнит id черновика:
+//   — в кнопках id приходит из callback_data (его кладёт parse_partner.py);
+//   — если авто-сводка не дошла, есть кнопка «Проверить черновик»
+//     (pshow_latest), которая находит свежайший черновик в _partner_drafts/.
+//
+// Машина состояний сессии (.bot_state/partner_sessions/{chatId}.json):
+//   await_text ──(текст)──► parsing ──(сводка от питона / pshow)──► await_confirm
+//        ▲                     │                                        │
+//        │                     └──(pmore / любой текст)──► await_more ──┘
+//        │                                                              │
+//   await_more ──(текст)──► parsing                          (pconfirm)─┤
+//                                                                       ▼
+//                                                                  generated
+//                                                              (ppublish/pcancel/TTL → удаление)
+//
+// Ключевой инвариант: свободный текст в ЛЮБОЙ активной стадии трактуется как
+// ввод/дополнение анкеты и не теряется.
+
+const PARTNER_SESSION_TTL_MS = 60 * 60 * 1000;              // 60 минут
+const PARTNER_INPUT_PATH = (chatId) => `.bot_state/partner_input/${chatId}.txt`;
+const PARTNER_DRAFT_PATH = (id) => `_partner_drafts/${id}.json`;
+// Страны, которые реально настроены в automation/country_config.py.
+// Если добавляешь страну туда — добавь код сюда, иначе страница уйдёт в путь
+// /xx/, которого нет в конфиге, и каталог её не подхватит.
+const PARTNER_COUNTRIES = ["ua", "kz", "pl", "by"];
+const COUNTRY_FLAGS = { ua: "🇺🇦", kz: "🇰🇿", pl: "🇵🇱", by: "🇧🇾", ru: "🇷🇺" };
+
+// ── /addpartner — старт: открываем сессию, ждём описание ──
+async function cmdAddPartner(chatId, args, msg, env) {
+  // Свежая сессия. Чистим прошлый ввод, чтобы остатки старого описания
+  // не подмешались в новый парсинг.
+  await ghDeleteFile(PARTNER_INPUT_PATH(chatId), "partner: reset input", env).catch(() => {});
+  const session = {
+    chat_id: chatId,
+    stage: "await_text",
+    started_at: new Date().toISOString(),
+    draft_id: null,
+  };
+  await savePartnerSession(chatId, session, env);
+
+  const text = `➕ *Добавление партнёра*\n\n` +
+    `Опиши партнёра *одним сообщением* — своими словами, в свободной форме. ` +
+    `Чем больше деталей, тем полнее страница. Можно прямо скопировать заполненную анкету.\n\n` +
+    `*Желательно указать:*\n` +
+    `• Название и тип (покер-рум или клуб)\n` +
+    `• Приложение (ClubGG / PPPoker / X-Poker / PokerBros / Upoker) — если это клуб\n` +
+    `• Страна аудитории, валюта расчётов\n` +
+    `• Рейкбек (% или «нет — только бонусы»)\n` +
+    `• Бонусы, форматы (кэш/турниры/спины), лимиты\n` +
+    `• Платежи (карта / крипта — какие сети), сроки выплат\n` +
+    `• Плюсы и минусы, как начать играть\n` +
+    `• Ссылка для кнопки «Перейти»\n\n` +
+    `Я сам разберу текст на параметры и покажу, что понял.\n\n` +
+    `Отмена: /cancel`;
+  await sendMessage(chatId, env, text);
+}
+
+// ── Приём свободного текста в рамках партнёрской сессии ──
+async function handlePartnerAnswer(chatId, text, message, env) {
+  const session = await getPartnerSession(chatId, env);
+  if (!session) return;   // сессия истекла между проверкой и обработкой
+
+  const stage = session.stage || "await_text";
+
+  // Первый ввод описания.
+  if (stage === "await_text") {
+    await triggerPartnerParse(chatId, text, env, { append: false });
+    return;
+  }
+
+  // Дополнение/исправление. Сюда попадаем как по кнопке «Дополнить» (await_more),
+  // так и если оператор просто продолжил писать, не нажав кнопку
+  // (parsing / await_confirm / generated) — текст не теряем.
+  if (stage === "await_more" || stage === "parsing" ||
+      stage === "await_confirm" || stage === "generated") {
+    await triggerPartnerParse(chatId, text, env, { append: true });
+    return;
+  }
+
+  // Неизвестная стадия — на всякий случай трактуем как новый ввод.
+  await triggerPartnerParse(chatId, text, env, { append: false });
+}
+
+// ── Общая процедура: записать ввод (+ опц. дописать) и запустить парсинг ──
+async function triggerPartnerParse(chatId, text, env, { append }) {
+  const path = PARTNER_INPUT_PATH(chatId);
+  let payloadText = text;
+  let appendedNote = "";
+
+  if (append) {
+    const existing = await ghReadFile(path, env);
+    if (existing && existing.text && existing.text.trim()) {
+      payloadText = existing.text.trim() + "\n\n--- дополнение ---\n" + text;
+      appendedNote = " (учту вместе с прежним описанием)";
+    } else {
+      // Прежнего текста нет (истёк/подчищен) — дополнение станет основным.
+      appendedNote = " (прежнее описание не найдено — беру этот текст как основной)";
+    }
+  }
+
+  const wrote = await ghWriteFile(path, payloadText,
+    `partner: ${append ? "дополнение" : "описание"} от ${chatId}`, env);
+  if (!wrote) {
+    await sendMessage(chatId, env, "❌ Не удалось сохранить описание. Попробуй ещё раз.");
+    return;
+  }
+
+  const ok = await triggerWorkflow("parse-partner.yml",
+    { chat_id: String(chatId), input_path: path }, env);
+  if (!ok) {
+    await sendMessage(chatId, env,
+      "❌ Не удалось запустить парсинг (parse-partner.yml). Проверь GITHUB_TOKEN и наличие workflow.");
+    return;
+  }
+
+  // Стадия → ждём результат. draft_id пока неизвестен — его назначит питон.
+  const session = (await getPartnerSession(chatId, env)) ||
+    { chat_id: chatId, started_at: new Date().toISOString() };
+  session.stage = "parsing";
+  await savePartnerSession(chatId, session, env);
+
+  await sendMessage(chatId, env,
+    `🧠 Разбираю описание${appendedNote}… обычно ~20–40 секунд.\n\n` +
+    `Пришлю, что понял, и кнопки. Если сводка не придёт за минуту — жми:`,
+    [[{ text: "🔄 Проверить черновик", callback_data: "pshow_latest" }]]);
+}
+
+// ── Единый диспетчер всех партнёрских callback'ов ──
+async function handlePartnerCallback(action, segments, cb, env) {
+  const chatId = cb.message.chat.id;
+
+  if (action === "pshow_latest") {
+    await answerCallback(cb.id, env, "🔎 Ищу черновик…");
+    await showLatestPartnerDraft(chatId, env);
+    return;
+  }
+
+  if (action === "pshow") {
+    const draftId = segments[1];
+    if (!validPartnerId(draftId)) { await answerCallback(cb.id, env, "⚠️ Некорректный id"); return; }
+    await answerCallback(cb.id, env, "📋 Показываю черновик");
+    await showPartnerDraftSummary(chatId, draftId, env);
+    return;
+  }
+
+  if (action === "pcountry") {
+    const draftId = segments[1];
+    const code = segments[2];
+    if (!validPartnerId(draftId) || !/^[a-z]{2}$/.test(code || "")) {
+      await answerCallback(cb.id, env, "⚠️ Некорректные данные"); return;
+    }
+    await answerCallback(cb.id, env, `📍 Страна: ${code.toUpperCase()}`);
+    await setPartnerCountry(chatId, draftId, code, cb.message, env);
+    return;
+  }
+
+  if (action === "pmore") {
+    const draftId = segments[1];   // может отсутствовать — не критично
+    await answerCallback(cb.id, env, "✏️ Жду дополнение");
+    const session = (await getPartnerSession(chatId, env)) ||
+      { chat_id: chatId, started_at: new Date().toISOString() };
+    session.stage = "await_more";
+    if (validPartnerId(draftId)) session.draft_id = draftId;
+    await savePartnerSession(chatId, session, env);
+    await sendMessage(chatId, env,
+      "✏️ Пришли *дополнение или исправление одним сообщением*. " +
+      "Я учту его вместе с прежним описанием и пере-соберу черновик.");
+    return;
+  }
+
+  if (action === "pconfirm") {
+    const draftId = segments[1];
+    if (!validPartnerId(draftId)) { await answerCallback(cb.id, env, "⚠️ Некорректный id"); return; }
+    await answerCallback(cb.id, env, "🚀 Собираю страницу…");
+    await editMessageRemoveButtons(cb.message, env, "ppreview");
+    await confirmPartner(chatId, draftId, env);
+    return;
+  }
+
+  if (action === "ppublish") {
+    const draftId = segments[1];
+    if (!validPartnerId(draftId)) { await answerCallback(cb.id, env, "⚠️ Некорректный id"); return; }
+    await answerCallback(cb.id, env, "🌐 Публикую…");
+    await editMessageRemoveButtons(cb.message, env, "ppublish");
+    await publishPartner(chatId, draftId, env);
+    return;
+  }
+
+  if (action === "pcancel") {
+    await answerCallback(cb.id, env, "❌ Отменено");
+    // Пытаемся подчистить черновик, если знаем id (из сессии).
+    const session = await getPartnerSession(chatId, env);
+    if (session && validPartnerId(session.draft_id)) {
+      await ghDeleteFile(PARTNER_DRAFT_PATH(session.draft_id),
+        "partner: cancel draft", env).catch(() => {});
+    }
+    await deletePartnerSession(chatId, env);
+    await ghDeleteFile(PARTNER_INPUT_PATH(chatId), "partner: cancel input", env).catch(() => {});
+    await editMessageText(cb.message,
+      (cb.message.text || cb.message.caption || "") + "\n\n❌ *Отменено*", env);
+    return;
+  }
+}
+
+// ── Показать сводку по конкретному черновику + кнопки действий ──
+async function showPartnerDraftSummary(chatId, draftId, env) {
+  const draft = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
+  if (!draft) {
+    await sendMessage(chatId, env,
+      "⚠️ Черновик ещё не готов или не найден. Подожди ~30 сек после отправки описания " +
+      "и снова нажми «🔄 Проверить черновик».");
+    return;
+  }
+
+  // Обновляем сессию: знаем id, ждём подтверждения.
+  const session = (await getPartnerSession(chatId, env)) ||
+    { chat_id: chatId, started_at: new Date().toISOString() };
+  session.stage = "await_confirm";
+  session.draft_id = draftId;
+  await savePartnerSession(chatId, session, env);
+
+  const summary = renderPartnerSummary(draft);
+
+  // Если основная страна не определена — сначала просим выбрать её кнопками.
+  const countryUnclear = draft._country_unclear || !draft.country;
+  let kb;
+  if (countryUnclear) {
+    kb = [];
+    // Раскладываем настроенные страны по 2 в ряд.
+    for (let i = 0; i < PARTNER_COUNTRIES.length; i += 2) {
+      const row = PARTNER_COUNTRIES.slice(i, i + 2).map(cc => ({
+        text: `${COUNTRY_FLAGS[cc] || ""} ${cc.toUpperCase()}`,
+        callback_data: `pcountry:${draftId}:${cc}`,
+      }));
+      kb.push(row);
+    }
+    kb.push([{ text: "❌ Отмена", callback_data: "pcancel" }]);
+    await sendMessage(chatId, env,
+      summary + "\n\n❓ *Укажи основную страну* (определяет путь страницы):", kb);
+  } else {
+    kb = [
+      [{ text: "✅ Создать страницу", callback_data: `pconfirm:${draftId}` }],
+      [{ text: "✏️ Дополнить текстом", callback_data: `pmore:${draftId}` }],
+      [{ text: "❌ Отмена", callback_data: "pcancel" }],
+    ];
+    await sendMessage(chatId, env, summary, kb);
+  }
+}
+
+// ── Найти свежайший черновик (когда авто-сводка не дошла) ──
+async function showLatestPartnerDraft(chatId, env) {
+  // 1) Если сессия уже знает id — показываем его.
+  const session = await getPartnerSession(chatId, env);
+  if (session && validPartnerId(session.draft_id)) {
+    const draft = await ghReadJSON(PARTNER_DRAFT_PATH(session.draft_id), env);
+    if (draft) { await showPartnerDraftSummary(chatId, session.draft_id, env); return; }
+  }
+
+  // 2) Иначе перебираем _partner_drafts/ и берём самый свежий по _parsed_at.
+  const files = await ghListDir("_partner_drafts", env);
+  const jsons = (files || []).filter(f => f.name.endsWith(".json"));
+  if (jsons.length === 0) {
+    await sendMessage(chatId, env,
+      "⚠️ Черновиков пока нет — вероятно, парсинг ещё идёт или упал.\n\n" +
+      "Проверь логи: *Actions → Parse partner description*. " +
+      "Если упал (часто — нет `OPENROUTER_API_KEY`), поправь и пришли описание заново: /addpartner");
+    return;
+  }
+
+  let best = null;
+  let bestTs = -1;
+  for (const f of jsons) {
+    const id = f.name.replace(/\.json$/, "");
+    const d = await ghReadJSON(PARTNER_DRAFT_PATH(id), env);
+    if (!d) continue;
+    const ts = d._parsed_at ? new Date(d._parsed_at).getTime() : 0;
+    if (ts >= bestTs) { bestTs = ts; best = id; }
+  }
+  if (!best) {
+    await sendMessage(chatId, env, "⚠️ Не удалось прочитать черновики. Пришли описание заново: /addpartner");
+    return;
+  }
+  await showPartnerDraftSummary(chatId, best, env);
+}
+
+// Резервный рендер сводки на стороне Worker'а. По основному пути сводку
+// присылает parse_partner.py (send_telegram_summary). Эта версия нужна для
+// pshow / pshow_latest / после выбора страны. Держим форматы согласованными.
+function renderPartnerSummary(draft) {
+  const L = ["📋 *Вот что я понял:*", ""];
+  L.push(`🎯 *${escapeMd(draft.name || "?")}* · ${escapeMd(draft.type || "?")} · ${escapeMd(draft.networkLabel || draft.network || "?")}`);
+  const country = draft.country;
+  L.push(`📍 Основная страна: ${escapeMd(country || "не определена")} · Валюта: ${escapeMd(draft.currency || "?")}`);
+  const accepted = draft.acceptedCountries || [];
+  if (accepted.length && (accepted.length > 1 || (country && String(accepted) !== String([country])))) {
+    L.push(`🌐 Принимает из: ${escapeMd(accepted.join(", "))}`);
+  }
+  L.push(`💰 Рейкбек: ${escapeMd(draft.rakeLabel || "?")}`);
+  L.push(`⭐ KOZYR score: ${escapeMd(String(draft.score ?? "?"))}`);
+  const games = draft.games || [];
+  const limits = draft.limits || [];
+  if (games.length || limits.length) {
+    L.push(`🎮 ${escapeMd(limits.slice(0, 4).join(", "))} · ${escapeMd(games.join(", "))}`);
+  }
+  const sw = draft.software || [];
+  if (sw.length) L.push(`📱 ${escapeMd(sw.join(", "))}`);
+  const pros = draft.pros || [];
+  const cons = draft.cons || [];
+  L.push(`✅ Плюсы: ${pros.length} · ❌ Минусы: ${cons.length}`);
+  const faq = draft.faq || [];
+  if (faq.length) L.push(`❓ FAQ: ${faq.length}`);
+  const missing = draft._missing || [];
+  if (missing.length) {
+    L.push("");
+    L.push(`⚠️ _Не указано (будут дефолты): ${escapeMd(missing.slice(0, 8).join(", "))}_`);
+  }
+  L.push("");
+  const kind = draft.type === "club" ? "clubs" : "rooms";
+  L.push(`_Путь страницы: /${escapeMd(country || "??")}/${kind}/${escapeMd(draft.id || "?")}/_`);
+  return L.join("\n");
+}
+
+// ── Проставить основную страну в черновике и показать сводку заново ──
+async function setPartnerCountry(chatId, draftId, code, message, env) {
+  if (!PARTNER_COUNTRIES.includes(code)) {
+    await sendMessage(chatId, env,
+      `⚠️ Страна \`${escapeMd(code)}\` не настроена в \`country_config.py\`. ` +
+      `Доступны: ${PARTNER_COUNTRIES.map(c => "`" + c + "`").join(", ")}.`);
+    return;
+  }
+  const draft = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
+  if (!draft) {
+    await sendMessage(chatId, env, "⚠️ Черновик не найден. Начни заново: /addpartner");
+    return;
+  }
+  draft.country = code;
+  draft.countries = [code];
+  draft._country_unclear = false;
+  if (!Array.isArray(draft.acceptedCountries) || draft.acceptedCountries.length === 0) {
+    draft.acceptedCountries = [code];
+  }
+  if (Array.isArray(draft._missing)) {
+    draft._missing = draft._missing.filter(m => m !== "основная страна");
+  }
+  await ghWriteFile(PARTNER_DRAFT_PATH(draftId),
+    JSON.stringify(draft, null, 2),
+    `partner: set country ${code} for ${draftId}`, env);
+
+  // Фиксируем выбор в исходном сообщении и присылаем обновлённую сводку.
+  const base = (message.text || message.caption || "").split("\n\n❓")[0];
+  await editMessageText(message, base + `\n\n📍 *Основная страна: ${code.toUpperCase()}*`, env);
+  await showPartnerDraftSummary(chatId, draftId, env);
+}
+
+// ── Подтверждение: собрать страницу-превью (в _pending_partner/) ──
+async function confirmPartner(chatId, draftId, env) {
+  const draft = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
+  if (!draft) {
+    await sendMessage(chatId, env, "⚠️ Черновик не найден. Начни заново: /addpartner");
+    await deletePartnerSession(chatId, env);
+    return;
+  }
+  // Страховка: не собираем страницу без основной страны (иначе уйдёт в /ua/ по дефолту).
+  if (draft._country_unclear || !draft.country) {
+    await sendMessage(chatId, env, "📍 Сначала выбери основную страну:");
+    await showPartnerDraftSummary(chatId, draftId, env);
+    return;
+  }
+
+  // Если логотип присылали ДО разбора анкеты — привяжем его сейчас.
+  await attachStagedLogoIfAny(chatId, draftId, env);
+
+  const ok = await triggerWorkflow("generate-partner.yml",
+    { partner_id: draftId, publish: "false" }, env);
+
+  // Сессию НЕ удаляем: оставляем в стадии generated, чтобы оператор мог
+  // дополнить/перегенерить или опубликовать. Закроется по TTL/pcancel/ppublish.
+  const session = (await getPartnerSession(chatId, env)) ||
+    { chat_id: chatId, started_at: new Date().toISOString() };
+  session.stage = "generated";
+  session.draft_id = draftId;
+  await savePartnerSession(chatId, session, env);
+
+  const kind = draft.type === "club" ? "clubs" : "rooms";
+  const path = `/${draft.country}/${kind}/${draftId}/`;
+  await sendMessage(chatId, env, ok
+    ? `🚀 Собираю страницу партнёра *${escapeMd(draft.name || draftId)}*.\n\n` +
+      `Через 2–3 минуты будет превью в \`_pending_partner/${escapeMd(draftId)}/index.html\`.\n` +
+      `Прод-путь после публикации: \`${escapeMd(path)}\`\n\n` +
+      `Проверь превью и, если всё ок, публикуй:`
+    : "❌ Не удалось запустить генерацию (generate-partner.yml). Проверь GITHUB_TOKEN.",
+    ok ? [
+      [{ text: "🌐 Опубликовать в прод", callback_data: `ppublish:${draftId}` }],
+      [{ text: "✏️ Дополнить и пересобрать", callback_data: `pmore:${draftId}` }],
+      [{ text: "❌ Отмена", callback_data: "pcancel" }],
+    ] : null);
+}
+
+// ── Публикация: страница в прод + партнёр в каталог ──
+async function publishPartner(chatId, draftId, env) {
+  const draft = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
+  const ok = await triggerWorkflow("generate-partner.yml",
+    { partner_id: draftId, publish: "true" }, env);
+
+  // Публикация — терминальный шаг: закрываем сессию и чистим ввод.
+  await deletePartnerSession(chatId, env);
+  await ghDeleteFile(PARTNER_INPUT_PATH(chatId), "partner: published, clear input", env).catch(() => {});
+
+  const name = draft ? (draft.name || draftId) : draftId;
+  await sendMessage(chatId, env, ok
+    ? `🌐 Публикую *${escapeMd(name)}* в прод.\n\n` +
+      `Workflow пересоберёт страницу, добавит партнёра в \`partners.json\` и \`partners.js\`. ` +
+      `Через 2–3 минуты появится в каталоге и на карточке.`
+    : "❌ Не удалось запустить публикацию (generate-partner.yml).");
+}
+
+// ── Хранение партнёрских сессий (как edit-сессии, через Contents API) ──
+function validPartnerId(id) {
+  return typeof id === "string" && /^[a-z0-9-]+$/.test(id);
+}
+
+async function getPartnerSession(chatId, env) {
+  const data = await ghReadJSON(`.bot_state/partner_sessions/${chatId}.json`, env);
+  if (!data) return null;
+  const startedAt = new Date(data.started_at || 0).getTime();
+  if (!startedAt || Date.now() - startedAt > PARTNER_SESSION_TTL_MS) {
+    await deletePartnerSession(chatId, env);
+    return null;
+  }
+  return data;
+}
+
+async function savePartnerSession(chatId, session, env) {
+  await ghWriteFile(`.bot_state/partner_sessions/${chatId}.json`,
+    JSON.stringify(session, null, 2),
+    `partner session ${chatId} [${session.stage || "?"}]`, env);
+}
+
+async function deletePartnerSession(chatId, env) {
+  await ghDeleteFile(`.bot_state/partner_sessions/${chatId}.json`,
+    "close partner session", env).catch(() => {});
 }
 
 // ==== Suggested actions ====
@@ -1893,6 +2414,8 @@ async function editMessageRemoveButtons(message, env, action) {
     publish: "\n\n⏳ *Публикуется...*",
     regenerate: "\n\n🔄 *Перегенерация запущена*",
     reject: "\n\n❌ *Отклонено*",
+    ppreview: "\n\n🚀 *Собираю страницу-превью...*",
+    ppublish: "\n\n🌐 *Публикую в прод...*",
   }[action] || "";
   const newText = ((message.text || message.caption || "") + statusLine).slice(0, 4000);
   await editMessageText(message, newText, env);
@@ -1927,7 +2450,8 @@ const MAIN_MENU_KEYBOARD = {
   keyboard: [
     [{ text: "📝 Темы" }, { text: "⚡ Сгенерить" }],
     [{ text: "📊 Аналитика" }, { text: "📋 Pending" }],
-    [{ text: "🌍 Страны" }, { text: "⚙️ Ещё" }],
+    [{ text: "🌍 Страны" }, { text: "➕ Партнёр" }],
+    [{ text: "⚙️ Ещё" }],
   ],
   resize_keyboard: true,
   is_persistent: true,
@@ -1940,6 +2464,7 @@ const BUTTON_TO_COMMAND = {
   "📊 Аналитика":  "/analytics",
   "📋 Pending":    "/pending",
   "🌍 Страны":    "/countries",
+  "➕ Партнёр":    "/addpartner",
   "⚙️ Ещё":       "__more_menu__",  // спец-маркер, откроет inline-меню
 };
 
@@ -2136,6 +2661,205 @@ async function sendFullText(slug, message, env) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  ЛОГОТИП ПАРТНЁРА: приём фото/картинки в Telegram → файл в репозиторий →
+//  привязка к черновику (draft.logo_img). Конвенция путей — как у существующих
+//  партнёров: ua/blog/logos/{id}.{ext}, а в карточке /ua/blog/logos/{id}.{ext}.
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Приём логотипа во время партнёрской сессии.
+async function handlePartnerLogo(chatId, message, env) {
+  const session = await getPartnerSession(chatId, env);
+  if (!session) return;
+
+  // 1. file_id: фото (берём самое большое) или документ-картинку.
+  let fileId = null;
+  let hintName = "";
+  if (Array.isArray(message.photo) && message.photo.length) {
+    fileId = message.photo[message.photo.length - 1].file_id;
+    hintName = "photo.jpg";
+  } else if (message.document) {
+    const mime = message.document.mime_type || "";
+    if (!/^image\//.test(mime)) {
+      await sendMessage(chatId, env,
+        "⚠️ Это не картинка. Пришли логотип как фото или файл-изображение (PNG/JPG/WebP/SVG).");
+      return;
+    }
+    fileId = message.document.file_id;
+    hintName = message.document.file_name || "logo";
+  }
+  if (!fileId) {
+    await sendMessage(chatId, env, "⚠️ Не нашёл картинку в сообщении.");
+    return;
+  }
+
+  // 2. getFile → путь на серверах Telegram.
+  const tgPath = await tgGetFile(fileId, env);
+  if (!tgPath) {
+    await sendMessage(chatId, env, "❌ Не удалось получить файл из Telegram (getFile).");
+    return;
+  }
+  const ext = imageExt(tgPath) || imageExt(hintName) || "jpg";
+
+  // 3. Скачиваем байты и кодируем в base64.
+  let buf;
+  try {
+    buf = await tgDownloadFile(tgPath, env);
+  } catch (e) {
+    await sendMessage(chatId, env, "❌ Не удалось скачать файл из Telegram.");
+    return;
+  }
+  const base64 = arrayBufferToBase64(buf);
+
+  // 4a. Партнёр уже известен — сохраняем СЫРОЙ файл и запускаем авто-обработку
+  // (обрезка полей, квадрат, webp). logo_img проставляем оптимистично как .webp:
+  // авто-обработка создаст именно его, а генерация страницы сразу берёт верный src.
+  if (validPartnerId(session.draft_id)) {
+    const id = session.draft_id;
+    const rawPath = `_partner_logos_raw/${id}.${ext}`;
+    const okImg = await ghWriteBinary(rawPath, base64, `partner: raw logo for ${id}`, env);
+    if (!okImg) {
+      await sendMessage(chatId, env, "❌ Не удалось сохранить логотип в репозиторий.");
+      return;
+    }
+    const draft = await ghReadJSON(PARTNER_DRAFT_PATH(id), env);
+    if (draft) {
+      draft.logo_img = `/ua/blog/logos/${id}.webp`;
+      if (Array.isArray(draft._missing)) {
+        draft._missing = draft._missing.filter(m => !/logo/i.test(m));
+      }
+      await ghWriteFile(PARTNER_DRAFT_PATH(id),
+        JSON.stringify(draft, null, 2), `partner: logo path ${id}`, env);
+    }
+    const ok = await triggerWorkflow("process-logo.yml", { partner_id: id }, env);
+    await sendMessage(chatId, env, ok
+      ? `✅ Логотип принят · *${escapeMd((draft && draft.name) || id)}*.\n\n` +
+        `Обрабатываю: обрезаю поля, делаю квадрат и конвертирую в webp… ` +
+        `через ~1 минуту будет готов и привязан. Если превью уже собрано — ` +
+        `потом нажми «✏️ Дополнить и пересобрать».`
+      : `⚠️ Логотип сохранён, но не удалось запустить обработку (process-logo.yml). ` +
+        `Проверь, что воркфлоу залит в .github/workflows/.`);
+    return;
+  }
+
+  // 4b. Партнёр ещё не разобран — стейджим логотип под чат до появления черновика.
+  const stagePath = `.bot_state/partner_logos/${chatId}.${ext}`;
+  const okStage = await ghWriteBinary(stagePath, base64,
+    `partner: staged logo for chat ${chatId}`, env);
+  if (!okStage) {
+    await sendMessage(chatId, env, "❌ Не удалось сохранить логотип.");
+    return;
+  }
+  session.logo_staged_ext = ext;
+  await savePartnerSession(chatId, session, env);
+  await sendMessage(chatId, env,
+    "✅ Логотип принял. Привяжу его к партнёру, как только разберу анкету " +
+    "(пришли описание текстом, если ещё не присылал).");
+}
+
+// Перенести застейдженный логотип на партнёра (перед сборкой превью).
+async function attachStagedLogoIfAny(chatId, draftId, env) {
+  const session = await getPartnerSession(chatId, env);
+  if (!session || !session.logo_staged_ext) return;
+  if (!validPartnerId(draftId)) return;
+  const ext = session.logo_staged_ext;
+  const stagePath = `.bot_state/partner_logos/${chatId}.${ext}`;
+  const staged = await ghReadFileBase64(stagePath, env);
+  if (!staged) return;
+  const rawPath = `_partner_logos_raw/${draftId}.${ext}`;
+  const ok = await ghWriteBinary(rawPath, staged, `partner: raw logo for ${draftId}`, env);
+  if (!ok) return;
+  const draft = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
+  if (draft && !draft.logo_img) {
+    draft.logo_img = `/ua/blog/logos/${draftId}.webp`;
+    if (Array.isArray(draft._missing)) {
+      draft._missing = draft._missing.filter(m => !/logo/i.test(m));
+    }
+    await ghWriteFile(PARTNER_DRAFT_PATH(draftId),
+      JSON.stringify(draft, null, 2), `partner: logo path ${draftId}`, env);
+  }
+  await triggerWorkflow("process-logo.yml", { partner_id: draftId }, env);
+  await ghDeleteFile(stagePath, "partner: clear staged logo", env).catch(() => {});
+  delete session.logo_staged_ext;
+  await savePartnerSession(chatId, session, env);
+}
+
+// ── Telegram file helpers ──
+async function tgGetFile(fileId, env) {
+  try {
+    const r = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/getFile`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ file_id: fileId }),
+    });
+    const j = await r.json();
+    return j?.result?.file_path || null;
+  } catch (e) {
+    console.error("tgGetFile failed:", e);
+    return null;
+  }
+}
+
+async function tgDownloadFile(filePath, env) {
+  const r = await fetch(`https://api.telegram.org/file/bot${env.TELEGRAM_BOT_TOKEN}/${filePath}`);
+  if (!r.ok) throw new Error(`download ${r.status}`);
+  return await r.arrayBuffer();
+}
+
+function imageExt(nameOrPath) {
+  const m = /\.(png|jpe?g|webp|svg|gif)$/i.exec(nameOrPath || "");
+  if (!m) return null;
+  let e = m[1].toLowerCase();
+  if (e === "jpeg") e = "jpg";
+  return e;
+}
+
+function arrayBufferToBase64(buf) {
+  const bytes = new Uint8Array(buf);
+  let binary = "";
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+  }
+  return btoa(binary);
+}
+
+// ── GitHub бинарные helpers (логотип) ──
+// Запись бинарника: content — уже base64 сырых байт (не перекодируем как текст).
+async function ghWriteBinary(filePath, base64Content, commitMessage, env) {
+  let sha = undefined;
+  try {
+    const readResp = await ghApi(`/contents/${encodeURI(filePath)}?ref=main`, "GET", null, env);
+    if (readResp.ok) { const d = await readResp.json(); sha = d.sha; }
+  } catch (e) { /* нет файла — создаём */ }
+  const body = { message: commitMessage, content: base64Content, branch: "main" };
+  if (sha) body.sha = sha;
+  try {
+    const resp = await ghApi(`/contents/${encodeURI(filePath)}`, "PUT", body, env);
+    if (resp.ok) return true;
+    const t = await resp.text();
+    console.error(`ghWriteBinary ${filePath} failed (${resp.status}): ${t.slice(0, 300)}`);
+    return false;
+  } catch (e) {
+    console.error("ghWriteBinary exception:", filePath, e);
+    return false;
+  }
+}
+
+// Читает файл и возвращает СЫРОЙ base64 (для переноса бинарника без перекодировки).
+async function ghReadFileBase64(filePath, env) {
+  try {
+    const resp = await ghApi(`/contents/${encodeURI(filePath)}?ref=main`, "GET", null, env);
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    if (!data.content) return null;
+    return data.content.replace(/\n/g, "");
+  } catch (e) {
+    console.error("ghReadFileBase64 failed:", filePath, e);
+    return null;
   }
 }
 
