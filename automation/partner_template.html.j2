@@ -47,7 +47,7 @@
   "@context": "https://schema.org",
   "@type": "Product",
   "name": "{{ p.name }}",
-  "description": "Покер-рум прямо в Telegram с расчётами в криптовалюте USDT. Мгновенные депозиты и выводы, без скачивания приложений, KYC нет.",
+  "description": "Покер-рум прямо в Telegram с расчётами в криптовалюте USDT. Мгновенные депозиты и выводы, без скачивания приложений, {{ t.fact_kyc }} нет.",
   "brand": {
     "@type": "Brand",
     "name": "{{ p.name }}"
@@ -95,7 +95,7 @@
       "author": {"@type": "Person", "name": "Влад С."},
       "datePublished": "2026-06-25",
       "reviewRating": {"@type": "Rating", "ratingValue": "4", "bestRating": "5", "worstRating": "1"},
-      "reviewBody": "Рейкбек через аффилейта пришёл 2 числа как обещали. HUD не работает — играю на чистом ридинге, для микро это даже плюс."
+      "reviewBody": "{{ t.fact_rakeback }} через аффилейта пришёл 2 числа как обещали. HUD не работает — играю на чистом ридинге, для микро это даже плюс."
     }
   ],
   "offers": {
@@ -111,7 +111,7 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "FAQPage",
+  "@type": "{{ t.faq_word }}Page",
   "mainEntity": [
     {"@type": "Question", "name": "Нужно ли скачивать приложение для {{ p.name }}?", "acceptedAnswer": {"@type": "Answer", "text": "Нет, игра идёт прямо в Telegram-боте. Также есть отдельная веб-версия (это отдельный аккаунт)."}},
     {"@type": "Question", "name": "В какой валюте расчёты на {{ p.name }}?", "acceptedAnswer": {"@type": "Answer", "text": "Только в криптовалюте USDT (экосистема TON). Карт и фиата нет."}},
@@ -125,8 +125,8 @@
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    {"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://kozyr.club/ua/"},
-    {"@type": "ListItem", "position": 2, "name": "Румы", "item": "https://kozyr.club/ua/rooms/"},
+    {"@type": "ListItem", "position": 1, "name": "{{ t.bc_home }}", "item": "https://kozyr.club/ua/"},
+    {"@type": "ListItem", "position": 2, "name": "{{ t.nav_rooms }}", "item": "https://kozyr.club/ua/rooms/"},
     {"@type": "ListItem", "position": 3, "name": "{{ p.name }}", "item": "https://kozyr.club/{{ p.country }}/{{ p.kind }}/{{ p.id }}/"}
   ]
 }
@@ -1098,18 +1098,18 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 <style>.skip-link{position:absolute;left:-9999px;top:0;z-index:9999;padding:10px 16px;background:#2668FF;color:#fff;border-radius:0 0 8px 0;font:600 14px/1.2 system-ui,sans-serif;text-decoration:none}.skip-link:focus{left:0}</style>
 </head>
 <body>
-<a href="#about" class="skip-link">Перейти к основному содержанию</a>
-<a href="{{ p.ref_url_final }}" data-partner data-cta-variant="blue" class="klink kozyr-sticky-cta" aria-label="Начать игру в {{ p.name }}" rel="nofollow noopener sponsored" target="_blank"><span class="kzc__logo"><img src="{{ p.logo_img }}" alt="{{ p.name }}" width="42" height="42" loading="lazy"><span class="kzc__dot" aria-hidden="true"></span></span><span class="kzc__txt"><span class="kzc__name">{{ p.name }}</span><span class="kzc__sub">{{ content.hero_sub }}</span></span><span class="kzc__cta">Играть <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+<a href="#about" class="skip-link">{{ t.skip }}</a>
+<a href="{{ p.ref_url_final }}" data-partner data-cta-variant="blue" class="klink kozyr-sticky-cta" aria-label="{{ t.aria_play_in }} {{ p.name }}" rel="nofollow noopener sponsored" target="_blank"><span class="kzc__logo"><img src="{{ p.logo_img }}" alt="{{ p.name }}" width="42" height="42" loading="lazy"><span class="kzc__dot" aria-hidden="true"></span></span><span class="kzc__txt"><span class="kzc__name">{{ p.name }}</span><span class="kzc__sub">{{ content.hero_sub }}</span></span><span class="kzc__cta">{{ t.play }} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
 
-<div class="compliance" role="region" aria-label="Правовое уведомление">
+<div class="compliance" role="region" aria-label="{{ t.aria_legal }}">
   <div class="compliance-inner">
-    Используя сайт, ты принимаешь <a href="/ua/legal/#terms">Пользовательское соглашение</a> и <a href="/ua/legal/#privacy">Политику конфиденциальности</a>. Только для лиц старше 21 года.
+    {{ t.compliance_pre }} <a href="/ua/legal/#terms">{{ t.terms }}</a> {{ t.and_word }} <a href="/ua/legal/#privacy">{{ t.privacy_doc }}</a>{{ t.compliance_post }}
   </div>
 </div>
 
-<nav class="nav" aria-label="Основная навигация">
+<nav class="nav" aria-label="{{ t.aria_mainnav }}">
   <div class="nav-inner">
-    <a href="/ua/" class="logo" aria-label="KOZYR — на главную">
+    <a href="/ua/" class="logo" aria-label="{{ t.aria_home }}">
       <span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="ki1" x1="505" y1="628" x2="596" y2="628" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#14358F"/><stop offset="1" stop-color="#2A6BFF"/></linearGradient></defs><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
 fill="#000000" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 587 1 1071 0 1076 -3 16
 -32 42 583 -519 198 -180 547 -499 775 -709 228 -209 547 -501 708 -649 l294
@@ -1133,39 +1133,39 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <span>KOZYR</span>
     </a>
     <div class="nav-links">
-      <a href="/ua/#compare">Сделки</a>
-      <a href="/ua/rooms/">Румы</a>
-      <a href="/ua/clubs/">Клубы</a>
-      <a href="/ua/#faq">FAQ</a><a href="/ua/blog/">Блог</a>
+      <a href="/ua/#compare">{{ t.nav_deals }}</a>
+      <a href="/ua/rooms/">{{ t.nav_rooms }}</a>
+      <a href="/ua/clubs/">{{ t.nav_clubs }}</a>
+      <a href="/ua/#faq">{{ t.faq_word }}</a><a href="/ua/blog/">{{ t.nav_blog }}</a>
     </div>
     <div class="nav-actions">
-      <div class="lang" role="group" aria-label="Выбор языка">
+      <div class="lang" role="group" aria-label="{{ t.aria_lang }}">
         <a href="/{{ p.country }}/{{ p.kind }}/{{ p.id }}/" hreflang="ru-UA" lang="ru"{% if p.lang_tag == "ru-UA" %} aria-current="page"{% endif %}>RU</a>
         <a href="/{{ p.country }}/uk/{{ p.kind }}/{{ p.id }}/" hreflang="uk-UA" lang="uk"{% if p.lang_tag == "uk-UA" %} aria-current="page"{% endif %}>UA</a>
       </div>
-      <a href="#cta" class="btn btn-primary">Активировать сделку</a>
-      <button class="nav-burger" id="nav-burger" aria-expanded="false" aria-controls="nav-drawer" aria-label="Меню">
+      <a href="#cta" class="btn btn-primary">{{ t.cta_activate }}</a>
+      <button class="nav-burger" id="nav-burger" aria-expanded="false" aria-controls="nav-drawer" aria-label="{{ t.aria_menu }}">
         <svg class="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
         <svg class="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </button>
     </div>
   </div>
   <div class="nav-drawer" id="nav-drawer">
-    <a href="/ua/#partners">Партнёры <span aria-hidden="true">→</span></a>
+    <a href="/ua/#partners">{{ t.partners }} <span aria-hidden="true">→</span></a>
     <a href="/{{ p.country }}/{{ p.kind }}/{{ p.id }}/">{{ p.name }} <span aria-hidden="true">→</span></a>
     <a href="/ua/rooms/pokerbet/">PokerBet <span aria-hidden="true">→</span></a>
-    <a href="/ua/#faq">FAQ <span aria-hidden="true">→</span></a>
-    <a href="#cta" class="btn btn-dark">Активировать сделку</a>
+    <a href="/ua/#faq">{{ t.faq_word }} <span aria-hidden="true">→</span></a>
+    <a href="#cta" class="btn btn-dark">{{ t.cta_activate }}</a>
   </div>
 </nav>
 
 <main id="main">
 
 <div class="wrap">
-  <nav class="breadcrumbs" aria-label="Хлебные крошки">
-    <a href="/ua/">Главная</a>
+  <nav class="breadcrumbs" aria-label="{{ t.aria_breadcrumbs }}">
+    <a href="/ua/">{{ t.bc_home }}</a>
     <span class="sep">/</span>
-    <a href="/ua/rooms/">Румы</a>
+    <a href="/ua/rooms/">{{ t.nav_rooms }}</a>
     <span class="sep">/</span>
     <span class="current">{{ p.name }}</span>
   </nav>
@@ -1175,11 +1175,9 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
   <div class="wrap room-hero-inner">
     <div>
       <div class="room-tag">
-        <span class="fi fi-ua"></span>
-        Покер в Telegram · крипта
-      </div>
-      <h1>{{ p.name }} — обзор <em>2026</em>.</h1>
-      <p class="room-hero-lead">Покер-рум прямо в Telegram: без скачивания приложений, мгновенные крипто-депозиты и выводы в USDT, мягкие поля и вход через аккаунт Telegram за секунды.</p>
+        <span class="fi fi-ua"></span>{{ content.hero_badge }}</div>
+      <h1>{{ p.name }} — {{ t.review_word }} <em>2026</em>.</h1>
+      <p class="room-hero-lead">{{ content.hero_lead }}</p>
 
       <div class="room-verdict">
         <div class="room-score">
@@ -1187,18 +1185,18 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
           <span class="room-score-of">Kozyr Score</span>
         </div>
         <div class="room-verdict-text">
-          <div class="room-verdict-label">Вердикт KOZYR</div>
-          <p>Удобный крипто-рум для тех, кто хочет играть без установки клиента и лишних процедур — прямо в мессенджере.</p>
+          <div class="room-verdict-label">{{ t.verdict_label }}</div>
+          <p>{{ content.verdict }}</p>
         </div>
       </div>
 
       <div class="room-hero-ctas">
-        <a href="#cta" class="btn btn-dark btn-xl">Активировать сделку →</a>
-        <a href="#pros-cons" class="btn btn-ghost btn-xl">Плюсы и минусы</a>
+        <a href="#cta" class="btn btn-dark btn-xl">{{ t.cta_activate_arrow }}</a>
+        <a href="#pros-cons" class="btn btn-ghost btn-xl">{{ t.h_proscons_1 }}{{ t.h_proscons_2 }}</a>
       </div>
     </div>
 
-    <aside class="room-facts" aria-label="Быстрые факты">
+    <aside class="room-facts" aria-label="{{ t.aria_facts }}">
       <div class="room-facts-badge">
         <div class="room-facts-logo room-facts-logo--img"><img src="{{ p.logo_img }}" alt="{{ p.name }}" width="48" height="48"></div>
         <div>
@@ -1209,50 +1207,20 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 
       <div class="ka-block" data-accept-countries="ua,ru,kz,by,cn"></div>
 
-      <div class="room-facts-reviews" data-reviews-summary="{{ p.id }}"><!--RV-SUM:{{ p.id }}--><span class="kz-rev-sum"><span class="kz-stars kz-stars--sm" aria-label="Рейтинг 4.4 из 5"><span class="kz-star kz-star--on" aria-hidden="true">★</span><span class="kz-star kz-star--on" aria-hidden="true">★</span><span class="kz-star kz-star--on" aria-hidden="true">★</span><span class="kz-star kz-star--on" aria-hidden="true">★</span><span class="kz-star kz-star--half" aria-hidden="true">★</span></span><span class="kz-rev-sum__num"><strong>4.4</strong>&nbsp;из&nbsp;5</span><span class="kz-rev-sum__sep" aria-hidden="true">·</span><span class="kz-rev-sum__cnt">5&nbsp;отзывов</span></span><!--/RV-SUM:{{ p.id }}--></div>
+      <div class="room-facts-reviews" data-reviews-summary="{{ p.id }}"><!--RV-SUM:{{ p.id }}--><span class="kz-rev-sum"><span class="kz-stars kz-stars--sm" aria-label="{{ t.rating_word }} 4.4 {{ t.rating_of }} 5"><span class="kz-star kz-star--on" aria-hidden="true">★</span><span class="kz-star kz-star--on" aria-hidden="true">★</span><span class="kz-star kz-star--on" aria-hidden="true">★</span><span class="kz-star kz-star--on" aria-hidden="true">★</span><span class="kz-star kz-star--half" aria-hidden="true">★</span></span><span class="kz-rev-sum__num"><strong>4.4</strong>&nbsp;{{ t.rating_of }}&nbsp;5</span><span class="kz-rev-sum__sep" aria-hidden="true">·</span><span class="kz-rev-sum__cnt">5&nbsp;{{ t.reviews_word }}</span></span><!--/RV-SUM:{{ p.id }}--></div>
 
       <dl>
-        <div class="fact">
-          <dt>Рейкбек</dt>
-          <dd class="highlight">до 30%</dd>
-        </div>
-        <div class="fact">
-          <dt>Лицензия</dt>
-          <dd>Офшор</dd>
-        </div>
-        <div class="fact">
-          <dt>Валюта</dt>
-          <dd>USDT</dd>
-        </div>
-        <div class="fact">
-          <dt>KYC</dt>
-          <dd>Нет</dd>
-        </div>
-        <div class="fact">
-          <dt>Доступ</dt>
-          <dd>Telegram / Web</dd>
-        </div>
-        <div class="fact">
-          <dt>Мин. депозит</dt>
-          <dd>$0.20</dd>
-        </div>
-        <div class="fact">
-          <dt>Мин. вывод</dt>
-          <dd>3 USDT</dd>
-        </div>
-        <div class="fact">
-          <dt>Форматы</dt>
-          <dd>Кэш, MTT</dd>
-        </div>
-        <div class="fact">
-          <dt>Выплаты</dt>
-          <dd>от мгновенно до 24 ч</dd>
-        </div>
-        <div class="fact">
-          <dt>Платёжки</dt>
-          <dd>Крипта (TON)</dd>
-        </div>
-      </dl>
+        <div class="fact"> <dt>{{ t.fact_rakeback }}</dt> <dd class="highlight">{{ content.facts.rakeback }}</dd> </div>
+        <div class="fact"> <dt>{{ t.fact_license }}</dt> <dd>{{ content.facts.license }}</dd> </div>
+        <div class="fact"> <dt>{{ t.fact_currency }}</dt> <dd>{{ content.facts.currency }}</dd> </div>
+        <div class="fact"> <dt>{{ t.fact_kyc }}</dt> <dd>{{ content.facts.kyc }}</dd> </div>
+        <div class="fact"> <dt>{{ t.fact_access }}</dt> <dd>{{ content.facts.access }}</dd> </div>
+        <div class="fact"> <dt>{{ t.fact_min_deposit }}</dt> <dd>{{ content.facts.min_deposit }}</dd> </div>
+        <div class="fact"> <dt>{{ t.fact_min_withdraw }}</dt> <dd>{{ content.facts.min_withdraw }}</dd> </div>
+        <div class="fact"> <dt>{{ t.fact_formats }}</dt> <dd>{{ content.facts.formats }}</dd> </div>
+        <div class="fact"> <dt>{{ t.fact_payouts }}</dt> <dd>{{ content.facts.payouts }}</dd> </div>
+        <div class="fact"> <dt>{{ t.fact_payments }}</dt> <dd>{{ content.facts.payments }}</dd> </div>
+        </dl>
 
       <a href="#cta" class="room-facts-cta">
         Перейти в {{ p.name }} →
@@ -1264,21 +1232,21 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 
 <div class="article">
 
-  <aside class="article-toc" aria-label="Содержание обзора">
-    <div class="article-toc-label">Содержание</div>
+  <aside class="article-toc" aria-label="{{ t.toc_heading }}">
+    <div class="article-toc-label">{{ t.toc_title }}</div>
     <ul>
-      <li><a href="#about" class="toc-link active">О руме</a></li>
-      <li><a href="#legality">Лицензия и статус</a></li>
-      <li><a href="#software">Софт и интерфейс</a></li>
-      <li><a href="#games">Игры и лимиты</a></li>
-      <li><a href="#traffic">Трафик и поля</a></li>
-      <li><a href="#deposits">Депозиты и выплаты</a></li>
-      <li><a href="#bonus">Бонусы и промо</a></li>
-      <li><a href="#rakeback">Рейкбек</a></li>
-      <li><a href="#kyc">Верификация</a></li>
-      <li><a href="#pros-cons">Плюсы и минусы</a></li>
-      <li><a href="#reviews">Отзывы</a></li>
-      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#about" class="toc-link active">{{ t.sec_about }}</a></li>
+      <li><a href="#legality">{{ t.sec_legality }}</a></li>
+      <li><a href="#software">{{ t.sec_software }}</a></li>
+      <li><a href="#games">{{ t.sec_games }}</a></li>
+      <li><a href="#traffic">{{ t.sec_traffic }}</a></li>
+      <li><a href="#deposits">{{ t.sec_deposits }}</a></li>
+      <li><a href="#bonus">{{ t.sec_bonus }}</a></li>
+      <li><a href="#rakeback">{{ t.fact_rakeback }}</a></li>
+      <li><a href="#kyc">{{ t.sec_kyc }}</a></li>
+      <li><a href="#pros-cons">{{ t.h_proscons_1 }}{{ t.h_proscons_2 }}</a></li>
+      <li><a href="#reviews">{{ t.sec_reviews }}</a></li>
+      <li><a href="#faq">{{ t.faq_word }}</a></li>
     </ul>
   </aside>
 
@@ -1303,17 +1271,17 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     <section id="kyc">{{ content.kyc | safe }}</section>
 
     <section id="pros-cons">
-      <h2>Плюсы и <em>минусы</em></h2>
+      <h2>{{ t.h_proscons_1 }}<em>{{ t.h_proscons_2 }}</em></h2>
       <div class="proscons">
         <div class="proscons-block proscons-pros">
-          <div class="proscons-title">✓ Плюсы</div>
+          <div class="proscons-title">{{ t.pros_title }}</div>
           <ul>
             {% for pro in p.pros %}<li>{{ pro }}</li>
             {% endfor %}
           </ul>
         </div>
         <div class="proscons-block proscons-cons">
-          <div class="proscons-title">− Минусы</div>
+          <div class="proscons-title">{{ t.cons_title }}</div>
           <ul>
             {% for con in p.cons %}<li>{{ con }}</li>
             {% endfor %}
@@ -1323,15 +1291,15 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     </section>
 
     <section id="reviews" style="margin-top: 64px;">
-      <h2>Что говорят <em>игроки</em></h2>
-      <p>Реальные отзывы игроков, которые прошли через KOZYR. Все «проверено» подтверждены скрином депозита или вывода — модерируются вручную.</p>
+      <h2>{{ t.h_reviews_1 }} <em>{{ t.h_reviews_2 }}</em></h2>
+      <p>{{ t.reviews_intro }}</p>
       <div data-reviews="{{ p.id }}" data-reviews-limit="3"><!--RV-LIST:{{ p.id }}--></div>
     </section>
 
     <section id="cta" style="margin-top: 64px;">{{ content.cta | safe }}</section>
 
     <section id="faq">
-      <h2>Часто задаваемые <em>вопросы</em></h2>
+      <h2>{{ t.h_faq_1 }} <em>{{ t.h_faq_2 }}</em></h2>
       <div class="article-faq">
         {% for item in p.faq %}<div class="article-faq-item">
           <button class="article-faq-q">
@@ -1346,11 +1314,11 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 
   </article>
 
-  <aside class="article-side" aria-label="Быстрый CTA">
+  <aside class="article-side" aria-label="{{ t.aria_cta }}">
     <div class="side-cta">
-      <div class="side-cta-label">Рейкбек до</div>
+      <div class="side-cta-label">{{ t.sticky_rb }}</div>
       <div class="side-cta-value">30<em>%</em></div>
-      <p class="side-cta-desc">Крипто-рум прямо в Telegram. Депозит от $0.20 в USDT, вход за секунды.</p>
+      <p class="side-cta-desc">{{ content.sticky_note }}</p>
       <a href="#cta" class="side-cta-btn">
         <span>Перейти в {{ p.name }}</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1358,13 +1326,13 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     </div>
 
     <div class="side-related">
-      <div class="side-related-title">Смотри также</div>
+      <div class="side-related-title">{{ t.related_title }}</div>
       <ul>
-        <li><a href="/ua/rooms/pokerbet/">PokerBet — рум на гривны</a></li>
-        <li><a href="/ua/clubs/klubok/">KlubOk — клуб в ClubGG</a></li>
-        <li><a href="/ua/#score">Калькулятор рейкбека</a></li>
-        <li><a href="/ua/#faq">FAQ по сделкам</a></li>
-        <li><a href="/ua/legal/#terms">Условия использования</a></li>
+        <li><a href="/ua/rooms/pokerbet/">{{ t.rel_pokerbet }}</a></li>
+        <li><a href="/ua/clubs/klubok/">{{ t.rel_klubok }}</a></li>
+        <li><a href="/ua/#score">{{ t.rel_calc }}</a></li>
+        <li><a href="/ua/#faq">{{ t.rel_faq }}</a></li>
+        <li><a href="/ua/legal/#terms">{{ t.rel_terms }}</a></li>
       </ul>
     </div>
   </aside>
@@ -1399,19 +1367,19 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 17 5 25 28 34 -2 8 -132 -113z" fill="#14358F"/></g></g></svg></span>
           <span>KOZYR</span>
         </a>
-        <p>Прозрачные рейкбек-сделки для украинских покерных игроков. Румы и клубный формат.</p>
+        <p>Прозрачные рейкбек-сделки для украинских покерных игроков. {{ t.nav_rooms }} и клубный формат.</p>
       </div>
       <div class="footer-col">
-        <h3>Продукт</h3>
+        <h3>{{ t.foot_product }}</h3>
         <ul>
-          <li><a href="/ua/#compare">Сделки</a></li>
-          <li><a href="/ua/rooms/">Все румы</a></li>
-          <li><a href="/ua/clubs/">Все клубы</a></li>
-          <li><a href="/ua/#score">Калькулятор</a></li>
+          <li><a href="/ua/#compare">{{ t.nav_deals }}</a></li>
+          <li><a href="/ua/rooms/">{{ t.foot_all_rooms }}</a></li>
+          <li><a href="/ua/clubs/">{{ t.foot_all_clubs }}</a></li>
+          <li><a href="/ua/#score">{{ t.foot_calc }}</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h3>Румы</h3>
+        <h3>{{ t.nav_rooms }}</h3>
         <ul>
           <li><a href="/{{ p.country }}/{{ p.kind }}/{{ p.id }}/">{{ p.name }}</a></li>
           <li><a href="/ua/rooms/pokerbet/">PokerBet</a></li>
@@ -1419,23 +1387,23 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
         </ul>
       </div>
       <div class="footer-col">
-        <h3>Помощь</h3>
+        <h3>{{ t.foot_help }}</h3>
         <ul>
-          <li><a href="/ua/#faq">FAQ</a></li>        </ul>
+          <li><a href="/ua/#faq">{{ t.faq_word }}</a></li>        </ul>
       </div>
       <div class="footer-col">
-        <h3>Юридическое</h3>
+        <h3>{{ t.foot_legal }}</h3>
         <ul>
-          <li><a href="/ua/legal/#terms">Пользовательское соглашение</a></li>
-          <li><a href="/ua/legal/#privacy">Приватность</a></li>
-          <li><a href="/ua/legal/#responsible-gaming">Ответственная игра</a>
-              <a href="/ua/legal/#partners">Как мы зарабатываем</a></li>
-          <li><a href="/ua/legal/#disclaimer">Отказ от ответственности</a></li>
+          <li><a href="/ua/legal/#terms">{{ t.terms }}</a></li>
+          <li><a href="/ua/legal/#privacy">{{ t.foot_privacy }}</a></li>
+          <li><a href="/ua/legal/#responsible-gaming">{{ t.foot_rg }}</a>
+              <a href="/ua/legal/#partners">{{ t.foot_howwe }}</a></li>
+          <li><a href="/ua/legal/#disclaimer">{{ t.foot_disclaimer }}</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <div>© 2026 KOZYR · Играй ответственно · 21+</div>
+      <div>{{ t.copyright }}</div>
       <div><span>RU</span> · <span>UA</span></div>
     </div>
   </div>

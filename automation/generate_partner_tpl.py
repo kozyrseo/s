@@ -29,7 +29,8 @@ MAX_TOKENS = 16000   # контента ~11 КБ (~3.5k токенов) — с �
 
 CONTENT_KEYS = [
     "meta_title", "meta_description", "og_title", "og_description",
-    "schema_description", "hero_sub",
+    "schema_description", "hero_sub", "hero_badge", "hero_lead", "verdict",
+    "sticky_note", "facts",
     "about", "legality", "software", "games", "traffic",
     "deposits", "bonus", "rakeback", "kyc", "cta",
 ]
