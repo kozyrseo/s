@@ -25,6 +25,7 @@ import urllib.error
 from pathlib import Path
 
 from openai import OpenAI
+from score_partner import compute_kozyr_score  # детерминированный kozyr_score
 
 AUTOMATION = Path(__file__).resolve().parent
 REPO_ROOT = AUTOMATION.parent
@@ -65,7 +66,7 @@ def build_parse_prompt(networks: dict, questions: dict) -> str:
 - type: "room" (покер-рум) или "club" (приватный клуб). Клуб в приложении = club.
 - network: определи приложение из текста (PPPoker→pppoker, ClubGG→clubgg). Рум→своё имя.
 - networkLabel: человекочитаемое (PPPoker, ClubGG)
-- score: если не указан — поставь 7.5 (средний)
+- score: НЕ вычисляй, поставь null — балл считает код (score_partner.py) детерминированно
 - rake: число процентов (35) или "none" если рейкбека нет
 - rakeLabel: как показать ("до 35%", "нет — только бонусы")
 - currency: UAH/USD/EUR (гривна→UAH)
@@ -171,6 +172,7 @@ def send_telegram_summary(chat_id: str, draft: dict) -> None:
         L.append(f"🌐 Принимает из: {', '.join(accepted)}")
 
     L.append(f"💰 Рейкбек: {draft.get('rakeLabel', '?')}")
+    L.append(f"⭐ KOZYR score: {draft.get('score', '?')}")
     games = draft.get("games", [])
     limits = draft.get("limits", [])
     if games or limits:
@@ -311,6 +313,13 @@ def main():
         if "основная страна" not in missing:
             missing.insert(0, "основная страна")
         draft["_missing"] = missing
+
+    # Детерминированный kozyr_score (score_partner.py) вместо догадки LLM.
+    # Гарантирует score в [5.5, 9.4] — всегда truthy, поэтому build_partners.py
+    # не забракует партнёра по обязательному полю "score" (и не будет score=0).
+    score, score_breakdown = compute_kozyr_score(draft)
+    draft["score"] = score
+    draft["_score_breakdown"] = score_breakdown
 
     # Метка времени парсинга. Telegram-бот (worker_v2.js) использует её,
     # чтобы в кнопке «🔄 Проверить черновик» показать САМЫЙ СВЕЖИЙ черновик,
