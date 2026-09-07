@@ -61,7 +61,19 @@ jobs:
           git add -A
           if git diff --staged --quiet; then
             echo "Нет изменений для коммита"
-          else
-            git commit -m "partner: ${{ github.event.inputs.partner_id }}"
-            git push
+            exit 0
           fi
+          git commit -m "partner: ${{ github.event.inputs.partner_id }}"
+          # Тот же фикс гонки, что и в parse-partner.yml: воркер параллельно
+          # пишет в main через Contents API, поэтому пушим с ретраями и
+          # ребейзом перед каждой попыткой.
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push; then
+              echo "Изменения запушены с попытки $attempt"
+              exit 0
+            fi
+            echo "Попытка $attempt не удалась, повтор через паузу..."
+            sleep $((RANDOM % 4 + 2))
+          done
+          echo "Не удалось запушить изменения после 5 попыток"
+          exit 1
