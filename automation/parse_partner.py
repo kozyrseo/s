@@ -312,6 +312,12 @@ def main():
             missing.insert(0, "основная страна")
         draft["_missing"] = missing
 
+    # Метка времени парсинга. Telegram-бот (worker_v2.js) использует её,
+    # чтобы в кнопке «🔄 Проверить черновик» показать САМЫЙ СВЕЖИЙ черновик,
+    # если авто-сводка не дошла. Без неё бот не отличит новый черновик от старых.
+    from datetime import datetime, timezone
+    draft["_parsed_at"] = datetime.now(timezone.utc).isoformat()
+
     # Сохраняем черновик
     DRAFTS_DIR.mkdir(parents=True, exist_ok=True)
     out = DRAFTS_DIR / f"{draft['id']}.json"
