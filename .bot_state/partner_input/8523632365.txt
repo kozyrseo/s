@@ -42,3 +42,6 @@ TON Poker — покер-рум. Играется прямо в Telegram (вну
 ССЫЛКА ДЛЯ КНОПКИ «ПЕРЕЙТИ»: https://t.me/myTonPokerBot/lobby?startapp=eyJhZnAiOiJaV1V6TkRnM1pEQmxOVFZrWkRoa1pUZzFNelpqWmpnMFpqa3pOVGxqWXpjIn0
 
 БРЕНДИНГ/ЛОГОТИП (Figma): https://www.figma.com/design/rbphsgGgyryCsK8371OVUt/Ton-Poker-branding
+
+--- дополнение ---
+Валюта расчётов — USDT (не USD). Отображать USDT везде.
