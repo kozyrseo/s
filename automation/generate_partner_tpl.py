@@ -78,6 +78,54 @@ def generate_content(draft: dict) -> dict:
     return content
 
 
+def rewrite_links_ru_uk(text: str) -> str:
+    """Переписывает внутренние ссылки /ua/... → /ua/uk/... (ассеты не трогает)."""
+    if not isinstance(text, str):
+        return text
+    def repl(m):
+        url = m.group(0)
+        if url.startswith("/ua/uk/"):
+            return url
+        if re.search(r"\.(webp|jpg|jpeg|png|svg|gif|ico|css|js|pdf)($|[?#])", url):
+            return url
+        return "/ua/uk/" + url[len("/ua/"):]
+    return re.sub(r'/ua/[^\s"\'<>)]+', repl, text)
+
+
+TRANSLATE_SYSTEM = """Ти — перекладач покерного сайту. Переклади ЗНАЧЕННЯ цього JSON з
+російської на українську мову.
+
+ПРАВИЛА:
+- Звертання — на «ти» (українське тикання природне).
+- «Покерный рум» → «покерний рум» (не «зал»).
+- «Вывод денег» → «виведення коштів».
+- Уникай кальок з російської, пиши природною українською.
+- ЗБЕРЕЖИ всі HTML-теги і структуру як є (<h2>, <p>, <ul>, <table>, <strong>, <em>, class-атрибути).
+- Перекладай ТІЛЬКИ текст всередині тегів, самі теги не чіпай.
+- Числа, назви (TON Poker, USDT, Cryptobot, мемкоїни) залишай як є.
+
+Поверни ТІЛЬКИ валідний JSON з ТИМИ САМИМИ ключами. Без пояснень."""
+
+
+def translate_content(content_ru: dict) -> dict:
+    """Переводит content JSON ru→uk через LLM + переписывает внутренние ссылки."""
+    from openai import OpenAI
+    client = OpenAI(api_key=os.environ["OPENROUTER_API_KEY"], base_url=OPENROUTER_BASE_URL)
+    user = "JSON для перекладу:\n```json\n" + json.dumps(content_ru, ensure_ascii=False, indent=2) + "\n```"
+    print(f"  LLM: перевод контента ru→uk ({MODEL})…")
+    resp = client.chat.completions.create(
+        model=MODEL, max_tokens=MAX_TOKENS,
+        messages=[{"role": "system", "content": TRANSLATE_SYSTEM},
+                  {"role": "user", "content": user}],
+    )
+    uk = parse_content_json(resp.choices[0].message.content or "")
+    # переписываем внутренние ссылки в контенте
+    for k, v in uk.items():
+        uk[k] = rewrite_links_ru_uk(v)
+    print(f"  ✓ перевод получен ({len(json.dumps(uk, ensure_ascii=False))} симв.)")
+    return uk
+
+
 def partner_path(draft: dict, lang_prefix: str = "") -> str:
     kind = "clubs" if draft.get("type") == "club" else "rooms"
     country = draft.get("country", "ua")
@@ -97,18 +145,30 @@ def main():
     draft = json.loads(draft_file.read_text(encoding="utf-8"))
     print(f"Партнёр: {draft.get('name')} ({draft.get('type')}, {args.id})")
 
-    content = generate_content(draft)
-
+    # ── Русская версия ──
+    content_ru = generate_content(draft)
     from render_partner import build_page
-    html = build_page(draft, content)
+    html_ru = build_page(draft, content_ru, lang="ru")
 
     if args.publish:
-        out = REPO_ROOT / partner_path(draft) / "index.html"
+        out_ru = REPO_ROOT / partner_path(draft) / "index.html"
     else:
-        out = PENDING / args.id / "index.html"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(html, encoding="utf-8")
-    print(f"✓ Страница собрана (шаблон): {out} ({len(html)} символов)")
+        out_ru = PENDING / args.id / "index.html"
+    out_ru.parent.mkdir(parents=True, exist_ok=True)
+    out_ru.write_text(html_ru, encoding="utf-8")
+    print(f"✓ RU страница: {out_ru} ({len(html_ru)} символов)")
+
+    # ── Украинская версия (перевод контента → тот же шаблон) ──
+    content_uk = translate_content(content_ru)
+    html_uk = build_page(draft, content_uk, lang="uk")
+
+    if args.publish:
+        out_uk = REPO_ROOT / partner_path(draft, lang_prefix="uk") / "index.html"
+    else:
+        out_uk = PENDING / (args.id + "_uk") / "index.html"
+    out_uk.parent.mkdir(parents=True, exist_ok=True)
+    out_uk.write_text(html_uk, encoding="utf-8")
+    print(f"✓ UK страница: {out_uk} ({len(html_uk)} символов)")
 
 
 if __name__ == "__main__":

@@ -23,17 +23,30 @@ TEMPLATE   = AUTOMATION / "partner_template.html.j2"
 DRAFTS     = REPO_ROOT / "_partner_drafts"
 
 
-def build_page(draft: dict, content: dict) -> str:
-    """Рендерит HTML страницы партнёра из шаблона + анкеты + контента."""
+def build_page(draft: dict, content: dict, lang: str = "ru") -> str:
+    """Рендерит HTML страницы партнёра из шаблона + анкеты + контента.
+
+    lang="ru" → страница в /{country}/{kind}/{id}/  (основная)
+    lang="uk" → украинская версия в /{country}/uk/{kind}/{id}/
+    """
     from jinja2 import Template
     tpl = TEMPLATE.read_text(encoding="utf-8")
     p = dict(draft)
     p["kind"] = "clubs" if draft.get("type") == "club" else "rooms"
-    # реф-ссылка кнопки: из анкеты, иначе плейсхолдер саппорта
     p["ref_url_final"] = (draft.get("ref_url") or "").strip() or "https://t.me/kozyr_support"
     p.setdefault("pros", [])
     p.setdefault("cons", [])
     p.setdefault("faq", [])
+    country = draft.get("country", "ua")
+    base = f"https://kozyr.club/{country}"
+    if lang == "uk":
+        p["lang_tag"] = "uk-UA"
+        p["og_locale"] = "uk_UA"
+        p["canonical"] = f"{base}/uk/{p['kind']}/{draft['id']}/"
+    else:
+        p["lang_tag"] = "ru-UA"
+        p["og_locale"] = "ru_UA"
+        p["canonical"] = f"{base}/{p['kind']}/{draft['id']}/"
     return Template(tpl).render(p=p, content=content)
 
 
