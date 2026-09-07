@@ -226,6 +226,25 @@ def main():
         sys.exit(f"❌ Нет файла анкеты: {draft_file}")
 
     draft = json.loads(draft_file.read_text(encoding="utf-8"))
+
+    # ── Быстрый путь публикации: превью уже собрано и проверено оператором ──
+    # Если оператор нажал «Опубликовать» после проверки превью, публикуем
+    # РОВНО ту страницу, что он видел (_pending_partner/{id}/index.html),
+    # а не генерируем заново (LLM недетерминирован → в прод ушёл бы другой текст,
+    # плюс лишний вызов API). Заново генерим только если превью почему-то нет.
+    preview_file = PENDING_DIR / draft["id"] / "index.html"
+    if args.publish and preview_file.exists():
+        html = preview_file.read_text(encoding="utf-8")
+        out = REPO_ROOT / partner_path_for(draft).strip("/") / "index.html"
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(html, encoding="utf-8")
+        print(f"✓ Опубликовано из превью (без повторной генерации): {out.relative_to(REPO_ROOT)}")
+        add_to_partners_json(draft)
+        print()
+        print("✓ Готово (перенос готового превью).")
+        print("  Не забудь: python automation/build_partners.py (пересобрать partners.js)")
+        return
+
     networks = json.loads(NETWORKS_FILE.read_text(encoding="utf-8"))["networks"]
     system_prompt = PROMPT_FILE.read_text(encoding="utf-8")
     reference = load_reference(draft.get("type", "room"))
