@@ -50,7 +50,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 REVIEWS_JSON = ROOT / "reviews.json"
 JS_FILE = ROOT / "assets" / "kozyr-reviews.js"
-PARTNER_DISPLAY = {"pokerbet": "PokerBet", "klubok": "KlubOk"}
+PARTNER_DISPLAY = {"pokerbet": "PokerBet", "klubok": "KlubOk", "tonpoker": "TON Poker"}
 
 # (partner_id, lang, путь к странице)
 PAGES = [
@@ -58,6 +58,8 @@ PAGES = [
     ("pokerbet", "uk", ROOT / "ua" / "uk" / "rooms" / "pokerbet" / "index.html"),
     ("klubok", "ru", ROOT / "ua" / "clubs" / "klubok" / "index.html"),
     ("klubok", "uk", ROOT / "ua" / "uk" / "clubs" / "klubok" / "index.html"),
+    ("tonpoker", "ru", ROOT / "ua" / "rooms" / "tonpoker" / "index.html"),
+    ("tonpoker", "uk", ROOT / "ua" / "uk" / "rooms" / "tonpoker" / "index.html"),
 ]
 
 # Метки-локали (из I18N в kozyr-reviews.js — держим синхронно)
