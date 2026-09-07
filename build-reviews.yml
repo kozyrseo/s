@@ -1,0 +1,52 @@
+name: Build reviews
+
+on:
+  workflow_dispatch: {}
+  push:
+    paths:
+      - "reviews.json"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-reviews
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build reviews
+        run: python automation/build_reviews.py
+
+      - name: Commit changes
+        run: |
+          git config user.name "kozyr-bot"
+          git config user.email "bot@kozyr.club"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "Отзывы уже актуальны — коммитить нечего"
+            exit 0
+          fi
+          git commit -m "reviews: rebuild"
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push; then
+              echo "Запушено с попытки $attempt"
+              exit 0
+            fi
+            echo "Попытка $attempt не удалась, повтор..."
+            sleep $((RANDOM % 4 + 2))
+          done
+          echo "Не удалось запушить после 5 попыток"
+          exit 1
