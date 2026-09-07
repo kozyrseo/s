@@ -1,6 +1,6 @@
 {
   "chat_id": 8523632365,
-  "stage": "await_text",
+  "stage": "parsing",
   "started_at": "2026-09-07T05:51:15.397Z",
   "draft_id": null
 }
