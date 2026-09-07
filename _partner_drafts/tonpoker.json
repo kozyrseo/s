@@ -107,13 +107,10 @@
   ],
   "logo_from": null,
   "logo_to": null,
-  "logo_img": null,
+  "logo_img": "/ua/blog/logos/tonpoker.png",
   "dark_card": true,
   "_missing": [
     "score",
-    "logo_from",
-    "logo_to",
-    "logo_img",
     "spins/sng games",
     "welcome bonus (нет)",
     "точные лимиты в формате NL"
