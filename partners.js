@@ -199,6 +199,93 @@
         "type": "club",
         "networkLabel": "ClubGG",
         "country": "ua"
+  },
+  {
+        "id": "tonpoker",
+        "name": "TON Poker",
+        "type": "room",
+        "score": 7.9,
+        "rake": 30,
+        "currency": "USDT",
+        "license": "Офшорная юрисдикция, без отдельной лицензии, KYC нет",
+        "url": "/ua/rooms/tonpoker/",
+        "access": "telegram",
+        "network": "tonpoker",
+        "networkLabel": "",
+        "country": "ua",
+        "countries": [
+              "ua"
+        ],
+        "acceptedCountries": [
+              "ua",
+              "ru",
+              "kz",
+              "by",
+              "cn"
+        ],
+        "limits": [
+              "NL10",
+              "NL25",
+              "NL50",
+              "NL100",
+              "NL200"
+        ],
+        "games": [
+              "cash",
+              "mtt"
+        ],
+        "software": [
+              "web",
+              "android",
+              "ios"
+        ],
+        "payments": [
+              "crypto"
+        ],
+        "bonus": [
+              "freeroll",
+              "rakerace"
+        ],
+        "payoutHours": 24,
+        "payoutLabel": "от мгновенно до 24 часов",
+        "note": "Покер-рум прямо в Telegram: без скачивания приложений, мгновенные крипто-депозиты и выводы, мягкие поля.",
+        "logo": {
+              "text": "TO",
+              "from": "#14358F",
+              "to": "#2A6BFF"
+        },
+        "card": {
+              "logoImg": "/ua/blog/logos/tonpoker.webp",
+              "kind": "",
+              "dark": false,
+              "rows": [
+                    [
+                          "Рейкбек",
+                          "rake",
+                          false
+                    ],
+                    [
+                          "Валюта",
+                          "USDT",
+                          false
+                    ],
+                    [
+                          "Бонус",
+                          "до 30% (на усмотрение аффилейта)",
+                          true
+                    ],
+                    [
+                          "Мин. депозит",
+                          "$0.20",
+                          false
+                    ],
+                    [
+                          "Форматы",
+                          "cash, mtt",
+                          false
+                    ]
+              ]
+        }
   }
   ];
 
