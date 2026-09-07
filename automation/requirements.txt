@@ -16,3 +16,6 @@ google-api-python-client>=2.100.0
 
 # GA4 Data API — конверсии и поведение (ga4_analytics.py, analytics.py)
 google-analytics-data>=0.18.0
+
+# Шаблонная система партнёрских страниц (render_partner.py)
+jinja2>=3.1.0
