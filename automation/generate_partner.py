@@ -116,6 +116,32 @@ def parse_html_response(raw_text: str) -> str:
     return html.strip()
 
 
+def inject_cta_link(html: str, draft: dict) -> str:
+    """Подставляет реф-ссылку партнёра в CTA-кнопки.
+
+    LLM копирует из эталонной страницы плейсхолдер ссылки (t.me/kozyr_support),
+    т.к. в промпте ссылки нет. Здесь мы надёжно, без участия модели, заменяем
+    href у всех кнопок с атрибутом data-partner на draft['ref_url'].
+    Ссылки без data-partner (напр. «Оставить отзыв») НЕ трогаем.
+    Если ref_url в анкете нет — оставляем как есть.
+    """
+    ref = (draft.get("ref_url") or "").strip()
+    if not ref:
+        print("  ⚠️ ref_url в анкете нет — кнопка «Перейти» останется с плейсхолдером.")
+        return html
+
+    def _replace_href(m):
+        tag = m.group(0)
+        if 'href="' in tag:
+            return re.sub(r'href="[^"]*"', f'href="{ref}"', tag, count=1)
+        # href нет в теге — добавим
+        return tag[:2] + f' href="{ref}"' + tag[2:]
+
+    new_html, n = re.subn(r'<a\b[^>]*\bdata-partner\b[^>]*>', _replace_href, html)
+    print(f"  ✓ Реф-ссылка подставлена в {n} CTA-кнопок: {ref[:50]}")
+    return new_html
+
+
 def generate_html_with_continuation(client, system_prompt, user_message, max_parts=5):
     """
     Генерирует HTML устойчиво к обрыву по лимиту токенов.
@@ -315,6 +341,7 @@ def main():
 
     raw = generate_html_with_continuation(client, system_prompt, user_message)
     html = parse_html_response(raw)
+    html = inject_cta_link(html, draft)
 
     # Валидация
     errors = []

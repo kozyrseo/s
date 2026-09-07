@@ -71,6 +71,8 @@ def build_parse_prompt(networks: dict, questions: dict) -> str:
 - rakeLabel: как показать ("до 35%", "нет — только бонусы")
 - currency: UAH/USD/EUR (гривна→UAH)
 - payoutHours: число часов (примерно, из "30-90 минут" → 1)
+- ref_url: ссылка для кнопки «Перейти» (реферальная/партнёрская). Извлеки URL
+  как есть (https://, http://, t.me/...). Если ссылки в тексте нет — оставь "".
 - списки (games, limits, software, payments, bonus):
   массивы строк. games: cash/mtt/spins/sng. software: ios/android/win/mac/web.
   payments: card/bank/crypto/ewallet.
