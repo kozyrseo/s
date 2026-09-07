@@ -1,0 +1,57 @@
+name: Process partner logo
+
+on:
+  workflow_dispatch:
+    inputs:
+      partner_id:
+        description: "ID партнёра (файл лежит в _partner_logos_raw/{id}.*)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: process-logo-${{ github.event.inputs.partner_id }}
+  cancel-in-progress: false
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Pillow
+        run: pip install "Pillow>=10.0.0"
+
+      - name: Process logo
+        run: python automation/process_logo.py --id "${{ github.event.inputs.partner_id }}"
+
+      - name: Commit changes
+        run: |
+          git config user.name "kozyr-bot"
+          git config user.email "bot@kozyr.club"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "Нет изменений — коммитить нечего"
+            exit 0
+          fi
+          git commit -m "partner: logo ${{ github.event.inputs.partner_id }}"
+          for attempt in 1 2 3 4 5; do
+            if git pull --rebase origin main && git push; then
+              echo "Запушено с попытки $attempt"
+              exit 0
+            fi
+            echo "Попытка $attempt не удалась, повтор..."
+            sleep $((RANDOM % 4 + 2))
+          done
+          echo "Не удалось запушить после 5 попыток"
+          exit 1
