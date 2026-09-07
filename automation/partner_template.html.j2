@@ -1140,8 +1140,8 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     </div>
     <div class="nav-actions">
       <div class="lang" role="group" aria-label="Выбор языка">
-        <a href="/{{ p.country }}/{{ p.kind }}/{{ p.id }}/" hreflang="ru-UA" lang="ru" aria-current="page">RU</a>
-        <a href="/{{ p.country }}/uk/{{ p.kind }}/{{ p.id }}/" hreflang="uk-UA" lang="uk">UA</a>
+        <a href="/{{ p.country }}/{{ p.kind }}/{{ p.id }}/" hreflang="ru-UA" lang="ru"{% if p.lang_tag == "ru-UA" %} aria-current="page"{% endif %}>RU</a>
+        <a href="/{{ p.country }}/uk/{{ p.kind }}/{{ p.id }}/" hreflang="uk-UA" lang="uk"{% if p.lang_tag == "uk-UA" %} aria-current="page"{% endif %}>UA</a>
       </div>
       <a href="#cta" class="btn btn-primary">Активировать сделку</a>
       <button class="nav-burger" id="nav-burger" aria-expanded="false" aria-controls="nav-drawer" aria-label="Меню">
