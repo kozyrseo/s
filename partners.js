@@ -211,17 +211,13 @@
         "url": "/ua/rooms/tonpoker/",
         "access": "telegram",
         "network": "tonpoker",
-        "networkLabel": "",
+        "networkLabel": "TON Poker (Telegram)",
         "country": "ua",
         "countries": [
               "ua"
         ],
         "acceptedCountries": [
-              "ua",
-              "ru",
-              "kz",
-              "by",
-              "cn"
+              "all"
         ],
         "limits": [
               "NL10",
@@ -256,23 +252,18 @@
         },
         "card": {
               "logoImg": "/ua/blog/logos/tonpoker.webp",
-              "kind": "",
+              "kind": "TON Poker (Telegram)",
               "dark": false,
               "rows": [
                     [
                           "Рейкбек",
-                          "rake",
-                          false
+                          "до 30% (на усмотрение аффилейта)",
+                          true
                     ],
                     [
                           "Валюта",
                           "USDT",
                           false
-                    ],
-                    [
-                          "Бонус",
-                          "до 30% (на усмотрение аффилейта)",
-                          true
                     ],
                     [
                           "Мин. депозит",
@@ -282,6 +273,11 @@
                     [
                           "Форматы",
                           "cash, mtt",
+                          false
+                    ],
+                    [
+                          "Выплаты",
+                          "от мгновенно до 24 часов",
                           false
                     ]
               ]

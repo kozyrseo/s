@@ -367,10 +367,10 @@ async function handleCallback(cb, env) {
   //  чтобы держать всю партнёрскую логику в одном месте).
   //  Схема callback_data (совпадает с automation/parse_partner.py):
   //    pcountry:{id}:{cc}  → выбрать основную страну, если парсер не понял
-  //    pconfirm:{id}       → generate-partner.yml (preview) — собрать страницу
+  //    pconfirm:{id}       → generate-partner-tpl.yml (preview) — собрать страницу (шаблон)
   //    pmore:{id}          → перевести сессию в режим «дополнить текстом»
   //    pcancel             → отменить сессию + удалить черновик
-  //    ppublish:{id}       → generate-partner.yml (publish=true) — в прод
+  //    ppublish:{id}       → generate-partner-tpl.yml (publish=true) — в прод (шаблон)
   //    pshow:{id}          → показать сводку по конкретному черновику
   //    pshow_latest        → показать последний черновик (если авто-сводка не дошла)
   // ═══════════════════════════════════════════════════════════════════
@@ -1942,7 +1942,7 @@ async function confirmPartner(chatId, draftId, env) {
   // Если логотип присылали ДО разбора анкеты — привяжем его сейчас.
   await attachStagedLogoIfAny(chatId, draftId, env);
 
-  const ok = await triggerWorkflow("generate-partner.yml",
+  const ok = await triggerWorkflow("generate-partner-tpl.yml",
     { partner_id: draftId, publish: "false" }, env);
 
   // Сессию НЕ удаляем: оставляем в стадии generated, чтобы оператор мог
@@ -1960,7 +1960,7 @@ async function confirmPartner(chatId, draftId, env) {
       `Через 2–3 минуты будет превью в \`_pending_partner/${escapeMd(draftId)}/index.html\`.\n` +
       `Прод-путь после публикации: \`${escapeMd(path)}\`\n\n` +
       `Проверь превью и, если всё ок, публикуй:`
-    : "❌ Не удалось запустить генерацию (generate-partner.yml). Проверь GITHUB_TOKEN.",
+    : "❌ Не удалось запустить генерацию (generate-partner-tpl.yml). Проверь GITHUB_TOKEN.",
     ok ? [
       [{ text: "🌐 Опубликовать в прод", callback_data: `ppublish:${draftId}` }],
       [{ text: "✏️ Дополнить и пересобрать", callback_data: `pmore:${draftId}` }],
@@ -1971,7 +1971,7 @@ async function confirmPartner(chatId, draftId, env) {
 // ── Публикация: страница в прод + партнёр в каталог ──
 async function publishPartner(chatId, draftId, env) {
   const draft = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
-  const ok = await triggerWorkflow("generate-partner.yml",
+  const ok = await triggerWorkflow("generate-partner-tpl.yml",
     { partner_id: draftId, publish: "true" }, env);
 
   // Публикация — терминальный шаг: закрываем сессию и чистим ввод.
@@ -1983,7 +1983,7 @@ async function publishPartner(chatId, draftId, env) {
     ? `🌐 Публикую *${escapeMd(name)}* в прод.\n\n` +
       `Workflow пересоберёт страницу, добавит партнёра в \`partners.json\` и \`partners.js\`. ` +
       `Через 2–3 минуты появится в каталоге и на карточке.`
-    : "❌ Не удалось запустить публикацию (generate-partner.yml).");
+    : "❌ Не удалось запустить публикацию (generate-partner-tpl.yml).");
 }
 
 // ── Хранение партнёрских сессий (как edit-сессии, через Contents API) ──

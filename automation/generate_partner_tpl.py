@@ -207,6 +207,97 @@ def partner_path(draft: dict, lang_prefix: str = "") -> str:
     return f"{country}/{lp}{kind}/{draft['id']}"
 
 
+PARTNERS_JSON = REPO_ROOT / "partners.json"
+
+
+def _rake_label(draft):
+    """Значение строки «Рейкбек» для карточки."""
+    rl = (draft.get("rakeLabel") or "").strip()
+    if rl:
+        return rl
+    rake = draft.get("rake")
+    if rake not in (None, "none", "", 0):
+        return f"{rake}%"
+    return "—"
+
+
+def build_card_rows(draft):
+    """Строки карточки каталога (до 5) из анкеты."""
+    rows = [
+        ["Рейкбек", _rake_label(draft), True],
+        ["Валюта", str(draft.get("currency", "USDT")), False],
+    ]
+    if draft.get("minDeposit"):
+        rows.append(["Мин. депозит", draft["minDeposit"], False])
+    if draft.get("games"):
+        rows.append(["Форматы", ", ".join(draft["games"][:4]), False])
+    if draft.get("payoutLabel"):
+        rows.append(["Выплаты", draft["payoutLabel"], False])
+    return rows[:5]
+
+
+def build_partner_object(draft):
+    """Объект партнёра для каталога partners.json."""
+    rake = draft.get("rake", "none")
+    if rake != "none":
+        try:
+            rake = int(rake)
+        except (ValueError, TypeError):
+            rake = "none"
+    return {
+        "id": draft["id"],
+        "name": draft["name"],
+        "type": draft.get("type", "room"),
+        "score": float(draft.get("score", 0)),
+        "rake": rake,
+        "currency": draft.get("currency", "USDT"),
+        "license": draft.get("license", ""),
+        "url": "/" + partner_path(draft) + "/",
+        "access": draft.get("access", "direct"),
+        "network": draft.get("network", ""),
+        "networkLabel": draft.get("network_label", draft.get("networkLabel", "")),
+        "country": draft.get("country", "ua"),
+        "countries": draft.get("countries", [draft.get("country", "ua")]),
+        "acceptedCountries": draft.get("acceptedCountries", ["all"]),
+        "limits": draft.get("limits", []),
+        "games": draft.get("games", []),
+        "software": draft.get("software", []),
+        "payments": draft.get("payments", []),
+        "bonus": draft.get("bonus", []),
+        "payoutHours": int(draft.get("payoutHours", 24)),
+        "payoutLabel": draft.get("payoutLabel", ""),
+        "note": draft.get("note", ""),
+        "logo": {
+            "text": draft.get("name", "?")[:2].upper(),
+            "from": draft.get("logo_from", "#14358F"),
+            "to": draft.get("logo_to", "#2A6BFF"),
+        },
+        "card": {
+            "logoImg": draft.get("logo_img", ""),
+            "kind": draft.get("network_label", draft.get("networkLabel", "")),
+            "dark": draft.get("dark_card", "false") == "true",
+            "rows": build_card_rows(draft),
+        },
+    }
+
+
+def upsert_partner_json(draft):
+    """Добавляет ИЛИ ОБНОВЛЯЕТ партнёра в partners.json (по id)."""
+    data = json.loads(PARTNERS_JSON.read_text(encoding="utf-8"))
+    obj = build_partner_object(draft)
+    parts = data.get("partners", [])
+    for i, p in enumerate(parts):
+        if p.get("id") == draft["id"]:
+            parts[i] = obj
+            print(f"  ✓ partners.json: обновлён '{draft['id']}'")
+            break
+    else:
+        parts.append(obj)
+        print(f"  ✓ partners.json: добавлен '{draft['id']}'")
+    data["partners"] = parts
+    PARTNERS_JSON.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--id", required=True)
@@ -231,6 +322,10 @@ def main():
     out_ru.parent.mkdir(parents=True, exist_ok=True)
     out_ru.write_text(html_ru, encoding="utf-8")
     print(f"✓ RU страница: {out_ru} ({len(html_ru)} символов)")
+
+    # Каталог (главная): добавляем/обновляем партнёра при публикации в прод
+    if args.publish:
+        upsert_partner_json(draft)
 
     # ── Украинская версия (перевод контента → тот же шаблон) ──
     content_uk, draft_uk = translate_content(content_ru, draft)
