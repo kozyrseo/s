@@ -296,6 +296,25 @@ def upsert_partner_json(draft):
         print(f"  ✓ partners.json: добавлен '{draft['id']}'")
     data["partners"] = parts
     PARTNERS_JSON.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    # Пересобираем каталог partners.js из обновлённого partners.json
+    _rebuild_partners_js()
+
+
+def _rebuild_partners_js():
+    """Пересобирает partners.js (каталог главной) через build_partners.py."""
+    import subprocess, sys as _sys
+    bp = PARTNERS_JSON.parent / "automation" / "build_partners.py"
+    if not bp.exists():
+        print("  ⚠️ build_partners.py не найден — partners.js не пересобран")
+        return
+    try:
+        r = subprocess.run([_sys.executable, str(bp)], capture_output=True, text=True)
+        if r.returncode == 0:
+            print("  ✓ partners.js пересобран (каталог главной обновлён)")
+        else:
+            print(f"  ⚠️ build_partners.py вернул код {r.returncode}: {r.stderr[:200]}")
+    except Exception as e:
+        print(f"  ⚠️ не удалось пересобрать partners.js: {e}")
 
 
 def main():
