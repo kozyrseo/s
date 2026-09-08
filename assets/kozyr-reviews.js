@@ -273,7 +273,7 @@
     var cls = 'kz-stars kz-stars--' + (size || 'md');
     var full = Math.floor(rating);
     var half = (rating - full) >= 0.5;
-    var html = '<span class="' + cls + '" aria-label="Рейтинг ' + rating.toFixed(1) + ' из 5">';
+    var html = '<span class="' + cls + '" aria-label="' + ((document.documentElement.getAttribute('lang')||'').slice(0,2)==='uk' ? 'Рейтинг ' + rating.toFixed(1) + ' з 5' : 'Рейтинг ' + rating.toFixed(1) + ' из 5') + '">';
     for (var i = 1; i <= 5; i++) {
       var state = i <= full ? 'on' : (i === full + 1 && half ? 'half' : 'off');
       html += '<span class="kz-star kz-star--' + state + '" aria-hidden="true">★</span>';
