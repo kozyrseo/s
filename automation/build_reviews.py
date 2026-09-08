@@ -50,6 +50,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 REVIEWS_JSON = ROOT / "reviews.json"
 JS_FILE = ROOT / "assets" / "kozyr-reviews.js"
+ENHANCE_FILE = ROOT / "assets" / "kozyr-enhance.js"
 PARTNER_DISPLAY = {"pokerbet": "PokerBet", "klubok": "KlubOk", "tonpoker": "TON Poker"}
 
 # (partner_id, lang, путь к странице)
@@ -301,10 +302,16 @@ def js_cache_version(js_text: str) -> str:
     return hashlib.md5(js_text.encode("utf-8")).hexdigest()[:8]
 
 
-def bump_cache_buster(page_html: str, version: str) -> str:
-    """Проставляет ?v=<version> у ссылок на kozyr-reviews.js в странице."""
-    return re.sub(r'(kozyr-reviews\.js\?v=)[A-Za-z0-9._-]+',
-                  lambda m: m.group(1) + version, page_html)
+def bump_cache_buster(page_html: str, version: str, enhance_version: str = None) -> str:
+    """Проставляет ?v=<hash> у ссылок на kozyr-reviews.js и kozyr-enhance.js.
+    При правке любого из этих JS его версия меняется → браузер/Cloudflare тянут
+    свежий файл (иначе геоблок/отзывы остаются из кеша)."""
+    out = re.sub(r'(kozyr-reviews\.js\?v=)[A-Za-z0-9._-]+',
+                 lambda m: m.group(1) + version, page_html)
+    if enhance_version:
+        out = re.sub(r'(kozyr-enhance\.js\?v=)[A-Za-z0-9._-]+',
+                     lambda m: m.group(1) + enhance_version, out)
+    return out
 
 
 def process_page(partner: str, lang: str, reviews: list[dict], page_html: str) -> str:
@@ -396,6 +403,8 @@ def main() -> int:
         cur_js = JS_FILE.read_text(encoding="utf-8")
         new_js = rewrite_js(cur_js, reviews)
         js_ver = js_cache_version(new_js)
+    # версия kozyr-enhance.js (геоблок, страны) — по хешу содержимого
+    enh_ver = js_cache_version(ENHANCE_FILE.read_text(encoding="utf-8")) if ENHANCE_FILE.exists() else None
 
     for partner, lang, path in PAGES:
         if not path.exists():
@@ -403,8 +412,8 @@ def main() -> int:
             continue
         cur = path.read_text(encoding="utf-8")
         new = process_page(partner, lang, reviews, cur)
-        if js_ver:
-            new = bump_cache_buster(new, js_ver)
+        if js_ver or enh_ver:
+            new = bump_cache_buster(new, js_ver or '', enh_ver)
         if new != cur:
             if args.check:
                 drift = True

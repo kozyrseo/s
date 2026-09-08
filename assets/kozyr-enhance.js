@@ -236,7 +236,7 @@
     if (!geo) return '';
     var label = (_isUk ? COUNTRY_LABELS_UK : COUNTRY_LABELS)[geo] || COUNTRY_LABELS[geo];
     if (!label) return '';   /* не знаем страну — не мешаем */
-    var accepted = list.indexOf(geo) !== -1;
+    var accepted = list.indexOf('all') !== -1 || list.indexOf('*') !== -1 || list.indexOf(geo) !== -1;
     var flag = '<span class="fi fi-' + geo + '" aria-hidden="true"></span>';
     var title = accepted
       ? (_isUk ? 'Партнер працює з гравцями з регіону: ' : 'Партнёр работает с игроками из региона: ') + label

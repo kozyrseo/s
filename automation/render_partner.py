@@ -211,6 +211,13 @@ def build_page(draft: dict, content: dict, lang: str = "ru") -> str:
     p.setdefault("pros", [])
     p.setdefault("cons", [])
     p.setdefault("faq", [])
+    # Принимаемые страны для геоблока: 'all' = принимает весь мир (не блокировать),
+    # иначе список кодов через запятую из анкеты. country = основное гео (путь).
+    _ac = draft.get("acceptedCountries") or []
+    if (not _ac) or ("all" in _ac) or ("*" in _ac):
+        p["accept_attr"] = "all"
+    else:
+        p["accept_attr"] = ",".join(str(c).strip().lower() for c in _ac)
     country = draft.get("country", "ua")
     base = f"https://kozyr.club/{country}"
     if lang == "uk":

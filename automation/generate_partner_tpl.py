@@ -74,7 +74,7 @@ def generate_content(draft: dict) -> dict:
                   {"role": "user", "content": user}],
     )
     raw = resp.choices[0].message.content or ""
-    content = parse_content_json(raw)
+    content = apply_content_fixups(parse_content_json(raw), "ru")
     print(f"  ✓ контент получен ({len(json.dumps(content, ensure_ascii=False))} симв., все ключи на месте)")
     return content
 
@@ -106,11 +106,66 @@ TRANSLATE_SYSTEM = """Ти — перекладач покерного сайт�
 - Числа, назви (TON Poker, USDT, Cryptobot, мемкоїни) залишай як є.
 - ОБОВ'ЯЗКОВО переклади ВСІ значення, включно з вкладеним об'єктом "facts"
   (rakeback, license, currency, kyc, access, formats, payouts, payments) та полем
-  "sticky_note". Не залишай російських слів: "Крипта"→"Крипта", "Нет"→"Ні",
+  "sticky_note". Не залишай російських слів: "Крипта"→"Криптовалюта", "Нет"→"Ні",
   "Есть"→"Є", "Кэш"→"Кеш", "от мгновенно"→"від миттєво", "Крипто-рум"→"Крипто-рум",
   "Депозит от"→"Депозит від", "вход"→"вхід", "через"→"через".
 
 Поверни ТІЛЬКИ валідний JSON з ТИМИ САМИМИ ключами. Без пояснень."""
+
+
+# Детермінована зачистка контенту. Критично: аудиторія українська —
+# НЕ можна московський час (МСК/Москва) і чутливі гео-терміни (СНГ/СНД).
+# Застосовується і до RU-версії (сайт для укр. аудиторії), і до UK.
+CONTENT_FIXUPS = {
+    "ru": [
+        (re.compile(r"\bКрипта\b"), "Криптовалюта"),
+        (re.compile(r"\bкрипта\b"), "криптовалюта"),
+        (re.compile(r"\s*по\s+МСК"), " по киевскому времени"),
+        (re.compile(r"\s*за\s+МСК"), " по киевскому времени"),
+        (re.compile(r"\(МСК\)"), "(киевское время)"),
+        (re.compile(r"\bМСК\b"), "киевское время"),
+        (re.compile(r"экс-?СН[ГД]"), "русскоязычных стран"),
+        (re.compile(r"\bСН[ГД]\b"), "русскоязычных стран"),
+        (re.compile(r"по\s+московскому\s+времени"), "по киевскому времени"),
+        (re.compile(r"московск(ому|ое|ого)\s+врем"), "киевск\1 врем"),
+        (re.compile(r"\bмск\b", re.I), "по киевскому времени"),
+        (re.compile(r"постсоветск"), "русскоязычн"),
+        (re.compile(r"на\s+рубл[а-я]*"), "на USDT"),
+        (re.compile(r"в\s+рубл[а-я]*"), "в USDT"),
+        (re.compile(r"рубл[а-я]*"), "USDT"),
+        (re.compile(r"₽"), "USDT"),
+    ],
+    "uk": [
+        (re.compile(r"\bКрипта\b"), "Криптовалюта"),
+        (re.compile(r"\bкрипта\b"), "криптовалюта"),
+        (re.compile(r"\s*за\s+МСК"), " за київським часом"),
+        (re.compile(r"\s*по\s+МСК"), " за київським часом"),
+        (re.compile(r"\(МСК\)"), "(київський час)"),
+        (re.compile(r"\bМСК\b"), "київський час"),
+        (re.compile(r"екс-?СН[ГД]"), "російськомовних країн"),
+        (re.compile(r"\bСН[ГД]\b"), "російськомовних країн"),
+        (re.compile(r"по\s+московському\s+час[уі]"), "за київським часом"),
+        (re.compile(r"московськ(ому|е|ого)\s+час"), "київськ\1 час"),
+        (re.compile(r"\bмск\b", re.I), "за київським часом"),
+        (re.compile(r"пострадянськ"), "російськомовн"),
+        (re.compile(r"на\s+рубл[а-яі]*"), "на USDT"),
+        (re.compile(r"в\s+рубл[а-яі]*"), "в USDT"),
+        (re.compile(r"рубл[а-яі]*"), "USDT"),
+        (re.compile(r"₽"), "USDT"),
+    ],
+}
+
+def apply_content_fixups(val, lang):
+    fx = CONTENT_FIXUPS.get(lang, [])
+    if isinstance(val, str):
+        for pat, rep in fx:
+            val = pat.sub(rep, val)
+        return val
+    if isinstance(val, dict):
+        return {k: apply_content_fixups(v, lang) for k, v in val.items()}
+    if isinstance(val, list):
+        return [apply_content_fixups(x, lang) for x in val]
+    return val
 
 
 def translate_content(content_ru: dict, draft: dict):
@@ -136,11 +191,11 @@ def translate_content(content_ru: dict, draft: dict):
     uk = parse_content_json(resp.choices[0].message.content or "")
     for k, v in uk.items():
         uk[k] = rewrite_links_ru_uk(v)
-    content_uk = {k: v for k, v in uk.items() if not k.startswith("__")}
+    content_uk = apply_content_fixups({k: v for k, v in uk.items() if not k.startswith("__")}, "uk")
     draft_uk = dict(draft)
-    draft_uk["pros"] = uk.get("__pros", draft.get("pros", []))
-    draft_uk["cons"] = uk.get("__cons", draft.get("cons", []))
-    draft_uk["faq"] = uk.get("__faq", draft.get("faq", []))
+    draft_uk["pros"] = apply_content_fixups(uk.get("__pros", draft.get("pros", [])), "uk")
+    draft_uk["cons"] = apply_content_fixups(uk.get("__cons", draft.get("cons", [])), "uk")
+    draft_uk["faq"] = apply_content_fixups(uk.get("__faq", draft.get("faq", [])), "uk")
     print(f"  ✓ перевод получен ({len(json.dumps(uk, ensure_ascii=False))} симв.)")
     return content_uk, draft_uk
 
