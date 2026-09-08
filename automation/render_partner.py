@@ -103,7 +103,10 @@ I18N = {
             "rating_of": "из",
             "rating_word": "Рейтинг",
             "reviews_word": "отзывов",
-            "and_word": "и"
+            "and_word": "и",
+            "cta_goto": "Перейти в",
+            "cta_note_pre": "Заходи в ",
+            "cta_note_post": " по ссылке KOZYR"
     },
     "uk": {
             "skip": "Перейти до основного вмісту",
@@ -185,7 +188,10 @@ I18N = {
             "rating_of": "з",
             "rating_word": "Рейтинг",
             "reviews_word": "відгуків",
-            "and_word": "та"
+            "and_word": "та",
+            "cta_goto": "Перейти в",
+            "cta_note_pre": "Заходь у ",
+            "cta_note_post": " за посиланням KOZYR"
     },
 }
 

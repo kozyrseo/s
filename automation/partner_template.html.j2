@@ -1221,9 +1221,9 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
         </dl>
 
       <a href="#cta" class="room-facts-cta">
-        Перейти в {{ p.name }} →
+        {{ t.cta_goto }} {{ p.name }} →
       </a>
-      <p class="room-facts-note">Заходи в {{ p.name }} по ссылке KOZYR</p>
+      <p class="room-facts-note">{{ t.cta_note_pre }}{{ p.name }}{{ t.cta_note_post }}</p>
     </aside>
   </div>
 </header>
@@ -1318,7 +1318,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <div class="side-cta-value">30<em>%</em></div>
       <p class="side-cta-desc">{{ content.sticky_note }}</p>
       <a href="#cta" class="side-cta-btn">
-        <span>Перейти в {{ p.name }}</span>
+        <span>{{ t.cta_goto }} {{ p.name }}</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
@@ -1365,7 +1365,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 17 5 25 28 34 -2 8 -132 -113z" fill="#14358F"/></g></g></svg></span>
           <span>KOZYR</span>
         </a>
-        <p>Прозрачные рейкбек-сделки для украинских покерных игроков. {{ t.nav_rooms }} и клубный формат.</p>
+        <p>{{ t.footer_tagline }}</p>
       </div>
       <div class="footer-col">
         <h3>{{ t.foot_product }}</h3>
