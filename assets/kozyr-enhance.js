@@ -232,11 +232,22 @@
   var COUNTRY_LABELS_UK = { ua: 'Україна', pl: 'Польща', de: 'Німеччина', cz: 'Чехія', ru: 'Росія', by: 'Білорусь', kz: 'Казахстан', md: 'Молдова', ge: 'Грузія', am: 'Вірменія', az: 'Азербайджан', lt: 'Литва', lv: 'Латвія', ee: 'Естонія', sk: 'Словаччина', hu: 'Угорщина', ro: 'Румунія', bg: 'Болгарія', at: 'Австрія', it: 'Італія', es: 'Іспанія', pt: 'Португалія', fr: 'Франція', nl: 'Нідерланди', be: 'Бельгія', gb: 'Велика Британія', ie: 'Ірландія', tr: 'Туреччина', il: 'Ізраїль', cy: 'Кіпр' };
 
   function acceptMarkerHtml(list) {
+    var isAll = list.indexOf('all') !== -1 || list.indexOf('*') !== -1;
     var geo = (window.KozyrGeo && window.KozyrGeo.get) ? window.KozyrGeo.get() : null;
-    if (!geo) return '';
-    var label = (_isUk ? COUNTRY_LABELS_UK : COUNTRY_LABELS)[geo] || COUNTRY_LABELS[geo];
-    if (!label) return '';   /* не знаем страну — не мешаем */
-    var accepted = list.indexOf('all') !== -1 || list.indexOf('*') !== -1 || list.indexOf(geo) !== -1;
+    var label = geo ? ((_isUk ? COUNTRY_LABELS_UK : COUNTRY_LABELS)[geo] || COUNTRY_LABELS[geo]) : null;
+    /* Партнёр "весь мир" (all): плашка "Доступний" показывается ВСЕГДА,
+       даже если гео не определилось — тогда без страны/флага. */
+    if (!label) {
+      if (!isAll) return '';
+      var mA = _isUk ? 'Доступний у вашому регіоні' : 'Доступен в вашем регионе';
+      var sA = _isUk ? 'Приймає гравців з усього світу' : 'Принимает игроков со всего мира';
+      var tA = _isUk ? 'Партнер працює з гравцями з усього світу' : 'Партнёр работает с игроками со всего мира';
+      return '<span class="ka ka--yes" title="' + tA + '">' +
+        '<span class="ka__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>' +
+        '<span class="ka__body"><span class="ka__main">' + mA + '</span><span class="ka__sub">' + sA + '</span></span>' +
+      '</span>';
+    }
+    var accepted = isAll || list.indexOf(geo) !== -1;
     var flag = '<span class="fi fi-' + geo + '" aria-hidden="true"></span>';
     var title = accepted
       ? (_isUk ? 'Партнер працює з гравцями з регіону: ' : 'Партнёр работает с игроками из региона: ') + label

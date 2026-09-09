@@ -288,8 +288,8 @@
 window.KOZYR_PARTNERS = PARTNERS;
 
   function rakeText(p) {
-    if (p.rake === "none") return "нет";
-    return (p.rake === null || p.rake === undefined) ? "уточняется" : (p.rake + "% еженедельно");
+    if (p.rake === "none") return "возврат рейка";
+    return (p.rake === null || p.rake === undefined) ? "уточняется" : ("до " + p.rake + "%");
   }
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
