@@ -232,6 +232,7 @@
   var COUNTRY_LABELS_UK = { ua: 'Україна', pl: 'Польща', de: 'Німеччина', cz: 'Чехія', ru: 'Росія', by: 'Білорусь', kz: 'Казахстан', md: 'Молдова', ge: 'Грузія', am: 'Вірменія', az: 'Азербайджан', lt: 'Литва', lv: 'Латвія', ee: 'Естонія', sk: 'Словаччина', hu: 'Угорщина', ro: 'Румунія', bg: 'Болгарія', at: 'Австрія', it: 'Італія', es: 'Іспанія', pt: 'Португалія', fr: 'Франція', nl: 'Нідерланди', be: 'Бельгія', gb: 'Велика Британія', ie: 'Ірландія', tr: 'Туреччина', il: 'Ізраїль', cy: 'Кіпр' };
 
   function acceptMarkerHtml(list) {
+    var _isUk = (document.documentElement.getAttribute('lang') || '').indexOf('uk') === 0 || /\/uk\//.test(location.pathname);
     var isAll = list.indexOf('all') !== -1 || list.indexOf('*') !== -1;
     var geo = (window.KozyrGeo && window.KozyrGeo.get) ? window.KozyrGeo.get() : null;
     var label = geo ? ((_isUk ? COUNTRY_LABELS_UK : COUNTRY_LABELS)[geo] || COUNTRY_LABELS[geo]) : null;
