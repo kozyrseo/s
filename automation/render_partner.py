@@ -16,6 +16,7 @@ KOZYR — рендер страницы партнёра из шаблона (С
 from __future__ import annotations
 import argparse, json, sys
 from pathlib import Path
+import re
 
 AUTOMATION = Path(__file__).resolve().parent
 REPO_ROOT  = AUTOMATION.parent
@@ -197,6 +198,19 @@ I18N = {
 
 
 
+
+def _bump_js_versions(html):
+    """Проставляет ?v=<hash> для kozyr-enhance.js/kozyr-reviews.js по хешу файла."""
+    import hashlib
+    for jsname in ("kozyr-enhance.js", "kozyr-reviews.js"):
+        jsfile = REPO_ROOT / "assets" / jsname
+        if jsfile.exists():
+            ver = hashlib.md5(jsfile.read_bytes()).hexdigest()[:8]
+            html = re.sub(r"(" + re.escape(jsname) + r"\?v=)[A-Za-z0-9._-]+",
+                          lambda m, v=ver: m.group(1) + v, html)
+    return html
+
+
 def build_page(draft: dict, content: dict, lang: str = "ru") -> str:
     """Рендерит HTML страницы партнёра из шаблона + анкеты + контента.
 
@@ -228,7 +242,8 @@ def build_page(draft: dict, content: dict, lang: str = "ru") -> str:
         p["lang_tag"] = "ru-UA"
         p["og_locale"] = "ru_UA"
         p["canonical"] = f"{base}/{p['kind']}/{draft['id']}/"
-    return Template(tpl).render(p=p, content=content, t=I18N.get(lang, I18N["ru"]))
+    html = Template(tpl).render(p=p, content=content, t=I18N.get(lang, I18N["ru"]))
+    return _bump_js_versions(html)
 
 
 def main():
