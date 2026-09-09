@@ -189,7 +189,7 @@ I18N = {
             "rating_word": "Рейтинг",
             "reviews_word": "відгуків",
             "and_word": "та",
-            "cta_goto": "Перейти в",
+            "cta_goto": "Перейти до",
             "cta_note_pre": "Заходь у ",
             "cta_note_post": " за посиланням KOZYR"
     },

@@ -89,7 +89,7 @@
                     ],
                     [
                           "Форматы",
-                          "Hold'em, Omaha, Short Deck, MTT",
+                          "Hold'em, Omaha, Short, Deck, MTT",
                           false
                     ]
               ]
@@ -257,7 +257,7 @@
               "rows": [
                     [
                           "Рейкбек",
-                          "до 30% (на усмотрение аффилейта)",
+                          "до 30%",
                           true
                     ],
                     [
@@ -272,7 +272,7 @@
                     ],
                     [
                           "Форматы",
-                          "cash, mtt",
+                          "Кэш, MTT",
                           false
                     ],
                     [

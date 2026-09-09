@@ -124,6 +124,10 @@ CONTENT_FIXUPS = {
         (re.compile(r"\s*за\s+МСК"), " по киевскому времени"),
         (re.compile(r"\(МСК\)"), "(киевское время)"),
         (re.compile(r"\bМСК\b"), "киевское время"),
+        (re.compile(r"\s*\(на усмотрение аффилейта\)"), ""),
+        (re.compile(r"на усмотрение аффилейта"), "индивидуально"),
+        (re.compile(r"платит аффилейт по своему усмотрению"), "выплачивается по условиям партнёра"),
+        (re.compile(r"\bаффилейт\w*"), "партнёр"),
         (re.compile(r"экс-?СН[ГД]"), "русскоязычных стран"),
         (re.compile(r"\bСН[ГД]\b"), "русскоязычных стран"),
         (re.compile(r"по\s+московскому\s+времени"), "по киевскому времени"),
@@ -142,6 +146,9 @@ CONTENT_FIXUPS = {
         (re.compile(r"\s*по\s+МСК"), " за київським часом"),
         (re.compile(r"\(МСК\)"), "(київський час)"),
         (re.compile(r"\bМСК\b"), "київський час"),
+        (re.compile(r"\s*\(на розсуд партнера\)"), ""),
+        (re.compile(r"на розсуд аффілейта|на розсуд партнера"), "індивідуально"),
+        (re.compile(r"\bаффілейт\w*|\bафілейт\w*"), "партнер"),
         (re.compile(r"екс-?СН[ГД]"), "російськомовних країн"),
         (re.compile(r"\bСН[ГД]\b"), "російськомовних країн"),
         (re.compile(r"по\s+московському\s+час[уі]"), "за київським часом"),
@@ -221,6 +228,16 @@ def _rake_label(draft):
     return "—"
 
 
+GAME_LABELS = {"cash": "Кэш", "mtt": "MTT", "spin": "Спины", "spins": "Спины",
+               "sng": "SNG", "of": "OFC", "ofc": "OFC", "plo": "PLO", "nlh": "NLH",
+               "zoom": "Zoom", "fast": "Fast", "hu": "HU"}
+
+
+def _games_label(games):
+    return ", ".join(GAME_LABELS.get(str(x).strip().lower(), str(x).strip().capitalize())
+                     for x in (games or []))
+
+
 def build_card_rows(draft):
     """Строки карточки каталога (до 5) из анкеты."""
     rows = [
@@ -230,7 +247,7 @@ def build_card_rows(draft):
     if draft.get("minDeposit"):
         rows.append(["Мин. депозит", draft["minDeposit"], False])
     if draft.get("games"):
-        rows.append(["Форматы", ", ".join(draft["games"][:4]), False])
+        rows.append(["Форматы", _games_label(draft["games"][:4]), False])
     if draft.get("payoutLabel"):
         rows.append(["Выплаты", draft["payoutLabel"], False])
     return rows[:5]
