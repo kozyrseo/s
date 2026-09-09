@@ -629,7 +629,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       var box = document.querySelector("[data-compare-rooms]");
       var tw = document.querySelector("[data-compare-table]");
       if (box && tw) {
-        var rt = function (p) { return p.rake === "none" ? "нет" : (p.rake == null ? "уточняется" : p.rake + "% еженедельно"); };
+        var rt = function (p) { return p.rake === "none" ? "нет" : (p.rake == null ? "уточняется" : "до " + p.rake + "%"); };
         var rows = rooms.map(function (p) {
           return "<tr><td><strong>" + p.name + "</strong></td><td>" + rt(p) + "</td><td>" +
             (p.currency || "—") + "</td><td>" + (p.license || "—") + "</td><td>" + (p.payoutLabel || "—") + "</td></tr>";

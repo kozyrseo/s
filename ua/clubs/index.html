@@ -488,7 +488,7 @@ body { margin: 0; font-family: var(--f-body); color: var(--ink); background: #F6
       var box = document.querySelector("[data-compare-clubs]");
       var tw = document.querySelector("[data-compare-table]");
       if (box && tw) {
-        var rt = function (p) { return p.rake === "none" ? "нет" : (p.rake == null ? "уточняется" : p.rake + "% еженедельно"); };
+        var rt = function (p) { return p.rake === "none" ? "нет" : (p.rake == null ? "уточняется" : "до " + p.rake + "%"); };
         var rows = clubs.map(function (p) {
           return "<tr><td><strong>" + p.name + "</strong></td><td>" + rt(p) + "</td><td>" +
             (p.currency || "—") + "</td><td>" + (p.network || "—") + "</td><td>" + (p.payoutLabel || "—") + "</td></tr>";
