@@ -376,7 +376,8 @@ async function handleCallback(cb, env) {
   // ═══════════════════════════════════════════════════════════════════
   if (action === "pcountry" || action === "pconfirm" || action === "pmore" ||
       action === "pcancel" || action === "ppublish" ||
-      action === "pshow" || action === "pshow_latest") {
+      action === "pshow" || action === "pshow_latest" ||
+      action === "pedit" || action === "pfield" || action === "pacc") {
     await handlePartnerCallback(action, segments, cb, env);
     return;
   }
@@ -522,7 +523,7 @@ async function cmdHelp(chatId, args, msg, env) {
   ⚙️ Ещё — research, обновить темы, аналитика за период, статус, translate, A/B
 
 *➕ Добавление партнёра (авто):*
-  Нажми «➕ Партнёр» или /addpartner → опиши рум/клуб одним сообщением своими словами → бот распарсит через Claude, покажет «что понял» и кнопки:
+  Нажми «➕ Добавить партнёра» в меню → опиши рум/клуб одним сообщением своими словами → бот распарсит через Claude, покажет «что понял» и кнопки:
     ✅ Создать страницу · ✏️ Дополнить текстом · ❌ Отмена
   Готовая страница появится в \`_pending_partner/{id}/\` — проверь и жми «🌐 Опубликовать».
 
@@ -1595,6 +1596,111 @@ const PARTNER_DRAFT_PATH = (id) => `_partner_drafts/${id}.json`;
 // Если добавляешь страну туда — добавь код сюда, иначе страница уйдёт в путь
 // /xx/, которого нет в конфиге, и каталог её не подхватит.
 const PARTNER_COUNTRIES = ["ua", "kz", "pl", "by"];
+
+// Поля черновика, которые оператор может поправить кнопками (без переписывания
+// всего описания). type задаёт, как трактовать введённый текст.
+const PARTNER_EDIT_FIELDS = {
+  name:        { label: "Название",   type: "str",  hint: "новое название (напр. Royal Club)" },
+  rakeLabel:   { label: "Рейкбек",    type: "rake", hint: "как показывать рейкбек (напр. «до 35%» или «нет»)" },
+  bonus:       { label: "Бонус",      type: "list", hint: "бонусы через запятую или с новой строки" },
+  limits:      { label: "Лимиты",     type: "list", hint: "лимиты через запятую (NL10, NL25, NL50)" },
+  payoutLabel: { label: "Выплаты",    type: "str",  hint: "скорость выплат (напр. «0–24 часа», «мгновенно»)" },
+  score:       { label: "Score",      type: "num",  hint: "оценку 1–10 (напр. 8.4)" },
+  ref_url:     { label: "Реф-ссылка", type: "url",  hint: "ссылку кнопки «Перейти» (https://… или t.me/…)" },
+  currency:    { label: "Валюта",     type: "cur",  hint: "валюту: UAH / USD / EUR / USDT" },
+  note:        { label: "Описание",   type: "str",  hint: "краткое описание в 1 предложение для карточки" },
+};
+
+function partnerEditMenuKb(draftId) {
+  const keys = Object.keys(PARTNER_EDIT_FIELDS);
+  const kb = [];
+  for (let i = 0; i < keys.length; i += 2) {
+    kb.push(keys.slice(i, i + 2).map(k => ({
+      text: "✏️ " + PARTNER_EDIT_FIELDS[k].label,
+      callback_data: `pfield:${draftId}:${k}`,
+    })));
+  }
+  kb.push([{ text: "← Назад к сводке", callback_data: `pshow:${draftId}` }]);
+  return kb;
+}
+
+// Применяет введённое значение к одному полю черновика (по типу поля),
+// сохраняет анкету и заново показывает сводку.
+async function applyPartnerFieldValue(chatId, session, rawValue, env) {
+  const draftId = session.draft_id;
+  const field = session.edit_field;
+  const meta = PARTNER_EDIT_FIELDS[field] ||
+    (field === "acceptedCountries" ? { label: "Принимает из", type: "countries" } : null);
+  const draft = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
+  if (!draft || !meta) {
+    session.stage = "await_confirm"; session.edit_field = null;
+    await savePartnerSession(chatId, session, env);
+    await sendMessage(chatId, env, "⚠️ Черновик не найден — правка отменена.");
+    return;
+  }
+
+  const value = (rawValue || "").trim();
+  let applied = value;
+
+  switch (meta.type) {
+    case "list":
+      draft[field] = value.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean);
+      applied = draft[field].join(", ") || "—";
+      break;
+    case "countries": {
+      const codes = value.toLowerCase().split(/[\s,;]+/).map(s => s.trim())
+        .filter(s => s === "all" || /^[a-z]{2}$/.test(s));
+      if (!codes.length) { await sendMessage(chatId, env, "⚠️ Не вижу кодов стран. Пример: `ua, pl, de`. Попробуй ещё раз."); return; }
+      draft.acceptedCountries = codes;
+      applied = codes.join(", ");
+      break;
+    }
+    case "num": {
+      let n = parseFloat(value.replace(",", "."));
+      if (isNaN(n)) { await sendMessage(chatId, env, "⚠️ Нужно число, напр. `8.4`. Попробуй ещё раз."); return; }
+      n = Math.max(1, Math.min(10, n));
+      draft.score = Math.round(n * 10) / 10;
+      applied = String(draft.score);
+      break;
+    }
+    case "url":
+      if (value && !/^(https?:\/\/|t\.me\/|tg:\/\/)/i.test(value)) {
+        await sendMessage(chatId, env, "⚠️ Ссылка должна начинаться с `https://`, `t.me/` или `tg://`. Попробуй ещё раз."); return;
+      }
+      draft[field] = value;
+      break;
+    case "cur":
+      draft[field] = value.toUpperCase();
+      applied = draft[field];
+      break;
+    case "rake": {
+      draft.rakeLabel = value;
+      const m = value.match(/(\d+(?:[.,]\d+)?)\s*%/);
+      if (m) draft.rake = parseFloat(m[1].replace(",", "."));
+      else if (/^(нет|none|0|без)/i.test(value)) draft.rake = null;
+      applied = value;
+      break;
+    }
+    default: // str
+      draft[field] = value;
+  }
+
+  // Поле заполнено — убираем его из «не указано».
+  if (Array.isArray(draft._missing)) {
+    const lab = meta.label.toLowerCase();
+    draft._missing = draft._missing.filter(m => !String(m).toLowerCase().includes(lab));
+  }
+
+  await ghWriteFile(PARTNER_DRAFT_PATH(draftId), JSON.stringify(draft, null, 2),
+    `partner: edit ${field} for ${draftId}`, env);
+
+  session.stage = "await_confirm";
+  session.edit_field = null;
+  await savePartnerSession(chatId, session, env);
+
+  await sendMessage(chatId, env, `✅ *${meta.label}* обновлено: ${escapeMd(String(applied))}`);
+  await showPartnerDraftSummary(chatId, draftId, env);
+}
 const COUNTRY_FLAGS = { ua: "🇺🇦", kz: "🇰🇿", pl: "🇵🇱", by: "🇧🇾", ru: "🇷🇺" };
 
 // ── /addpartner — старт: открываем сессию, ждём описание ──
@@ -1633,6 +1739,12 @@ async function handlePartnerAnswer(chatId, text, message, env) {
   if (!session) return;   // сессия истекла между проверкой и обработкой
 
   const stage = session.stage || "await_text";
+
+  // Правка одного поля кнопкой: пришло новое значение — применяем к черновику.
+  if (stage === "edit_field" && session.edit_field && validPartnerId(session.draft_id)) {
+    await applyPartnerFieldValue(chatId, session, text, env);
+    return;
+  }
 
   // Первый ввод описания.
   if (stage === "await_text") {
@@ -1711,6 +1823,87 @@ async function handlePartnerCallback(action, segments, cb, env) {
     const draftId = segments[1];
     if (!validPartnerId(draftId)) { await answerCallback(cb.id, env, "⚠️ Некорректный id"); return; }
     await answerCallback(cb.id, env, "📋 Показываю черновик");
+    await showPartnerDraftSummary(chatId, draftId, env);
+    return;
+  }
+
+  // Меню правки полей.
+  if (action === "pedit") {
+    const draftId = segments[1];
+    if (!validPartnerId(draftId)) { await answerCallback(cb.id, env, "⚠️ Некорректный id"); return; }
+    await answerCallback(cb.id, env, "✏️ Что исправить?");
+    await sendMessage(chatId, env,
+      "✏️ *Что исправить?* Выбери поле — пришлю подсказку, а ты одним сообщением введёшь новое значение.",
+      partnerEditMenuKb(draftId));
+    return;
+  }
+
+  // Выбрано поле → просим значение и переводим сессию в edit_field.
+  if (action === "pfield") {
+    const draftId = segments[1];
+    const field = segments[2];
+    if (!validPartnerId(draftId) || !PARTNER_EDIT_FIELDS[field]) {
+      await answerCallback(cb.id, env, "⚠️ Некорректное поле"); return;
+    }
+    const f = PARTNER_EDIT_FIELDS[field];
+    await answerCallback(cb.id, env, `✏️ ${f.label}`);
+    const session = (await getPartnerSession(chatId, env)) ||
+      { chat_id: chatId, started_at: new Date().toISOString() };
+    session.stage = "edit_field";
+    session.draft_id = draftId;
+    session.edit_field = field;
+    await savePartnerSession(chatId, session, env);
+    await sendMessage(chatId, env,
+      `✏️ *${f.label}* — пришли ${f.hint} одним сообщением.`,
+      [[{ text: "← Отмена правки", callback_data: `pshow:${draftId}` }]]);
+    return;
+  }
+
+  // Откуда партнёр принимает игроков (acceptedCountries) — кнопками.
+  if (action === "pacc") {
+    const draftId = segments[1];
+    const mode = segments[2];
+    if (!validPartnerId(draftId)) { await answerCallback(cb.id, env, "⚠️ Некорректный id"); return; }
+
+    if (!mode) {
+      await answerCallback(cb.id, env, "🌐 Откуда принимает?");
+      await sendMessage(chatId, env,
+        "🌐 *Откуда партнёр принимает игроков?*\n\n" +
+        "• 🌍 _Весь мир_ — без гео-ограничений\n" +
+        "• 📍 _Только основная_ — как страна публикации\n" +
+        "• ✍️ _Список_ — сам введёшь коды стран",
+        [
+          [{ text: "🌍 Весь мир", callback_data: `pacc:${draftId}:all` },
+           { text: "📍 Только основная", callback_data: `pacc:${draftId}:only` }],
+          [{ text: "✍️ Ввести список стран", callback_data: `pacc:${draftId}:list` }],
+          [{ text: "← Назад к сводке", callback_data: `pshow:${draftId}` }],
+        ]);
+      return;
+    }
+
+    if (mode === "list") {
+      await answerCallback(cb.id, env, "✍️ Жду список");
+      const session = (await getPartnerSession(chatId, env)) ||
+        { chat_id: chatId, started_at: new Date().toISOString() };
+      session.stage = "edit_field";
+      session.draft_id = draftId;
+      session.edit_field = "acceptedCountries";
+      await savePartnerSession(chatId, session, env);
+      await sendMessage(chatId, env,
+        "✍️ Пришли *коды стран через запятую* (ISO-2): напр. `ua, pl, de, kz`.",
+        [[{ text: "← Отмена", callback_data: `pshow:${draftId}` }]]);
+      return;
+    }
+
+    // all / only — применяем сразу
+    const draft = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
+    if (!draft) { await answerCallback(cb.id, env, "⚠️ Черновик не найден"); return; }
+    draft.acceptedCountries = mode === "all"
+      ? ["all"]
+      : (draft.country ? [draft.country] : []);
+    await ghWriteFile(PARTNER_DRAFT_PATH(draftId), JSON.stringify(draft, null, 2),
+      `partner: acceptedCountries=${mode} for ${draftId}`, env);
+    await answerCallback(cb.id, env, mode === "all" ? "🌍 Весь мир" : "📍 Только основная");
     await showPartnerDraftSummary(chatId, draftId, env);
     return;
   }
@@ -1812,7 +2005,9 @@ async function showPartnerDraftSummary(chatId, draftId, env) {
   } else {
     kb = [
       [{ text: "✅ Создать страницу", callback_data: `pconfirm:${draftId}` }],
-      [{ text: "✏️ Дополнить текстом", callback_data: `pmore:${draftId}` }],
+      [{ text: "✏️ Исправить поле", callback_data: `pedit:${draftId}` },
+       { text: "🌐 Принимает из…", callback_data: `pacc:${draftId}` }],
+      [{ text: "➕ Дополнить текстом", callback_data: `pmore:${draftId}` }],
       [{ text: "❌ Отмена", callback_data: "pcancel" }],
     ];
     await sendMessage(chatId, env, summary, kb);
@@ -1835,7 +2030,7 @@ async function showLatestPartnerDraft(chatId, env) {
     await sendMessage(chatId, env,
       "⚠️ Черновиков пока нет — вероятно, парсинг ещё идёт или упал.\n\n" +
       "Проверь логи: *Actions → Parse partner description*. " +
-      "Если упал (часто — нет `OPENROUTER_API_KEY`), поправь и пришли описание заново: /addpartner");
+      "Если упал (часто — нет `OPENROUTER_API_KEY`), поправь и пришли описание заново — жми «➕ Добавить партнёра» в меню");
     return;
   }
 
@@ -1849,7 +2044,7 @@ async function showLatestPartnerDraft(chatId, env) {
     if (ts >= bestTs) { bestTs = ts; best = id; }
   }
   if (!best) {
-    await sendMessage(chatId, env, "⚠️ Не удалось прочитать черновики. Пришли описание заново: /addpartner");
+    await sendMessage(chatId, env, "⚠️ Не удалось прочитать черновики. Пришли описание заново — жми «➕ Добавить партнёра» в меню.");
     return;
   }
   await showPartnerDraftSummary(chatId, best, env);
@@ -1902,7 +2097,7 @@ async function setPartnerCountry(chatId, draftId, code, message, env) {
   }
   const draft = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
   if (!draft) {
-    await sendMessage(chatId, env, "⚠️ Черновик не найден. Начни заново: /addpartner");
+    await sendMessage(chatId, env, "⚠️ Черновик не найден. Начни заново кнопкой «➕ Добавить партнёра» в меню");
     return;
   }
   draft.country = code;
@@ -1928,7 +2123,7 @@ async function setPartnerCountry(chatId, draftId, code, message, env) {
 async function confirmPartner(chatId, draftId, env) {
   const draft = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
   if (!draft) {
-    await sendMessage(chatId, env, "⚠️ Черновик не найден. Начни заново: /addpartner");
+    await sendMessage(chatId, env, "⚠️ Черновик не найден. Начни заново кнопкой «➕ Добавить партнёра» в меню");
     await deletePartnerSession(chatId, env);
     return;
   }
@@ -1943,7 +2138,7 @@ async function confirmPartner(chatId, draftId, env) {
   await attachStagedLogoIfAny(chatId, draftId, env);
 
   const ok = await triggerWorkflow("generate-partner-tpl.yml",
-    { partner_id: draftId, publish: "false" }, env);
+    { partner_id: draftId, publish: "false", chat_id: String(chatId) }, env);
 
   // Сессию НЕ удаляем: оставляем в стадии generated, чтобы оператор мог
   // дополнить/перегенерить или опубликовать. Закроется по TTL/pcancel/ppublish.
@@ -1972,7 +2167,7 @@ async function confirmPartner(chatId, draftId, env) {
 async function publishPartner(chatId, draftId, env) {
   const draft = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
   const ok = await triggerWorkflow("generate-partner-tpl.yml",
-    { partner_id: draftId, publish: "true" }, env);
+    { partner_id: draftId, publish: "true", chat_id: String(chatId) }, env);
 
   // Публикация — терминальный шаг: закрываем сессию и чистим ввод.
   await deletePartnerSession(chatId, env);

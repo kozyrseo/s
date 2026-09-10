@@ -435,6 +435,10 @@ def _propagate(draft: dict) -> None:
     _ensure_sitemap(draft)
     # OG-обложка (og-{kind}-{id}.jpg) — иначе битое превью при шеринге
     _run_script("build_partner_og.py", "--id", draft["id"])
+    # Догенерить редакционные отзывы, если у партнёра их ещё нет (иначе пустой
+    # контейнер и ноль соц-доказательства). Идемпотентно: не трогает, если есть.
+    if os.environ.get("OPENROUTER_API_KEY"):
+        _run_script("gen_partner_extras.py", "--id", draft["id"], "--reviews")
     # Отзывы + aggregateRating (PAGES берётся из partners.json — партнёр уже там)
     _run_script("build_reviews.py")
     # llms.txt / llms-full.txt (единая точка правды для ИИ)
@@ -450,6 +454,12 @@ def main():
     draft_file = DRAFTS / f"{args.id}.json"
     if not draft_file.exists():
         sys.exit(f"❌ Нет анкеты: {draft_file}")
+
+    # 0. Догенерить FAQ в анкету, если оператор его не задал (до загрузки в
+    #    память — скрипт пишет файл, дальше читаем уже с FAQ). Идемпотентно.
+    if os.environ.get("OPENROUTER_API_KEY"):
+        _run_script("gen_partner_extras.py", "--id", args.id, "--faq")
+
     draft = json.loads(draft_file.read_text(encoding="utf-8"))
     print(f"Партнёр: {draft.get('name')} ({draft.get('type')}, {args.id})")
 

@@ -33,6 +33,34 @@
     }
     return p.url;
   }
+  // ── Локализация витрины каталога RU→UK ──
+  // Метки/единицы/CTA карточек хранятся в partners.json по-русски. На
+  // украинских страницах (pageLang()==="uk") переводим их «на месте», иначе
+  // на /ua/uk/ карточка показывала бы «Выплаты», «часа», «Смотреть обзор».
+  var CARD_LABELS_UK = {
+    "Рейкбек": "Рейкбек", "Валюта": "Валюта", "Выплаты": "Виплати",
+    "Мин. депозит": "Мін. депозит", "Форматы": "Формати",
+    "Форматы игр": "Формати ігор", "Бонус": "Бонус", "Лимиты": "Ліміти",
+    "Welcome-бонус": "Welcome-бонус", "Лицензия": "Ліцензія",
+    "Юрисдикция": "Юрисдикція", "Софт": "Софт"
+  };
+  function trCard(s) {
+    if (pageLang() !== "uk" || s == null) return s;
+    var out = String(s);
+    if (CARD_LABELS_UK[out]) return CARD_LABELS_UK[out];
+    // единицы времени/скорости внутри значений выплат (длинные формы — первыми)
+    out = out
+      .replace(/мгновенно/gi, "миттєво")
+      .replace(/часов/g, "годин").replace(/часа/g, "години")
+      .replace(/минуты/g, "хвилини").replace(/минут/g, "хвилин");
+    return out;
+  }
+  function trCta(ru) {
+    if (pageLang() !== "uk") return ru;
+    var M = { "Смотреть обзор": "Дивитись огляд", "Перейти на": "Перейти на" };
+    return M[ru] || ru;
+  }
+
   function cardHTML(p) {
     var c = p.card || {};
     var rows = (c.rows || []).map(function (r) {
@@ -40,8 +68,8 @@
       var val = r[1] === "rake" ? rakeText(p) : r[1];
       var hi = r[1] === "rake" ? (p.rake !== null) : !!r[2];
       if (val === undefined || val === null || val === "") return "";
-      return '<div class="pcard__row"><span class="pcard__k">' + esc(label) +
-        '</span><span class="pcard__v' + (hi ? " hi" : "") + '">' + esc(val) + "</span></div>";
+      return '<div class="pcard__row"><span class="pcard__k">' + esc(trCard(label)) +
+        '</span><span class="pcard__v' + (hi ? " hi" : "") + '">' + esc(trCard(val)) + "</span></div>";
     }).join("");
     var logo;
     if (c.logoImg) {
@@ -56,7 +84,7 @@
       '<div><div class="pcard__name">' + esc(p.name) + "</div>" +
       '<div class="pcard__badge">' + esc(c.kind || "") + "</div></div></div>" +
       '<div class="pcard__rows">' + rows + "</div>" +
-      '<span class="pcard__cta">Смотреть обзор ' + esc(p.name) + " →</span></a>";
+      '<span class="pcard__cta">' + trCta("Смотреть обзор") + " " + esc(p.name) + " →</span></a>";
   }
   function render() {
     var boxes = document.querySelectorAll("[data-partners]");
@@ -226,8 +254,8 @@
       var val = r[1] === "rake" ? rakeText(p) : r[1];
       var hi = r[1] === "rake" ? (p.rake !== null) : !!r[2];
       if (val === undefined || val === null || val === "") return "";
-      return '<div class="pcard__row"><span class="pcard__k">' + esc(label) +
-        '</span><span class="pcard__v' + (hi ? " hi" : "") + '">' + esc(val) + "</span></div>";
+      return '<div class="pcard__row"><span class="pcard__k">' + esc(trCard(label)) +
+        '</span><span class="pcard__v' + (hi ? " hi" : "") + '">' + esc(trCard(val)) + "</span></div>";
     }).join("");
     var logo;
     if (c.logoImg) {
@@ -243,7 +271,7 @@
       '<div><div class="pcard__name">' + esc(p.name) + "</div>" +
       '<div class="pcard__badge">' + esc(c.kind || "") + "</div></div></div>" +
       '<div class="pcard__rows">' + rows + "</div>" +
-      '<span class="pcard__cta">Перейти на ' + esc(p.name) + " →</span></a>";
+      '<span class="pcard__cta">' + trCta("Перейти на") + " " + esc(p.name) + " →</span></a>";
   }
 
   function renderSideWidget() {

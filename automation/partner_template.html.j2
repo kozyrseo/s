@@ -108,7 +108,7 @@
 }
 </script>
 
-<script type="application/ld+json">
+{% if p.faq %}<script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -116,7 +116,7 @@
         {% for item in p.faq %}{"@type": "Question", "name": {{ item.q | tojson }}, "acceptedAnswer": {"@type": "Answer", "text": {{ item.a | tojson }}}}{% if not loop.last %},{% endif %}
         {% endfor %}]
 }
-</script>
+</script>{% endif %}
 
 <script type="application/ld+json">
 {
@@ -1296,6 +1296,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 
     <section id="cta" style="margin-top: 64px;">{{ content.cta | safe }}</section>
 
+    {% if p.faq %}
     <section id="faq">
       <h2>{{ t.h_faq_1 }} <em>{{ t.h_faq_2 }}</em></h2>
       <div class="article-faq">
@@ -1309,6 +1310,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
         {% endfor %}
       </div>
     </section>
+    {% endif %}
 
   </article>
 

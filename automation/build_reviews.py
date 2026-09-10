@@ -370,6 +370,10 @@ def process_page(partner: str, lang: str, reviews: list[dict], page_html: str) -
         out = inject_div(out, "data-reviews", partner, "RV-LIST", "")
         return out
     out = page_html
+    # Сводка + список + схема — из ОДНОГО набора (все отзывы партнёра), чтобы
+    # видимое совпадало с JSON-LD и рантайм-пересчётом в kozyr-reviews.js.
+    # Сгенерированные отзывы помечены source="editorial" (см. gen_partner_extras)
+    # — при желании их можно позже отфильтровать из схемы одним условием здесь.
     out = inject_div(out, "data-reviews-summary", partner, "RV-SUM",
                      summary_html(part, lab))
     out = inject_div(out, "data-reviews", partner, "RV-LIST",
