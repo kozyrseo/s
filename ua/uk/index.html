@@ -3015,6 +3015,11 @@ body::before {
 }
 </script>
 <style>.skip-link{position:absolute;left:-9999px;top:0;z-index:9999;padding:10px 16px;background:#2668FF;color:#fff;border-radius:0 0 8px 0;font:600 14px/1.2 system-ui,sans-serif;text-decoration:none}.skip-link:focus{left:0}</style>
+<style>
+.kf-compare-close{width:34px;height:34px;flex:0 0 auto;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;font-size:18px;line-height:1;display:inline-flex;align-items:center;justify-content:center;transition:background .15s}
+.kf-compare-close:hover{background:var(--hot,#E63946)}
+@media(max-width:640px){.kf-compare-bar .kf-compare-close{width:30px;height:30px}}
+</style>
 </head>
 <body>
 <a href="#main" class="skip-link">Перейти до основного вмісту</a>
@@ -3305,6 +3310,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     <div class="kf-compare-list" id="kf-compare-list"></div>
     <span class="kf-compare-hint">Можна до трьох</span>
     <button class="btn btn-primary" id="kf-compare-go">Порівняти</button>
+    <button class="kf-compare-close" id="kf-compare-close" type="button" aria-label="Сховати порівняння">×</button>
   </div>
 </section>
 
@@ -4312,6 +4318,8 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
 
   /* ---------- Рендер: табло ---------- */
 
+  function rakePct(r) { var v = r && r.rake; return (typeof v === 'number' && v > 0) ? v : null; }
+
   function renderReadout(list) {
     var n = list.length, total = ROOMS.length;
     var el = $('kf-count');
@@ -4320,14 +4328,11 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     $('kf-total').textContent = total;
     $('kf-fill').style.width = total ? (n / total * 100) + '%' : '0%';
 
-    var best = null;
-    list.forEach(function (r) {
-      if (r.rake === null) return;
-      if (!best || r.rake > best.rake) best = r;
-    });
-    $('kf-best').innerHTML = best
-      ? '<span>Максимум у видачі</span><strong>' + esc(best.name) + ' · до ' + best.rake + '%</strong>'
-      : (n ? '<span>Проценты уточняются у партнёров</span>' : '<span>Ослабь фильтры, чтобы увидеть сделки</span>');
+    var top = null;
+    list.forEach(function (r) { if (!top || r.score > top.score) top = r; });
+    $('kf-best').innerHTML = top
+      ? '<span>Топ за Kozyr Score</span><strong>' + esc(top.name) + ' · ' + top.score.toFixed(1) + '</strong>'
+      : '<span>Послаб фільтри, щоб побачити угоди</span>';
   }
 
   /* ---------- Главный рендер ---------- */
@@ -4485,6 +4490,22 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     draw();
   }
 
+  var _finderInView = true;
+  function setCompareBarVisible() {
+    var on = state.compare.length > 0 && _finderInView;
+    var bar = $('kf-compare-bar');
+    if (bar) bar.classList.toggle('is-up', on);
+    document.body.classList.toggle('kf-has-compare', on);
+  }
+  (function () {
+    var sec = document.getElementById('partners');
+    if (sec && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (e) { _finderInView = e[0].isIntersecting; setCompareBarVisible(); }, { rootMargin: '0px 0px -25% 0px' }).observe(sec);
+    }
+    var cb = document.getElementById('kf-compare-close');
+    if (cb) cb.addEventListener('click', function () { state.compare = []; draw(); });
+  })();
+
   function renderCompareBar() {
     var bar = $('kf-compare-bar'), list = $('kf-compare-list');
     list.innerHTML = state.compare.map(function (id) {
@@ -4492,8 +4513,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       return '<span class="kf-compare-chip">' + logoHtml(r) + esc(r.name) +
         '<button data-uncmp="' + id + '" aria-label="Убрать ' + esc(r.name) + '">×</button></span>';
     }).join('');
-    bar.classList.toggle('is-up', state.compare.length > 0);
-    document.body.classList.toggle('kf-has-compare', state.compare.length > 0);
+    setCompareBarVisible();
     $('kf-compare-go').disabled = state.compare.length < 2;
     $('kf-compare-go').textContent = state.compare.length < 2 ? 'Обери ще один' : 'Порівняти';
   }
@@ -4507,13 +4527,13 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
     var list = state.compare.map(roomById);
     if (list.length < 2) return;
 
-    var bestRake = Math.max.apply(null, list.map(function (r) { return r.rake === null ? -1 : r.rake; }));
+    var bestRake = Math.max.apply(null, list.map(function (r) { var p = rakePct(r); return p === null ? -1 : p; }));
     var bestScore = Math.max.apply(null, list.map(function (r) { return r.score; }));
     var fastest = Math.min.apply(null, list.map(function (r) { return r.payoutHours; }));
 
     var rows = [
       { key:'Kozyr Score', cell:function (r) { return r.score.toFixed(1); }, best:function (r) { return r.score === bestScore; } },
-      { key:'Рейкбек', cell:function (r) { return r.rake === null ? 'немає' : 'до ' + r.rake + '%'; }, best:function (r) { return r.rake !== null && r.rake === bestRake; } },
+      { key:'Рейкбек', cell:function (r) { var p = rakePct(r); return p === null ? 'немає' : 'до ' + p + '%'; }, best:function (r) { var p = rakePct(r); return p !== null && p === bestRake; } },
       { key:'Доступ', cell:function (r) { return labelOf('access', r.access); } },
       { key:'Країни', cell:function (r) { return r.countries.map(function (c) { return labelOf('countries', c); }).join(', '); } },
       { key:'Ліміти', cell:function (r) { return r.limits.join(' · '); } },
