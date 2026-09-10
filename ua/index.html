@@ -3088,6 +3088,17 @@ body::before {
   .kza-grid.kza-anim.is-in .kza-card:nth-child(4)::after{animation-delay:.63s}
   .kza-card.c-score .kza-medal{animation:kza-glow 2.8s ease-in-out infinite 1s}
 }
+/* ===== P3 · полировка таблицы каталога ===== */
+.kf-access{padding:3px 9px;border-radius:100px;font-weight:600}
+.kf-access--direct{background:var(--accent-tint,#EBF1FF);color:var(--accent-deep)}
+.kf-access--club{background:var(--surface-warm,#F5F1E8);color:var(--gold,#B8841C)}
+.kf-access--telegram{background:#E4F4FC;color:#1CA0E3}
+.kf-cur{color:var(--ink-3)}
+.kf-logo--img{background:#fff!important;border:1px solid color-mix(in srgb,var(--border,#E3E7F1) 85%,transparent);box-shadow:0 1px 3px rgba(10,17,40,.05)}
+.kf-logo--img img{object-fit:contain!important;padding:5px}
+.kf-score-bar{height:5px!important;border-radius:100px}
+.kf-score-fill{border-radius:100px}
+.kf-rake--pending{background:var(--surface-alt,#F5F7FB);padding:4px 11px;border-radius:100px;display:inline-block}
 </style>
 </head>
 <body>
@@ -4291,7 +4302,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
          rank === 0 ? ' <span class="kf-tagline kf-tagline--top">топ</span>' : '') +
       '</div>' +
       '<div class="kf-room-meta">' + room.countries.map(flagHtml).join('') +
-        '<span>' + esc(labelOf('access', room.access)) + ' · ' + esc(room.currency) + '</span>' +
+        '<span class="kf-access kf-access--' + room.access + '">' + esc(labelOf('access', room.access)) + '</span><span class="kf-cur">' + esc(room.currency) + '</span>' +
         acceptanceBadge(room) +
       '</div>' +
       '</div></div>';
