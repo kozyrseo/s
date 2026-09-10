@@ -3070,6 +3070,24 @@ body::before {
 .kza-card.c-payout::before{background:var(--gold,#B8841C)} .kza-card.c-payout .kza-medal{background:color-mix(in srgb,var(--gold,#B8841C) 14%,#fff);color:var(--gold,#B8841C)}
 @media(max-width:960px){.kza-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.kza-grid{grid-template-columns:1fr}}
+/* --- анимация награждения --- */
+.kza-card::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.5) 50%,transparent 68%);transform:translateX(-130%)}
+@keyframes kza-rise{to{opacity:1;transform:none}}
+@keyframes kza-sheen{to{transform:translateX(130%)}}
+@keyframes kza-glow{0%,100%{box-shadow:0 0 0 0 rgba(38,104,255,0)}50%{box-shadow:0 0 0 5px rgba(38,104,255,.14)}}
+@media (prefers-reduced-motion: no-preference){
+  .kza-grid.kza-anim .kza-card{opacity:0;transform:translateY(22px) scale(.985)}
+  .kza-grid.kza-anim.is-in .kza-card{animation:kza-rise .6s cubic-bezier(.22,1,.36,1) forwards}
+  .kza-grid.kza-anim.is-in .kza-card:nth-child(2){animation-delay:.11s}
+  .kza-grid.kza-anim.is-in .kza-card:nth-child(3){animation-delay:.22s}
+  .kza-grid.kza-anim.is-in .kza-card:nth-child(4){animation-delay:.33s}
+  .kza-grid.kza-anim.is-in .kza-card::after{animation:kza-sheen 1.05s ease-out forwards}
+  .kza-grid.kza-anim.is-in .kza-card:nth-child(1)::after{animation-delay:.30s}
+  .kza-grid.kza-anim.is-in .kza-card:nth-child(2)::after{animation-delay:.41s}
+  .kza-grid.kza-anim.is-in .kza-card:nth-child(3)::after{animation-delay:.52s}
+  .kza-grid.kza-anim.is-in .kza-card:nth-child(4)::after{animation-delay:.63s}
+  .kza-card.c-score .kza-medal{animation:kza-glow 2.8s ease-in-out infinite 1s}
+}
 </style>
 </head>
 <body>
@@ -5085,6 +5103,15 @@ document.getElementById('geo-banner-close').addEventListener('click', () => {
       '</div>';
     }).join('');
     wrap.innerHTML='<div class="kza-grid">'+html+'</div>';
+    var grid=wrap.querySelector('.kza-grid');
+    if(grid){
+      grid.classList.add('kza-anim');
+      if('IntersectionObserver' in window){
+        var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){grid.classList.add('is-in');io.disconnect();}});},{threshold:0.2});
+        io.observe(grid);
+        setTimeout(function(){grid.classList.add('is-in');},2500);
+      } else { grid.classList.add('is-in'); }
+    }
 
     var tag=sec.querySelector('.section-tag span');if(tag)tag.textContent=L.aTag;
     var lead=sec.querySelector('.compare-lead');if(lead)lead.textContent=L.aLead;
