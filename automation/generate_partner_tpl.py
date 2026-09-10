@@ -23,6 +23,27 @@ PENDING    = REPO_ROOT / "_pending_partner"
 PROMPT     = AUTOMATION / "partner_content_prompt.md"
 EXAMPLE    = AUTOMATION / "content_example.json"
 
+
+def logo_initials(name: str) -> str:
+    """Инициалы для текстового лого: первые буквы двух «слов».
+    Учитывает пробелы И camelCase-границы: «TON Poker»→«TP»,
+    «PokerBet»→«PB», «KlubOk»→«KO». Фолбэк — первые 2 символа."""
+    name = (name or "").strip()
+    if not name:
+        return "?"
+    spaced = re.sub(r"(?<=[a-zа-яёіїєґ])(?=[A-ZА-ЯЁІЇЄҐ])", " ", name)
+    words = [w for w in re.split(r"[\s\-_]+", spaced) if w]
+    if len(words) >= 2:
+        return (words[0][0] + words[1][0]).upper()
+    return name[:2].upper()
+
+
+def as_bool(v) -> bool:
+    """Терпимо к типам: True/'true'/'yes'/'1'/1 → True (анкеты бывают и bool, и str)."""
+    if isinstance(v, bool):
+        return v
+    return str(v).strip().lower() in ("true", "yes", "1", "y", "да")
+
 MODEL = "anthropic/claude-opus-4.8"
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 MAX_TOKENS = 16000   # контента ~11 КБ (~3.5k токенов) — с запасом, один вызов
@@ -271,6 +292,10 @@ def build_partner_object(draft):
         "type": draft.get("type", "room"),
         "score": float(draft.get("score", 0)),
         "rake": rake,
+        # Явная формулировка рейкбека («до N%», период выплат) — если задана в
+        # анкете. Используется в llms.txt и как источник точной прозы для ИИ.
+        **({"rakeText": draft["rakeText"]} if draft.get("rakeText") else {}),
+        **({"rakeLabel": draft["rakeLabel"]} if draft.get("rakeLabel") else {}),
         "currency": draft.get("currency", "USDT"),
         "license": draft.get("license", ""),
         "url": "/" + partner_path(draft) + "/",
@@ -289,14 +314,14 @@ def build_partner_object(draft):
         "payoutLabel": draft.get("payoutLabel", ""),
         "note": draft.get("note", ""),
         "logo": {
-            "text": draft.get("name", "?")[:2].upper(),
-            "from": draft.get("logo_from", "#14358F"),
-            "to": draft.get("logo_to", "#2A6BFF"),
+            "text": logo_initials(draft.get("name", "?")),
+            "from": draft.get("logo_from") or "#14358F",
+            "to": draft.get("logo_to") or "#2A6BFF",
         },
         "card": {
             "logoImg": draft.get("logo_img", ""),
             "kind": draft.get("network_label", draft.get("networkLabel", "")),
-            "dark": draft.get("dark_card", "false") == "true",
+            "dark": as_bool(draft.get("dark_card", False)),
             "rows": build_card_rows(draft),
         },
     }
@@ -336,6 +361,84 @@ def _rebuild_partners_js():
             print(f"  ⚠️ build_partners.py вернул код {r.returncode}: {r.stderr[:200]}")
     except Exception as e:
         print(f"  ⚠️ не удалось пересобрать partners.js: {e}")
+
+
+SITEMAP = REPO_ROOT / "sitemap-raw.xml"
+
+
+def _run_script(script: str, *script_args: str) -> None:
+    """Прогоняет вспомогательный скрипт из automation/ и логирует результат.
+    Используется для пост-публикационной пропагации (отзывы, llms, OG)."""
+    import subprocess, sys as _sys
+    path = AUTOMATION / script
+    if not path.exists():
+        print(f"  ⚠️ {script} не найден — пропуск")
+        return
+    try:
+        r = subprocess.run([_sys.executable, str(path), *script_args],
+                           capture_output=True, text=True)
+        if r.returncode == 0:
+            print(f"  ✓ {script} {' '.join(script_args)}".rstrip())
+        else:
+            print(f"  ⚠️ {script} код {r.returncode}: {(r.stderr or r.stdout)[:200]}")
+    except Exception as e:
+        print(f"  ⚠️ {script}: {e}")
+
+
+def _sitemap_block(loc: str, ru: str, uk: str) -> str:
+    from datetime import date
+    return (
+        "  <url>\n"
+        f"    <loc>{loc}</loc>\n"
+        f"    <lastmod>{date.today().isoformat()}</lastmod>\n"
+        "    <changefreq>weekly</changefreq>\n"
+        "    <priority>0.85</priority>\n"
+        f'    <xhtml:link rel="alternate" hreflang="ru-UA"     href="{ru}"/>\n'
+        f'    <xhtml:link rel="alternate" hreflang="uk-UA"     href="{uk}"/>\n'
+        '    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>\n'
+        "  </url>\n"
+    )
+
+
+def _ensure_sitemap(draft: dict) -> None:
+    """Добавляет RU+UK URL партнёра в sitemap-raw.xml, если их там ещё нет.
+    Раньше это был ручной шаг — новые страницы не попадали в sitemap."""
+    if not SITEMAP.exists():
+        print("  ⚠️ sitemap-raw.xml не найден — пропуск")
+        return
+    xml = SITEMAP.read_text(encoding="utf-8")
+    ru = f"https://kozyr.club/{partner_path(draft)}/"
+    uk = f"https://kozyr.club/{partner_path(draft, lang_prefix='uk')}/"
+    blocks = ""
+    added = 0
+    for loc in (ru, uk):
+        if f"<loc>{loc}</loc>" in xml:
+            continue
+        blocks += _sitemap_block(loc, ru, uk)
+        added += 1
+    if not blocks:
+        print("  ✓ sitemap: URL уже присутствуют")
+        return
+    if "</urlset>" not in xml:
+        print("  ⚠️ sitemap: нет </urlset> — пропуск")
+        return
+    xml = xml.replace("</urlset>", blocks + "</urlset>")
+    SITEMAP.write_text(xml, encoding="utf-8")
+    print(f"  ✓ sitemap: добавлено {added} URL")
+
+
+def _propagate(draft: dict) -> None:
+    """Пост-публикационная пропагация нового/обновлённого партнёра по всему сайту:
+    sitemap + серверный рендер отзывов/aggregateRating + llms.txt + OG-обложка.
+    Именно эти шаги раньше забывали, из-за чего страница выходила «наполовину»."""
+    print("Пропагация по сайту:")
+    _ensure_sitemap(draft)
+    # OG-обложка (og-{kind}-{id}.jpg) — иначе битое превью при шеринге
+    _run_script("build_partner_og.py", "--id", draft["id"])
+    # Отзывы + aggregateRating (PAGES берётся из partners.json — партнёр уже там)
+    _run_script("build_reviews.py")
+    # llms.txt / llms-full.txt (единая точка правды для ИИ)
+    _run_script("build_llms.py")
 
 
 def main():
@@ -378,6 +481,10 @@ def main():
     out_uk.parent.mkdir(parents=True, exist_ok=True)
     out_uk.write_text(html_uk, encoding="utf-8")
     print(f"✓ UK страница: {out_uk} ({len(html_uk)} символов)")
+
+    # ── Пропагация по сайту (только прод): sitemap, отзывы, llms, OG ──
+    if args.publish:
+        _propagate(draft)
 
 
 if __name__ == "__main__":

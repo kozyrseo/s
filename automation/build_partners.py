@@ -25,8 +25,21 @@ partners.js   = генерируется этим скриптом (НЕ ред�
 from __future__ import annotations
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
+
+
+def logo_initials(name: str) -> str:
+    """Инициалы: «TON Poker»→«TP», «PokerBet»→«PB», «KlubOk»→«KO»."""
+    name = (name or "").strip()
+    if not name:
+        return "?"
+    spaced = re.sub(r"(?<=[a-zа-яёіїєґ])(?=[A-ZА-ЯЁІЇЄҐ])", " ", name)
+    words = [w for w in re.split(r"[\s\-_]+", spaced) if w]
+    if len(words) >= 2:
+        return (words[0][0] + words[1][0]).upper()
+    return name[:2].upper()
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 AUTOMATION = Path(__file__).resolve().parent
@@ -77,7 +90,7 @@ def normalize_partner(p: dict, errors: list) -> dict:
     if not logo.get("to"):
         logo["to"] = DEFAULT_LOGO_TO
     if not logo.get("text"):
-        logo["text"] = (p.get("name", "?")[:2]).upper()
+        logo["text"] = logo_initials(p.get("name", "?"))
 
     # 4. Обрезка длинных текстов (защита вёрстки)
     p["name"] = truncate(p.get("name", ""), MAX_NAME_LEN)

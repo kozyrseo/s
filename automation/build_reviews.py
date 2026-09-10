@@ -51,17 +51,41 @@ ROOT = Path(__file__).resolve().parent.parent
 REVIEWS_JSON = ROOT / "reviews.json"
 JS_FILE = ROOT / "assets" / "kozyr-reviews.js"
 ENHANCE_FILE = ROOT / "assets" / "kozyr-enhance.js"
-PARTNER_DISPLAY = {"pokerbet": "PokerBet", "klubok": "KlubOk", "tonpoker": "TON Poker"}
+PARTNERS_JSON = ROOT / "partners.json"
 
-# (partner_id, lang, путь к странице)
-PAGES = [
-    ("pokerbet", "ru", ROOT / "ua" / "rooms" / "pokerbet" / "index.html"),
-    ("pokerbet", "uk", ROOT / "ua" / "uk" / "rooms" / "pokerbet" / "index.html"),
-    ("klubok", "ru", ROOT / "ua" / "clubs" / "klubok" / "index.html"),
-    ("klubok", "uk", ROOT / "ua" / "uk" / "clubs" / "klubok" / "index.html"),
-    ("tonpoker", "ru", ROOT / "ua" / "rooms" / "tonpoker" / "index.html"),
-    ("tonpoker", "uk", ROOT / "ua" / "uk" / "rooms" / "tonpoker" / "index.html"),
-]
+
+def _load_partners() -> list[dict]:
+    try:
+        return json.loads(PARTNERS_JSON.read_text(encoding="utf-8")).get("partners", [])
+    except Exception:
+        return []
+
+
+def _partner_pages(partners: list[dict]) -> list[tuple[str, str, Path]]:
+    """(id, lang, путь) для RU и UK страниц каждого партнёра — ИЗ url в
+    partners.json, а не хардкодом. Так любой НОВЫЙ партнёр автоматически
+    попадает под серверный рендер отзывов (раньше его забывали дописать сюда,
+    из-за чего aggregateRating на странице расходился с reviews.json).
+    url вида '/ua/rooms/<id>/' → RU: ua/rooms/<id>/index.html;
+    UK: вставляем 'uk' после кода страны → ua/uk/rooms/<id>/index.html."""
+    pages: list[tuple[str, str, Path]] = []
+    for p in partners:
+        parts = [seg for seg in (p.get("url") or "").split("/") if seg]  # ['ua','rooms','<id>']
+        if len(parts) < 2:
+            continue
+        ru_path = ROOT.joinpath(*parts, "index.html")
+        uk_path = ROOT.joinpath(parts[0], "uk", *parts[1:], "index.html")
+        pages.append((p["id"], "ru", ru_path))
+        pages.append((p["id"], "uk", uk_path))
+    return pages
+
+
+_PARTNERS = _load_partners()
+PARTNER_DISPLAY = ({p["id"]: p.get("name", p["id"]) for p in _PARTNERS}
+                   or {"pokerbet": "PokerBet", "klubok": "KlubOk", "tonpoker": "TON Poker"})
+
+# (partner_id, lang, путь к странице) — производно от partners.json
+PAGES = _partner_pages(_PARTNERS)
 
 # Метки-локали (из I18N в kozyr-reviews.js — держим синхронно)
 I18N = {
@@ -314,11 +338,37 @@ def bump_cache_buster(page_html: str, version: str, enhance_version: str = None)
     return out
 
 
+def strip_product_rating(page_html: str) -> str:
+    """Убирает aggregateRating и review из Product JSON-LD. Нужно для партнёров
+    БЕЗ отзывов: показывать зашитый в шаблон плейсхолдер-рейтинг (и чужие тексты
+    отзывов) нельзя — это фейковые данные для Google."""
+    def repl(m: re.Match) -> str:
+        raw = m.group(1)
+        try:
+            obj = json.loads(raw)
+        except json.JSONDecodeError:
+            return m.group(0)
+        if not (isinstance(obj, dict) and "aggregateRating" in obj):
+            return m.group(0)
+        obj.pop("aggregateRating", None)
+        obj.pop("review", None)
+        new = json.dumps(obj, ensure_ascii=False, indent=2)
+        return m.group(0).replace(raw, "\n" + new + "\n")
+
+    pattern = re.compile(r'<script type="application/ld\+json">(.*?)</script>', re.S)
+    return pattern.sub(repl, page_html, count=0)
+
+
 def process_page(partner: str, lang: str, reviews: list[dict], page_html: str) -> str:
     lab = I18N[lang]
     part = [r for r in reviews if r["partner"] == partner and r["lang"] == lang]
     if not part:
-        return page_html
+        # Нет отзывов у партнёра: снимаем плейсхолдер-рейтинг из шаблона и
+        # очищаем маркеры, чтобы не отдавать фейковые/чужие отзывы.
+        out = strip_product_rating(page_html)
+        out = inject_div(out, "data-reviews-summary", partner, "RV-SUM", "")
+        out = inject_div(out, "data-reviews", partner, "RV-LIST", "")
+        return out
     out = page_html
     out = inject_div(out, "data-reviews-summary", partner, "RV-SUM",
                      summary_html(part, lab))

@@ -126,9 +126,19 @@
       if (limit > 0) list = list.slice(0, limit);
       list = list.filter(function (p) { return p.card; });
 
-      // Сетка: каталог (много карточек) — до 3 колонок; блок — до 2.
-      var cols = ptype ? Math.min(list.length, 3) : Math.min(list.length, 2);
-      box.style.gridTemplateColumns = "repeat(" + Math.max(cols, 1) + ",1fr)";
+      // Сетка:
+      //   • каталог (data-partner-type) — до 3 колонок фикс;
+      //   • «полный» блок в статье (3+ партнёра) — адаптивно auto-fit,
+      //     до 3 колонок на десктопе и 1 на мобиле (инлайн-стиль иначе
+      //     форсировал бы N колонок и ломал мобильную вёрстку);
+      //   • маленький блок (1–2) — фикс по числу карточек.
+      if (ptype) {
+        box.style.gridTemplateColumns = "repeat(" + Math.max(Math.min(list.length, 3), 1) + ",1fr)";
+      } else if (list.length >= 3) {
+        box.style.gridTemplateColumns = "repeat(auto-fit, minmax(220px, 1fr))";
+      } else {
+        box.style.gridTemplateColumns = "repeat(" + Math.max(Math.min(list.length, 2), 1) + ",1fr)";
+      }
       box.innerHTML = list.map(cardHTML).join("");
     });
   }

@@ -225,7 +225,9 @@ def _insert_partners(html: str, lang: str) -> str:
     def repl(m):
         opts = m.group(1) or m.group(2) or ""
         ids_attr = ""
-        limit_attr = ' data-limit="2"'
+        # По умолчанию — ПОЛНЫЙ блок со всеми партнёрами (data-limit="0").
+        # Ограничение можно задать в статье через [[partners:limit=N]].
+        limit_attr = ' data-limit="0"'
         for part in opts.split(","):
             part = part.strip()
             if part.startswith("ids="):

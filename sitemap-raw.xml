@@ -76,6 +76,15 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
   </url>
   <url>
+    <loc>https://kozyr.club/ua/rooms/tonpoker/</loc>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/rooms/tonpoker/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/rooms/tonpoker/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+  </url>
+  <url>
     <loc>https://kozyr.club/ua/clubs/klubok/</loc>
     <lastmod>2026-08-29</lastmod>
     <changefreq>weekly</changefreq>
@@ -113,6 +122,15 @@
     <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/rooms/pokerbet/"/>
     <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/rooms/pokerbet/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+  </url>
+  <url>
+    <loc>https://kozyr.club/ua/uk/rooms/tonpoker/</loc>
+    <lastmod>2026-09-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/rooms/tonpoker/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/rooms/tonpoker/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
   </url>
   <url>

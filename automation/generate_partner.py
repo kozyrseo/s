@@ -234,6 +234,24 @@ def add_to_partners_json(draft: dict) -> None:
     print(f"  ✓ partners.json: добавлен '{draft['id']}' (запусти build_partners.py)")
 
 
+def logo_initials(name: str) -> str:
+    """Инициалы для текстового лого: «TON Poker»→«TP», «PokerBet»→«PB»."""
+    name = (name or "").strip()
+    if not name:
+        return "?"
+    spaced = re.sub(r"(?<=[a-zа-яёіїєґ])(?=[A-ZА-ЯЁІЇЄҐ])", " ", name)
+    words = [w for w in re.split(r"[\s\-_]+", spaced) if w]
+    if len(words) >= 2:
+        return (words[0][0] + words[1][0]).upper()
+    return name[:2].upper()
+
+
+def as_bool(v) -> bool:
+    if isinstance(v, bool):
+        return v
+    return str(v).strip().lower() in ("true", "yes", "1", "y", "да")
+
+
 def build_partner_object(draft: dict) -> dict:
     """Преобразует анкету в объект partners.json."""
     rake = draft.get("rake", "none")
@@ -248,6 +266,8 @@ def build_partner_object(draft: dict) -> dict:
         "type": draft.get("type", "room"),
         "score": float(draft.get("score", 0)),
         "rake": rake,
+        **({"rakeText": draft["rakeText"]} if draft.get("rakeText") else {}),
+        **({"rakeLabel": draft["rakeLabel"]} if draft.get("rakeLabel") else {}),
         "currency": draft.get("currency", "UAH"),
         "license": draft.get("license", ""),
         "url": partner_path_for(draft),
@@ -266,14 +286,14 @@ def build_partner_object(draft: dict) -> dict:
         "payoutLabel": draft.get("payoutLabel", ""),
         "note": draft.get("note", ""),
         "logo": {
-            "text": draft.get("name", "?")[:2].upper(),
-            "from": draft.get("logo_from", "#14358F"),
-            "to": draft.get("logo_to", "#2A6BFF"),
+            "text": logo_initials(draft.get("name", "?")),
+            "from": draft.get("logo_from") or "#14358F",
+            "to": draft.get("logo_to") or "#2A6BFF",
         },
         "card": {
             "logoImg": draft.get("logo_img", ""),
             "kind": f"{draft.get('networkLabel', '')}",
-            "dark": draft.get("dark_card", "false") == "true",
+            "dark": as_bool(draft.get("dark_card", False)),
             "rows": build_card_rows(draft),
         },
     }
