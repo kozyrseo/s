@@ -3048,7 +3048,7 @@ body::before {
 .topic-card[data-empty]{display:none}
 
 /* ===== P5 · сравнение по всем — рейтинг строками ===== */
-#compare .compare-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+#compare .compare-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:20px;box-shadow:0 14px 40px rgba(20,33,74,.07);background:var(--surface)}
 .kzc-sum{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 20px}
 .kzc-sum-chip{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:11px 15px}
 .kzc-sum-chip .k{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
@@ -3059,14 +3059,18 @@ table.kzc thead th{position:sticky;top:0;background:var(--surface-alt,#F5F7FB);z
 table.kzc tbody td{padding:14px;border-bottom:1px solid var(--line);vertical-align:middle;font-size:14px}
 table.kzc tbody tr:last-child td{border-bottom:none}
 table.kzc tbody tr{transition:background .14s}
-table.kzc tbody tr:hover{background:color-mix(in srgb,var(--accent) 5%,transparent)}
+table.kzc tbody tr:hover{background:color-mix(in srgb,var(--accent) 6%,transparent)}
+table.kzc tbody tr:first-child .kzc-rank{box-shadow:0 3px 10px color-mix(in srgb,var(--gold,#B8841C) 45%,transparent)}
+.kzc-cta{box-shadow:0 4px 12px rgba(0,7,20,.18)}
+.kzc-cta:hover{background:var(--accent,#2668FF)}
 .kzc-rank{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;font-family:var(--f-display);font-weight:700;font-size:13px;background:var(--surface-alt,#F5F7FB);color:var(--ink-2)}
 .kzc-rank.r1{background:var(--gold,#B8841C);color:#fff}
 .kzc-rank.r2{background:#C7CCD8;color:#fff}
 .kzc-rank.r3{background:#E0C39A;color:#fff}
 .kzc-room{display:flex;align-items:center;gap:11px}
 .kzc-logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;font-family:var(--f-display);font-weight:700;font-size:13px;flex:0 0 auto}
-.kzc-logo img{width:38px;height:38px;border-radius:11px;object-fit:cover}
+.kzc-logo--img{background:#fff;border:1px solid color-mix(in srgb,var(--line) 70%,transparent);box-shadow:0 1px 3px rgba(10,17,40,.06)}
+.kzc-logo img{width:100%;height:100%;border-radius:11px;object-fit:contain;padding:6px}
 .kzc-nm{font-family:var(--f-display);font-weight:600;font-size:14.5px;line-height:1.1}
 .kzc-sb{color:var(--ink-3);font-size:12px;margin-top:2px}
 .kzc-score{display:inline-flex;align-items:baseline;gap:8px}
@@ -3418,7 +3422,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     <div class="topics-grid">
       <a href="/ua/uk/rooms/na-grivnu/" class="topic-card topic-card--gold">
         <div class="topic-card-suit" aria-hidden="true">
-          <svg viewBox="0 0 40 40" fill="currentColor"><path d="M20 4L28 20L20 36L12 20Z" opacity="0.9"/><circle cx="20" cy="20" r="3.5" fill="#fff"/></svg>
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="20" cy="12" rx="11" ry="4.5" fill="currentColor" fill-opacity="0.16"/><ellipse cx="20" cy="12" rx="11" ry="4.5"/><path d="M9 12v8c0 2.5 4.9 4.5 11 4.5s11-2 11-4.5v-8"/><path d="M9 20v8c0 2.5 4.9 4.5 11 4.5s11-2 11-4.5v-8"/></svg>
         </div>
         <div class="topic-card-eyebrow">Валюта</div>
         <h3 class="topic-card-title">Гра в <em>гривні</em></h3>
@@ -3430,7 +3434,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       </a>
       <a href="/ua/uk/rooms/dlya-novichkov/" class="topic-card topic-card--blue">
         <div class="topic-card-suit" aria-hidden="true">
-          <svg viewBox="0 0 40 40" fill="currentColor"><path d="M20 4C14 4 10 8 10 13c0 6 10 8 10 16 0-8 10-10 10-16 0-5-4-9-10-9zm-2 32h4l1 2h-6l1-2z"/></svg>
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 5c5.2 3 8 8.2 8 15.4L24.5 24h-9L12 20.4C12 13.2 14.8 8 20 5z" fill="currentColor" fill-opacity="0.16"/><path d="M20 5c5.2 3 8 8.2 8 15.4L24.5 24h-9L12 20.4C12 13.2 14.8 8 20 5z"/><circle cx="20" cy="16" r="2.8"/><path d="M15.5 27l-2.5 6M24.5 27l2.5 6M20 27v6.5"/></svg>
         </div>
         <div class="topic-card-eyebrow">Перший рум</div>
         <h3 class="topic-card-title">Для <em>новачків</em></h3>
@@ -3442,7 +3446,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       </a>
       <a href="/ua/uk/rooms/mobilnye/" class="topic-card topic-card--dark">
         <div class="topic-card-suit" aria-hidden="true">
-          <svg viewBox="0 0 40 40" fill="currentColor"><path d="M20 4c-2 6-8 8-8 14 0 5 4 8 8 8s8-3 8-8c0-6-6-8-8-14zm-2 26v6h4v-6h-4z"/></svg>
+          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="12.5" y="5" width="15" height="30" rx="3.5" fill="currentColor" fill-opacity="0.16"/><rect x="12.5" y="5" width="15" height="30" rx="3.5"/><path d="M18 30.5h4"/><circle cx="20" cy="13" r="2.2" fill="currentColor" stroke="none"/></svg>
         </div>
         <div class="topic-card-eyebrow">Мобільні</div>
         <h3 class="topic-card-title">С <em>телефона</em></h3>
@@ -5041,12 +5045,20 @@ document.getElementById('geo-banner-close').addEventListener('click', () => {
   /* ---- P4 counts ---- */
   var SLUG=['na-grivnu','dlya-novichkov','mobilnye'];
   function guideKey(href){for(var i=0;i<SLUG.length;i++){if(href.indexOf('/'+SLUG[i]+'/')!==-1)return SLUG[i];}return null;}
-  var GUIDE={
-    'na-grivnu':function(p){return p.currency==='UAH'&&(has(p.payments,'card')||has(p.payments,'bank'));},
-    'dlya-novichkov':function(p){return p.access!=='club'&&has(p.limits,'NL10');},
-    'mobilnye':function(p){return has(p.software,'ios')&&has(p.software,'android')&&p.access!=='telegram';}
-  };
-  function gmatch(k,p){if(Array.isArray(p.tags)&&p.tags.length)return p.tags.indexOf(k)!==-1;var f=GUIDE[k];return f?!!f(p):false;}
+  /* Счётчики = ровно то, что показывает landing-страница гида: тот же data-filter из partners.js + p.card.
+     Масштаб: новый партнёр с currency=UAH сам попадёт в «на гривну» и т.д. */
+  var GUIDE_FILTER={'na-grivnu':'currency:UAH','dlya-novichkov':'limit:NL10','mobilnye':'soft:ios'};
+  var KEY_ALIAS={limit:'limits',game:'games',payment:'payments',soft:'software',bonuses:'bonus'};
+  function matchFilter(p,filter){
+    if(!p.card)return false;
+    return (filter||'').split(';').map(function(s){return s.trim();}).filter(Boolean).every(function(cond){
+      var parts=cond.split(':'),key=(parts[0]||'').trim(),want=(parts[1]||'').trim();
+      if(!key||!want)return true;key=KEY_ALIAS[key]||key;var val=p[key];
+      if(Array.isArray(val))return val.some(function(x){return String(x).toLowerCase()===want.toLowerCase();});
+      return String(val==null?'':val).toLowerCase()===want.toLowerCase();
+    });
+  }
+  function gmatch(k,p){var f=GUIDE_FILTER[k];return f?matchFilter(p,f):false;}
   function plural(n){var f=L.plural,a=n%100,b=n%10;if(a>10&&a<20)return f[2];if(b===1)return f[0];if(b>=2&&b<=4)return f[1];return f[2];}
   function counts(P){
     var cards=document.querySelectorAll('.topic-card');
@@ -5061,7 +5073,8 @@ document.getElementById('geo-banner-close').addEventListener('click', () => {
 
   /* ---- P5 compare-all ---- */
   function payoutTxt(h){if(h==null)return '\u2014';if(h<=1)return L.pay1;if(h<24)return L.payH.replace('{n}',h);return L.payD.replace('{n}',Math.round(h/24));}
-  function logoCell(p){var g=p.logo||{};if(g.img)return '<div class="kzc-logo"><img src="'+esc(g.img)+'" alt="'+esc(p.name)+'" width="38" height="38"></div>';return '<div class="kzc-logo" style="background:linear-gradient(135deg,'+esc(g.from||'#2668FF')+','+esc(g.to||'#1E52D9')+')">'+esc(g.text||p.name.slice(0,2))+'</div>';}
+  function logoImgOf(p){return (p.card&&p.card.logoImg)||p.logoImg||(p.logo&&p.logo.img)||null;}
+  function logoCell(p){var src=logoImgOf(p);if(src)return '<div class="kzc-logo kzc-logo--img"><img src="'+esc(src)+'" alt="'+esc(p.name)+'" width="38" height="38" loading="lazy"></div>';var g=p.logo||{};return '<div class="kzc-logo" style="background:linear-gradient(135deg,'+esc(g.from||'#2668FF')+','+esc(g.to||'#1E52D9')+')">'+esc(g.text||p.name.slice(0,2))+'</div>';}
   function pill(a){var c=a==='club'?'club':(a==='telegram'?'telegram':'direct');return '<span class="kzc-pill '+c+'">'+esc(lab('access',a))+'</span>';}
   function dim(s){return '<span class="kzc-dim">'+esc(s)+'</span>';}
   function chip(){return '<span class="kzc-chip">'+esc(L.best)+'</span>';}
