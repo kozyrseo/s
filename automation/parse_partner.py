@@ -174,19 +174,36 @@ def send_telegram_summary(chat_id: str, draft: dict) -> None:
         L.append(f"📍 Основная страна: _не определена_ · Валюта: {draft.get('currency', '?')}")
     # Принимает игроков (если список шире основной)
     accepted = draft.get("acceptedCountries", [])
-    if accepted and (len(accepted) > 1 or (country and accepted != [country])):
-        L.append(f"🌐 Принимает из: {', '.join(accepted)}")
+    if accepted:
+        acc = "весь мир" if "all" in accepted else ", ".join(accepted)
+        L.append(f"🌐 Принимает: {acc}")
 
     L.append(f"💰 Рейкбек: {draft.get('rakeLabel', '?')}")
     L.append(f"⭐ KOZYR score: {draft.get('score', '?')}")
     games = draft.get("games", [])
     limits = draft.get("limits", [])
     if games or limits:
-        L.append(f"🎮 {', '.join(limits[:4])} · {', '.join(games)}")
+        L.append(f"🎮 {', '.join(limits[:5])}" + (f" · {', '.join(games)}" if games else ""))
     sw = draft.get("software", [])
     if sw:
-        L.append(f"📱 {', '.join(sw)}")
-    L.append(f"✅ Плюсы: {len(draft.get('pros', []))} · ❌ Минусы: {len(draft.get('cons', []))}")
+        L.append(f"📱 Софт: {', '.join(sw)}")
+    pay = draft.get("payments", [])
+    if pay:
+        L.append(f"💳 Платежи: {', '.join(pay)}")
+    # Реф-ссылка (денежная) — критично проверить перед публикацией
+    ref = draft.get("ref_url") or ""
+    if ref:
+        L.append(f"🔗 Ссылка: {ref}")
+    else:
+        L.append("🔗 ⚠️ Реф-ссылка не задана — кнопка «Перейти» будет без ссылки")
+    # Логотип: загружен или будет текстовым
+    if draft.get("logo_img"):
+        L.append("🖼 Логотип: загружен")
+    else:
+        L.append("🖼 Логотип: текстовый (пришли фото, чтобы заменить)")
+    faq_n = len(draft.get("faq", []))
+    L.append(f"✅ Плюсы: {len(draft.get('pros', []))} · ❌ Минусы: {len(draft.get('cons', []))}"
+             + (f" · ❓ FAQ: {faq_n}" if faq_n else ""))
     missing = draft.get("_missing", [])
     if missing:
         L.append("")
@@ -214,7 +231,10 @@ def send_telegram_summary(chat_id: str, draft: dict) -> None:
     else:
         keyboard = [
             [{"text": "✅ Создать страницу", "callback_data": f"pconfirm:{draft_id}"}],
-            [{"text": "✏️ Дополнить текстом", "callback_data": f"pmore:{draft_id}"}],
+            [{"text": "👁 Показать всё", "callback_data": f"pfull:{draft_id}"},
+             {"text": "✏️ Исправить поле", "callback_data": f"pedit:{draft_id}"}],
+            [{"text": "🌐 Принимает из…", "callback_data": f"pacc:{draft_id}"}],
+            [{"text": "➕ Дополнить текстом", "callback_data": f"pmore:{draft_id}"}],
             [{"text": "❌ Отмена", "callback_data": "pcancel"}],
         ]
     payload = {
