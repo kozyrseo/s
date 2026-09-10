@@ -12,6 +12,10 @@ on:
         required: false
         default: 'false'
         type: string
+      chat_id:
+        description: 'Telegram chat_id (куда прислать превью/итог). Пусто → в TELEGRAM_CHAT_ID'
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -54,6 +58,23 @@ jobs:
       - name: Rebuild catalog (partners.js)
         run: python automation/build_partners.py
 
+      - name: Smoke test page
+        id: smoke
+        continue-on-error: true
+        env:
+          PARTNER_ID: ${{ github.event.inputs.partner_id }}
+          PUBLISH: ${{ github.event.inputs.publish }}
+        run: |
+          if [ "$PUBLISH" = "true" ]; then
+            OUT=$(python automation/test_partner_page.py --id "$PARTNER_ID" 2>&1) && RC=0 || RC=1
+          else
+            OUT=$(python automation/test_partner_page.py --id "$PARTNER_ID" --pending 2>&1) && RC=0 || RC=1
+          fi
+          echo "$OUT"
+          SUMMARY=$(printf '%s' "$OUT" | head -1)
+          if [ "$RC" -eq 0 ]; then echo "smoke_ok=1" >> "$GITHUB_OUTPUT"; else echo "smoke_ok=0" >> "$GITHUB_OUTPUT"; fi
+          echo "smoke_summary=$SUMMARY" >> "$GITHUB_OUTPUT"
+
       - name: Commit changes
         run: |
           git config user.name "kozyr-bot"
@@ -61,16 +82,26 @@ jobs:
           git add -A
           if git diff --staged --quiet; then
             echo "Nothing to commit"
-            exit 0
+          else
+            git commit -m "partner (tpl): ${{ github.event.inputs.partner_id }}"
+            for attempt in 1 2 3 4 5; do
+              if git pull --rebase origin main && git push; then
+                echo "Pushed on attempt $attempt"
+                break
+              fi
+              echo "Attempt $attempt failed, retrying..."
+              sleep $((RANDOM % 4 + 2))
+            done
           fi
-          git commit -m "partner (tpl): ${{ github.event.inputs.partner_id }}"
-          for attempt in 1 2 3 4 5; do
-            if git pull --rebase origin main && git push; then
-              echo "Pushed on attempt $attempt"
-              exit 0
-            fi
-            echo "Attempt $attempt failed, retrying..."
-            sleep $((RANDOM % 4 + 2))
-          done
-          echo "Failed to push after 5 attempts"
-          exit 1
+
+      - name: Notify Telegram (preview link + smoke result + buttons)
+        if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          CHAT_ID: ${{ github.event.inputs.chat_id }}
+          PARTNER_ID: ${{ github.event.inputs.partner_id }}
+          PUBLISH: ${{ github.event.inputs.publish }}
+          SMOKE_OK: ${{ steps.smoke.outputs.smoke_ok }}
+          SMOKE_SUMMARY: ${{ steps.smoke.outputs.smoke_summary }}
+        run: python automation/notify_partner_ready.py
