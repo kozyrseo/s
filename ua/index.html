@@ -3018,6 +3018,72 @@ body::before {
 .kf-compare-close:hover{background:var(--hot,#E63946)}
 @media(max-width:640px){.kf-compare-bar .kf-compare-close{width:30px;height:30px}}
 </style>
+
+<style id="kozyr-p45">
+/* ===== P4 · тематические гиды — крупнее и смелее ===== */
+.topics-grid{gap:22px}
+.topic-card{display:flex;flex-direction:column;min-height:290px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,#fff,#fbfcff);padding:30px 26px 24px;overflow:hidden;transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s,border-color .3s}
+.topic-card::before{height:6px;opacity:.95}
+.topic-card:hover{transform:translateY(-6px);box-shadow:0 26px 54px rgba(20,33,74,.14);border-color:color-mix(in srgb,var(--accent) 38%,var(--line))}
+.topic-card-suit{position:static;width:62px;height:62px;border-radius:17px;display:grid;place-items:center;margin:0 0 20px;transition:transform .3s;opacity:1}
+.topic-card-suit svg{width:34px;height:34px;opacity:1}
+.topic-card-suit svg path,.topic-card-suit svg circle{opacity:1}
+.topic-card:hover .topic-card-suit{transform:scale(1.06) rotate(-4deg)}
+.topic-card--gold .topic-card-suit{background:color-mix(in srgb,var(--gold,#B8841C) 16%,#fff);color:var(--gold,#B8841C)}
+.topic-card--blue .topic-card-suit{background:color-mix(in srgb,var(--accent) 14%,#fff);color:var(--accent)}
+.topic-card--dark .topic-card-suit{background:color-mix(in srgb,var(--ink) 10%,#fff);color:var(--ink)}
+.topic-card-eyebrow{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-3)}
+.topic-card-title{font-family:var(--f-display);font-weight:700;font-size:27px;letter-spacing:-.02em;margin:8px 0 12px;line-height:1.05}
+.topic-card-desc{color:var(--ink-2);font-size:14px;line-height:1.55}
+.topic-card-meta{margin-top:auto;padding-top:20px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid color-mix(in srgb,var(--line) 60%,transparent)}
+.topic-card-count{display:inline-flex;align-items:baseline;gap:7px;font-variant-numeric:tabular-nums;background:none;padding:0}
+.topic-card-count b{font-family:var(--f-display);font-size:30px;font-weight:700;line-height:1}
+.topic-card-count span{font-size:12.5px;color:var(--ink-3)}
+.topic-card--gold .topic-card-count b{color:var(--gold,#B8841C)}
+.topic-card--blue .topic-card-count b{color:var(--accent)}
+.topic-card--dark .topic-card-count b{color:var(--ink)}
+.topic-card-arrow{font-weight:600;font-size:14px}
+.topic-card[data-empty]{display:none}
+
+/* ===== P5 · сравнение по всем — рейтинг строками ===== */
+#compare .compare-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.kzc-sum{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 20px}
+.kzc-sum-chip{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:11px 15px}
+.kzc-sum-chip .k{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.kzc-sum-chip .v{font-family:var(--f-display);font-weight:700;font-size:14.5px}
+.kzc-sum-chip .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+table.kzc{width:100%;border-collapse:collapse;min-width:720px}
+table.kzc thead th{position:sticky;top:0;background:var(--surface-alt,#F5F7FB);z-index:2;text-align:left;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding:13px 14px;white-space:nowrap;border-bottom:1px solid var(--line)}
+table.kzc tbody td{padding:14px;border-bottom:1px solid var(--line);vertical-align:middle;font-size:14px}
+table.kzc tbody tr:last-child td{border-bottom:none}
+table.kzc tbody tr{transition:background .14s}
+table.kzc tbody tr:hover{background:color-mix(in srgb,var(--accent) 5%,transparent)}
+.kzc-rank{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;font-family:var(--f-display);font-weight:700;font-size:13px;background:var(--surface-alt,#F5F7FB);color:var(--ink-2)}
+.kzc-rank.r1{background:var(--gold,#B8841C);color:#fff}
+.kzc-rank.r2{background:#C7CCD8;color:#fff}
+.kzc-rank.r3{background:#E0C39A;color:#fff}
+.kzc-room{display:flex;align-items:center;gap:11px}
+.kzc-logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;font-family:var(--f-display);font-weight:700;font-size:13px;flex:0 0 auto}
+.kzc-logo img{width:38px;height:38px;border-radius:11px;object-fit:cover}
+.kzc-nm{font-family:var(--f-display);font-weight:600;font-size:14.5px;line-height:1.1}
+.kzc-sb{color:var(--ink-3);font-size:12px;margin-top:2px}
+.kzc-score{display:inline-flex;align-items:baseline;gap:8px}
+.kzc-score b{font-family:var(--f-display);font-size:17px;font-weight:700}
+.kzc-scorebar{width:52px;height:6px;border-radius:100px;background:var(--line);overflow:hidden}
+.kzc-scorebar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-deep))}
+.kzc-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:100px;font-weight:600;font-size:12.5px}
+.kzc-badge.rk{background:var(--success-tint,#E4F6EE);color:var(--success,#05A661)}
+.kzc-badge.rk::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.kzc-badge.no{background:var(--surface-alt,#F5F7FB);color:var(--ink-3)}
+.kzc-pill{display:inline-flex;align-items:center;padding:4px 11px;border-radius:100px;font-weight:600;font-size:12.5px}
+.kzc-pill.direct{background:var(--accent-tint,#EBF1FF);color:var(--accent-deep)}
+.kzc-pill.club{background:var(--surface-warm,#F5F1E8);color:var(--gold,#B8841C)}
+.kzc-pill.telegram{background:#E4F4FC;color:#1CA0E3}
+.kzc-dim{color:var(--ink-2);font-variant-numeric:tabular-nums;font-size:13px}
+.kzc-best{background:color-mix(in srgb,var(--success,#05A661) 7%,transparent)}
+.kzc-chip{margin-left:8px;font-family:var(--f-mono);font-size:8.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--success,#05A661);font-weight:600}
+.kzc-cta{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;border-radius:100px;background:var(--surface-dark,#000714);color:#fff;font-weight:600;font-size:12.5px;white-space:nowrap}
+</style>
 </head>
 <body>
 <a href="#main" class="skip-link">Перейти к основному содержанию</a>
@@ -3396,7 +3462,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <p class="compare-lead">Два разных подхода: покер-рум на гривны с лицензией Curaçao — или приватный клуб в ClubGG с мягкими полями. Сравнение по ключевым параметрам.</p>
     </div>
 
-    <div class="compare-wrap">
+    <div class="compare-wrap" id="kozyr-compare-wrap">
       <table class="compare-table">
         <thead>
           <tr>
@@ -4198,8 +4264,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
              '<div class="kf-rake-note">Ждём данные партнёра</div>';
     }
     if (room.rake === 'none') {
-      return '<div class="kf-rake kf-rake--pending">Возврат рейка</div>' +
-             (big ? '' : '<div class="kf-rake-note">Условия индивидуально</div>');
+      return '<div class="kf-rake kf-rake--pending">нет</div>';
     }
     return '<div class="kf-rake">до&nbsp;' + room.rake + '<em>%</em></div>' +
            (big ? '' : '<div class="kf-rake-note">Возврат рейка</div>');
@@ -4380,7 +4445,7 @@ window.addEventListener('load', function () { try { render(); } catch (e) {} });
       return '<tr class="kf-row-in">' +
         '<td><div class="kf-room"><div class="kf-room-main"><span class="kf-room-name">' + esc(r.name) + '</span></div></div></td>' +
         '<td><div class="kf-score"><span class="kf-score-num">' + (r.score != null ? r.score.toFixed(1) : '—') + '</span></div></td>' +
-        '<td>' + (r.rake != null ? 'до ' + r.rake + '%' : 'Уточняется') + '</td>' +
+        '<td>' + (typeof r.rake === 'number' ? 'до ' + r.rake + '%' : (r.rake === 'none' ? 'нет' : 'Уточняется')) + '</td>' +
         '<td>' + (r.countries || []).slice(0, 2).map(function (c) { return labelOf('countries', c); }).join(', ') + '</td>' +
         '<td>' + (r.limits || []).slice(0, 3).join(', ') + '</td>' +
         '<td class="kf-col-hide-lg">' + (r.games || []).map(function (g) { return labelOf('games', g); }).join(', ') + '</td>' +
@@ -4958,5 +5023,97 @@ document.getElementById('geo-banner-close').addEventListener('click', () => {
 
   <script defer src="/assets/kozyr-geo.js?v=20260829"></script>
   <script defer src="/assets/kozyr-enhance.js?v=f4076ff4"></script>
+
+<script>
+/* Kozyr P4/P5 — живые счётчики гидов + сравнение по всем. Источник: window.KOZYR_PARTNERS. */
+(function(){
+  "use strict";
+  var L = {"plural":["партнёр","партнёра","партнёров"],"upto":"до","none":"нет","best":"лучший","review":"Обзор","hPartner":"Партнёр","hScore":"Score","rRake":"Рейкбек","rAccess":"Доступ","rLimits":"Лимиты","rPay":"Платёжки","rPayout":"Вывод","access":{"direct":"Прямая ссылка","club":"Клуб","telegram":"Telegram"},"payments":{"card":"Карта","bank":"Банк","crypto":"Крипта","p2p":"P2P"},"pay1":"до 1 часа","payH":"до {n} ч","payD":"до {n} сут","sScore":"Выше Score","sRake":"Лучший рейкбек","sPayout":"Быстрее всех","tag":"● Топ партнёров","lead":"Топ партнёров по Kozyr Score — рейкбек, доступ, лимиты, платёжки и сроки вывода в одной таблице. Пересобирается автоматически.","note":"Список и оценки обновляются по мере поступления данных от партнёров. Kozyr Score считается по пяти параметрам, методология открытая."};
+  function ready(fn){document.readyState!=='loading'?fn():document.addEventListener('DOMContentLoaded',fn);}
+  function partners(){return (window.KOZYR_PARTNERS||[]).slice();}
+  function has(a,v){return Array.isArray(a)&&a.indexOf(v)!==-1;}
+  function rakeNum(p){var v=p&&p.rake;return typeof v==='number'&&v>0?v:null;}
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function lab(g,v){return (L[g]&&L[g][v])||v;}
+
+  /* ---- P4 counts ---- */
+  var SLUG=['na-grivnu','dlya-novichkov','mobilnye'];
+  function guideKey(href){for(var i=0;i<SLUG.length;i++){if(href.indexOf('/'+SLUG[i]+'/')!==-1)return SLUG[i];}return null;}
+  var GUIDE={
+    'na-grivnu':function(p){return p.currency==='UAH'&&(has(p.payments,'card')||has(p.payments,'bank'));},
+    'dlya-novichkov':function(p){return p.access!=='club'&&has(p.limits,'NL10');},
+    'mobilnye':function(p){return has(p.software,'ios')&&has(p.software,'android')&&p.access!=='telegram';}
+  };
+  function gmatch(k,p){if(Array.isArray(p.tags)&&p.tags.length)return p.tags.indexOf(k)!==-1;var f=GUIDE[k];return f?!!f(p):false;}
+  function plural(n){var f=L.plural,a=n%100,b=n%10;if(a>10&&a<20)return f[2];if(b===1)return f[0];if(b>=2&&b<=4)return f[1];return f[2];}
+  function counts(P){
+    var cards=document.querySelectorAll('.topic-card');
+    for(var i=0;i<cards.length;i++){
+      var card=cards[i],k=guideKey(card.getAttribute('href')||'');if(!k)continue;
+      var n=P.filter(function(p){return gmatch(k,p);}).length;
+      var el=card.querySelector('.topic-card-count');
+      if(el)el.innerHTML='<b>'+n+'</b> <span>'+plural(n)+'</span>';
+      if(n===0)card.setAttribute('data-empty','');else card.removeAttribute('data-empty');
+    }
+  }
+
+  /* ---- P5 compare-all ---- */
+  function payoutTxt(h){if(h==null)return '\u2014';if(h<=1)return L.pay1;if(h<24)return L.payH.replace('{n}',h);return L.payD.replace('{n}',Math.round(h/24));}
+  function logoCell(p){var g=p.logo||{};if(g.img)return '<div class="kzc-logo"><img src="'+esc(g.img)+'" alt="'+esc(p.name)+'" width="38" height="38"></div>';return '<div class="kzc-logo" style="background:linear-gradient(135deg,'+esc(g.from||'#2668FF')+','+esc(g.to||'#1E52D9')+')">'+esc(g.text||p.name.slice(0,2))+'</div>';}
+  function pill(a){var c=a==='club'?'club':(a==='telegram'?'telegram':'direct');return '<span class="kzc-pill '+c+'">'+esc(lab('access',a))+'</span>';}
+  function dim(s){return '<span class="kzc-dim">'+esc(s)+'</span>';}
+  function chip(){return '<span class="kzc-chip">'+esc(L.best)+'</span>';}
+  function rakeCell(p,best){var r=rakeNum(p);if(r==null)return '<span class="kzc-badge no">'+esc(L.none)+'</span>';return '<span class="kzc-badge rk">'+esc(L.upto)+' '+r+'%</span>'+(best?chip():'');}
+  function sumChip(k,v,color){return '<div class="kzc-sum-chip"><span class="dot" style="background:'+(color||'#2668FF')+'"></span><div><div class="k">'+esc(k)+'</div><div class="v">'+v+'</div></div></div>';}
+
+  function renderCompare(P){
+    var wrap=document.getElementById('kozyr-compare-wrap');
+    if(!wrap||P.length<2)return;
+    var sec=document.getElementById('compare');
+    var pin=sec&&sec.getAttribute('data-compare-ids'),list;
+    if(pin){list=pin.split(',').map(function(s){var id=s.trim();return P.filter(function(p){return p.id===id;})[0];}).filter(Boolean);}
+    else{list=P.slice().sort(function(a,b){return (b.score||0)-(a.score||0)||(rakeNum(b)||0)-(rakeNum(a)||0);});}
+    if(list.length<2)return;
+
+    var bestScore=Math.max.apply(null,list.map(function(p){return p.score||0;}));
+    var bestRake=Math.max.apply(null,list.map(function(p){var r=rakeNum(p);return r==null?-1:r;}));
+    var fastest=Math.min.apply(null,list.map(function(p){return p.payoutHours==null?1e9:p.payoutHours;}));
+
+    var head='<th>#</th><th>'+esc(L.hPartner)+'</th><th>'+esc(L.hScore)+'</th><th>'+esc(L.rRake)+'</th><th>'+esc(L.rAccess)+'</th><th>'+esc(L.rLimits)+'</th><th>'+esc(L.rPay)+'</th><th>'+esc(L.rPayout)+'</th><th></th>';
+    var body=list.map(function(p,i){
+      var sB=(p.score||0)===bestScore,rB=rakeNum(p)!=null&&rakeNum(p)===bestRake,pB=p.payoutHours!=null&&p.payoutHours===fastest;
+      var pct=Math.round((p.score||0)/10*100);
+      return '<tr>'+
+        '<td><span class="kzc-rank r'+(i+1)+'">'+(i+1)+'</span></td>'+
+        '<td><div class="kzc-room">'+logoCell(p)+'<div><div class="kzc-nm">'+esc(p.name)+'</div><div class="kzc-sb">'+esc(p.license||lab('access',p.access))+'</div></div></div></td>'+
+        '<td class="'+(sB?'kzc-best':'')+'"><span class="kzc-score"><b>'+(p.score||0).toFixed(1)+'</b><span class="kzc-scorebar"><i style="width:'+pct+'%"></i></span></span></td>'+
+        '<td class="'+(rB?'kzc-best':'')+'">'+rakeCell(p,rB)+'</td>'+
+        '<td>'+pill(p.access)+'</td>'+
+        '<td>'+dim((p.limits||[]).join(' \u00b7 '))+'</td>'+
+        '<td>'+dim((p.payments||[]).map(function(x){return lab('payments',x);}).join(', '))+'</td>'+
+        '<td class="'+(pB?'kzc-best':'')+'"><span class="kzc-dim">'+esc(payoutTxt(p.payoutHours))+'</span>'+(pB?chip():'')+'</td>'+
+        '<td><a class="kzc-cta" href="'+esc(p.url||'#partners')+'">'+esc(L.review)+' \u2192</a></td>'+
+      '</tr>';
+    }).join('');
+    wrap.innerHTML='<table class="kzc"><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table>';
+
+    var top=list.filter(function(p){return (p.score||0)===bestScore;})[0];
+    var rk=bestRake>=0?list.filter(function(p){return rakeNum(p)===bestRake;})[0]:null;
+    var fa=list.filter(function(p){return p.payoutHours===fastest;})[0];
+    var sum='';
+    if(top)sum+=sumChip(L.sScore,esc(top.name)+' \u00b7 '+(top.score||0).toFixed(1),(top.logo||{}).from);
+    if(rk)sum+=sumChip(L.sRake,esc(rk.name)+' \u00b7 '+esc(L.upto)+' '+bestRake+'%',(rk.logo||{}).from);
+    if(fa)sum+=sumChip(L.sPayout,esc(fa.name)+' \u00b7 '+esc(payoutTxt(fa.payoutHours)),(fa.logo||{}).from);
+    var old=sec.querySelector('.kzc-sum');if(old)old.parentNode.removeChild(old);
+    if(sum)wrap.insertAdjacentHTML('beforebegin','<div class="kzc-sum">'+sum+'</div>');
+
+    var tag=sec.querySelector('.section-tag span');if(tag)tag.textContent=L.tag;
+    var lead=sec.querySelector('.compare-lead');if(lead)lead.textContent=L.lead;
+    var note=sec.querySelector('.compare-note');if(note)note.textContent=L.note;
+  }
+
+  ready(function(){var P=partners();try{counts(P);}catch(e){}try{renderCompare(P);}catch(e){}});
+})();
+</script>
 </body>
 </html>
