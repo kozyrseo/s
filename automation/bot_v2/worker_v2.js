@@ -377,7 +377,8 @@ async function handleCallback(cb, env) {
   if (action === "pcountry" || action === "pconfirm" || action === "pmore" ||
       action === "pcancel" || action === "ppublish" ||
       action === "pshow" || action === "pshow_latest" ||
-      action === "pedit" || action === "pfield" || action === "pacc") {
+      action === "pedit" || action === "pfield" || action === "pacc" ||
+      action === "pfull" || action === "ptype") {
     await handlePartnerCallback(action, segments, cb, env);
     return;
   }
@@ -1608,6 +1609,9 @@ const PARTNER_EDIT_FIELDS = {
   score:       { label: "Score",      type: "num",  hint: "оценку 1–10 (напр. 8.4)" },
   ref_url:     { label: "Реф-ссылка", type: "url",  hint: "ссылку кнопки «Перейти» (https://… или t.me/…)" },
   currency:    { label: "Валюта",     type: "cur",  hint: "валюту: UAH / USD / EUR / USDT" },
+  games:       { label: "Игры",       type: "list", hint: "форматы через запятую (cash, mtt, spins, sng)" },
+  software:    { label: "Софт",       type: "list", hint: "платформы через запятую (ios, android, win, mac, web)" },
+  payments:    { label: "Платежи",    type: "list", hint: "способы через запятую (card, crypto, bank, ewallet)" },
   note:        { label: "Описание",   type: "str",  hint: "краткое описание в 1 предложение для карточки" },
 };
 
@@ -1620,6 +1624,8 @@ function partnerEditMenuKb(draftId) {
       callback_data: `pfield:${draftId}:${k}`,
     })));
   }
+  // Тип (рум/клуб) — переключателем, а не вводом.
+  kb.push([{ text: "🔄 Тип: рум ⇄ клуб", callback_data: `ptype:${draftId}` }]);
   kb.push([{ text: "← Назад к сводке", callback_data: `pshow:${draftId}` }]);
   return kb;
 }
@@ -1827,6 +1833,29 @@ async function handlePartnerCallback(action, segments, cb, env) {
     return;
   }
 
+  // Полный просмотр черновика (все поля: плюсы/минусы/about/бонусы/…).
+  if (action === "pfull") {
+    const draftId = segments[1];
+    if (!validPartnerId(draftId)) { await answerCallback(cb.id, env, "⚠️ Некорректный id"); return; }
+    await answerCallback(cb.id, env, "👁 Показываю всё");
+    await showPartnerFullDraft(chatId, draftId, env);
+    return;
+  }
+
+  // Переключить тип рум ⇄ клуб (частая ошибка парсинга — чиним одним тапом).
+  if (action === "ptype") {
+    const draftId = segments[1];
+    if (!validPartnerId(draftId)) { await answerCallback(cb.id, env, "⚠️ Некорректный id"); return; }
+    const d = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
+    if (!d) { await answerCallback(cb.id, env, "⚠️ Не найден"); return; }
+    d.type = d.type === "club" ? "room" : "club";
+    await ghWriteFile(PARTNER_DRAFT_PATH(draftId), JSON.stringify(d, null, 2),
+      `partner: toggle type→${d.type} for ${draftId}`, env);
+    await answerCallback(cb.id, env, d.type === "club" ? "Тип: клуб" : "Тип: рум");
+    await showPartnerDraftSummary(chatId, draftId, env);
+    return;
+  }
+
   // Меню правки полей.
   if (action === "pedit") {
     const draftId = segments[1];
@@ -2005,8 +2034,9 @@ async function showPartnerDraftSummary(chatId, draftId, env) {
   } else {
     kb = [
       [{ text: "✅ Создать страницу", callback_data: `pconfirm:${draftId}` }],
-      [{ text: "✏️ Исправить поле", callback_data: `pedit:${draftId}` },
-       { text: "🌐 Принимает из…", callback_data: `pacc:${draftId}` }],
+      [{ text: "👁 Показать всё", callback_data: `pfull:${draftId}` },
+       { text: "✏️ Исправить поле", callback_data: `pedit:${draftId}` }],
+      [{ text: "🌐 Принимает из…", callback_data: `pacc:${draftId}` }],
       [{ text: "➕ Дополнить текстом", callback_data: `pmore:${draftId}` }],
       [{ text: "❌ Отмена", callback_data: "pcancel" }],
     ];
@@ -2057,25 +2087,37 @@ function renderPartnerSummary(draft) {
   const L = ["📋 *Вот что я понял:*", ""];
   L.push(`🎯 *${escapeMd(draft.name || "?")}* · ${escapeMd(draft.type || "?")} · ${escapeMd(draft.networkLabel || draft.network || "?")}`);
   const country = draft.country;
-  L.push(`📍 Основная страна: ${escapeMd(country || "не определена")} · Валюта: ${escapeMd(draft.currency || "?")}`);
+  L.push(`📍 Страна: ${escapeMd(country || "не определена")} · Валюта: ${escapeMd(draft.currency || "?")}`);
   const accepted = draft.acceptedCountries || [];
-  if (accepted.length && (accepted.length > 1 || (country && String(accepted) !== String([country])))) {
-    L.push(`🌐 Принимает из: ${escapeMd(accepted.join(", "))}`);
+  if (accepted.length) {
+    const acc = accepted.includes("all") ? "весь мир" : accepted.join(", ");
+    L.push(`🌐 Принимает: ${escapeMd(acc)}`);
   }
   L.push(`💰 Рейкбек: ${escapeMd(draft.rakeLabel || "?")}`);
   L.push(`⭐ KOZYR score: ${escapeMd(String(draft.score ?? "?"))}`);
   const games = draft.games || [];
   const limits = draft.limits || [];
   if (games.length || limits.length) {
-    L.push(`🎮 ${escapeMd(limits.slice(0, 4).join(", "))} · ${escapeMd(games.join(", "))}`);
+    L.push(`🎮 ${escapeMd(limits.slice(0, 5).join(", "))}${games.length ? " · " + escapeMd(games.join(", ")) : ""}`);
   }
   const sw = draft.software || [];
-  if (sw.length) L.push(`📱 ${escapeMd(sw.join(", "))}`);
+  if (sw.length) L.push(`📱 Софт: ${escapeMd(sw.join(", "))}`);
+  const pay = draft.payments || [];
+  if (pay.length) L.push(`💳 Платежи: ${escapeMd(pay.join(", "))}`);
+  // Реф-ссылка (денежная) — критично проверить перед публикацией.
+  if (draft.ref_url) {
+    L.push(`🔗 Ссылка: ${escapeMd(draft.ref_url)}`);
+  } else {
+    L.push("🔗 ⚠️ Реф-ссылка не задана — кнопка «Перейти» будет без ссылки");
+  }
+  // Логотип: загружен или будет текстовым (инициалы).
+  L.push(draft.logo_img
+    ? "🖼 Логотип: загружен"
+    : "🖼 Логотип: текстовый (пришли фото, чтобы заменить)");
   const pros = draft.pros || [];
   const cons = draft.cons || [];
-  L.push(`✅ Плюсы: ${pros.length} · ❌ Минусы: ${cons.length}`);
   const faq = draft.faq || [];
-  if (faq.length) L.push(`❓ FAQ: ${faq.length}`);
+  L.push(`✅ Плюсы: ${pros.length} · ❌ Минусы: ${cons.length}${faq.length ? ` · ❓ FAQ: ${faq.length}` : ""}`);
   const missing = draft._missing || [];
   if (missing.length) {
     L.push("");
@@ -2083,8 +2125,35 @@ function renderPartnerSummary(draft) {
   }
   L.push("");
   const kind = draft.type === "club" ? "clubs" : "rooms";
-  L.push(`_Путь страницы: /${escapeMd(country || "??")}/${kind}/${escapeMd(draft.id || "?")}/_`);
+  L.push(`_Путь: /${escapeMd(country || "??")}/${kind}/${escapeMd(draft.id || "?")}/_`);
   return L.join("\n");
+}
+
+// Полная карточка черновика — всё, что распарсено (для проверки перед сборкой).
+async function showPartnerFullDraft(chatId, draftId, env) {
+  const d = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
+  if (!d) { await sendMessage(chatId, env, "⚠️ Черновик не найден."); return; }
+  const fmt = a => (Array.isArray(a) && a.length) ? a.map(x => escapeMd(String(x))).join(", ") : "—";
+  const L = [`🗂 *Полная карточка: ${escapeMd(d.name || draftId)}*`, ""];
+  L.push(`*Тип:* ${escapeMd(d.type || "?")} · *Сеть:* ${escapeMd(d.networkLabel || d.network || "?")}`);
+  L.push(`*Страна:* ${escapeMd(d.country || "?")} · *Валюта:* ${escapeMd(d.currency || "?")}`);
+  L.push(`*Принимает:* ${(d.acceptedCountries || []).includes("all") ? "весь мир" : fmt(d.acceptedCountries)}`);
+  L.push(`*Рейкбек:* ${escapeMd(d.rakeLabel || "?")} · *Score:* ${escapeMd(String(d.score ?? "?"))}`);
+  L.push(`*Выплаты:* ${escapeMd(d.payoutLabel || "?")}`);
+  L.push(`*Игры:* ${fmt(d.games)} · *Лимиты:* ${fmt(d.limits)}`);
+  L.push(`*Софт:* ${fmt(d.software)} · *Платежи:* ${fmt(d.payments)}`);
+  L.push(`*Бонусы:* ${fmt(d.bonus)}`);
+  L.push(`*Реф-ссылка:* ${d.ref_url ? escapeMd(d.ref_url) : "⚠️ не задана"}`);
+  L.push(`*Логотип:* ${d.logo_img ? "загружен" : "текстовый (инициалы)"}`);
+  const pros = d.pros || [], cons = d.cons || [];
+  if (pros.length) { L.push(""); L.push("*Плюсы:*"); pros.slice(0, 10).forEach(p => L.push(`  ✅ ${escapeMd(p)}`)); }
+  if (cons.length) { L.push("*Минусы:*"); cons.slice(0, 10).forEach(c => L.push(`  ❌ ${escapeMd(c)}`)); }
+  const about = d.about || [];
+  if (about.length) { L.push(""); L.push("*О площадке:*"); L.push(escapeMd(about.join(" ").slice(0, 500))); }
+  const faq = d.faq || [];
+  if (faq.length) { L.push(""); L.push(`*FAQ (${faq.length}):*`); faq.slice(0, 6).forEach(q => L.push(`  ❓ ${escapeMd(q.q || "")}`)); }
+  const kb = [[{ text: "← Назад к сводке", callback_data: `pshow:${draftId}` }]];
+  await sendMessage(chatId, env, L.join("\n"), kb);
 }
 
 // ── Проставить основную страну в черновике и показать сводку заново ──
