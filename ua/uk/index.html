@@ -3047,48 +3047,31 @@ body::before {
 .topic-card-arrow{font-weight:600;font-size:14px}
 .topic-card[data-empty]{display:none}
 
-/* ===== P5 · сравнение по всем — рейтинг строками ===== */
-#compare .compare-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:20px;box-shadow:0 14px 40px rgba(20,33,74,.07);background:var(--surface)}
-.kzc-sum{display:flex;flex-wrap:wrap;gap:12px;margin:0 0 20px}
-.kzc-sum-chip{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:11px 15px}
-.kzc-sum-chip .k{font-family:var(--f-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
-.kzc-sum-chip .v{font-family:var(--f-display);font-weight:700;font-size:14.5px}
-.kzc-sum-chip .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
-table.kzc{width:100%;border-collapse:collapse;min-width:720px}
-table.kzc thead th{position:sticky;top:0;background:var(--surface-alt,#F5F7FB);z-index:2;text-align:left;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);font-weight:600;padding:13px 14px;white-space:nowrap;border-bottom:1px solid var(--line)}
-table.kzc tbody td{padding:14px;border-bottom:1px solid var(--line);vertical-align:middle;font-size:14px}
-table.kzc tbody tr:last-child td{border-bottom:none}
-table.kzc tbody tr{transition:background .14s}
-table.kzc tbody tr:hover{background:color-mix(in srgb,var(--accent) 6%,transparent)}
-table.kzc tbody tr:first-child .kzc-rank{box-shadow:0 3px 10px color-mix(in srgb,var(--gold,#B8841C) 45%,transparent)}
-.kzc-cta{box-shadow:0 4px 12px rgba(0,7,20,.18)}
-.kzc-cta:hover{background:var(--accent,#2668FF)}
-.kzc-rank{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;font-family:var(--f-display);font-weight:700;font-size:13px;background:var(--surface-alt,#F5F7FB);color:var(--ink-2)}
-.kzc-rank.r1{background:var(--gold,#B8841C);color:#fff}
-.kzc-rank.r2{background:#C7CCD8;color:#fff}
-.kzc-rank.r3{background:#E0C39A;color:#fff}
-.kzc-room{display:flex;align-items:center;gap:11px}
-.kzc-logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;color:#fff;font-family:var(--f-display);font-weight:700;font-size:13px;flex:0 0 auto}
-.kzc-logo--img{background:#fff;border:1px solid color-mix(in srgb,var(--line) 70%,transparent);box-shadow:0 1px 3px rgba(10,17,40,.06)}
-.kzc-logo img{width:100%;height:100%;border-radius:11px;object-fit:contain;padding:6px}
-.kzc-nm{font-family:var(--f-display);font-weight:600;font-size:14.5px;line-height:1.1}
-.kzc-sb{color:var(--ink-3);font-size:12px;margin-top:2px}
-.kzc-score{display:inline-flex;align-items:baseline;gap:8px}
-.kzc-score b{font-family:var(--f-display);font-size:17px;font-weight:700}
-.kzc-scorebar{width:52px;height:6px;border-radius:100px;background:var(--line);overflow:hidden}
-.kzc-scorebar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-deep))}
-.kzc-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:100px;font-weight:600;font-size:12.5px}
-.kzc-badge.rk{background:var(--success-tint,#E4F6EE);color:var(--success,#05A661)}
-.kzc-badge.rk::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
-.kzc-badge.no{background:var(--surface-alt,#F5F7FB);color:var(--ink-3)}
-.kzc-pill{display:inline-flex;align-items:center;padding:4px 11px;border-radius:100px;font-weight:600;font-size:12.5px}
-.kzc-pill.direct{background:var(--accent-tint,#EBF1FF);color:var(--accent-deep)}
-.kzc-pill.club{background:var(--surface-warm,#F5F1E8);color:var(--gold,#B8841C)}
-.kzc-pill.telegram{background:#E4F4FC;color:#1CA0E3}
-.kzc-dim{color:var(--ink-2);font-variant-numeric:tabular-nums;font-size:13px}
-.kzc-best{background:color-mix(in srgb,var(--success,#05A661) 7%,transparent)}
-.kzc-chip{margin-left:8px;font-family:var(--f-mono);font-size:8.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--success,#05A661);font-weight:600}
-.kzc-cta{display:inline-flex;align-items:center;gap:5px;padding:8px 13px;border-radius:100px;background:var(--surface-dark,#000714);color:#fff;font-weight:600;font-size:12.5px;white-space:nowrap}
+/* ===== P5 · «Лучшие в категории» (awards) ===== */
+#compare .compare-wrap{overflow:visible;border:none;box-shadow:none;background:none;padding:0}
+.kza-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.kza-card{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px 20px;box-shadow:0 10px 30px rgba(20,33,74,.05);transition:transform .28s cubic-bezier(.22,1,.36,1),box-shadow .28s,border-color .28s;overflow:hidden}
+.kza-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--accent)}
+.kza-card:hover{transform:translateY(-5px);box-shadow:0 22px 46px rgba(20,33,74,.13)}
+.kza-cat{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.kza-medal{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:0 0 auto;background:color-mix(in srgb,var(--accent) 12%,#fff);color:var(--accent)}
+.kza-medal svg{width:19px;height:19px}
+.kza-cat-name{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);line-height:1.3}
+.kza-winner{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.kza-logo{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:0 0 auto;background:#fff;border:1px solid color-mix(in srgb,var(--line) 70%,transparent);box-shadow:0 1px 3px rgba(10,17,40,.06);overflow:hidden}
+.kza-logo img{width:100%;height:100%;object-fit:contain;padding:6px}
+.kza-logo.mono{color:#fff;font-family:var(--f-display);font-weight:700;font-size:14px;border:none}
+.kza-name{font-family:var(--f-display);font-weight:700;font-size:17px;line-height:1.1}
+.kza-stat{font-family:var(--f-display);font-weight:700;font-size:15px;margin-top:3px}
+.kza-why{color:var(--ink-2);font-size:13px;line-height:1.5;margin:0 0 16px}
+.kza-cta{margin-top:auto;display:inline-flex;align-items:center;gap:6px;align-self:flex-start;padding:8px 14px;border-radius:100px;background:var(--surface-dark,#000714);color:#fff;font-weight:600;font-size:12.5px;box-shadow:0 4px 12px rgba(0,7,20,.16);transition:background .15s}
+.kza-cta:hover{background:var(--accent)}
+.kza-card.c-score::before{background:var(--accent)} .kza-card.c-score .kza-medal{background:color-mix(in srgb,var(--accent) 12%,#fff);color:var(--accent)}
+.kza-card.c-rake::before{background:var(--success,#05A661)} .kza-card.c-rake .kza-medal{background:var(--success-tint,#E4F6EE);color:var(--success,#05A661)} .kza-card.c-rake .kza-stat{color:var(--success,#05A661)}
+.kza-card.c-crypto::before{background:#1CA0E3} .kza-card.c-crypto .kza-medal{background:#E4F4FC;color:#1CA0E3}
+.kza-card.c-payout::before{background:var(--gold,#B8841C)} .kza-card.c-payout .kza-medal{background:color-mix(in srgb,var(--gold,#B8841C) 14%,#fff);color:var(--gold,#B8841C)}
+@media(max-width:960px){.kza-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.kza-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -5031,22 +5014,22 @@ document.getElementById('geo-banner-close').addEventListener('click', () => {
   <script defer src="/assets/kozyr-enhance.js?v=f4076ff4"></script>
 
 <script>
-/* Kozyr P4/P5 — живые счётчики гидов + сравнение по всем. Источник: window.KOZYR_PARTNERS. */
+/* Kozyr P4/P5 — счётчики гидов + «Лучшие в категории». Источник: window.KOZYR_PARTNERS. */
 (function(){
   "use strict";
-  var L = {"plural":["партнер","партнери","партнерів"],"upto":"до","none":"немає","best":"найкращий","review":"Огляд","hPartner":"Партнер","hScore":"Score","rRake":"Рейкбек","rAccess":"Доступ","rLimits":"Ліміти","rPay":"Платіжки","rPayout":"Вивід","access":{"direct":"Пряме посилання","club":"Клуб","telegram":"Telegram"},"payments":{"card":"Картка","bank":"Банк","crypto":"Крипта","p2p":"P2P"},"pay1":"до 1 години","payH":"до {n} год","payD":"до {n} діб","sScore":"Вище Score","sRake":"Найкращий рейкбек","sPayout":"Найшвидший вивід","tag":"● Топ партнерів","lead":"Топ партнерів за Kozyr Score — рейкбек, доступ, ліміти, платіжки та строки виводу в одній таблиці. Перезбирається автоматично.","note":"Список і оцінки оновлюються в міру надходження даних від партнерів. Kozyr Score рахується за п’ятьма параметрами, методологія відкрита."};
+  var L = {"plural":["партнер","партнери","партнерів"],"upto":"до","review":"Огляд","access":{"direct":"Пряме посилання","club":"Клуб","telegram":"Telegram"},"pay1":"до 1 години","payH":"до {n} год","payD":"до {n} діб","aTag":"● Найкращі в категорії","aLead":"Переможці за ключовими метриками — оцінка, рейкбек, швидкість виплат, крипта. Перераховується з каталогу автоматично.","aNote":"Переможець у кожній категорії визначається за даними партнерів і оновлюється автоматично. Повне порівняння з фільтрами — у каталозі вище.","aScoreName":"Вибір редакції","aScoreWhy":"Найвища оцінка Kozyr Score у каталозі.","aRakeName":"Максимальний рейкбек","aRakeWhy":"Найбільше повернення рейку серед партнерів.","aCryptoName":"Крипта і Telegram","aCryptoWhy":"Гра без карток і зайвої верифікації.","aPayoutName":"Швидкі виплати","aPayoutWhy":"Найшвидший вивід коштів."};
   function ready(fn){document.readyState!=='loading'?fn():document.addEventListener('DOMContentLoaded',fn);}
   function partners(){return (window.KOZYR_PARTNERS||[]).slice();}
   function has(a,v){return Array.isArray(a)&&a.indexOf(v)!==-1;}
   function rakeNum(p){var v=p&&p.rake;return typeof v==='number'&&v>0?v:null;}
   function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function lab(g,v){return (L[g]&&L[g][v])||v;}
+  function logoImgOf(p){return (p.card&&p.card.logoImg)||p.logoImg||(p.logo&&p.logo.img)||null;}
+  function payoutTxt(h){if(h==null)return '\u2014';if(h<=1)return L.pay1;if(h<24)return L.payH.replace('{n}',h);return L.payD.replace('{n}',Math.round(h/24));}
 
-  /* ---- P4 counts ---- */
+  /* P4 counts = тот же фильтр, что и landing-страница гида */
   var SLUG=['na-grivnu','dlya-novichkov','mobilnye'];
   function guideKey(href){for(var i=0;i<SLUG.length;i++){if(href.indexOf('/'+SLUG[i]+'/')!==-1)return SLUG[i];}return null;}
-  /* Счётчики = ровно то, что показывает landing-страница гида: тот же data-filter из partners.js + p.card.
-     Масштаб: новый партнёр с currency=UAH сам попадёт в «на гривну» и т.д. */
   var GUIDE_FILTER={'na-grivnu':'currency:UAH','dlya-novichkov':'limit:NL10','mobilnye':'soft:ios'};
   var KEY_ALIAS={limit:'limits',game:'games',payment:'payments',soft:'software',bonuses:'bonus'};
   function matchFilter(p,filter){
@@ -5071,63 +5054,46 @@ document.getElementById('geo-banner-close').addEventListener('click', () => {
     }
   }
 
-  /* ---- P5 compare-all ---- */
-  function payoutTxt(h){if(h==null)return '\u2014';if(h<=1)return L.pay1;if(h<24)return L.payH.replace('{n}',h);return L.payD.replace('{n}',Math.round(h/24));}
-  function logoImgOf(p){return (p.card&&p.card.logoImg)||p.logoImg||(p.logo&&p.logo.img)||null;}
-  function logoCell(p){var src=logoImgOf(p);if(src)return '<div class="kzc-logo kzc-logo--img"><img src="'+esc(src)+'" alt="'+esc(p.name)+'" width="38" height="38" loading="lazy"></div>';var g=p.logo||{};return '<div class="kzc-logo" style="background:linear-gradient(135deg,'+esc(g.from||'#2668FF')+','+esc(g.to||'#1E52D9')+')">'+esc(g.text||p.name.slice(0,2))+'</div>';}
-  function pill(a){var c=a==='club'?'club':(a==='telegram'?'telegram':'direct');return '<span class="kzc-pill '+c+'">'+esc(lab('access',a))+'</span>';}
-  function dim(s){return '<span class="kzc-dim">'+esc(s)+'</span>';}
-  function chip(){return '<span class="kzc-chip">'+esc(L.best)+'</span>';}
-  function rakeCell(p,best){var r=rakeNum(p);if(r==null)return '<span class="kzc-badge no">'+esc(L.none)+'</span>';return '<span class="kzc-badge rk">'+esc(L.upto)+' '+r+'%</span>'+(best?chip():'');}
-  function sumChip(k,v,color){return '<div class="kzc-sum-chip"><span class="dot" style="background:'+(color||'#2668FF')+'"></span><div><div class="k">'+esc(k)+'</div><div class="v">'+v+'</div></div></div>';}
+  /* P5 «Лучшие в категории» */
+  var ICON={
+    crown:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 8l3.5 3L12 5l5.5 6L21 8l-1.6 10.5H4.6L3 8z"/></svg>',
+    percent:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="7.5" cy="7.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/><path d="M18 6L6 18"/></svg>',
+    bolt:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>',
+    coin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><ellipse cx="12" cy="6.5" rx="7" ry="3"/><path d="M5 6.5v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5M5 11.5v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"/></svg>'
+  };
+  function logoAward(p){var src=logoImgOf(p);if(src)return '<span class="kza-logo"><img src="'+esc(src)+'" alt="'+esc(p.name)+'" width="44" height="44" loading="lazy"></span>';var g=p.logo||{};return '<span class="kza-logo mono" style="background:linear-gradient(135deg,'+esc(g.from||'#2668FF')+','+esc(g.to||'#1E52D9')+')">'+esc(g.text||p.name.slice(0,2))+'</span>';}
+  function byMax(arr,val){var best=null;arr.forEach(function(p){var v=val(p);if(v==null)return;if(best==null||v>val(best))best=p;});return best;}
+  function byMin(arr,val){var best=null;arr.forEach(function(p){var v=val(p);if(v==null)return;if(best==null||v<val(best))best=p;});return best;}
 
-  function renderCompare(P){
+  function renderAwards(P){
     var wrap=document.getElementById('kozyr-compare-wrap');
-    if(!wrap||P.length<2)return;
+    if(!wrap||!P.length)return;
     var sec=document.getElementById('compare');
-    var pin=sec&&sec.getAttribute('data-compare-ids'),list;
-    if(pin){list=pin.split(',').map(function(s){var id=s.trim();return P.filter(function(p){return p.id===id;})[0];}).filter(Boolean);}
-    else{list=P.slice().sort(function(a,b){return (b.score||0)-(a.score||0)||(rakeNum(b)||0)-(rakeNum(a)||0);});}
-    if(list.length<2)return;
+    var oldsum=sec&&sec.querySelector('.kzc-sum');if(oldsum)oldsum.parentNode.removeChild(oldsum);
 
-    var bestScore=Math.max.apply(null,list.map(function(p){return p.score||0;}));
-    var bestRake=Math.max.apply(null,list.map(function(p){var r=rakeNum(p);return r==null?-1:r;}));
-    var fastest=Math.min.apply(null,list.map(function(p){return p.payoutHours==null?1e9:p.payoutHours;}));
-
-    var head='<th>#</th><th>'+esc(L.hPartner)+'</th><th>'+esc(L.hScore)+'</th><th>'+esc(L.rRake)+'</th><th>'+esc(L.rAccess)+'</th><th>'+esc(L.rLimits)+'</th><th>'+esc(L.rPay)+'</th><th>'+esc(L.rPayout)+'</th><th></th>';
-    var body=list.map(function(p,i){
-      var sB=(p.score||0)===bestScore,rB=rakeNum(p)!=null&&rakeNum(p)===bestRake,pB=p.payoutHours!=null&&p.payoutHours===fastest;
-      var pct=Math.round((p.score||0)/10*100);
-      return '<tr>'+
-        '<td><span class="kzc-rank r'+(i+1)+'">'+(i+1)+'</span></td>'+
-        '<td><div class="kzc-room">'+logoCell(p)+'<div><div class="kzc-nm">'+esc(p.name)+'</div><div class="kzc-sb">'+esc(p.license||lab('access',p.access))+'</div></div></div></td>'+
-        '<td class="'+(sB?'kzc-best':'')+'"><span class="kzc-score"><b>'+(p.score||0).toFixed(1)+'</b><span class="kzc-scorebar"><i style="width:'+pct+'%"></i></span></span></td>'+
-        '<td class="'+(rB?'kzc-best':'')+'">'+rakeCell(p,rB)+'</td>'+
-        '<td>'+pill(p.access)+'</td>'+
-        '<td>'+dim((p.limits||[]).join(' \u00b7 '))+'</td>'+
-        '<td>'+dim((p.payments||[]).map(function(x){return lab('payments',x);}).join(', '))+'</td>'+
-        '<td class="'+(pB?'kzc-best':'')+'"><span class="kzc-dim">'+esc(payoutTxt(p.payoutHours))+'</span>'+(pB?chip():'')+'</td>'+
-        '<td><a class="kzc-cta" href="'+esc(p.url||'#partners')+'">'+esc(L.review)+' \u2192</a></td>'+
-      '</tr>';
+    var CATS=[
+      {cls:'c-score',icon:ICON.crown,name:L.aScoreName,why:L.aScoreWhy,winner:byMax(P,function(p){return p.score;}),stat:function(p){return 'Kozyr Score '+(p.score||0).toFixed(1);}},
+      {cls:'c-rake',icon:ICON.percent,name:L.aRakeName,why:L.aRakeWhy,winner:byMax(P,function(p){return rakeNum(p);}),stat:function(p){return L.upto+' '+rakeNum(p)+'%';}},
+      {cls:'c-crypto',icon:ICON.coin,name:L.aCryptoName,why:L.aCryptoWhy,winner:byMax(P.filter(function(p){return has(p.payments,'crypto')||p.access==='telegram';}),function(p){return p.score;}),stat:function(p){return (p.currency||'')+' \u00b7 '+lab('access',p.access);}},
+      {cls:'c-payout',icon:ICON.bolt,name:L.aPayoutName,why:L.aPayoutWhy,winner:byMin(P,function(p){return p.payoutHours;}),stat:function(p){return payoutTxt(p.payoutHours);}}
+    ];
+    var html=CATS.map(function(c){
+      var p=c.winner;if(!p)return '';
+      return '<div class="kza-card '+c.cls+'">'+
+        '<div class="kza-cat"><span class="kza-medal">'+c.icon+'</span><span class="kza-cat-name">'+esc(c.name)+'</span></div>'+
+        '<div class="kza-winner">'+logoAward(p)+'<div><div class="kza-name">'+esc(p.name)+'</div><div class="kza-stat">'+esc(c.stat(p))+'</div></div></div>'+
+        '<p class="kza-why">'+esc(c.why)+'</p>'+
+        '<a class="kza-cta" href="'+esc(p.url||'#partners')+'">'+esc(L.review)+' \u2192</a>'+
+      '</div>';
     }).join('');
-    wrap.innerHTML='<table class="kzc"><thead><tr>'+head+'</tr></thead><tbody>'+body+'</tbody></table>';
+    wrap.innerHTML='<div class="kza-grid">'+html+'</div>';
 
-    var top=list.filter(function(p){return (p.score||0)===bestScore;})[0];
-    var rk=bestRake>=0?list.filter(function(p){return rakeNum(p)===bestRake;})[0]:null;
-    var fa=list.filter(function(p){return p.payoutHours===fastest;})[0];
-    var sum='';
-    if(top)sum+=sumChip(L.sScore,esc(top.name)+' \u00b7 '+(top.score||0).toFixed(1),(top.logo||{}).from);
-    if(rk)sum+=sumChip(L.sRake,esc(rk.name)+' \u00b7 '+esc(L.upto)+' '+bestRake+'%',(rk.logo||{}).from);
-    if(fa)sum+=sumChip(L.sPayout,esc(fa.name)+' \u00b7 '+esc(payoutTxt(fa.payoutHours)),(fa.logo||{}).from);
-    var old=sec.querySelector('.kzc-sum');if(old)old.parentNode.removeChild(old);
-    if(sum)wrap.insertAdjacentHTML('beforebegin','<div class="kzc-sum">'+sum+'</div>');
-
-    var tag=sec.querySelector('.section-tag span');if(tag)tag.textContent=L.tag;
-    var lead=sec.querySelector('.compare-lead');if(lead)lead.textContent=L.lead;
-    var note=sec.querySelector('.compare-note');if(note)note.textContent=L.note;
+    var tag=sec.querySelector('.section-tag span');if(tag)tag.textContent=L.aTag;
+    var lead=sec.querySelector('.compare-lead');if(lead)lead.textContent=L.aLead;
+    var note=sec.querySelector('.compare-note');if(note)note.textContent=L.aNote;
   }
 
-  ready(function(){var P=partners();try{counts(P);}catch(e){}try{renderCompare(P);}catch(e){}});
+  ready(function(){var P=partners();try{counts(P);}catch(e){}try{renderAwards(P);}catch(e){}});
 })();
 </script>
 </body>
