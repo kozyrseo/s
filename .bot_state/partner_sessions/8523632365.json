@@ -1,6 +1,6 @@
 {
   "chat_id": 8523632365,
-  "stage": "generated",
+  "stage": "await_more",
   "started_at": "2026-09-11T05:42:09.268Z",
   "draft_id": "grombet",
   "wizard": null,
