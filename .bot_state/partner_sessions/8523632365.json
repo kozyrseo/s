@@ -3,6 +3,6 @@
   "stage": "await_confirm",
   "started_at": "2026-09-11T05:42:09.268Z",
   "draft_id": "grombet",
-  "wizard": "colors",
+  "wizard": null,
   "wizard_input": null
 }
