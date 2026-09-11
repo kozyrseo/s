@@ -283,6 +283,98 @@
                     ]
               ]
         }
+  },
+  {
+        "id": "grombet",
+        "name": "Grombet",
+        "type": "room",
+        "score": 8.4,
+        "rake": 70,
+        "rakeLabel": "до 70%",
+        "currency": "UAH",
+        "license": null,
+        "url": "/ua/rooms/grombet/",
+        "access": "public",
+        "network": "grombet",
+        "networkLabel": "Grombet",
+        "country": "ua",
+        "countries": [
+              "ua"
+        ],
+        "acceptedCountries": [
+              "all"
+        ],
+        "excludedCountries": [
+              "us",
+              "ru",
+              "ir"
+        ],
+        "limits": [
+              "NL2",
+              "NL5000"
+        ],
+        "games": [
+              "cash",
+              "spins",
+              "mtt"
+        ],
+        "software": [
+              "win",
+              "mac",
+              "android",
+              "web",
+              "hud"
+        ],
+        "payments": [
+              "card",
+              "crypto"
+        ],
+        "bonus": [
+              "welcome",
+              "freeroll",
+              "rakerace",
+              "rakeback"
+        ],
+        "payoutHours": 1,
+        "payoutLabel": "5–60 минут",
+        "note": "Покер-рум с мягкими полями, рейкбеком до 70% и быстрыми выплатами за 5–60 минут.",
+        "logo": {
+              "text": "GR",
+              "from": "#14358F",
+              "to": "#2A6BFF"
+        },
+        "card": {
+              "logoImg": "/ua/blog/logos/grombet.webp",
+              "kind": "Grombet",
+              "dark": false,
+              "rows": [
+                    [
+                          "Рейкбек",
+                          "до 70%",
+                          true
+                    ],
+                    [
+                          "Валюта",
+                          "UAH",
+                          false
+                    ],
+                    [
+                          "Мин. депозит",
+                          "300 ₴ (картой), 1 ₴ (крипта)",
+                          false
+                    ],
+                    [
+                          "Форматы",
+                          "Кэш, Спины, MTT",
+                          false
+                    ],
+                    [
+                          "Выплаты",
+                          "5–60 минут",
+                          false
+                    ]
+              ]
+        }
   }
   ];
 
