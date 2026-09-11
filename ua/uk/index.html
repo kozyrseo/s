@@ -3047,48 +3047,85 @@ body::before {
 .topic-card-arrow{font-weight:600;font-size:14px}
 .topic-card[data-empty]{display:none}
 
-/* ===== P5 · «Лучшие в категории» (awards) ===== */
+/* ===== P5 · «Лучшие в категории» — витрина победителей ===== */
 #compare .compare-wrap{overflow:visible;border:none;box-shadow:none;background:none;padding:0}
-.kza-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-.kza-card{position:relative;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px 20px;box-shadow:0 10px 30px rgba(20,33,74,.05);transition:transform .28s cubic-bezier(.22,1,.36,1),box-shadow .28s,border-color .28s;overflow:hidden}
-.kza-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--accent)}
-.kza-card:hover{transform:translateY(-5px);box-shadow:0 22px 46px rgba(20,33,74,.13)}
-.kza-cat{display:flex;align-items:center;gap:10px;margin-bottom:16px}
-.kza-medal{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:0 0 auto;background:color-mix(in srgb,var(--accent) 12%,#fff);color:var(--accent)}
-.kza-medal svg{width:19px;height:19px}
-.kza-cat-name{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);line-height:1.3}
-.kza-winner{display:flex;align-items:center;gap:11px;margin-bottom:12px}
-.kza-logo{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;flex:0 0 auto;background:#fff;border:1px solid color-mix(in srgb,var(--line) 70%,transparent);box-shadow:0 1px 3px rgba(10,17,40,.06);overflow:hidden}
-.kza-logo img{width:100%;height:100%;object-fit:contain;padding:6px}
-.kza-logo.mono{color:#fff;font-family:var(--f-display);font-weight:700;font-size:14px;border:none}
-.kza-name{font-family:var(--f-display);font-weight:700;font-size:17px;line-height:1.1}
-.kza-stat{font-family:var(--f-display);font-weight:700;font-size:15px;margin-top:3px}
-.kza-why{color:var(--ink-2);font-size:13px;line-height:1.5;margin:0 0 16px}
-.kza-cta{margin-top:auto;display:inline-flex;align-items:center;gap:6px;align-self:flex-start;padding:8px 14px;border-radius:100px;background:var(--surface-dark,#000714);color:#fff;font-weight:600;font-size:12.5px;box-shadow:0 4px 12px rgba(0,7,20,.16);transition:background .15s}
-.kza-cta:hover{background:var(--accent)}
-.kza-card.c-score::before{background:var(--accent)} .kza-card.c-score .kza-medal{background:color-mix(in srgb,var(--accent) 12%,#fff);color:var(--accent)}
-.kza-card.c-rake::before{background:var(--success,#05A661)} .kza-card.c-rake .kza-medal{background:var(--success-tint,#E4F6EE);color:var(--success,#05A661)} .kza-card.c-rake .kza-stat{color:var(--success,#05A661)}
-.kza-card.c-crypto::before{background:#1CA0E3} .kza-card.c-crypto .kza-medal{background:#E4F4FC;color:#1CA0E3}
-.kza-card.c-payout::before{background:var(--gold,#B8841C)} .kza-card.c-payout .kza-medal{background:color-mix(in srgb,var(--gold,#B8841C) 14%,#fff);color:var(--gold,#B8841C)}
-@media(max-width:960px){.kza-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:560px){.kza-grid{grid-template-columns:1fr}}
-/* --- анимация награждения --- */
-.kza-card::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.5) 50%,transparent 68%);transform:translateX(-130%)}
+.kza-showcase{display:flex;flex-direction:column;gap:20px}
+
+/* — Гран-при (тёмный герой) — */
+.kza-hero{position:relative;overflow:hidden;border-radius:26px;padding:30px 34px 32px;color:#fff;background:radial-gradient(130% 170% at 8% -10%, #17244E 0%, #0A1128 52%, #06060F 100%);display:flex;flex-direction:column;gap:22px;box-shadow:0 26px 64px rgba(6,17,40,.38)}
+.kza-hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(55% 120% at 88% -10%, rgba(217,169,59,.30), transparent 62%)}
+.kza-hero-badge{display:inline-flex;align-items:center;gap:9px;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:#D9A93B;font-weight:600}
+.kza-hero-badge svg{width:17px;height:17px}
+.kza-hero-body{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:30px}
+.kza-hero-trophy{width:78px;height:78px;border-radius:22px;display:grid;place-items:center;flex:0 0 auto;background:linear-gradient(135deg,#E7BC56,#B8841C);color:#0A1128;box-shadow:0 12px 30px rgba(184,132,28,.5)}
+.kza-hero-trophy svg{width:42px;height:42px}
+.kza-hero-main{display:flex;align-items:center;gap:20px;min-width:0}
+.kza-hero-logo{width:62px;height:62px;border-radius:16px;background:#fff;display:grid;place-items:center;flex:0 0 auto;overflow:hidden;box-shadow:0 8px 22px rgba(0,0,0,.32)}
+.kza-hero-logo img{width:100%;height:100%;object-fit:contain;padding:9px}
+.kza-hero-name{font-family:var(--f-display);font-weight:700;font-size:32px;letter-spacing:-.025em;line-height:1}
+.kza-hero-why{color:rgba(255,255,255,.72);font-size:15px;line-height:1.5;margin-top:9px;max-width:430px}
+.kza-hero-side{display:flex;flex-direction:column;align-items:flex-end;gap:18px;flex:0 0 auto}
+.kza-hero-score{text-align:right;line-height:1}
+.kza-hero-score .num{font-family:var(--f-display);font-weight:700;font-size:56px;letter-spacing:-.03em;color:#E7BC56}
+.kza-hero-score .lbl{display:block;font-family:var(--f-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:7px}
+.kza-hero-cta{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:100px;background:#fff;color:#0A1128;font-weight:700;font-size:14px;white-space:nowrap;box-shadow:0 10px 24px rgba(0,0,0,.28);transition:transform .15s,box-shadow .15s}
+.kza-hero-cta:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(0,0,0,.4)}
+
+/* — Победители в категориях — */
+.kza-row{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.kza-card{position:relative;overflow:hidden;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:26px 24px;box-shadow:0 12px 32px rgba(20,33,74,.06);transition:transform .28s cubic-bezier(.22,1,.36,1),box-shadow .28s,border-color .28s}
+.kza-card::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--accent)}
+.kza-card:hover{transform:translateY(-6px);box-shadow:0 26px 52px rgba(20,33,74,.14)}
+.kza-card-top{display:flex;align-items:center;gap:11px;margin-bottom:18px}
+.kza-medal{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;flex:0 0 auto;background:color-mix(in srgb,var(--accent) 12%,#fff);color:var(--accent)}
+.kza-medal svg{width:23px;height:23px}
+.kza-cat{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);line-height:1.35;font-weight:600}
+.kza-stat-big{font-family:var(--f-display);font-weight:700;font-size:40px;letter-spacing:-.025em;line-height:1;margin-bottom:18px}
+.kza-winner{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.kza-logo{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;flex:0 0 auto;background:#fff;border:1px solid color-mix(in srgb,var(--line) 70%,transparent);box-shadow:0 1px 3px rgba(10,17,40,.06);overflow:hidden}
+.kza-logo img{width:100%;height:100%;object-fit:contain;padding:7px}
+.kza-logo.mono{color:#fff;font-family:var(--f-display);font-weight:700;font-size:15px;border:none}
+.kza-name{font-family:var(--f-display);font-weight:700;font-size:19px;line-height:1.1}
+.kza-why{color:var(--ink-2);font-size:13.5px;line-height:1.55;margin:0 0 18px}
+.kza-cta{margin-top:auto;display:inline-flex;align-items:center;gap:6px;align-self:flex-start;padding:10px 17px;border-radius:100px;background:var(--surface-dark,#000714);color:#fff;font-weight:600;font-size:13px;box-shadow:0 4px 12px rgba(0,7,20,.16);transition:background .15s,transform .15s}
+.kza-cta:hover{background:var(--accent);transform:translateX(2px)}
+.kza-card.c-rake::before{background:var(--success,#05A661)} .kza-card.c-rake .kza-medal{background:var(--success-tint,#E4F6EE);color:var(--success,#05A661)} .kza-card.c-rake .kza-stat-big{color:var(--success,#05A661)}
+.kza-card.c-crypto::before{background:#1CA0E3} .kza-card.c-crypto .kza-medal{background:#E4F4FC;color:#1CA0E3} .kza-card.c-crypto .kza-stat-big{font-size:27px;color:#1180B4}
+.kza-card.c-payout::before{background:var(--gold,#B8841C)} .kza-card.c-payout .kza-medal{background:color-mix(in srgb,var(--gold,#B8841C) 14%,#fff);color:var(--gold,#B8841C)} .kza-card.c-payout .kza-stat-big{color:var(--gold,#B8841C)}
+
+/* — анимация награждения — */
+.kza-hero::after,.kza-card::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(115deg,transparent 34%,rgba(255,255,255,.45) 50%,transparent 66%);transform:translateX(-135%)}
+.kza-hero-body,.kza-hero-badge{position:relative;z-index:1}
 @keyframes kza-rise{to{opacity:1;transform:none}}
-@keyframes kza-sheen{to{transform:translateX(130%)}}
-@keyframes kza-glow{0%,100%{box-shadow:0 0 0 0 rgba(38,104,255,0)}50%{box-shadow:0 0 0 5px rgba(38,104,255,.14)}}
+@keyframes kza-sheen{to{transform:translateX(135%)}}
+@keyframes kza-glow{0%,100%{box-shadow:0 12px 30px rgba(184,132,28,.5)}50%{box-shadow:0 12px 34px 5px rgba(231,188,86,.62)}}
 @media (prefers-reduced-motion: no-preference){
-  .kza-grid.kza-anim .kza-card{opacity:0;transform:translateY(22px) scale(.985)}
-  .kza-grid.kza-anim.is-in .kza-card{animation:kza-rise .6s cubic-bezier(.22,1,.36,1) forwards}
-  .kza-grid.kza-anim.is-in .kza-card:nth-child(2){animation-delay:.11s}
-  .kza-grid.kza-anim.is-in .kza-card:nth-child(3){animation-delay:.22s}
-  .kza-grid.kza-anim.is-in .kza-card:nth-child(4){animation-delay:.33s}
-  .kza-grid.kza-anim.is-in .kza-card::after{animation:kza-sheen 1.05s ease-out forwards}
-  .kza-grid.kza-anim.is-in .kza-card:nth-child(1)::after{animation-delay:.30s}
-  .kza-grid.kza-anim.is-in .kza-card:nth-child(2)::after{animation-delay:.41s}
-  .kza-grid.kza-anim.is-in .kza-card:nth-child(3)::after{animation-delay:.52s}
-  .kza-grid.kza-anim.is-in .kza-card:nth-child(4)::after{animation-delay:.63s}
-  .kza-card.c-score .kza-medal{animation:kza-glow 2.8s ease-in-out infinite 1s}
+  .kza-anim .kza-hero,.kza-anim .kza-card{opacity:0;transform:translateY(24px) scale(.985)}
+  .kza-anim.is-in .kza-hero,.kza-anim.is-in .kza-card{animation:kza-rise .6s cubic-bezier(.22,1,.36,1) forwards}
+  .kza-anim.is-in .kza-row .kza-card:nth-child(1){animation-delay:.14s}
+  .kza-anim.is-in .kza-row .kza-card:nth-child(2){animation-delay:.24s}
+  .kza-anim.is-in .kza-row .kza-card:nth-child(3){animation-delay:.34s}
+  .kza-anim.is-in .kza-hero::after{animation:kza-sheen 1.15s ease-out .3s forwards}
+  .kza-anim.is-in .kza-card::after{animation:kza-sheen 1s ease-out forwards}
+  .kza-anim.is-in .kza-row .kza-card:nth-child(1)::after{animation-delay:.48s}
+  .kza-anim.is-in .kza-row .kza-card:nth-child(2)::after{animation-delay:.58s}
+  .kza-anim.is-in .kza-row .kza-card:nth-child(3)::after{animation-delay:.68s}
+  .kza-anim.is-in .kza-hero-trophy{animation:kza-glow 2.8s ease-in-out infinite 1.2s}
+}
+
+/* — адаптив — */
+@media(max-width:900px){
+  .kza-hero{padding:26px 24px 26px}
+  .kza-hero-body{grid-template-columns:auto 1fr;gap:20px}
+  .kza-hero-side{grid-column:1 / -1;flex-direction:row;align-items:center;justify-content:space-between;width:100%;padding-top:20px;border-top:1px solid rgba(255,255,255,.1)}
+  .kza-hero-score{text-align:left}
+  .kza-row{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .kza-hero-trophy{width:60px;height:60px;border-radius:17px}.kza-hero-trophy svg{width:32px;height:32px}
+  .kza-hero-main{gap:15px}.kza-hero-logo{width:52px;height:52px}
+  .kza-hero-name{font-size:25px}.kza-hero-why{font-size:14px}
+  .kza-hero-score .num{font-size:46px}.kza-stat-big{font-size:36px}
 }
 /* ===== P3 · полировка таблицы каталога ===== */
 .kf-access{padding:3px 9px;border-radius:100px;font-weight:600}
@@ -5114,35 +5151,57 @@ document.getElementById('geo-banner-close').addEventListener('click', () => {
     var oldsum=sec&&sec.querySelector('.kzc-sum');if(oldsum)oldsum.parentNode.removeChild(oldsum);
 
     var CATS=[
-      {cls:'c-score',icon:ICON.crown,name:L.aScoreName,why:L.aScoreWhy,winner:byMax(P,function(p){return p.score;}),stat:function(p){return 'Kozyr Score '+(p.score||0).toFixed(1);}},
+      {cls:'c-score',icon:ICON.crown,name:L.aScoreName,why:L.aScoreWhy,winner:byMax(P,function(p){return p.score;}),stat:function(p){return (p.score||0).toFixed(1);}},
       {cls:'c-rake',icon:ICON.percent,name:L.aRakeName,why:L.aRakeWhy,winner:byMax(P,function(p){return rakeNum(p);}),stat:function(p){return L.upto+' '+rakeNum(p)+'%';}},
       {cls:'c-crypto',icon:ICON.coin,name:L.aCryptoName,why:L.aCryptoWhy,winner:byMax(P.filter(function(p){return has(p.payments,'crypto')||p.access==='telegram';}),function(p){return p.score;}),stat:function(p){return (p.currency||'')+' \u00b7 '+lab('access',p.access);}},
       {cls:'c-payout',icon:ICON.bolt,name:L.aPayoutName,why:L.aPayoutWhy,winner:byMin(P,function(p){return p.payoutHours;}),stat:function(p){return payoutTxt(p.payoutHours);}}
     ];
-    var html=CATS.map(function(c){
-      var p=c.winner;if(!p)return '';
+
+    var hero=CATS[0], cards=CATS.slice(1).filter(function(c){return c.winner;});
+    var heroHtml='';
+    if(hero.winner){
+      var hp=hero.winner;
+      heroHtml='<div class="kza-hero">'+
+        '<div class="kza-hero-badge">'+ICON.crown+esc(hero.name)+'</div>'+
+        '<div class="kza-hero-body">'+
+          '<div class="kza-hero-trophy">'+ICON.crown+'</div>'+
+          '<div class="kza-hero-main">'+heroLogo(hp)+
+            '<div><div class="kza-hero-name">'+esc(hp.name)+'</div><div class="kza-hero-why">'+esc(hero.why)+'</div></div>'+
+          '</div>'+
+          '<div class="kza-hero-side">'+
+            '<div class="kza-hero-score"><span class="num">'+(hp.score||0).toFixed(1)+'</span><span class="lbl">Kozyr Score</span></div>'+
+            '<a class="kza-hero-cta" href="'+esc(hp.url||'#partners')+'">'+esc(L.review)+' \u2192</a>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
+    }
+    var cardsHtml=cards.map(function(c){
+      var p=c.winner;
       return '<div class="kza-card '+c.cls+'">'+
-        '<div class="kza-cat"><span class="kza-medal">'+c.icon+'</span><span class="kza-cat-name">'+esc(c.name)+'</span></div>'+
-        '<div class="kza-winner">'+logoAward(p)+'<div><div class="kza-name">'+esc(p.name)+'</div><div class="kza-stat">'+esc(c.stat(p))+'</div></div></div>'+
+        '<div class="kza-card-top"><span class="kza-medal">'+c.icon+'</span><span class="kza-cat">'+esc(c.name)+'</span></div>'+
+        '<div class="kza-stat-big">'+esc(c.stat(p))+'</div>'+
+        '<div class="kza-winner">'+logoAward(p)+'<span class="kza-name">'+esc(p.name)+'</span></div>'+
         '<p class="kza-why">'+esc(c.why)+'</p>'+
         '<a class="kza-cta" href="'+esc(p.url||'#partners')+'">'+esc(L.review)+' \u2192</a>'+
       '</div>';
     }).join('');
-    wrap.innerHTML='<div class="kza-grid">'+html+'</div>';
-    var grid=wrap.querySelector('.kza-grid');
-    if(grid){
-      grid.classList.add('kza-anim');
+
+    wrap.innerHTML='<div class="kza-showcase kza-anim">'+heroHtml+'<div class="kza-row">'+cardsHtml+'</div></div>';
+
+    var show=wrap.querySelector('.kza-showcase');
+    if(show){
       if('IntersectionObserver' in window){
-        var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){grid.classList.add('is-in');io.disconnect();}});},{threshold:0.2});
-        io.observe(grid);
-        setTimeout(function(){grid.classList.add('is-in');},2500);
-      } else { grid.classList.add('is-in'); }
+        var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){show.classList.add('is-in');io.disconnect();}});},{threshold:0.15});
+        io.observe(show);
+        setTimeout(function(){show.classList.add('is-in');},2500);
+      } else { show.classList.add('is-in'); }
     }
 
     var tag=sec.querySelector('.section-tag span');if(tag)tag.textContent=L.aTag;
     var lead=sec.querySelector('.compare-lead');if(lead)lead.textContent=L.aLead;
     var note=sec.querySelector('.compare-note');if(note)note.textContent=L.aNote;
   }
+  function heroLogo(p){var src=logoImgOf(p);if(src)return '<span class="kza-hero-logo"><img src="'+esc(src)+'" alt="'+esc(p.name)+'" width="62" height="62" loading="lazy"></span>';var g=p.logo||{};return '<span class="kza-hero-logo" style="background:linear-gradient(135deg,'+esc(g.from||'#2668FF')+','+esc(g.to||'#1E52D9')+')"><span style="color:#fff;font-family:var(--f-display);font-weight:700;font-size:20px">'+esc(g.text||p.name.slice(0,2))+'</span></span>';}
 
   ready(function(){var P=partners();try{counts(P);}catch(e){}try{renderAwards(P);}catch(e){}});
 })();
