@@ -38,6 +38,14 @@ OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 MAX_TOKENS = 4000
 
 
+def _md(s) -> str:
+    """Экранирует спецсимволы legacy-Markdown в динамических значениях,
+    чтобы подчёркивания/звёздочки (напр. в logo_from или реф-ссылке) не
+    ломали разметку и вся сводка не падала в plain text."""
+    return (str(s).replace("\\", "\\\\").replace("_", "\\_")
+            .replace("*", "\\*").replace("`", "\\`").replace("[", "\\["))
+
+
 def build_parse_prompt(networks: dict, questions: dict) -> str:
     """Системный промпт: как извлечь параметры партнёра из текста."""
     net_list = "\n".join(
@@ -170,7 +178,7 @@ def send_telegram_summary(chat_id: str, draft: dict) -> None:
     draft_id = draft.get("id", "?")
     # Собираем текст сводки (Markdown)
     L = ["📋 *Вот что я понял:*", ""]
-    L.append(f"🎯 *{draft.get('name', '?')}* · {draft.get('type', '?')} · {draft.get('networkLabel', draft.get('network', '?'))}")
+    L.append(f"🎯 *{_md(draft.get('name', '?'))}* · {draft.get('type', '?')} · {_md(draft.get('networkLabel', draft.get('network', '?')))}")
 
     # Основная страна
     country = draft.get("country")
@@ -187,9 +195,9 @@ def send_telegram_summary(chat_id: str, draft: dict) -> None:
     if excl:
         L.append(f"🚫 Не принимает: {', '.join(excl)}")
     if draft.get("type") == "club" and draft.get("union"):
-        L.append(f"🏷 Союз: {draft.get('union')}")
+        L.append(f"🏷 Союз: {_md(draft.get('union'))}")
 
-    L.append(f"💰 Рейкбек: {draft.get('rakeLabel', '?')}")
+    L.append(f"💰 Рейкбек: {_md(draft.get('rakeLabel', '?'))}")
     L.append(f"⭐ KOZYR score: {draft.get('score', '?')}")
     games = draft.get("games", [])
     limits = draft.get("limits", [])
@@ -204,7 +212,7 @@ def send_telegram_summary(chat_id: str, draft: dict) -> None:
     # Реф-ссылка (денежная) — критично проверить перед публикацией
     ref = draft.get("ref_url") or ""
     if ref:
-        L.append(f"🔗 Ссылка: {ref}")
+        L.append(f"🔗 Ссылка: {_md(ref)}")
     else:
         L.append("🔗 ⚠️ Реф-ссылка не задана — кнопка «Перейти» будет без ссылки")
     # Логотип: загружен или будет текстовым
@@ -218,7 +226,7 @@ def send_telegram_summary(chat_id: str, draft: dict) -> None:
     missing = draft.get("_missing", [])
     if missing:
         L.append("")
-        L.append(f"⚠️ _Не указано (будут дефолты): {', '.join(missing[:8])}_")
+        L.append(f"⚠️ _Не указано (будут дефолты): {_md(', '.join(missing[:8]))}_")
 
     # Чеклист готовности (те же маркеры, что в воркере).
     def _is_placeholder(r):
@@ -237,7 +245,7 @@ def send_telegram_summary(chat_id: str, draft: dict) -> None:
     L.append("")
     kind = "clubs" if draft.get("type") == "club" else "rooms"
     path_country = country or "??"
-    L.append(f"_Путь: /{path_country}/{kind}/{draft_id}/_")
+    L.append(f"_Путь: /{path_country}/{kind}/{_md(draft_id)}/_")
     text = "\n".join(L)
 
     # Если основная страна не определена — сначала кнопки выбора страны.
