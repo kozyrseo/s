@@ -94,8 +94,8 @@
       "a": "Нет, игровой ник после регистрации изменить нельзя."
     }
   ],
-  "logo_from": null,
-  "logo_to": null,
+  "logo_from": "#ff4800",
+  "logo_to": "#ff4800",
   "logo_img": "/ua/blog/logos/grombet.webp",
   "dark_card": false,
   "_missing": [
