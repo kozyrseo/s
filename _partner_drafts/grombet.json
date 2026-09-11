@@ -96,15 +96,12 @@
   ],
   "logo_from": null,
   "logo_to": null,
-  "logo_img": null,
+  "logo_img": "/ua/blog/logos/grombet.webp",
   "dark_card": false,
   "_missing": [
     "score",
     "ref_url",
-    "license",
-    "logo_from",
-    "logo_to",
-    "logo_img"
+    "license"
   ],
   "_country_unclear": false,
   "_score_breakdown": {
