@@ -73,6 +73,19 @@ def parse_content_json(raw: str) -> dict:
     return d
 
 
+def _clamp_meta_title(title: str, limit: int = 60) -> str:
+    """Держит <title> в пределах ~60 символов (иначе Google обрежет в выдаче).
+    Сначала убирает брендовый суффикс '| KOZYR', затем режет по границе слова."""
+    t = (title or "").strip()
+    if len(t) <= limit:
+        return t
+    t = re.sub(r"\s*[|\-—]\s*KOZYR\s*$", "", t).strip()
+    if len(t) <= limit:
+        return t
+    cut = t[:limit].rsplit(" ", 1)[0].rstrip(" ,—-|·")
+    return cut or t[:limit]
+
+
 def generate_content(draft: dict) -> dict:
     """Вызывает LLM и возвращает content JSON."""
     from openai import OpenAI
@@ -96,6 +109,7 @@ def generate_content(draft: dict) -> dict:
     )
     raw = resp.choices[0].message.content or ""
     content = apply_content_fixups(parse_content_json(raw), "ru")
+    content["meta_title"] = _clamp_meta_title(content.get("meta_title", ""))
     print(f"  ✓ контент получен ({len(json.dumps(content, ensure_ascii=False))} симв., все ключи на месте)")
     return content
 
@@ -224,6 +238,7 @@ def translate_content(content_ru: dict, draft: dict):
     for k, v in uk.items():
         uk[k] = rewrite_links_ru_uk(v)
     content_uk = apply_content_fixups({k: v for k, v in uk.items() if not k.startswith("__")}, "uk")
+    content_uk["meta_title"] = _clamp_meta_title(content_uk.get("meta_title", ""))
     draft_uk = dict(draft)
     draft_uk["pros"] = apply_content_fixups(uk.get("__pros", draft.get("pros", [])), "uk")
     draft_uk["cons"] = apply_content_fixups(uk.get("__cons", draft.get("cons", [])), "uk")
@@ -467,7 +482,7 @@ def main():
     # ── Русская версия ──
     content_ru = generate_content(draft)
     from render_partner import build_page
-    html_ru = build_page(draft, content_ru, lang="ru")
+    html_ru = build_page(draft, content_ru, lang="ru", is_preview=not args.publish)
 
     if args.publish:
         out_ru = REPO_ROOT / partner_path(draft) / "index.html"
@@ -483,7 +498,7 @@ def main():
 
     # ── Украинская версия (перевод контента → тот же шаблон) ──
     content_uk, draft_uk = translate_content(content_ru, draft)
-    html_uk = build_page(draft_uk, content_uk, lang="uk")
+    html_uk = build_page(draft_uk, content_uk, lang="uk", is_preview=not args.publish)
 
     if args.publish:
         out_uk = REPO_ROOT / partner_path(draft, lang_prefix="uk") / "index.html"

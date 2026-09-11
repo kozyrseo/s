@@ -211,7 +211,7 @@ def _bump_js_versions(html):
     return html
 
 
-def build_page(draft: dict, content: dict, lang: str = "ru") -> str:
+def build_page(draft: dict, content: dict, lang: str = "ru", is_preview: bool = False) -> str:
     """Рендерит HTML страницы партнёра из шаблона + анкеты + контента.
 
     lang="ru" → страница в /{country}/{kind}/{id}/  (основная)
@@ -220,6 +220,8 @@ def build_page(draft: dict, content: dict, lang: str = "ru") -> str:
     from jinja2 import Template
     tpl = TEMPLATE.read_text(encoding="utf-8")
     p = dict(draft)
+    # Превью не должно попадать в индекс (дубль финальной страницы).
+    p["robots"] = "noindex, nofollow" if is_preview else "index, follow, max-image-preview:large"
     p["kind"] = "clubs" if draft.get("type") == "club" else "rooms"
     p["ref_url_final"] = (draft.get("ref_url") or "").strip() or "https://t.me/kozyr_support"
     p.setdefault("pros", [])

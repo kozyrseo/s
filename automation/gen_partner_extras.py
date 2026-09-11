@@ -263,21 +263,35 @@ def main() -> int:
     draft_file, draft = _load_draft(args.id)
 
     if args.faq:
-        if draft.get("faq") and not args.force:
-            print("• FAQ уже есть в анкете — пропуск")
+        existing = draft.get("faq") or []
+        MIN_FAQ = 5
+        if len(existing) >= MIN_FAQ and not args.force:
+            print(f"• FAQ уже {len(existing)} (≥{MIN_FAQ}) — пропуск")
         else:
             try:
-                faq = generate_faq(draft)
-                if faq:
-                    draft["faq"] = faq
+                gen = generate_faq(draft)
+                # Объединяем: сначала вопросы оператора, потом сгенерированные
+                # (без дублей по тексту вопроса), разумный потолок — 6.
+                seen = {(q.get("q") or "").strip().lower() for q in existing}
+                merged = list(existing)
+                for item in gen:
+                    key = (item.get("q") or "").strip().lower()
+                    if key and key not in seen:
+                        merged.append(item)
+                        seen.add(key)
+                merged = merged[:6]
+                if not merged:
+                    print("⚠️ LLM вернул пустой FAQ — пропуск")
+                elif merged == existing:
+                    print("• FAQ без изменений")
+                else:
+                    draft["faq"] = merged
                     draft_file.write_text(
                         json.dumps(draft, ensure_ascii=False, indent=2) + "\n",
                         encoding="utf-8")
-                    print(f"✓ FAQ: {len(faq)} Q&A записано в анкету")
-                else:
-                    print("⚠️ LLM вернул пустой FAQ — пропуск")
+                    print(f"✓ FAQ: было {len(existing)}, стало {len(merged)} (дополнено генерацией)")
             except Exception as e:
-                print(f"⚠️ FAQ не сгенерирован: {e}")
+                print(f"⚠️ FAQ не дополнен: {e}")
 
     if args.reviews:
         if partner_has_reviews(args.id) and not args.force:

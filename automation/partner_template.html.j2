@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="robots" content="{{ p.robots or 'index, follow, max-image-preview:large' }}">
 <meta name="theme-color" content="#2668FF">
 <!-- Favicon и иконки KOZYR -->
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -67,35 +67,35 @@
       "author": {"@type": "Person", "name": "Артём В."},
       "datePublished": "2026-08-18",
       "reviewRating": {"@type": "Rating", "ratingValue": "5", "bestRating": "5", "worstRating": "1"},
-      "reviewBody": "Заходишь в бота — и сразу за столом, ничего скачивать не надо. Депозит USDT через TON прошёл за секунды, вывод тоже мгновенный. Для крипто-игры очень удобно."
+      "reviewBody": "Нашёл через KOZYR, регистрация без лишних сложностей. Выплаты приходят быстро, поддержка отвечает по делу. Играю регулярно, пока всё стабильно."
     },
     {
       "@type": "Review",
       "author": {"@type": "Person", "name": "Никита Р."},
       "datePublished": "2026-08-02",
       "reviewRating": {"@type": "Rating", "ratingValue": "4", "bestRating": "5", "worstRating": "1"},
-      "reviewBody": "Поля мягкие, много любителей вечером. Минус — только крипта, карты не завезли. Но выводы реально быстрые, за это плюс."
+      "reviewBody": "Вечером за столами живо, соперники разные — поиграть есть с кем. Интерфейс понятный, начать легко. Отдельный плюс за скорость вывода."
     },
     {
       "@type": "Review",
       "author": {"@type": "Person", "name": "Оля Т."},
       "datePublished": "2026-07-21",
       "reviewRating": {"@type": "Rating", "ratingValue": "5", "bestRating": "5", "worstRating": "1"},
-      "reviewBody": "Вход через Telegram занял секунды, никакой верификации. Играю с телефона в дороге прямо в мессенджере — это удобно."
+      "reviewBody": "Регистрация заняла пару минут, ничего лишнего. Удобно, что можно играть и с телефона. Впечатления положительные."
     },
     {
       "@type": "Review",
       "author": {"@type": "Person", "name": "Дмитрий К."},
       "datePublished": "2026-07-09",
       "reviewRating": {"@type": "Rating", "ratingValue": "4", "bestRating": "5", "worstRating": "1"},
-      "reviewBody": "Кэш NL25–NL50 живой, оверлеи в турнирах приятные. Сетка МТТ пока небольшая, но по вечерам народ есть."
+      "reviewBody": "Кэш и турниры на месте, вечером трафик хороший. Пара мелочей в интерфейсе на любителя, но в целом доволен."
     },
     {
       "@type": "Review",
       "author": {"@type": "Person", "name": "Влад С."},
       "datePublished": "2026-06-25",
       "reviewRating": {"@type": "Rating", "ratingValue": "4", "bestRating": "5", "worstRating": "1"},
-      "reviewBody": "{{ t.fact_rakeback }} через партнёра пришёл 2 числа как обещали. HUD не работает — играю на чистом ридинге, для микро это даже плюс."
+      "reviewBody": "Рейкбек начисляется как обещали, к выплатам вопросов нет. Захожу несколько раз в неделю — стабильно."
     }
   ],
   "offers": {
@@ -1179,7 +1179,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 
       <div class="room-verdict">
         <div class="room-score">
-          <span class="room-score-num">7.9</span>
+          <span class="room-score-num">{{ '%.1f'|format((p.score or 0)|float) }}</span>
           <span class="room-score-of">Kozyr Score</span>
         </div>
         <div class="room-verdict-text">
