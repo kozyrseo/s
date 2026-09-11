@@ -3099,6 +3099,19 @@ body::before {
 .kf-score-bar{height:5px!important;border-radius:100px}
 .kf-score-fill{border-radius:100px}
 .kf-rake--pending{background:var(--surface-alt,#F5F7FB);padding:4px 11px;border-radius:100px;display:inline-block}
+/* ===== Мобильная модалка сравнения: заморозка подписей+шапки, скролл румов ===== */
+@media (max-width:640px){
+  .kf-modal-head{left:0;z-index:5}
+  .kf-cmp{width:auto;min-width:100%}
+  .kf-cmp thead th{min-width:156px;padding:16px 12px;vertical-align:top}
+  .kf-cmp tbody td{min-width:156px}
+  .kf-cmp tbody th{position:sticky;left:0;z-index:3;width:118px;min-width:118px;font-size:10px;background:var(--surface-alt);box-shadow:1px 0 0 var(--border)}
+  .kf-cmp thead th:first-child{position:sticky;left:0;z-index:4;min-width:118px;width:118px;background:var(--surface);box-shadow:1px 0 0 var(--border)}
+  .kf-cmp thead .kf-logo{width:34px;height:34px;font-size:12px}
+  .kf-cmp thead .kf-room-name{font-size:14px}
+  .kf-cmp thead .kf-room{gap:9px}
+  .kf-cmp td.is-best{background:rgba(6,179,106,.10)}
+}
 </style>
 </head>
 <body>
