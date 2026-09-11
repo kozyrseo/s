@@ -79,7 +79,7 @@ def main() -> int:
     draft = _draft(pid)
     name = draft.get("name", pid)
     smoke_line = ("✅ смоук-тест пройден" if smoke_ok
-                  else "⚠️ смоук-тест нашёл проблемы") + (f" · {smoke_summary}" if smoke_summary else "")
+                  else "⚠️ смоук-тест нашёл проблемы") + (f" · {md(smoke_summary)}" if smoke_summary else "")
 
     if publish:
         prod = BASE + _prod_path(draft, pid)
