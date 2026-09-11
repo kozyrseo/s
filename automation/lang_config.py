@@ -181,7 +181,7 @@ LANG_CONFIG: dict[str, LangCfg] = {
             "footer_link_cases": "Блог",
             "footer_link_reviews": "FAQ",
             "footer_link_pricing": "Правовая информация",
-            "footer_copyright": "© 2026 KOZYR · Витрина рейкбек-сделок",
+            "footer_copyright": "© 2026 KOZYR · Витрина рейкбек-сделок · 21+ · Играй ответственно",
             "lang_switcher_label": "UA",
             "lang_switcher_aria": "Перейти на украинскую версию",
             "lang_switcher_target_url": "/ua/uk/",
@@ -263,7 +263,7 @@ LANG_CONFIG: dict[str, LangCfg] = {
             "footer_link_cases": "Блог",
             "footer_link_reviews": "FAQ",
             "footer_link_pricing": "Правова інформація",
-            "footer_copyright": "© 2026 KOZYR · Вітрина рейкбек-угод",
+            "footer_copyright": "© 2026 KOZYR · Вітрина рейкбек-угод · 21+ · Грай відповідально",
             # Свитчер на этой странице ведёт на русскую версию
             "lang_switcher_label": "RU",
             "lang_switcher_aria": "Перейти на російську версію",
