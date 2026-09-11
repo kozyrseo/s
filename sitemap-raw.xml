@@ -7,16 +7,6 @@
   <!-- ============================================================
        ROOT — region chooser (x-default)
        ============================================================ -->
-  <url>
-    <loc>https://kozyr.club/</loc>
-    <lastmod>2026-08-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
-    <xhtml:link rel="alternate" hreflang="en"        href="https://kozyr.club/"/>
-    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/"/>
-    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/"/>
-  </url>
 
   <!-- ============================================================
        UKRAINE — RU
@@ -528,6 +518,19 @@
     <image:image>
       <image:loc>https://kozyr.club/ua/blog/kak-popolnit-i-vyvesti-v-pokere/hero.jpg</image:loc>
       <image:title>Как пополнить и вывести в покере: методы и сроки</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://kozyr.club/ua/uk/blog/kak-popolnit-i-vyvesti-v-pokere/</loc>
+    <lastmod>2026-09-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA" href="https://kozyr.club/ua/blog/kak-popolnit-i-vyvesti-v-pokere/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA" href="https://kozyr.club/ua/uk/blog/kak-popolnit-i-vyvesti-v-pokere/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/ua/blog/kak-popolnit-i-vyvesti-v-pokere/"/>
+    <image:image>
+      <image:loc>https://kozyr.club/ua/uk/blog/kak-popolnit-i-vyvesti-v-pokere/hero.jpg</image:loc>
+      <image:title>Як поповнити та вивести в покері: методи і строки</image:title>
     </image:image>
   </url>
   <url>
