@@ -231,7 +231,8 @@
   };
   var COUNTRY_LABELS_UK = { ua: 'Україна', pl: 'Польща', de: 'Німеччина', cz: 'Чехія', ru: 'Росія', by: 'Білорусь', kz: 'Казахстан', md: 'Молдова', ge: 'Грузія', am: 'Вірменія', az: 'Азербайджан', lt: 'Литва', lv: 'Латвія', ee: 'Естонія', sk: 'Словаччина', hu: 'Угорщина', ro: 'Румунія', bg: 'Болгарія', at: 'Австрія', it: 'Італія', es: 'Іспанія', pt: 'Португалія', fr: 'Франція', nl: 'Нідерланди', be: 'Бельгія', gb: 'Велика Британія', ie: 'Ірландія', tr: 'Туреччина', il: 'Ізраїль', cy: 'Кіпр' };
 
-  function acceptMarkerHtml(list) {
+  function acceptMarkerHtml(list, excludeList) {
+    excludeList = excludeList || [];
     var _isUk = (document.documentElement.getAttribute('lang') || '').indexOf('uk') === 0 || /\/uk\//.test(location.pathname);
     var isAll = list.indexOf('all') !== -1 || list.indexOf('*') !== -1;
     var geo = (window.KozyrGeo && window.KozyrGeo.get) ? window.KozyrGeo.get() : null;
@@ -248,7 +249,9 @@
         '<span class="ka__body"><span class="ka__main">' + mA + '</span><span class="ka__sub">' + sA + '</span></span>' +
       '</span>';
     }
-    var accepted = isAll || list.indexOf(geo) !== -1;
+    /* Доступен = (весь мир ИЛИ страна в списке) И страна НЕ в исключениях.
+       Исключения действуют даже при "all" (напр. весь мир, кроме US/RU/IR). */
+    var accepted = (isAll || list.indexOf(geo) !== -1) && excludeList.indexOf(geo) === -1;
     var flag = '<span class="fi fi-' + geo + '" aria-hidden="true"></span>';
     var title = accepted
       ? (_isUk ? 'Партнер працює з гравцями з регіону: ' : 'Партнёр работает с игроками из региона: ') + label
@@ -282,7 +285,9 @@
     nodes.forEach(function (el) {
       var raw = el.getAttribute('data-accept-countries') || '';
       var list = raw.split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
-      var html = acceptMarkerHtml(list);
+      var rawEx = el.getAttribute('data-exclude-countries') || '';
+      var excludeList = rawEx.split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+      var html = acceptMarkerHtml(list, excludeList);
       el.innerHTML = html;
       /* если плашка пустая (гео не определилось) — прячем контейнер,
          чтобы не оставалось «дырки» в вёрстке */

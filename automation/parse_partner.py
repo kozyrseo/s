@@ -75,6 +75,9 @@ def build_parse_prompt(networks: dict, questions: dict) -> str:
   ВАЖНО: если принимают со всего мира / «без географических ограничений» /
   «игроки со всего мира» / «весь мир» — верни РОВНО ["all"] (это значит «принимаем всех»,
   геоблок никого не блокирует). Основное гео (country) — отдельно, это где база/публикация.
+- excludedCountries: коды стран (ISO-2), ОТКУДА НЕ принимают игроков. Извлеки из
+  "кроме США, РФ, Ирана" / "не принимаем из ..." → ["us","ru","ir"]. Иначе [].
+  Работает даже при acceptedCountries=["all"] (весь мир, кроме этих).
 - ref_url: ссылка для кнопки «Перейти» (реферальная/партнёрская). Извлеки URL
   как есть (https://, http://, t.me/...). Если ссылки в тексте нет — оставь "".
 - списки (games, limits, software, payments, bonus):
@@ -99,7 +102,10 @@ def build_parse_prompt(networks: dict, questions: dict) -> str:
 - about: массив абзацев (2-3) — можешь развернуть кратко из описания
 - note: краткое описание в 1 предложение для карточки
 - faq: массив {{"q":"...","a":"..."}} — если есть вопросы, иначе []
-- logo_from, logo_to: hex-цвета если указаны, иначе null (будет дефолт)
+- logo_from, logo_to: hex-цвета бренда. Если цвета названы СЛОВАМИ — переведи в hex:
+  синий=#2668FF, золотой=#D9A93B, красный=#E23A3A, зелёный=#1FA85A, чёрный=#111827,
+  белый=#F3F4F6, фиолетовый=#7C3AED, оранжевый=#F97316. Если цветов нет — null.
+- union: название союза/юниона для клубов (если указано), иначе "".
 - dark_card: true если клуб/тёмная тема, иначе false
 - country: основная страна (ua по умолчанию)
 
@@ -177,6 +183,11 @@ def send_telegram_summary(chat_id: str, draft: dict) -> None:
     if accepted:
         acc = "весь мир" if "all" in accepted else ", ".join(accepted)
         L.append(f"🌐 Принимает: {acc}")
+    excl = draft.get("excludedCountries", [])
+    if excl:
+        L.append(f"🚫 Не принимает: {', '.join(excl)}")
+    if draft.get("type") == "club" and draft.get("union"):
+        L.append(f"🏷 Союз: {draft.get('union')}")
 
     L.append(f"💰 Рейкбек: {draft.get('rakeLabel', '?')}")
     L.append(f"⭐ KOZYR score: {draft.get('score', '?')}")
@@ -208,6 +219,21 @@ def send_telegram_summary(chat_id: str, draft: dict) -> None:
     if missing:
         L.append("")
         L.append(f"⚠️ _Не указано (будут дефолты): {', '.join(missing[:8])}_")
+
+    # Чеклист готовности (те же маркеры, что в воркере).
+    def _is_placeholder(r):
+        return (not r) or bool(re.match(r"^https?://[^/]+/?$", str(r).strip(), re.I))
+    _acc = "✅" if draft.get("acceptedCountries") else "—"
+    _exl = ", ".join(excl) if excl else "—"
+    _ref = ("⚠️ заглушка" if _is_placeholder(ref) else "✅") if ref else "❌ нет"
+    _logo = "✅" if draft.get("logo_img") else "❌ текст"
+    _DEF_FROM, _DEF_TO = "#14358F", "#2A6BFF"
+    _col = "✅" if ((draft.get("logo_from") and draft.get("logo_from") != _DEF_FROM)
+                   or (draft.get("logo_to") and draft.get("logo_to") != _DEF_TO)) else "⚠️ дефолт"
+    L.append("")
+    L.append("📋 *Готовность:*")
+    L.append(f"🌍 приём {_acc} · 🚫 искл. {_exl} · 🔗 ссылка {_ref}")
+    L.append(f"🖼 лого {_logo} · 🎨 цвета {_col}")
     L.append("")
     kind = "clubs" if draft.get("type") == "club" else "rooms"
     path_country = country or "??"
@@ -231,6 +257,7 @@ def send_telegram_summary(chat_id: str, draft: dict) -> None:
     else:
         keyboard = [
             [{"text": "✅ Создать страницу", "callback_data": f"pconfirm:{draft_id}"}],
+            [{"text": "⚙️ Мастер настройки (страны · ссылка · лого · цвета)", "callback_data": f"pwiz:{draft_id}"}],
             [{"text": "👁 Показать всё", "callback_data": f"pfull:{draft_id}"},
              {"text": "✏️ Исправить поле", "callback_data": f"pedit:{draft_id}"}],
             [{"text": "🌐 Принимает из…", "callback_data": f"pacc:{draft_id}"}],

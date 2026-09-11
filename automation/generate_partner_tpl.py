@@ -305,6 +305,7 @@ def build_partner_object(draft):
         "country": draft.get("country", "ua"),
         "countries": draft.get("countries", [draft.get("country", "ua")]),
         "acceptedCountries": draft.get("acceptedCountries", ["all"]),
+        "excludedCountries": draft.get("excludedCountries", []),
         "limits": draft.get("limits", []),
         "games": draft.get("games", []),
         "software": draft.get("software", []),

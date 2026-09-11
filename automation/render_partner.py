@@ -232,6 +232,9 @@ def build_page(draft: dict, content: dict, lang: str = "ru") -> str:
         p["accept_attr"] = "all"
     else:
         p["accept_attr"] = ",".join(str(c).strip().lower() for c in _ac)
+    # Страны-исключения: откуда партнёр НЕ принимает (даже при accept=all).
+    _ex = draft.get("excludedCountries") or []
+    p["exclude_attr"] = ",".join(str(c).strip().lower() for c in _ex)
     country = draft.get("country", "ua")
     base = f"https://kozyr.club/{country}"
     if lang == "uk":
