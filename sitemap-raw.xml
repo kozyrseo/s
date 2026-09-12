@@ -170,7 +170,7 @@
   </url>
   <url>
     <loc>https://kozyr.club/ua/uk/blog/</loc>
-    <lastmod>2026-09-02</lastmod>
+    <lastmod>2026-09-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/"/>
@@ -560,5 +560,17 @@
       <image:loc>https://kozyr.club/ua/blog/myagkie-polya-v-pokere-gde-iskat/hero.jpg</image:loc>
       <image:title>Мягкие поля в покере: где их искать</image:title>
     </image:image>
+      <xhtml:link rel="alternate" hreflang="ru-UA"        href="https://kozyr.club/ua/blog/myagkie-polya-v-pokere-gde-iskat/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/blog/myagkie-polya-v-pokere-gde-iskat/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/ua/blog/myagkie-polya-v-pokere-gde-iskat/"/>
+  </url>
+  <url>
+    <loc>https://kozyr.club/ua/uk/blog/myagkie-polya-v-pokere-gde-iskat/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="uk-UA" href="https://kozyr.club/ua/uk/blog/myagkie-polya-v-pokere-gde-iskat/"/>
+    <xhtml:link rel="alternate" hreflang="ru-UA" href="https://kozyr.club/ua/blog/myagkie-polya-v-pokere-gde-iskat/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/ua/blog/myagkie-polya-v-pokere-gde-iskat/"/>
   </url>
 </urlset>
