@@ -55,6 +55,24 @@ GA4_SCOPES = ["https://www.googleapis.com/auth/analytics.readonly"]
 # События конверсии, которые шлёт наш analytics.js
 CONVERSION_EVENTS = ["partner_page_click", "affiliate_click"]
 
+# ИИ-ассистенты / нейросети — источники трафика (по подстроке в sessionSource).
+# Ключ — человекочитаемое имя, значения — подстроки, по которым матчим реферер.
+# Список покрывает основные ИИ-поисковики и чат-ассистенты, которые проставляют
+# реферер при переходе на сайт. Дополняй по мере появления новых.
+AI_SOURCES = {
+    "ChatGPT":     ["chatgpt.com", "chat.openai.com", "openai.com"],
+    "Perplexity":  ["perplexity.ai", "perplexity"],
+    "Gemini":      ["gemini.google.com", "bard.google.com"],
+    "Copilot":     ["copilot.microsoft.com", "bing.com/chat"],
+    "Claude":      ["claude.ai", "anthropic"],
+    "DeepSeek":    ["deepseek.com", "deepseek"],
+    "Grok":        ["grok.com", "x.ai"],
+    "You.com":     ["you.com"],
+    "Poe":         ["poe.com"],
+    "Meta AI":     ["meta.ai"],
+    "Mistral":     ["mistral.ai", "chat.mistral"],
+}
+
 
 def _get_ga4_client() -> Any | None:
     """Клиент GA4 Data API на том же service account, что и GSC."""
@@ -385,6 +403,67 @@ def fetch_conversions_by_partner(days: int = LOOKBACK_DAYS) -> dict[str, dict]:
     return out
 
 
+def fetch_ai_referrals(days: int = LOOKBACK_DAYS) -> dict:
+    """
+    Трафик из нейросетей: пользователи, пришедшие с ИИ-ассистентов.
+    Тянет sessionSource (реальный реферер-домен) и группирует по AI_SOURCES.
+    Возвращает:
+      {
+        "by_ai":   {"ChatGPT": 12, "Perplexity": 5, ...},  # только ненулевые
+        "total":   17,                                      # сумма ИИ-трафика
+        "sessions": 20,                                     # сессии из ИИ
+        "raw_sources": {"chatgpt.com": 12, ...},            # сырые домены (для отладки)
+      }
+    ВАЖНО: ловит только переходы С РЕФЕРЕРОМ. Если ИИ пересказал ответ без
+    клика — визита нет, и здесь он не появится (это ограничение самого канала).
+    """
+    client = _get_ga4_client()
+    prop = _property()
+    if not client or not prop:
+        return {"by_ai": {}, "total": 0, "sessions": 0, "raw_sources": {}}
+    try:
+        req = RunReportRequest(
+            property=prop,
+            date_ranges=[_date_range(days)],
+            dimensions=[Dimension(name="sessionSource")],
+            metrics=[Metric(name="activeUsers"), Metric(name="sessions")],
+            limit=200,
+        )
+        resp = client.run_report(req)
+    except Exception as e:
+        print(f"⚠️  GA4 ai_referrals: {e}")
+        return {"by_ai": {}, "total": 0, "sessions": 0, "raw_sources": {}}
+
+    by_ai: dict[str, int] = {}
+    sessions_ai = 0
+    raw: dict[str, int] = {}
+    for row in resp.rows:
+        source = (row.dimension_values[0].value or "").lower()
+        users = int(float(row.metric_values[0].value or 0))
+        sess = int(float(row.metric_values[1].value or 0))
+        if users <= 0:
+            continue
+        # матчим источник по подстроке
+        matched = None
+        for ai_name, needles in AI_SOURCES.items():
+            if any(n in source for n in needles):
+                matched = ai_name
+                break
+        if matched:
+            by_ai[matched] = by_ai.get(matched, 0) + users
+            sessions_ai += sess
+            raw[source] = raw.get(source, 0) + users
+
+    # сортируем by_ai по убыванию
+    by_ai = dict(sorted(by_ai.items(), key=lambda x: -x[1]))
+    return {
+        "by_ai": by_ai,
+        "total": sum(by_ai.values()),
+        "sessions": sessions_ai,
+        "raw_sources": dict(sorted(raw.items(), key=lambda x: -x[1])),
+    }
+
+
 def collect_ga4(days: int = LOOKBACK_DAYS) -> dict:
     """
     Собирает всё из GA4 в один словарь. Безопасно: если GA4 недоступен —
@@ -400,6 +479,7 @@ def collect_ga4(days: int = LOOKBACK_DAYS) -> dict:
         "conversions_by_page": fetch_conversions_by_page(days),
         "conversions_by_partner": fetch_conversions_by_partner(days),
         "traffic_sources": fetch_traffic_sources(days),
+        "ai_referrals": fetch_ai_referrals(days),
         "by_country": fetch_by_country(days),
         "by_device": fetch_by_device(days),
         "collected_at": datetime.now(timezone.utc).isoformat(),
