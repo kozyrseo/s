@@ -793,7 +793,7 @@ body{position:relative}
 .pcard__top{margin-bottom:18px}
 .pcard__rows{gap:12px;margin:4px 0 20px}
 .pcard__row{padding-bottom:11px}
-.pcard__k{min-width:0}
+.pcard__k{min-width:0;word-break:keep-all;overflow-wrap:normal;hyphens:none}
 /* лого — мягкая тень для глубины */
 .pcard__logo{box-shadow:0 3px 10px rgba(20,33,74,.10)}
 /* тип-бейдж — лёгкая приглушённая подпись без плашки */
