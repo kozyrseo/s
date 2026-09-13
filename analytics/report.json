@@ -11,7 +11,7 @@
     "available": true,
     "totals": {
       "users": 7,
-      "views": 20,
+      "views": 21,
       "sessions": 9
     },
     "behavior_by_page": {
@@ -47,6 +47,13 @@
         "views": 1,
         "users": 1,
         "avg_engagement_s": 16.0,
+        "engagement_rate": 0.0,
+        "bounce_rate": 1.0
+      },
+      "/ua/uk/": {
+        "views": 1,
+        "users": 1,
+        "avg_engagement_s": 0.0,
         "engagement_rate": 0.0,
         "bounce_rate": 1.0
       },
@@ -109,7 +116,7 @@
       "desktop": 5,
       "mobile": 2
     },
-    "collected_at": "2026-09-13T12:44:41.065189+00:00"
+    "collected_at": "2026-09-13T12:55:56.932779+00:00"
   },
   "site": {
     "totals": {
@@ -124,5 +131,5 @@
   },
   "period_label": "последние 60 дней",
   "period_days": 60,
-  "collected_at": "2026-09-13T12:44:41.399746+00:00"
+  "collected_at": "2026-09-13T12:55:57.168072+00:00"
 }
