@@ -86,6 +86,24 @@ def _clamp_meta_title(title: str, limit: int = 60) -> str:
     return cut or t[:limit]
 
 
+def _clamp_meta_desc(desc: str, limit: int = 160) -> str:
+    """Держит meta description в пределах ~160 символов (иначе Google обрежет
+    сниппет в выдаче). Режет по границе предложения, если возможно, иначе по
+    границе слова с многоточием."""
+    d = (desc or "").strip()
+    if len(d) <= limit:
+        return d
+    # пробуем обрезать по последнему законченному предложению в пределах лимита
+    head = d[:limit]
+    for sep in (". ", "! ", "? "):
+        idx = head.rfind(sep)
+        if idx >= limit * 0.6:  # предложение не слишком короткое
+            return head[:idx + 1].strip()
+    # иначе — по границе слова + многоточие
+    cut = head.rsplit(" ", 1)[0].rstrip(" ,—-|·")
+    return (cut + "…") if cut else d[:limit]
+
+
 def generate_content(draft: dict) -> dict:
     """Вызывает LLM и возвращает content JSON."""
     from openai import OpenAI
@@ -110,6 +128,7 @@ def generate_content(draft: dict) -> dict:
     raw = resp.choices[0].message.content or ""
     content = apply_content_fixups(parse_content_json(raw), "ru")
     content["meta_title"] = _clamp_meta_title(content.get("meta_title", ""))
+    content["meta_description"] = _clamp_meta_desc(content.get("meta_description", ""))
     print(f"  ✓ контент получен ({len(json.dumps(content, ensure_ascii=False))} симв., все ключи на месте)")
     return content
 
@@ -239,6 +258,7 @@ def translate_content(content_ru: dict, draft: dict):
         uk[k] = rewrite_links_ru_uk(v)
     content_uk = apply_content_fixups({k: v for k, v in uk.items() if not k.startswith("__")}, "uk")
     content_uk["meta_title"] = _clamp_meta_title(content_uk.get("meta_title", ""))
+    content_uk["meta_description"] = _clamp_meta_desc(content_uk.get("meta_description", ""))
     draft_uk = dict(draft)
     draft_uk["pros"] = apply_content_fixups(uk.get("__pros", draft.get("pros", [])), "uk")
     draft_uk["cons"] = apply_content_fixups(uk.get("__cons", draft.get("cons", [])), "uk")
