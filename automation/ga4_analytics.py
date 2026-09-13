@@ -333,6 +333,58 @@ def fetch_by_device(days: int = LOOKBACK_DAYS) -> dict[str, int]:
         return {}
 
 
+def fetch_conversions_by_partner(days: int = LOOKBACK_DAYS) -> dict[str, dict]:
+    """
+    Клики по партнёрам — сгруппировано по partner_id (чистый идентификатор,
+    который шлёт analytics.js). Даёт ТОЧНУЮ статистику по каждому партнёру в
+    одном месте. Работает для новых партнёров автоматически (partner_id берётся
+    из URL /rooms|clubs/<slug>/). Требует зарегистрированного в GA4 custom
+    dimension 'partner_id' (Admin → Custom definitions).
+      outbound  — реальные переходы к партнёру (affiliate_click)
+      internal  — переходы на страницу-обзор партнёра (partner_page_click)
+    """
+    client = _get_ga4_client()
+    prop = _property()
+    if not client or not prop:
+        return {}
+    ev_filter = FilterExpression(
+        filter=Filter(
+            field_name="eventName",
+            in_list_filter=Filter.InListFilter(values=CONVERSION_EVENTS),
+        )
+    )
+    try:
+        req = RunReportRequest(
+            property=prop,
+            date_ranges=[_date_range(days)],
+            dimensions=[
+                Dimension(name="customEvent:partner_id"),
+                Dimension(name="eventName"),
+            ],
+            metrics=[Metric(name="eventCount")],
+            dimension_filter=ev_filter,
+            limit=500,
+        )
+        resp = client.run_report(req)
+    except Exception as e:
+        print(f"⚠️  GA4 by_partner (нужен custom dimension 'partner_id'): {e}")
+        return {}
+    out: dict[str, dict] = {}
+    for row in resp.rows:
+        pid = row.dimension_values[0].value or "unknown"
+        event = row.dimension_values[1].value
+        count = int(float(row.metric_values[0].value or 0))
+        if pid in ("(not set)", ""):
+            pid = "unknown"
+        rec = out.setdefault(pid, {"total": 0, "outbound": 0, "internal": 0})
+        rec["total"] += count
+        if event == "affiliate_click":
+            rec["outbound"] += count
+        elif event == "partner_page_click":
+            rec["internal"] += count
+    return out
+
+
 def collect_ga4(days: int = LOOKBACK_DAYS) -> dict:
     """
     Собирает всё из GA4 в один словарь. Безопасно: если GA4 недоступен —
@@ -346,6 +398,7 @@ def collect_ga4(days: int = LOOKBACK_DAYS) -> dict:
         "totals": fetch_totals(days),
         "behavior_by_page": fetch_behavior_by_page(days),
         "conversions_by_page": fetch_conversions_by_page(days),
+        "conversions_by_partner": fetch_conversions_by_partner(days),
         "traffic_sources": fetch_traffic_sources(days),
         "by_country": fetch_by_country(days),
         "by_device": fetch_by_device(days),

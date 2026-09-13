@@ -610,7 +610,20 @@ def format_markdown_report(analytics: dict) -> str:
         lines.append(f"- Конверсия сайта: **{site_cr * 100:.2f}%**")
         lines.append("")
 
-        # таблица по статьям: поведение + конверсия
+        # ── По партнёрам (точная статистика по каждому партнёру) ──
+        by_partner = ga4.get("conversions_by_partner", {})
+        if by_partner:
+            lines.append("### 🎰 По партнёрам")
+            lines.append("")
+            lines.append("| Партнёр | Переходы к партнёру | Открыли обзор | Всего |")
+            lines.append("|---|---:|---:|---:|")
+            for pid, rec in sorted(by_partner.items(), key=lambda kv: -kv[1].get("total", 0)):
+                lines.append(
+                    f"| {pid} | {rec.get('outbound', 0)} | "
+                    f"{rec.get('internal', 0)} | {rec.get('total', 0)} |"
+                )
+            lines.append("")
+
         with_data = [a for a in articles if a.get("behavior") or a.get("conversions")]
         if with_data:
             with_data.sort(key=lambda a: -a.get("conversions", {}).get("total", 0))
@@ -732,6 +745,21 @@ def format_telegram_report(analytics: dict) -> str:
     ]
     if not ga4_on:
         L += ["_GA4 пуст (нет визитов или данные ещё идут). SEO ниже — из Search Console._", ""]
+
+    # ── 1b. ПО ПАРТНЁРАМ (точная статистика по каждому партнёру) ──
+    by_partner = ga4.get("conversions_by_partner", {}) if ga4_on else {}
+    if by_partner:
+        L.append("*🎰 По партнёрам — переходы (🎯 outbound · 👁 обзор)*")
+        rows = sorted(by_partner.items(), key=lambda kv: -kv[1].get("total", 0))
+        for pid, rec in rows:
+            L.append(
+                f"• *{pid}* — 🎯 *{rec.get('outbound', 0)}* · 👁 {rec.get('internal', 0)} "
+                f"(всего {rec.get('total', 0)})"
+            )
+        L.append("")
+    elif ga4_on:
+        L += ["_Разбивка по партнёрам появится, когда в GA4 зарегистрирован "
+              "custom dimension `partner_id` и накопятся клики._", ""]
 
     # ── 2. ВСЕ СТАТЬИ ПО МЕТРИКАМ ──
     def _impr(a): return a.get("stats", {}).get("impressions", 0)

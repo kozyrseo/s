@@ -17,7 +17,7 @@
 (function () {
   'use strict';
 
-  var GA_MEASUREMENT_ID = 'G-E62CD39XNY'; // KOZYR — GA4 Measurement ID
+  var GA_MEASUREMENT_ID = 'G-2ELSB5748F'; // KOZYR — GA4 Measurement ID
 
   // --- gtag shim (определён ВСЕГДА, до всех проверок) ---
   // Стандартный паттерн Google: события пушатся в dataLayer-очередь.
@@ -101,7 +101,25 @@
       a.textContent.trim().slice(0, 60) ||
       href;
 
+    // Чистый идентификатор партнёра — для ТОЧНОЙ статистики по каждому партнёру.
+    // Порядок определения:
+    //   1) явный data-room / data-aff со значением (если задан);
+    //   2) внутренняя ссылка на /ua/(rooms|clubs)/<slug>/ — берём slug из ссылки;
+    //   3) outbound-кнопка (напр. на grombet88.com) — берём slug из адреса
+    //      ТЕКУЩЕЙ страницы, если это /ua/(rooms|clubs)/<slug>/;
+    //   4) иначе 'unknown'.
+    // Работает АВТОМАТИЧЕСКИ для новых партнёров: у каждого свой /rooms/<slug>/,
+    // отдельная разметка кнопок не нужна.
+    var pageSlug = location.pathname.match(/\/ua\/(?:clubs|rooms)\/([a-z0-9-]+)\/?/i);
+    var attrId = (a.getAttribute('data-room') || a.getAttribute('data-aff') || '').trim();
+    var partnerId =
+      (attrId && attrId.toLowerCase()) ||
+      (partnerPage ? partnerPage[1].toLowerCase() : '') ||
+      (isOutbound && pageSlug ? pageSlug[1].toLowerCase() : '') ||
+      'unknown';
+
     gtag('event', clickType, {
+      partner_id: partnerId,
       link_url: a.href,
       link_label: label,
       link_source: source,
