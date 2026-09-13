@@ -1,0 +1,33 @@
+name: Check GSC access
+
+# Диагностика доступа к Google Search Console.
+# Запускается ТОЛЬКО вручную (Run workflow). Ничего не меняет — только читает.
+# Показывает в логе: какие property видит service account и совпадает ли
+# GSC_SITE_URL с ними.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install google-api-python-client google-auth
+
+      - name: Run GSC diagnostics
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
+        run: python automation/check_gsc.py
