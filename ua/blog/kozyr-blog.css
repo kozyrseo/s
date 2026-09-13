@@ -785,30 +785,30 @@ body{position:relative}
 .side-pcard .pcard__cta{font-size:14px;padding:11px 14px}
 
 /* ═══════════ Карточки партнёров — светлый премиум, в стиле сайта ═══════════ */
-/* тонкая акцентная полоса сверху: рум — синяя, клуб — золотая */
+/* тонкая синяя акцентная полоса сверху (единый акцент) */
 .pcard{overflow:hidden;padding:26px;box-shadow:0 6px 22px rgba(20,33,74,.07)}
 .pcard::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);z-index:2}
-.pcard--club::before{background:var(--gold)}
 .pcard:hover{transform:translateY(-5px);box-shadow:0 20px 48px rgba(20,33,74,.13);border-color:var(--border-2)}
 /* воздух между элементами */
 .pcard__top{margin-bottom:18px}
 .pcard__rows{gap:12px;margin:4px 0 20px}
 .pcard__row{padding-bottom:11px}
+.pcard__k{min-width:0}
 /* лого — мягкая тень для глубины */
 .pcard__logo{box-shadow:0 3px 10px rgba(20,33,74,.10)}
-/* тип-бейдж — аккуратный чип */
-.pcard__badge{display:inline-block;background:var(--surface-alt);color:var(--ink-2);padding:2px 9px;border-radius:999px;margin-top:5px;letter-spacing:.02em}
-/* ключевой показатель (рейкбек/бонус) — синий акцент, лёгкое усиление без гигантизма */
-.pcard__v.hi{color:var(--accent);font-weight:800;font-size:16px}
+/* тип-бейдж — лёгкая приглушённая подпись без плашки */
+.pcard__badge{background:none;padding:0;color:var(--ink-3);margin-top:4px;letter-spacing:.02em}
+/* ключевой показатель (рейкбек/бонус) — синий акцент, в одну строку */
+.pcard__v.hi{color:var(--accent);font-weight:800;font-size:15px;white-space:nowrap}
 /* кнопка — единый вид, живой hover (фон синий/тёмный берётся из базовых правил) */
 .pcard__cta{font-size:15px;padding:14px 18px}
 .pcard:hover .pcard__cta{transform:translateY(-1px)}
 .pcard--room:hover .pcard__cta{box-shadow:0 12px 26px rgba(38,104,255,.28)}
 .pcard--club:hover .pcard__cta{box-shadow:0 12px 26px rgba(10,17,40,.24)}
-/* топ-карточка (первая = высший Kozyr Score) — тонкая синяя рамка «лучший выбор» */
-.partners .pcard:first-child{border-color:var(--accent);box-shadow:0 10px 32px rgba(38,104,255,.12)}
+/* топ-карточка (первая = высший Kozyr Score) — синяя рамка + мягкое свечение «лучший выбор» */
+.partners .pcard:first-child{border-color:var(--accent);box-shadow:0 0 0 1.5px var(--accent),0 14px 38px rgba(38,104,255,.18)}
 .partners .pcard:first-child::before{height:4px}
-.partners .pcard:first-child:hover{box-shadow:0 22px 50px rgba(38,104,255,.20)}
+.partners .pcard:first-child:hover{box-shadow:0 0 0 1.5px var(--accent),0 24px 54px rgba(38,104,255,.24)}
 /* сайдбар-версия компактная */
 .side-pcard{padding:20px 18px}
 /* на планшете/мобиле боковая колонка скрыта (toc-side уже display:none),
