@@ -5,43 +5,43 @@
       "slug": "chto-takoe-reykbek-v-pokere",
       "title": "Что такое рейкбек в покере и как на нём не потеряться",
       "url": "https://kozyr.club/ua/blog/chto-takoe-reykbek-v-pokere/",
-      "category": "flat",
+      "category": "needs_boost",
       "stats": {
-        "impressions": 50,
+        "impressions": 131,
         "clicks": 1,
-        "ctr": 0.02,
-        "position": 36.0
+        "ctr": 0.0076,
+        "position": 32.0
       },
       "top_queries": [
         {
           "query": "рейкбек в покере",
-          "impressions": 7,
+          "impressions": 14,
           "clicks": 1,
-          "position": 28.3
+          "position": 28.5
+        },
+        {
+          "query": "rekbxrb",
+          "impressions": 1,
+          "clicks": 0,
+          "position": 19
         },
         {
           "query": "покер повернення рейка",
-          "impressions": 2,
+          "impressions": 5,
           "clicks": 0,
-          "position": 30
+          "position": 28
         },
         {
           "query": "покер рейкбек",
-          "impressions": 2,
+          "impressions": 4,
           "clicks": 0,
-          "position": 21.5
+          "position": 20.8
         },
         {
           "query": "рейк покер",
-          "impressions": 8,
+          "impressions": 15,
           "clicks": 0,
-          "position": 71
-        },
-        {
-          "query": "рейк это",
-          "impressions": 1,
-          "clicks": 0,
-          "position": 61
+          "position": 71.9
         }
       ],
       "published_at": null,
@@ -52,11 +52,11 @@
         "audience:beginner"
       ],
       "behavior": {
-        "views": 5,
+        "views": 7,
         "users": 3,
-        "avg_engagement_s": 0.7,
-        "engagement_rate": 0.75,
-        "bounce_rate": 0.25
+        "avg_engagement_s": 1.3,
+        "engagement_rate": 0.8333,
+        "bounce_rate": 0.1667
       },
       "conversions": {},
       "conv_rate": 0.0
@@ -113,23 +113,29 @@
       "url": "https://kozyr.club/ua/blog/chto-takoe-bedbid-dzhekpot-v-pokere/",
       "category": "flat",
       "stats": {
-        "impressions": 6,
+        "impressions": 18,
         "clicks": 0,
         "ctr": 0.0,
-        "position": 21.2
+        "position": 23
       },
       "top_queries": [
         {
           "query": "бэд бит в покере",
+          "impressions": 2,
+          "clicks": 0,
+          "position": 24
+        },
+        {
+          "query": "бэдбит",
           "impressions": 1,
           "clicks": 0,
-          "position": 27
+          "position": 17
         },
         {
           "query": "покерок джекпот",
-          "impressions": 2,
+          "impressions": 6,
           "clicks": 0,
-          "position": 43
+          "position": 43.8
         }
       ],
       "published_at": null,
@@ -155,10 +161,10 @@
       "url": "https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/",
       "category": "flat",
       "stats": {
-        "impressions": 2,
+        "impressions": 8,
         "clicks": 0,
         "ctr": 0.0,
-        "position": 9
+        "position": 15
       },
       "top_queries": [],
       "published_at": null,
@@ -193,11 +199,11 @@
         "audience:regular"
       ],
       "behavior": {
-        "views": 6,
+        "views": 7,
         "users": 1,
-        "avg_engagement_s": 2.0,
-        "engagement_rate": 1.0,
-        "bounce_rate": 0.0
+        "avg_engagement_s": 32.0,
+        "engagement_rate": 0.75,
+        "bounce_rate": 0.25
       },
       "conversions": {},
       "conv_rate": 0.0
@@ -245,10 +251,10 @@
       "url": "https://kozyr.club/ua/blog/vyvod-v-grivne-poker-sposoby-sroki/",
       "category": "flat",
       "stats": {
-        "impressions": 0,
+        "impressions": 1,
         "clicks": 0,
         "ctr": 0.0,
-        "position": null
+        "position": 2
       },
       "top_queries": [],
       "published_at": null,
@@ -291,7 +297,7 @@
         "audience:beginner"
       ],
       "behavior": {
-        "views": 3,
+        "views": 4,
         "users": 1,
         "avg_engagement_s": 61.0,
         "engagement_rate": 1.0,
@@ -321,11 +327,11 @@
         "audience:beginner"
       ],
       "behavior": {
-        "views": 1,
+        "views": 2,
         "users": 1,
-        "avg_engagement_s": 47.0,
-        "engagement_rate": 1.0,
-        "bounce_rate": 0.0
+        "avg_engagement_s": 51.0,
+        "engagement_rate": 0.5,
+        "bounce_rate": 0.5
       },
       "conversions": {},
       "conv_rate": 0.0
@@ -334,6 +340,41 @@
       "slug": "pokernye-kombinacii-po-starshinstvu",
       "title": "Покерные комбинации по старшинству: таблица 2026",
       "url": "https://kozyr.club/ua/blog/pokernye-kombinacii-po-starshinstvu/",
+      "category": "flat",
+      "stats": {
+        "impressions": 1,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 69
+      },
+      "top_queries": [
+        {
+          "query": "старшинство фулл хауса",
+          "impressions": 1,
+          "clicks": 0,
+          "position": 69
+        }
+      ],
+      "published_at": null,
+      "tags": [
+        "format:nlh",
+        "topic:beginners",
+        "audience:beginner"
+      ],
+      "behavior": {
+        "views": 6,
+        "users": 2,
+        "avg_engagement_s": 18.0,
+        "engagement_rate": 0.6,
+        "bounce_rate": 0.4
+      },
+      "conversions": {},
+      "conv_rate": 0.0
+    },
+    {
+      "slug": "pravila-tehasskogo-holdema",
+      "title": "Правила техасского холдема: этапы, блайнды, позиции",
+      "url": "https://kozyr.club/ua/blog/pravila-tehasskogo-holdema/",
       "category": "flat",
       "stats": {
         "impressions": 0,
@@ -349,11 +390,42 @@
         "audience:beginner"
       ],
       "behavior": {
-        "views": 5,
-        "users": 2,
-        "avg_engagement_s": 17.0,
+        "views": 11,
+        "users": 1,
+        "avg_engagement_s": 85.0,
         "engagement_rate": 0.75,
         "bounce_rate": 0.25
+      },
+      "conversions": {},
+      "conv_rate": 0.0
+    },
+    {
+      "slug": "kak-popolnit-i-vyvesti-v-pokere",
+      "title": "Как пополнить и вывести в покере: методы и сроки",
+      "url": "https://kozyr.club/ua/blog/kak-popolnit-i-vyvesti-v-pokere/",
+      "category": "flat",
+      "stats": {
+        "impressions": 0,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": null
+      },
+      "top_queries": [],
+      "published_at": null,
+      "tags": [
+        "format:mixed",
+        "topic:payments",
+        "topic:withdrawal",
+        "platform:pokerbet",
+        "platform:klubok",
+        "audience:beginner"
+      ],
+      "behavior": {
+        "views": 8,
+        "users": 2,
+        "avg_engagement_s": 10.0,
+        "engagement_rate": 0.5,
+        "bounce_rate": 0.5
       },
       "conversions": {},
       "conv_rate": 0.0
@@ -361,49 +433,48 @@
   ],
   "by_category": {
     "winners": [],
-    "needs_boost": [],
-    "flat": [
+    "needs_boost": [
       {
         "slug": "chto-takoe-reykbek-v-pokere",
         "title": "Что такое рейкбек в покере и как на нём не потеряться",
         "url": "https://kozyr.club/ua/blog/chto-takoe-reykbek-v-pokere/",
-        "category": "flat",
+        "category": "needs_boost",
         "stats": {
-          "impressions": 50,
+          "impressions": 131,
           "clicks": 1,
-          "ctr": 0.02,
-          "position": 36.0
+          "ctr": 0.0076,
+          "position": 32.0
         },
         "top_queries": [
           {
             "query": "рейкбек в покере",
-            "impressions": 7,
+            "impressions": 14,
             "clicks": 1,
-            "position": 28.3
+            "position": 28.5
+          },
+          {
+            "query": "rekbxrb",
+            "impressions": 1,
+            "clicks": 0,
+            "position": 19
           },
           {
             "query": "покер повернення рейка",
-            "impressions": 2,
+            "impressions": 5,
             "clicks": 0,
-            "position": 30
+            "position": 28
           },
           {
             "query": "покер рейкбек",
-            "impressions": 2,
+            "impressions": 4,
             "clicks": 0,
-            "position": 21.5
+            "position": 20.8
           },
           {
             "query": "рейк покер",
-            "impressions": 8,
+            "impressions": 15,
             "clicks": 0,
-            "position": 71
-          },
-          {
-            "query": "рейк это",
-            "impressions": 1,
-            "clicks": 0,
-            "position": 61
+            "position": 71.9
           }
         ],
         "published_at": null,
@@ -414,15 +485,17 @@
           "audience:beginner"
         ],
         "behavior": {
-          "views": 5,
+          "views": 7,
           "users": 3,
-          "avg_engagement_s": 0.7,
-          "engagement_rate": 0.75,
-          "bounce_rate": 0.25
+          "avg_engagement_s": 1.3,
+          "engagement_rate": 0.8333,
+          "bounce_rate": 0.1667
         },
         "conversions": {},
         "conv_rate": 0.0
-      },
+      }
+    ],
+    "flat": [
       {
         "slug": "pokerbet-ili-klubok-sravnenie",
         "title": "PokerBet или KlubOk: где играть в Украине",
@@ -475,23 +548,29 @@
         "url": "https://kozyr.club/ua/blog/chto-takoe-bedbid-dzhekpot-v-pokere/",
         "category": "flat",
         "stats": {
-          "impressions": 6,
+          "impressions": 18,
           "clicks": 0,
           "ctr": 0.0,
-          "position": 21.2
+          "position": 23
         },
         "top_queries": [
           {
             "query": "бэд бит в покере",
+            "impressions": 2,
+            "clicks": 0,
+            "position": 24
+          },
+          {
+            "query": "бэдбит",
             "impressions": 1,
             "clicks": 0,
-            "position": 27
+            "position": 17
           },
           {
             "query": "покерок джекпот",
-            "impressions": 2,
+            "impressions": 6,
             "clicks": 0,
-            "position": 43
+            "position": 43.8
           }
         ],
         "published_at": null,
@@ -517,10 +596,10 @@
         "url": "https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/",
         "category": "flat",
         "stats": {
-          "impressions": 2,
+          "impressions": 8,
           "clicks": 0,
           "ctr": 0.0,
-          "position": 9
+          "position": 15
         },
         "top_queries": [],
         "published_at": null,
@@ -555,11 +634,11 @@
           "audience:regular"
         ],
         "behavior": {
-          "views": 6,
+          "views": 7,
           "users": 1,
-          "avg_engagement_s": 2.0,
-          "engagement_rate": 1.0,
-          "bounce_rate": 0.0
+          "avg_engagement_s": 32.0,
+          "engagement_rate": 0.75,
+          "bounce_rate": 0.25
         },
         "conversions": {},
         "conv_rate": 0.0
@@ -607,10 +686,10 @@
         "url": "https://kozyr.club/ua/blog/vyvod-v-grivne-poker-sposoby-sroki/",
         "category": "flat",
         "stats": {
-          "impressions": 0,
+          "impressions": 1,
           "clicks": 0,
           "ctr": 0.0,
-          "position": null
+          "position": 2
         },
         "top_queries": [],
         "published_at": null,
@@ -653,7 +732,7 @@
           "audience:beginner"
         ],
         "behavior": {
-          "views": 3,
+          "views": 4,
           "users": 1,
           "avg_engagement_s": 61.0,
           "engagement_rate": 1.0,
@@ -683,11 +762,11 @@
           "audience:beginner"
         ],
         "behavior": {
-          "views": 1,
+          "views": 2,
           "users": 1,
-          "avg_engagement_s": 47.0,
-          "engagement_rate": 1.0,
-          "bounce_rate": 0.0
+          "avg_engagement_s": 51.0,
+          "engagement_rate": 0.5,
+          "bounce_rate": 0.5
         },
         "conversions": {},
         "conv_rate": 0.0
@@ -696,6 +775,41 @@
         "slug": "pokernye-kombinacii-po-starshinstvu",
         "title": "Покерные комбинации по старшинству: таблица 2026",
         "url": "https://kozyr.club/ua/blog/pokernye-kombinacii-po-starshinstvu/",
+        "category": "flat",
+        "stats": {
+          "impressions": 1,
+          "clicks": 0,
+          "ctr": 0.0,
+          "position": 69
+        },
+        "top_queries": [
+          {
+            "query": "старшинство фулл хауса",
+            "impressions": 1,
+            "clicks": 0,
+            "position": 69
+          }
+        ],
+        "published_at": null,
+        "tags": [
+          "format:nlh",
+          "topic:beginners",
+          "audience:beginner"
+        ],
+        "behavior": {
+          "views": 6,
+          "users": 2,
+          "avg_engagement_s": 18.0,
+          "engagement_rate": 0.6,
+          "bounce_rate": 0.4
+        },
+        "conversions": {},
+        "conv_rate": 0.0
+      },
+      {
+        "slug": "pravila-tehasskogo-holdema",
+        "title": "Правила техасского холдема: этапы, блайнды, позиции",
+        "url": "https://kozyr.club/ua/blog/pravila-tehasskogo-holdema/",
         "category": "flat",
         "stats": {
           "impressions": 0,
@@ -711,11 +825,42 @@
           "audience:beginner"
         ],
         "behavior": {
-          "views": 5,
-          "users": 2,
-          "avg_engagement_s": 17.0,
+          "views": 11,
+          "users": 1,
+          "avg_engagement_s": 85.0,
           "engagement_rate": 0.75,
           "bounce_rate": 0.25
+        },
+        "conversions": {},
+        "conv_rate": 0.0
+      },
+      {
+        "slug": "kak-popolnit-i-vyvesti-v-pokere",
+        "title": "Как пополнить и вывести в покере: методы и сроки",
+        "url": "https://kozyr.club/ua/blog/kak-popolnit-i-vyvesti-v-pokere/",
+        "category": "flat",
+        "stats": {
+          "impressions": 0,
+          "clicks": 0,
+          "ctr": 0.0,
+          "position": null
+        },
+        "top_queries": [],
+        "published_at": null,
+        "tags": [
+          "format:mixed",
+          "topic:payments",
+          "topic:withdrawal",
+          "platform:pokerbet",
+          "platform:klubok",
+          "audience:beginner"
+        ],
+        "behavior": {
+          "views": 8,
+          "users": 2,
+          "avg_engagement_s": 10.0,
+          "engagement_rate": 0.5,
+          "bounce_rate": 0.5
         },
         "conversions": {},
         "conv_rate": 0.0
@@ -726,45 +871,52 @@
   "ga4": {
     "available": true,
     "totals": {
-      "users": 27,
-      "views": 281,
-      "sessions": 92
+      "users": 32,
+      "views": 399,
+      "sessions": 136
     },
     "behavior_by_page": {
       "/ua/": {
-        "views": 59,
-        "users": 10,
-        "avg_engagement_s": 40.0,
-        "engagement_rate": 0.7234,
-        "bounce_rate": 0.2766
-      },
-      "/": {
-        "views": 32,
-        "users": 18,
-        "avg_engagement_s": 8.1,
-        "engagement_rate": 0.6667,
-        "bounce_rate": 0.3333
-      },
-      "/ua/clubs/klubok/": {
-        "views": 20,
-        "users": 4,
-        "avg_engagement_s": 42.8,
-        "engagement_rate": 0.8824,
-        "bounce_rate": 0.1176
+        "views": 85,
+        "users": 11,
+        "avg_engagement_s": 53.3,
+        "engagement_rate": 0.6571,
+        "bounce_rate": 0.3429
       },
       "/ua/uk/": {
-        "views": 20,
-        "users": 7,
-        "avg_engagement_s": 10.0,
-        "engagement_rate": 0.7619,
-        "bounce_rate": 0.2381
+        "views": 44,
+        "users": 9,
+        "avg_engagement_s": 21.4,
+        "engagement_rate": 0.7838,
+        "bounce_rate": 0.2162
+      },
+      "/": {
+        "views": 43,
+        "users": 23,
+        "avg_engagement_s": 7.7,
+        "engagement_rate": 0.6444,
+        "bounce_rate": 0.3556
+      },
+      "/ua/clubs/klubok/": {
+        "views": 24,
+        "users": 5,
+        "avg_engagement_s": 38.2,
+        "engagement_rate": 0.8636,
+        "bounce_rate": 0.1364
       },
       "/ua/rooms/pokerbet/": {
-        "views": 18,
-        "users": 7,
-        "avg_engagement_s": 26.6,
-        "engagement_rate": 0.7059,
-        "bounce_rate": 0.2941
+        "views": 19,
+        "users": 8,
+        "avg_engagement_s": 24.5,
+        "engagement_rate": 0.7222,
+        "bounce_rate": 0.2778
+      },
+      "/ua/rooms/na-grivnu/": {
+        "views": 15,
+        "users": 3,
+        "avg_engagement_s": 62.7,
+        "engagement_rate": 0.8333,
+        "bounce_rate": 0.1667
       },
       "/ua/uk/rooms/dlya-novichkov/": {
         "views": 15,
@@ -773,54 +925,75 @@
         "engagement_rate": 1.0,
         "bounce_rate": 0.0
       },
-      "/ua/rooms/na-grivnu/": {
-        "views": 14,
-        "users": 2,
+      "/ua/blog/": {
+        "views": 13,
+        "users": 5,
+        "avg_engagement_s": 12.4,
+        "engagement_rate": 0.9286,
+        "bounce_rate": 0.0714
+      },
+      "/ua/blog/pravila-tehasskogo-holdema/": {
+        "views": 11,
+        "users": 1,
         "avg_engagement_s": 85.0,
-        "engagement_rate": 0.8,
-        "bounce_rate": 0.2
+        "engagement_rate": 0.75,
+        "bounce_rate": 0.25
       },
       "/ua/clubs/": {
+        "views": 11,
+        "users": 6,
+        "avg_engagement_s": 19.3,
+        "engagement_rate": 0.9286,
+        "bounce_rate": 0.0714
+      },
+      "/ua/uk/rooms/": {
         "views": 10,
         "users": 5,
-        "avg_engagement_s": 15.2,
-        "engagement_rate": 0.9231,
-        "bounce_rate": 0.0769
-      },
-      "/ua/blog/": {
-        "views": 9,
-        "users": 4,
-        "avg_engagement_s": 6.2,
+        "avg_engagement_s": 5.8,
         "engagement_rate": 1.0,
         "bounce_rate": 0.0
       },
       "/ua/uk/rooms/na-grivnu/": {
-        "views": 9,
+        "views": 10,
+        "users": 3,
+        "avg_engagement_s": 3.3,
+        "engagement_rate": 1.0,
+        "bounce_rate": 0.0
+      },
+      "/ua/blog/kak-popolnit-i-vyvesti-v-pokere/": {
+        "views": 8,
         "users": 2,
-        "avg_engagement_s": 3.5,
-        "engagement_rate": 1.0,
-        "bounce_rate": 0.0
-      },
-      "/ua/uk/rooms/": {
-        "views": 7,
-        "users": 4,
-        "avg_engagement_s": 7.0,
-        "engagement_rate": 1.0,
-        "bounce_rate": 0.0
-      },
-      "/ua/blog/klubok-reykbek-clubgg-ukraina/": {
-        "views": 6,
-        "users": 1,
-        "avg_engagement_s": 2.0,
-        "engagement_rate": 1.0,
-        "bounce_rate": 0.0
+        "avg_engagement_s": 10.0,
+        "engagement_rate": 0.5,
+        "bounce_rate": 0.5
       },
       "/ua/blog/chto-takoe-reykbek-v-pokere/": {
-        "views": 5,
+        "views": 7,
         "users": 3,
-        "avg_engagement_s": 0.7,
+        "avg_engagement_s": 1.3,
+        "engagement_rate": 0.8333,
+        "bounce_rate": 0.1667
+      },
+      "/ua/blog/klubok-reykbek-clubgg-ukraina/": {
+        "views": 7,
+        "users": 1,
+        "avg_engagement_s": 32.0,
         "engagement_rate": 0.75,
         "bounce_rate": 0.25
+      },
+      "/ua/blog/pokernye-kombinacii-po-starshinstvu/": {
+        "views": 6,
+        "users": 2,
+        "avg_engagement_s": 18.0,
+        "engagement_rate": 0.6,
+        "bounce_rate": 0.4
+      },
+      "/ua/uk/clubs/klubok/": {
+        "views": 6,
+        "users": 5,
+        "avg_engagement_s": 6.2,
+        "engagement_rate": 0.8889,
+        "bounce_rate": 0.1111
       },
       "/ua/blog/kak-schitat-effektivnyy-reykbek-formula-primery/": {
         "views": 5,
@@ -828,13 +1001,6 @@
         "avg_engagement_s": 24.5,
         "engagement_rate": 1.0,
         "bounce_rate": 0.0
-      },
-      "/ua/blog/pokernye-kombinacii-po-starshinstvu/": {
-        "views": 5,
-        "users": 2,
-        "avg_engagement_s": 17.0,
-        "engagement_rate": 0.75,
-        "bounce_rate": 0.25
       },
       "/ua/uk/blog/kak-schitat-effektivnyy-reykbek-formula-primery/": {
         "views": 5,
@@ -850,12 +1016,19 @@
         "engagement_rate": 1.0,
         "bounce_rate": 0.0
       },
-      "/ua/uk/clubs/klubok/": {
+      "/ua/blog/kak-vybrat-poker-rum-ukraina/": {
         "views": 4,
-        "users": 4,
-        "avg_engagement_s": 6.5,
-        "engagement_rate": 0.8333,
-        "bounce_rate": 0.1667
+        "users": 1,
+        "avg_engagement_s": 61.0,
+        "engagement_rate": 1.0,
+        "bounce_rate": 0.0
+      },
+      "/ua/rooms/tonpoker/": {
+        "views": 4,
+        "users": 1,
+        "avg_engagement_s": 3.0,
+        "engagement_rate": 0.0,
+        "bounce_rate": 1.0
       },
       "/countries/": {
         "views": 3,
@@ -864,10 +1037,10 @@
         "engagement_rate": 0.75,
         "bounce_rate": 0.25
       },
-      "/ua/blog/kak-vybrat-poker-rum-ukraina/": {
+      "/ua/rooms/": {
         "views": 3,
-        "users": 1,
-        "avg_engagement_s": 61.0,
+        "users": 3,
+        "avg_engagement_s": 10.7,
         "engagement_rate": 1.0,
         "bounce_rate": 0.0
       },
@@ -877,6 +1050,34 @@
         "avg_engagement_s": 30.0,
         "engagement_rate": 1.0,
         "bounce_rate": 0.0
+      },
+      "/ua/uk/blog/": {
+        "views": 3,
+        "users": 1,
+        "avg_engagement_s": 4.0,
+        "engagement_rate": 1.0,
+        "bounce_rate": 0.0
+      },
+      "/ua/uk/blog/bonusy-poker-ukraina-2026-posle-zapreta-bezdepov/": {
+        "views": 3,
+        "users": 1,
+        "avg_engagement_s": 3.0,
+        "engagement_rate": 1.0,
+        "bounce_rate": 0.0
+      },
+      "/ua/uk/rooms/pokerbet/": {
+        "views": 3,
+        "users": 2,
+        "avg_engagement_s": 94.5,
+        "engagement_rate": 0.6667,
+        "bounce_rate": 0.3333
+      },
+      "/ua/blog/bonusy-poker-ukraina-2026-posle-zapreta-bezdepov/": {
+        "views": 2,
+        "users": 1,
+        "avg_engagement_s": 51.0,
+        "engagement_rate": 0.5,
+        "bounce_rate": 0.5
       },
       "/ua/blog/chto-takoe-bedbid-dzhekpot-v-pokere/": {
         "views": 2,
@@ -892,13 +1093,6 @@
         "engagement_rate": 1.0,
         "bounce_rate": 0.0
       },
-      "/ua/rooms/": {
-        "views": 2,
-        "users": 2,
-        "avg_engagement_s": 6.5,
-        "engagement_rate": 1.0,
-        "bounce_rate": 0.0
-      },
       "/ua/rooms/mobilnye/": {
         "views": 2,
         "users": 1,
@@ -906,17 +1100,10 @@
         "engagement_rate": 1.0,
         "bounce_rate": 0.0
       },
-      "/ua/uk/blog/": {
+      "/ua/uk/blog/chto-takoe-bedbid-dzhekpot-v-pokere/": {
         "views": 2,
-        "users": 1,
-        "avg_engagement_s": 4.0,
-        "engagement_rate": 1.0,
-        "bounce_rate": 0.0
-      },
-      "/ua/uk/blog/bonusy-poker-ukraina-2026-posle-zapreta-bezdepov/": {
-        "views": 2,
-        "users": 1,
-        "avg_engagement_s": 3.0,
+        "users": 2,
+        "avg_engagement_s": 5.0,
         "engagement_rate": 1.0,
         "bounce_rate": 0.0
       },
@@ -934,12 +1121,19 @@
         "engagement_rate": 1.0,
         "bounce_rate": 0.0
       },
-      "/ua/uk/rooms/pokerbet/": {
+      "/ua/uk/blog/pravila-tehasskogo-holdema/": {
         "views": 2,
         "users": 1,
-        "avg_engagement_s": 183.0,
-        "engagement_rate": 0.5,
-        "bounce_rate": 0.5
+        "avg_engagement_s": 36.0,
+        "engagement_rate": 1.0,
+        "bounce_rate": 0.0
+      },
+      "/ua/uk/legal/": {
+        "views": 2,
+        "users": 1,
+        "avg_engagement_s": 5.0,
+        "engagement_rate": 1.0,
+        "bounce_rate": 0.0
       },
       "/int/": {
         "views": 1,
@@ -948,17 +1142,17 @@
         "engagement_rate": 1.0,
         "bounce_rate": 0.0
       },
-      "/ua/blog/bonusy-poker-ukraina-2026-posle-zapreta-bezdepov/": {
+      "/ua/legal/": {
         "views": 1,
         "users": 1,
-        "avg_engagement_s": 47.0,
+        "avg_engagement_s": 2.0,
         "engagement_rate": 1.0,
         "bounce_rate": 0.0
       },
-      "/ua/uk/blog/chto-takoe-bedbid-dzhekpot-v-pokere/": {
+      "/ua/uk/blog/chto-takoe-reykbek-v-pokere/": {
         "views": 1,
         "users": 1,
-        "avg_engagement_s": 5.0,
+        "avg_engagement_s": 0.0,
         "engagement_rate": 1.0,
         "bounce_rate": 0.0
       },
@@ -986,18 +1180,18 @@
     },
     "conversions_by_page": {
       "/ua/": {
-        "total": 20,
+        "total": 26,
         "by_source": {},
         "by_event": {
-          "partner_page_click": 20
+          "partner_page_click": 26
         },
         "by_label": {}
       },
       "/ua/uk/": {
-        "total": 6,
+        "total": 8,
         "by_source": {},
         "by_event": {
-          "partner_page_click": 6
+          "partner_page_click": 8
         },
         "by_label": {}
       },
@@ -1065,6 +1259,14 @@
         },
         "by_label": {}
       },
+      "/ua/rooms/tonpoker/": {
+        "total": 1,
+        "by_source": {},
+        "by_event": {
+          "affiliate_click": 1
+        },
+        "by_label": {}
+      },
       "/ua/uk/blog/pokernyy-klub-clubgg-ukraina/": {
         "total": 1,
         "by_source": {},
@@ -1099,72 +1301,92 @@
       }
     },
     "traffic_sources": {
-      "Direct": 21,
-      "Organic Search": 7,
-      "Unassigned": 1
+      "Direct": 23,
+      "Organic Search": 11,
+      "Unassigned": 2
     },
     "by_country": {
-      "United States": 10,
-      "Ukraine": 7,
+      "United States": 11,
+      "Ukraine": 10,
       "Germany": 4,
-      "Netherlands": 2,
+      "Netherlands": 3,
       "Portugal": 2,
+      "United Kingdom": 2,
+      "Armenia": 1,
       "Costa Rica": 1,
+      "Ireland": 1,
       "Kazakhstan": 1,
       "Poland": 1,
-      "Russia": 1,
-      "United Kingdom": 1
+      "Russia": 1
     },
     "by_device": {
-      "desktop": 20,
-      "mobile": 6,
+      "desktop": 23,
+      "mobile": 8,
       "tablet": 1
     },
-    "collected_at": "2026-08-31T10:05:59.762095+00:00"
+    "collected_at": "2026-09-07T15:31:55.122167+00:00"
   },
   "site": {
     "totals": {
-      "impressions": 299,
-      "clicks": 27,
-      "ctr": 0.0903,
-      "position": 18.6
+      "impressions": 475,
+      "clicks": 31,
+      "ctr": 0.0653,
+      "position": 21.0
     },
     "pages": [
       {
-        "url": "https://kozyr.club/ua/clubs/klubok/",
-        "impressions": 99,
-        "clicks": 3,
-        "ctr": 0.0303,
-        "position": 5.8,
-        "path": "/ua/clubs/klubok/",
-        "title": "/ua/clubs/klubok/"
-      },
-      {
         "url": "https://kozyr.club/ua/blog/chto-takoe-reykbek-v-pokere/",
-        "impressions": 50,
+        "impressions": 131,
         "clicks": 1,
-        "ctr": 0.02,
-        "position": 36.0,
+        "ctr": 0.0076,
+        "position": 32.0,
         "path": "/ua/blog/chto-takoe-reykbek-v-pokere/",
         "title": "Что такое рейкбек в покере и как на нём не потеряться"
       },
       {
+        "url": "https://kozyr.club/ua/clubs/klubok/",
+        "impressions": 116,
+        "clicks": 3,
+        "ctr": 0.0259,
+        "position": 6.5,
+        "path": "/ua/clubs/klubok/",
+        "title": "/ua/clubs/klubok/"
+      },
+      {
+        "url": "https://kozyr.club/ua/uk/",
+        "impressions": 39,
+        "clicks": 3,
+        "ctr": 0.0769,
+        "position": 29.1,
+        "path": "/ua/uk/",
+        "title": "/ua/uk/"
+      },
+      {
         "url": "https://kozyr.club/",
-        "impressions": 33,
+        "impressions": 36,
         "clicks": 4,
-        "ctr": 0.1212,
+        "ctr": 0.1111,
         "position": 8.2,
         "path": "/",
         "title": "/"
       },
       {
-        "url": "https://kozyr.club/ua/uk/",
-        "impressions": 20,
-        "clicks": 2,
-        "ctr": 0.1,
-        "position": 28.2,
-        "path": "/ua/uk/",
-        "title": "/ua/uk/"
+        "url": "https://kozyr.club/ua/uk/blog/pokernyy-klub-clubgg-ukraina/",
+        "impressions": 23,
+        "clicks": 4,
+        "ctr": 0.1739,
+        "position": 5.6,
+        "path": "/ua/uk/blog/pokernyy-klub-clubgg-ukraina/",
+        "title": "/ua/uk/blog/pokernyy-klub-clubgg-ukraina/"
+      },
+      {
+        "url": "https://kozyr.club/ua/uk/rooms/na-grivnu/",
+        "impressions": 21,
+        "clicks": 1,
+        "ctr": 0.0476,
+        "position": 44.1,
+        "path": "/ua/uk/rooms/na-grivnu/",
+        "title": "/ua/uk/rooms/na-grivnu/"
       },
       {
         "url": "https://kozyr.club/ua/",
@@ -1176,40 +1398,49 @@
         "title": "/ua/"
       },
       {
-        "url": "https://kozyr.club/ua/uk/rooms/na-grivnu/",
+        "url": "https://kozyr.club/ua/blog/chto-takoe-bedbid-dzhekpot-v-pokere/",
         "impressions": 18,
-        "clicks": 1,
-        "ctr": 0.0556,
-        "position": 41.3,
-        "path": "/ua/uk/rooms/na-grivnu/",
-        "title": "/ua/uk/rooms/na-grivnu/"
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 23,
+        "path": "/ua/blog/chto-takoe-bedbid-dzhekpot-v-pokere/",
+        "title": "Что такое бэдбит джекпот покер и как его выиграть"
       },
       {
-        "url": "https://kozyr.club/ua/uk/blog/pokernyy-klub-clubgg-ukraina/",
-        "impressions": 13,
-        "clicks": 4,
-        "ctr": 0.3077,
-        "position": 5.8,
-        "path": "/ua/uk/blog/pokernyy-klub-clubgg-ukraina/",
-        "title": "/ua/uk/blog/pokernyy-klub-clubgg-ukraina/"
+        "url": "https://kozyr.club/ua/uk/rooms/pokerbet/",
+        "impressions": 16,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 26,
+        "path": "/ua/uk/rooms/pokerbet/",
+        "title": "/ua/uk/rooms/pokerbet/"
+      },
+      {
+        "url": "https://kozyr.club/ua/uk/rooms/",
+        "impressions": 15,
+        "clicks": 1,
+        "ctr": 0.0667,
+        "position": 48,
+        "path": "/ua/uk/rooms/",
+        "title": "/ua/uk/rooms/"
       },
       {
         "url": "https://kozyr.club/ua/rooms/dlya-novichkov/",
-        "impressions": 12,
+        "impressions": 14,
         "clicks": 0,
         "ctr": 0.0,
-        "position": 9.2,
+        "position": 13.8,
         "path": "/ua/rooms/dlya-novichkov/",
         "title": "/ua/rooms/dlya-novichkov/"
       },
       {
-        "url": "https://kozyr.club/ua/uk/rooms/pokerbet/",
+        "url": "https://kozyr.club/ua/rooms/na-grivnu/",
         "impressions": 12,
         "clicks": 0,
         "ctr": 0.0,
-        "position": 25.1,
-        "path": "/ua/uk/rooms/pokerbet/",
-        "title": "/ua/uk/rooms/pokerbet/"
+        "position": 16,
+        "path": "/ua/rooms/na-grivnu/",
+        "title": "/ua/rooms/na-grivnu/"
       },
       {
         "url": "https://kozyr.club/ua/uk/blog/",
@@ -1219,15 +1450,6 @@
         "position": 28.2,
         "path": "/ua/uk/blog/",
         "title": "/ua/uk/blog/"
-      },
-      {
-        "url": "https://kozyr.club/ua/rooms/na-grivnu/",
-        "impressions": 11,
-        "clicks": 0,
-        "ctr": 0.0,
-        "position": 12,
-        "path": "/ua/rooms/na-grivnu/",
-        "title": "/ua/rooms/na-grivnu/"
       },
       {
         "url": "https://kozyr.club/ua/uk/rooms/dlya-novichkov/",
@@ -1248,22 +1470,13 @@
         "title": "Как работают приватные покерные клубы в ClubGG"
       },
       {
-        "url": "https://kozyr.club/ua/uk/rooms/",
-        "impressions": 7,
-        "clicks": 1,
-        "ctr": 0.1429,
-        "position": 51.4,
-        "path": "/ua/uk/rooms/",
-        "title": "/ua/uk/rooms/"
-      },
-      {
-        "url": "https://kozyr.club/ua/blog/chto-takoe-bedbid-dzhekpot-v-pokere/",
-        "impressions": 6,
+        "url": "https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/",
+        "impressions": 8,
         "clicks": 0,
         "ctr": 0.0,
-        "position": 21.2,
-        "path": "/ua/blog/chto-takoe-bedbid-dzhekpot-v-pokere/",
-        "title": "Что такое бэдбит джекпот покер и как его выиграть"
+        "position": 15,
+        "path": "/ua/blog/pokernyy-klub-clubgg-ukraina/",
+        "title": "Покерный клуб ClubGG Украина: вступление и рейкбек до 65%"
       },
       {
         "url": "https://kozyr.club/ua/legal/",
@@ -1275,13 +1488,49 @@
         "title": "/ua/legal/"
       },
       {
+        "url": "https://kozyr.club/ua/blog/authors/nikita/",
+        "impressions": 5,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 2.8,
+        "path": "/ua/blog/authors/nikita/",
+        "title": "/ua/blog/authors/nikita/"
+      },
+      {
         "url": "https://kozyr.club/ua/rooms/pokerbet/",
+        "impressions": 5,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 17.8,
+        "path": "/ua/rooms/pokerbet/",
+        "title": "/ua/rooms/pokerbet/"
+      },
+      {
+        "url": "https://kozyr.club/ua/uk/clubs/klubok/",
+        "impressions": 4,
+        "clicks": 1,
+        "ctr": 0.25,
+        "position": 4,
+        "path": "/ua/uk/clubs/klubok/",
+        "title": "/ua/uk/clubs/klubok/"
+      },
+      {
+        "url": "https://kozyr.club/ua/uk/rooms/mobilnye/",
         "impressions": 4,
         "clicks": 0,
         "ctr": 0.0,
-        "position": 19.8,
-        "path": "/ua/rooms/pokerbet/",
-        "title": "/ua/rooms/pokerbet/"
+        "position": 11.5,
+        "path": "/ua/uk/rooms/mobilnye/",
+        "title": "/ua/uk/rooms/mobilnye/"
+      },
+      {
+        "url": "https://kozyr.club/ua/uk/clubs/",
+        "impressions": 3,
+        "clicks": 2,
+        "ctr": 0.6667,
+        "position": 24,
+        "path": "/ua/uk/clubs/",
+        "title": "/ua/uk/clubs/"
       },
       {
         "url": "https://kozyr.club/countries/",
@@ -1291,15 +1540,6 @@
         "position": 3.3,
         "path": "/countries/",
         "title": "/countries/"
-      },
-      {
-        "url": "https://kozyr.club/ua/uk/clubs/klubok/",
-        "impressions": 3,
-        "clicks": 1,
-        "ctr": 0.3333,
-        "position": 4.7,
-        "path": "/ua/uk/clubs/klubok/",
-        "title": "/ua/uk/clubs/klubok/"
       },
       {
         "url": "https://kozyr.club/ua/blog/klubok-reykbek-clubgg-ukraina/",
@@ -1320,6 +1560,15 @@
         "title": "PokerBet или KlubOk: где играть в Украине"
       },
       {
+        "url": "https://kozyr.club/ua/rooms/mobilnye/",
+        "impressions": 3,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 47.3,
+        "path": "/ua/rooms/mobilnye/",
+        "title": "/ua/rooms/mobilnye/"
+      },
+      {
         "url": "https://kozyr.club/ua/uk/blog/authors/nikita/",
         "impressions": 3,
         "clicks": 0,
@@ -1329,31 +1578,13 @@
         "title": "/ua/uk/blog/authors/nikita/"
       },
       {
-        "url": "https://kozyr.club/ua/uk/rooms/mobilnye/",
-        "impressions": 3,
-        "clicks": 0,
-        "ctr": 0.0,
-        "position": 14,
-        "path": "/ua/uk/rooms/mobilnye/",
-        "title": "/ua/uk/rooms/mobilnye/"
-      },
-      {
-        "url": "https://kozyr.club/ua/blog/authors/nikita/",
+        "url": "https://kozyr.club/ua/clubs/",
         "impressions": 2,
-        "clicks": 0,
-        "ctr": 0.0,
-        "position": 2.5,
-        "path": "/ua/blog/authors/nikita/",
-        "title": "/ua/blog/authors/nikita/"
-      },
-      {
-        "url": "https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/",
-        "impressions": 2,
-        "clicks": 0,
-        "ctr": 0.0,
-        "position": 9,
-        "path": "/ua/blog/pokernyy-klub-clubgg-ukraina/",
-        "title": "Покерный клуб ClubGG Украина: вступление и рейкбек до 65%"
+        "clicks": 2,
+        "ctr": 1.0,
+        "position": 28,
+        "path": "/ua/clubs/",
+        "title": "/ua/clubs/"
       },
       {
         "url": "https://kozyr.club/ua/uk/blog/klubok-reykbek-clubgg-ukraina/",
@@ -1365,15 +1596,6 @@
         "title": "/ua/uk/blog/klubok-reykbek-clubgg-ukraina/"
       },
       {
-        "url": "https://kozyr.club/ua/clubs/",
-        "impressions": 1,
-        "clicks": 1,
-        "ctr": 1.0,
-        "position": 2,
-        "path": "/ua/clubs/",
-        "title": "/ua/clubs/"
-      },
-      {
         "url": "https://kozyr.club/ua/blog/",
         "impressions": 1,
         "clicks": 0,
@@ -1383,13 +1605,40 @@
         "title": "/ua/blog/"
       },
       {
-        "url": "https://kozyr.club/ua/rooms/mobilnye/",
+        "url": "https://kozyr.club/ua/blog/pokernye-kombinacii-po-starshinstvu/",
         "impressions": 1,
         "clicks": 0,
         "ctr": 0.0,
-        "position": 7,
-        "path": "/ua/rooms/mobilnye/",
-        "title": "/ua/rooms/mobilnye/"
+        "position": 69,
+        "path": "/ua/blog/pokernye-kombinacii-po-starshinstvu/",
+        "title": "Покерные комбинации по старшинству: таблица 2026"
+      },
+      {
+        "url": "https://kozyr.club/ua/blog/vyvod-v-grivne-poker-sposoby-sroki/",
+        "impressions": 1,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 2,
+        "path": "/ua/blog/vyvod-v-grivne-poker-sposoby-sroki/",
+        "title": "Вывод в гривне покер: способы, сроки и минималки"
+      },
+      {
+        "url": "https://kozyr.club/ua/rooms/",
+        "impressions": 1,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 58,
+        "path": "/ua/rooms/",
+        "title": "/ua/rooms/"
+      },
+      {
+        "url": "https://kozyr.club/ua/uk/blog/chto-takoe-reykbek-v-pokere/",
+        "impressions": 1,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 9,
+        "path": "/ua/uk/blog/chto-takoe-reykbek-v-pokere/",
+        "title": "/ua/uk/blog/chto-takoe-reykbek-v-pokere/"
       },
       {
         "url": "https://kozyr.club/ua/uk/blog/kak-rabotayut-privatnye-pokerclubi/",
@@ -1399,15 +1648,6 @@
         "position": 17,
         "path": "/ua/uk/blog/kak-rabotayut-privatnye-pokerclubi/",
         "title": "/ua/uk/blog/kak-rabotayut-privatnye-pokerclubi/"
-      },
-      {
-        "url": "https://kozyr.club/ua/uk/clubs/",
-        "impressions": 1,
-        "clicks": 0,
-        "ctr": 0.0,
-        "position": 69,
-        "path": "/ua/uk/clubs/",
-        "title": "/ua/uk/clubs/"
       },
       {
         "url": "https://kozyr.club/ua/uk/legal/",
@@ -1421,40 +1661,28 @@
     ],
     "top_queries": [
       {
+        "query": "покер руми україни",
+        "impressions": 26,
+        "clicks": 2,
+        "position": 40.5
+      },
+      {
+        "query": "українські покер руми",
+        "impressions": 19,
+        "clicks": 2,
+        "position": 38.3
+      },
+      {
         "query": "kozyr",
         "impressions": 17,
         "clicks": 0,
         "position": 5.4
       },
       {
-        "query": "покер руми україни",
-        "impressions": 16,
-        "clicks": 2,
-        "position": 43.9
-      },
-      {
-        "query": "українські покер руми",
-        "impressions": 14,
-        "clicks": 2,
-        "position": 39.4
-      },
-      {
-        "query": "рейкбек",
-        "impressions": 10,
-        "clicks": 0,
-        "position": 26.2
-      },
-      {
-        "query": "рейк покер",
-        "impressions": 8,
-        "clicks": 0,
-        "position": 71
-      },
-      {
         "query": "рейкбек в покере",
-        "impressions": 7,
+        "impressions": 14,
         "clicks": 1,
-        "position": 28.3
+        "position": 28.5
       },
       {
         "query": "покер онлайн на гривні",
@@ -1463,16 +1691,40 @@
         "position": 44.7
       },
       {
-        "query": "покербет промокод 2024",
+        "query": "klubok покер",
         "impressions": 5,
-        "clicks": 0,
-        "position": 34
+        "clicks": 1,
+        "position": 13
       },
       {
-        "query": "klubok покер",
+        "query": "покер повернення рейка",
+        "impressions": 5,
+        "clicks": 0,
+        "position": 28
+      },
+      {
+        "query": "покер рейкбек",
         "impressions": 4,
+        "clicks": 0,
+        "position": 20.8
+      },
+      {
+        "query": "покер руми",
+        "impressions": 4,
+        "clicks": 0,
+        "position": 57
+      },
+      {
+        "query": "покер руми в україні",
+        "impressions": 3,
         "clicks": 1,
-        "position": 14
+        "position": 23.3
+      },
+      {
+        "query": "никита волошин",
+        "impressions": 3,
+        "clicks": 0,
+        "position": 3.3
       },
       {
         "query": "покер руми україна",
@@ -1487,34 +1739,34 @@
         "position": 26
       },
       {
+        "query": "бэд бит в покере",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 24
+      },
+      {
+        "query": "все покер румы",
+        "impressions": 2,
+        "clicks": 0,
+        "position": 69.5
+      },
+      {
         "query": "кейсур",
         "impressions": 2,
         "clicks": 0,
         "position": 6
       },
       {
-        "query": "покер повернення рейка",
+        "query": "покер румы с минимальным депозитом",
         "impressions": 2,
         "clicks": 0,
-        "position": 30
+        "position": 54.5
       },
       {
-        "query": "покер рейкбек",
-        "impressions": 2,
+        "query": "clubgg клубы украина",
+        "impressions": 1,
         "clicks": 0,
-        "position": 21.5
-      },
-      {
-        "query": "покербет промокод 2025",
-        "impressions": 2,
-        "clicks": 0,
-        "position": 30
-      },
-      {
-        "query": "покерок джекпот",
-        "impressions": 2,
-        "clicks": 0,
-        "position": 43
+        "position": 7
       },
       {
         "query": "poker club near me",
@@ -1529,25 +1781,19 @@
         "position": 66
       },
       {
-        "query": "бэд бит в покере",
+        "query": "rekbxrb",
         "impressions": 1,
         "clicks": 0,
-        "position": 27
+        "position": 19
       },
       {
-        "query": "все покер румы",
+        "query": "бэдбит",
         "impressions": 1,
         "clicks": 0,
-        "position": 81
+        "position": 17
       },
       {
         "query": "козр",
-        "impressions": 1,
-        "clicks": 0,
-        "position": 4
-      },
-      {
-        "query": "никита волошин",
         "impressions": 1,
         "clicks": 0,
         "position": 4
@@ -1559,21 +1805,15 @@
         "position": 35
       },
       {
-        "query": "покер румы с минимальным депозитом",
+        "query": "покер рум украина",
         "impressions": 1,
         "clicks": 0,
-        "position": 56
-      },
-      {
-        "query": "рейк это",
-        "impressions": 1,
-        "clicks": 0,
-        "position": 61
+        "position": 5
       }
     ],
-    "pages_count": 32
+    "pages_count": 36
   },
   "period_label": "последние 60 дней",
   "period_days": 60,
-  "collected_at": "2026-08-31T10:06:00.151424+00:00"
+  "collected_at": "2026-09-07T15:31:55.530129+00:00"
 }
