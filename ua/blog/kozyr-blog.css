@@ -784,52 +784,33 @@ body{position:relative}
 .side-pcard .pcard__row{font-size:13px;padding-bottom:7px}
 .side-pcard .pcard__cta{font-size:14px;padding:11px 14px}
 
-/* ═══════════ Карточки партнёров — ТЁМНЫЙ ПРЕМИУМ (как флагман «Выбор редакции») ═══════════ */
-.pcard{
-  overflow:hidden;color:#fff;border:none !important;border-radius:22px;padding:26px 24px;
-  background:radial-gradient(130% 170% at 8% -10%, #17244E 0%, #0A1128 52%, #06060F 100%);
-  box-shadow:0 20px 50px rgba(6,17,40,.30)
-}
-/* золотое свечение в углу + тонкая золотая полоса сверху */
-.pcard::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
-  background:radial-gradient(55% 120% at 88% -6%, rgba(217,169,59,.26), transparent 60%)}
-.pcard::after{content:"";position:absolute;top:0;left:0;right:0;height:4px;z-index:3;
-  background:linear-gradient(90deg,#E7BC56,#B8841C)}
-.pcard__top,.pcard__rows,.pcard__cta{position:relative;z-index:1}
-.pcard:hover{transform:translateY(-6px);box-shadow:0 32px 68px rgba(6,17,40,.48)}
-/* логотип на белом боксе для контраста */
-.pcard__logo--img{background:#fff !important;border:none !important;box-shadow:0 8px 22px rgba(0,0,0,.30)}
-.pcard__logo--img img{object-fit:contain;padding:7px}
-/* имя белое, тип — золотой */
-.pcard__name{color:#fff}
-.pcard__badge{color:#D9A93B;background:none;padding:0;margin-top:4px;font-weight:600;letter-spacing:.03em}
-/* строки данных на тёмном */
-.pcard__row{border-bottom:1px solid rgba(255,255,255,.10)}
-.pcard__k{color:rgba(255,255,255,.58)}
-.pcard__v{color:#fff}
-/* рейкбек — крупной золотой цифрой (главный продающий показатель) */
-.pcard__v.hi{color:#E7BC56;font-size:23px;font-weight:800;line-height:1;letter-spacing:-.02em}
-/* кнопка — белая пилюля, как у флагмана */
-.pcard__cta{background:#fff !important;color:#0A1128 !important;border-radius:100px;font-weight:700;
-  font-size:15px;padding:14px 20px;box-shadow:0 10px 24px rgba(0,0,0,.28)}
-.pcard:hover .pcard__cta{transform:translateY(-2px);box-shadow:0 15px 32px rgba(0,0,0,.42)}
-/* топ-карточка (первая = высший Kozyr Score) — золотая рамка-акцент */
-.partners .pcard:first-child{box-shadow:0 24px 58px rgba(6,17,40,.44),0 0 0 1.5px rgba(231,188,86,.55)}
-.partners .pcard:first-child::after{height:5px}
-.partners .pcard:first-child:hover{box-shadow:0 34px 72px rgba(6,17,40,.52),0 0 0 1.5px rgba(231,188,86,.7)}
-/* ── воздух + читаемость: больше отступов, приподнятый навигационно-синий фон ── */
-.pcard{padding:30px 28px;background:radial-gradient(135% 175% at 6% -12%, #1C2C5A 0%, #111C40 55%, #0B1228 100%)}
-.pcard__top{margin-bottom:20px}
-.pcard__rows{gap:14px;margin:6px 0 22px}
-.pcard__row{padding-bottom:13px;font-size:14.5px}
-.pcard__k{color:rgba(255,255,255,.64)}
-.pcard__logo{width:48px;height:48px;flex:0 0 48px;border-radius:13px}
-.pcard__name{font-size:19px}
-/* сайдбар-версия остаётся компактной */
+/* ═══════════ Карточки партнёров — светлый премиум, в стиле сайта ═══════════ */
+/* тонкая акцентная полоса сверху: рум — синяя, клуб — золотая */
+.pcard{overflow:hidden;padding:26px;box-shadow:0 6px 22px rgba(20,33,74,.07)}
+.pcard::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);z-index:2}
+.pcard--club::before{background:var(--gold)}
+.pcard:hover{transform:translateY(-5px);box-shadow:0 20px 48px rgba(20,33,74,.13);border-color:var(--border-2)}
+/* воздух между элементами */
+.pcard__top{margin-bottom:18px}
+.pcard__rows{gap:12px;margin:4px 0 20px}
+.pcard__row{padding-bottom:11px}
+/* лого — мягкая тень для глубины */
+.pcard__logo{box-shadow:0 3px 10px rgba(20,33,74,.10)}
+/* тип-бейдж — аккуратный чип */
+.pcard__badge{display:inline-block;background:var(--surface-alt);color:var(--ink-2);padding:2px 9px;border-radius:999px;margin-top:5px;letter-spacing:.02em}
+/* ключевой показатель (рейкбек/бонус) — синий акцент, лёгкое усиление без гигантизма */
+.pcard__v.hi{color:var(--accent);font-weight:800;font-size:16px}
+/* кнопка — единый вид, живой hover (фон синий/тёмный берётся из базовых правил) */
+.pcard__cta{font-size:15px;padding:14px 18px}
+.pcard:hover .pcard__cta{transform:translateY(-1px)}
+.pcard--room:hover .pcard__cta{box-shadow:0 12px 26px rgba(38,104,255,.28)}
+.pcard--club:hover .pcard__cta{box-shadow:0 12px 26px rgba(10,17,40,.24)}
+/* топ-карточка (первая = высший Kozyr Score) — тонкая синяя рамка «лучший выбор» */
+.partners .pcard:first-child{border-color:var(--accent);box-shadow:0 10px 32px rgba(38,104,255,.12)}
+.partners .pcard:first-child::before{height:4px}
+.partners .pcard:first-child:hover{box-shadow:0 22px 50px rgba(38,104,255,.20)}
+/* сайдбар-версия компактная */
 .side-pcard{padding:20px 18px}
-.side-pcard .pcard__logo{width:40px;height:40px;flex:0 0 40px}
-.side-pcard .pcard__name{font-size:16px}
-.side-pcard .pcard__row{padding-bottom:9px}
 /* на планшете/мобиле боковая колонка скрыта (toc-side уже display:none),
    поэтому виджет там не мешает; данные видны в основном partners-блоке */
 
