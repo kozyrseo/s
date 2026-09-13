@@ -1699,7 +1699,9 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
     # Значения для «текущего» языка (активная кнопка переключателя).
     _lang_self_label = {"ru": "RU", "uk": "UA"}.get(lang, "RU")
     _lang_switch_label = {"ru": "UA", "uk": "RU"}.get(lang, "UA")
-    _lang_self_url = canonical_url  # сама себя
+    # Относительный путь на саму себя (как lang_switch_url) — для консистентности
+    # переключателя языков: обе кнопки относительные, не смешиваем с абсолютным canonical.
+    _lang_self_url = f"{lang_cfg['url_prefix']}/{publish_slug}/"
     _lang_self_code = "ru" if lang == "ru" else "uk"
     _lang_switch_code = "uk" if lang == "ru" else "ru"
     # Build the inline i18n block for kozyr-fab.js. PT pages declare
