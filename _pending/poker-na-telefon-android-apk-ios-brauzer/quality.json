@@ -1,0 +1,198 @@
+{
+  "technical": {
+    "tier": "technical",
+    "scores": {
+      "title_length": {
+        "max": 5,
+        "score": 5,
+        "detail": "44 chars (target: 30-65)"
+      },
+      "desc_length": {
+        "max": 5,
+        "score": 5,
+        "detail": "139 chars (target: 130-160)"
+      },
+      "word_count": {
+        "max": 5,
+        "score": 3,
+        "detail": "1468 words (target: 1800-3500)"
+      },
+      "h2_count": {
+        "max": 5,
+        "score": 5,
+        "detail": "7 H2 headings (target: 7-12)"
+      },
+      "h3_count": {
+        "max": 3,
+        "score": 3,
+        "detail": "10 H3 headings (target: ≥3)"
+      },
+      "internal_links_count": {
+        "max": 5,
+        "score": 0,
+        "detail": "9 internal links (target: 3-5)"
+      },
+      "internal_links_diversity": {
+        "max": 3,
+        "score": 3,
+        "detail": "8 unique link targets"
+      },
+      "target_page_link": {
+        "max": 3,
+        "score": 3,
+        "detail": "Target /ua/rooms/pokerbet/ ✓ found"
+      },
+      "external_source_link": {
+        "max": 3,
+        "score": 3,
+        "detail": "1 external source link(s) (target: ≥1)"
+      },
+      "primary_keyword": {
+        "max": 4,
+        "score": 4,
+        "detail": "title=True, first_para=True, h2=True"
+      },
+      "secondary_keywords": {
+        "max": 4,
+        "score": 3,
+        "detail": "2/3 secondaries found"
+      },
+      "faq_count": {
+        "max": 4,
+        "score": 4,
+        "detail": "6 FAQ items (target: ≥6)"
+      },
+      "no_cliches": {
+        "max": 4,
+        "score": 4,
+        "detail": "clean"
+      },
+      "table_format": {
+        "max": 4,
+        "score": 4,
+        "detail": "2 table(s), all well-formed"
+      }
+    },
+    "total": 49,
+    "max": 57,
+    "percent": 86
+  },
+  "content": {
+    "tier": "content",
+    "scores": {
+      "eeat": {
+        "max": 4,
+        "score": 3,
+        "evidence": "лицензия Curaçao, выплаты ~100 минут, Welcome до 40 000 ₴, ссылка на Hand2Note",
+        "fix": "Добавить даты, версии приложений, реальные скриншоты/тесты скорости"
+      },
+      "sourcing": {
+        "max": 4,
+        "score": 4,
+        "evidence": "«рейкбек 40% начисляет и выплачивает сама клубная сторона», «расчёты через агента из каталога KOZYR»",
+        "fix": ""
+      },
+      "depth": {
+        "max": 4,
+        "score": 4,
+        "evidence": "объясняет почему румы не в Google Play, почему HUD только через эмуляторы, мультитейблинг",
+        "fix": ""
+      },
+      "concreteness": {
+        "max": 4,
+        "score": 4,
+        "evidence": "APK-шаги 1-4, 40% еженедельно, ~100 минут, VPIP/PFR, USDT/P2P/карта",
+        "fix": ""
+      },
+      "unique_angle": {
+        "max": 4,
+        "score": 3,
+        "evidence": "связка APK+iOS+браузер+HUD-эмуляторы под украинский рынок гривны",
+        "fix": "Добавить свой замер скорости/лагов, скрин лобби для отличия от конкурентов"
+      },
+      "intent_match": {
+        "max": 4,
+        "score": 4,
+        "evidence": "commercial: способы установки + переход к PokerBet и каталогу",
+        "fix": ""
+      },
+      "structure": {
+        "max": 3,
+        "score": 3,
+        "evidence": "H2 по способам, APK, iOS, браузер, HUD, гривна, вывод — без повторов",
+        "fix": ""
+      },
+      "readability": {
+        "max": 3,
+        "score": 3,
+        "evidence": "короткие абзацы, таблицы, списки, активный залог",
+        "fix": ""
+      },
+      "primary_kw_natural": {
+        "max": 3,
+        "score": 3,
+        "evidence": "«Покер на телефон» в заголовке, интро и выводе — органично",
+        "fix": ""
+      },
+      "secondary_coverage": {
+        "max": 3,
+        "score": 3,
+        "evidence": "«Android APK», «покер приложение iOS», «мобильный покер Украина» как H2 естественно",
+        "fix": ""
+      },
+      "link_context": {
+        "max": 3,
+        "score": 3,
+        "evidence": "«как выбрать покер рум», «обзор PokerBet», «вывод в гривне» с осмысленными анкорами",
+        "fix": ""
+      },
+      "faq_relevance": {
+        "max": 3,
+        "score": 3,
+        "evidence": "Google Play, безопасность способов, HUD, обновление APK, число столов — реальные вопросы",
+        "fix": ""
+      },
+      "h2_clickability": {
+        "max": 3,
+        "score": 3,
+        "evidence": "«Android APK: почему не из Google Play», «Браузерная версия: играть без установки»",
+        "fix": ""
+      },
+      "no_filler": {
+        "max": 3,
+        "score": 3,
+        "evidence": "без воды, вывод конкретный по сегментам игроков",
+        "fix": ""
+      },
+      "brand_voice": {
+        "max": 3,
+        "score": 3,
+        "evidence": "«Играйте на суммы, которые не жалко потерять», честно «рейкбека у PokerBet нет»",
+        "fix": ""
+      },
+      "conversion_bridge": {
+        "max": 3,
+        "score": 3,
+        "evidence": "«посмотрите обзор PokerBet или загляните в каталог рейкбек-сделок KOZYR»",
+        "fix": ""
+      }
+    },
+    "total": 52,
+    "max": 54,
+    "percent": 96,
+    "top_3_strengths": [
+      "Честное разграничение ролей: рейкбек начисляет и платит клубная сторона, KOZYR — витрина и агент",
+      "Высокая конкретика: пошаговая установка APK, точные условия партнёров, HUD через эмуляторы",
+      "Прямое попадание в commercial-интент с мягким CTA на PokerBet и каталог без втюхивания"
+    ],
+    "top_3_issues": [
+      "Мало собственного опыта: нет своих замеров скорости/лагов, скриншотов, дат версий приложений",
+      "Уникальность держится на компиляции индустрийных фактов, не хватает эксклюзивного теста",
+      "E-E-A-T проседает из-за отсутствия конкретных дат и авторской экспертизы"
+    ],
+    "verdict_explanation": "Сильная, честная и хорошо структурированная коммерческая статья с точным соблюдением роли KOZYR, теряющая баллы лишь в E-E-A-T и уникальности из-за нехватки собственных тестов."
+  },
+  "total": 91,
+  "verdict": "PUBLISH_READY",
+  "telegram_block": "🏆 *Качество: 91/100* 🟢 PUBLISH_READY\n   📊 Технически: 86/100 · 📝 Контент: 96/100\n\n✅ *Сильное:*\n   • Честное разграничение ролей: рейкбек начисляет и платит клубная сторона, KOZYR — витрина и агент\n   • Высокая конкретика: пошаговая установка APK, точные условия партнёров, HUD через эмуляторы\n   • Прямое попадание в commercial-интент с мягким CTA на PokerBet и каталог без втюхивания\n\n⚠️ *Что улучшить:*\n   • Мало собственного опыта: нет своих замеров скорости/лагов, скриншотов, дат версий приложений\n   • Уникальность держится на компиляции индустрийных фактов, не хватает эксклюзивного теста\n   • E-E-A-T проседает из-за отсутствия конкретных дат и авторской экспертизы\n   • word\\_count: 1468 words (target: 1800-3500)\n   • internal\\_links\\_count: 9 internal links (target: 3-5)"
+}
