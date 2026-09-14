@@ -12,5 +12,10 @@
   "selected_partners": [
     "tonpoker",
     "grombet"
+  ],
+  "partner_currencies": {},
+  "currency_queue": [
+    "tonpoker",
+    "grombet"
   ]
 }
