@@ -8,12 +8,12 @@
   ],
   "partner_currencies": {
     "tonpoker": "USDT",
-    "grombet": "USDT"
+    "grombet": "PLN"
   },
   "partners": [
     "tonpoker",
     "grombet"
   ],
   "chat_id": "8523632365",
-  "created_at": "2026-09-14T15:21:51.303Z"
+  "created_at": "2026-09-14T15:57:46.742Z"
 }
