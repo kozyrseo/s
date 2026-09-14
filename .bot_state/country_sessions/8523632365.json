@@ -5,5 +5,8 @@
   "code": "pl",
   "name": "PL",
   "flag": "🇵🇱",
-  "iso_country": "PL"
+  "iso_country": "PL",
+  "langs": [
+    "pl"
+  ]
 }
