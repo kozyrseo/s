@@ -61,6 +61,57 @@ def build_draft_for_market(partner: dict, code: str, cmeta: dict) -> dict:
     return draft
 
 
+_I18N_CACHE: dict = {}
+
+
+def _translate_i18n_to(lang: str) -> dict:
+    """Переводит UI-подписи шаблона (I18N) на язык страны. Кэш по языку —
+    83 подписи переводятся ОДИН раз на язык, не для каждого партнёра.
+
+    Fallback: если перевод упал — вернёт русские подписи (страница не сломается,
+    просто часть UI будет русской).
+    """
+    if lang in _I18N_CACHE:
+        return _I18N_CACHE[lang]
+    import os
+    import json as _json
+    from render_partner import I18N
+    ru = I18N["ru"]
+    key = os.environ.get("OPENROUTER_API_KEY")
+    if not key:
+        return ru
+    try:
+        from openai import OpenAI
+        from generate_partner_tpl import MODEL, MAX_TOKENS, OPENROUTER_BASE_URL
+        _LANG = {"pl": "польский", "kk": "казахский", "de": "немецкий",
+                 "cs": "чешский", "ro": "румынский", "es": "испанский",
+                 "en": "английский", "tr": "турецкий"}
+        lang_name = _LANG.get(lang, lang)
+        system = (f"Переведи значения JSON (UI-подписи сайта) с русского на "
+                  f"{lang_name}. Это кнопки, метки, короткие фразы интерфейса "
+                  f"покерного аффилиат-сайта. Сохраняй смысл и краткость. "
+                  f"Верни СТРОГО JSON с теми же ключами, без markdown.")
+        client = OpenAI(api_key=key, base_url=OPENROUTER_BASE_URL)
+        resp = client.chat.completions.create(
+            model=MODEL, max_tokens=MAX_TOKENS,
+            messages=[{"role": "system", "content": system},
+                      {"role": "user", "content": _json.dumps(ru, ensure_ascii=False, indent=2)}],
+        )
+        raw = (resp.choices[0].message.content or "").strip()
+        if raw.startswith("```"):
+            raw = raw.split("\n", 1)[1].rsplit("```", 1)[0] if "\n" in raw else raw
+        first, last = raw.find("{"), raw.rfind("}")
+        tr = _json.loads(raw[first:last + 1])
+        # дополняем недостающие ключи русскими (на случай пропусков)
+        result = dict(ru)
+        result.update({k: v for k, v in tr.items() if v})
+        _I18N_CACHE[lang] = result
+        return result
+    except Exception as e:
+        print(f"  ⚠️ перевод I18N на {lang} упал ({e}) — русские подписи")
+        return ru
+
+
 def _translate_content_to(content: dict, draft: dict, lang: str) -> dict:
     """Переводит контент страницы партнёра на произвольный язык (напр. pl).
 
@@ -150,8 +201,12 @@ def generate_partner_page(partner: dict, code: str, cmeta: dict) -> list[str]:
     if primary != "ru":
         content = _translate_content_to(content, draft, primary)
 
+    # Перевод UI-подписей шаблона (I18N: «Румы», «Сделки», «обзор»...) на язык
+    # страны — иначе они останутся русскими. Один раз на страну (кэшируем).
+    i18n_tr = _translate_i18n_to(primary) if primary != "ru" else None
+
     # Основная версия (primary-язык страны) → /{code}/{kind}/{id}/
-    html = rp.build_page(draft, content, lang="ru", is_preview=False)
+    html = rp.build_page(draft, content, lang="ru", is_preview=False, i18n_override=i18n_tr)
     # ВАЖНО: build_page строит путь из draft['country'] и lang; для основной
     # версии lang="ru" даёт /{country}/{kind}/{id}/ (сегмента языка нет).
     out = REPO_ROOT / code / kind / pid / "index.html"

@@ -211,7 +211,8 @@ def _bump_js_versions(html):
     return html
 
 
-def build_page(draft: dict, content: dict, lang: str = "ru", is_preview: bool = False) -> str:
+def build_page(draft: dict, content: dict, lang: str = "ru", is_preview: bool = False,
+               i18n_override: dict | None = None) -> str:
     """Рендерит HTML страницы партнёра из шаблона + анкеты + контента.
 
     lang="ru" → страница в /{country}/{kind}/{id}/  (основная)
@@ -277,7 +278,11 @@ def build_page(draft: dict, content: dict, lang: str = "ru", is_preview: bool = 
             "current": (_l == (primary_lang if lang != "uk" else "uk")),
         })
 
-    html = Template(tpl).render(p=p, content=content, t=I18N.get(lang, I18N["ru"]))
+    # МУЛЬТИГЕО: UI-подписи (I18N) для языка. Если передан i18n_override
+    # (переведённый на язык страны словарь) — используем его. Иначе — встроенный
+    # (ru/uk для Украины). Так польские страницы получают польские подписи.
+    _t = i18n_override if i18n_override else I18N.get(lang, I18N["ru"])
+    html = Template(tpl).render(p=p, content=content, t=_t)
     return _bump_js_versions(html)
 
 
