@@ -14,9 +14,8 @@
     "tonpoker"
   ],
   "partner_currencies": {
-    "grombet": "USDT"
+    "grombet": "USDT",
+    "tonpoker": "USDT"
   },
-  "currency_queue": [
-    "tonpoker"
-  ]
+  "currency_queue": []
 }
