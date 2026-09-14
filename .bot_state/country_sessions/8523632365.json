@@ -1,5 +1,9 @@
 {
   "chat_id": 8523632365,
-  "stage": "await_country",
-  "started_at": "2026-09-14T16:24:51.390Z"
+  "stage": "langs",
+  "started_at": "2026-09-14T16:24:51.390Z",
+  "code": "pl",
+  "name": "PL",
+  "flag": "🇵🇱",
+  "iso_country": "PL"
 }
