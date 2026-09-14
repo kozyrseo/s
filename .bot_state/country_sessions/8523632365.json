@@ -1,6 +1,6 @@
 {
   "chat_id": 8523632365,
-  "stage": "langs",
+  "stage": "partners",
   "started_at": "2026-09-14T16:24:51.390Z",
   "code": "pl",
   "name": "PL",
@@ -8,5 +8,6 @@
   "iso_country": "PL",
   "langs": [
     "pl"
-  ]
+  ],
+  "selected_partners": []
 }
