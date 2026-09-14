@@ -22,6 +22,7 @@ newcountry_generator.py — генератор каркаса новой стр�
 только записывает, сам не переводит (перевод + кнопки — в мастере).
 """
 from __future__ import annotations
+import os
 import json
 from pathlib import Path
 
@@ -29,6 +30,7 @@ AUTOMATION_DIR = Path(__file__).resolve().parent
 REPO_ROOT = AUTOMATION_DIR.parent
 COUNTRIES_JSON = AUTOMATION_DIR / "data" / "countries.json"
 LANG_TEXTS_PY = AUTOMATION_DIR / "lang_texts.py"
+PROMPTS_DIR = AUTOMATION_DIR / "prompts"
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -269,8 +271,17 @@ def run_from_job(code: str) -> int:
     flag = job.get("flag", "🏴")
     iso = job.get("iso_country", code.upper())
     languages = job["languages"]
-    currency = job["currency"]
     partner_ids = job.get("partners", [])
+    # МУЛЬТИГЕО: валюта теперь ПО КАЖДОМУ партнёру (мастер шлёт partner_currencies).
+    # Старый формат (одна currency на страну) поддерживаем для совместимости.
+    partner_currencies = job.get("partner_currencies", {})
+    # Дефолтная валюта страны: явная currency, иначе первая из партнёрских,
+    # иначе валюта по коду страны (NC-таблица), иначе USD.
+    _NC_CUR = {"pl": "PLN", "kz": "KZT", "by": "BYN", "de": "EUR", "cs": "CZK",
+               "ro": "RON", "es": "EUR", "tr": "TRY", "ge": "GEL", "az": "AZN"}
+    currency = (job.get("currency")
+                or (list(partner_currencies.values())[0] if partner_currencies else None)
+                or _NC_CUR.get(code, "USD"))
 
     # Чат для превью (из задания)
     if job.get("chat_id"):
@@ -331,6 +342,62 @@ def run_from_job(code: str) -> int:
         partner_ids=partner_ids,
     )
 
+    # 3b. МУЛЬТИГЕО: раскатка выбранных партнёров — создаём byMarket[code]
+    #     с валютой каждого партнёра + адаптированной карточкой + генерим отзывы.
+    primary_lang = languages[0]
+    review_flags_report = []  # для превью: сгенерированные отзывы
+    if partner_ids:
+        from partner_markets import rollout_partner_to_market
+        from ui_translator import translate_ui_with_checks
+        import json as _pj
+        pdata = _pj.loads((REPO_ROOT / "partners.json").read_text(encoding="utf-8"))
+        pmap = {p["id"]: p for p in pdata.get("partners", [])}
+
+        for pid in partner_ids:
+            p = pmap.get(pid)
+            if not p:
+                report["steps"].append(f"⚠️ Партнёр {pid} не найден — пропущен")
+                continue
+            pcur = partner_currencies.get(pid, currency)  # валюта этого партнёра
+            # Адаптируем строки карточки под страну: Claude переведёт метки/суммы.
+            # Берём украинскую карточку как образец, просим адаптировать валюту/суммы.
+            base_rows = (p.get("card") or {}).get("rows", [])
+            try:
+                # переводим значения строк карточки на язык страны + валюту
+                labels = {f"row_{i}": (r[1] if len(r) > 1 else "")
+                          for i, r in enumerate(base_rows)}
+                tr = translate_ui_with_checks(labels, primary_lang)["translated"]
+                new_rows = []
+                for i, r in enumerate(base_rows):
+                    val = tr.get(f"row_{i}", r[1] if len(r) > 1 else "")
+                    # валюту в строке «Валюта» подменяем на валюту партнёра
+                    if len(r) > 0 and ("Валют" in str(r[0]) or "valut" in str(r[0]).lower()):
+                        val = pcur
+                    new_rows.append([r[0], val, r[2] if len(r) > 2 else False])
+            except Exception as e:
+                new_rows = base_rows  # фолбэк — оставляем как есть
+                report["steps"].append(f"⚠️ Карточка {pid}: перевод не удался ({e})")
+
+            ok = rollout_partner_to_market(pid, code,
+                                           currency=pcur, card_rows=new_rows,
+                                           note=(p.get("note") or ""))
+            report["steps"].append(
+                f"✅ Партнёр {pid} раскатан на {code} ({pcur})" if ok
+                else f"⚠️ Партнёр {pid}: раскатка не удалась")
+
+            # Отзывы под гео (3-5 на партнёра)
+            try:
+                from review_generator import generate_reviews, add_reviews_to_json, back_translate_reviews
+                revs = generate_reviews(p.get("name", pid), p.get("type", "room"),
+                                        name, primary_lang, count=4)
+                if revs:
+                    backs = back_translate_reviews(revs, primary_lang)
+                    add_reviews_to_json(pid, code, primary_lang, revs, verified_ratio=0.6)
+                    review_flags_report.append((pid, revs, backs))
+                    report["steps"].append(f"✅ Отзывы {pid}: {len(revs)} шт (на проверку)")
+            except Exception as e:
+                report["steps"].append(f"⚠️ Отзывы {pid} не созданы: {e}")
+
     # 4. Промпт статей + проверка легалки
     legal_report = None
     try:
@@ -340,7 +407,7 @@ def run_from_job(code: str) -> int:
         pj = _json.loads((REPO_ROOT / "partners.json").read_text(encoding="utf-8"))
         chosen = [p for p in pj.get("partners", []) if p["id"] in partner_ids]
         for p in chosen:
-            p["currency"] = currency  # валюта рынка для промпта
+            p["currency"] = partner_currencies.get(p["id"], currency)  # валюта партнёра
         prompt_result = build_country_prompt(
             country_code=code, country_name=name, partners=chosen)
         # сохраняем промпт как system_prompt.{primary}.md
