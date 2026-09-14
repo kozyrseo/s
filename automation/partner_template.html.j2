@@ -33,9 +33,8 @@
 <meta name="description" content="{{ content.meta_description }}">
 
 <link rel="canonical" href="{{ p.canonical }}">
-<link rel="alternate" hreflang="ru-UA" href="https://kozyr.club/{{ p.country }}/{{ p.kind }}/{{ p.id }}/">
-<link rel="alternate" hreflang="uk-UA" href="https://kozyr.club/{{ p.country }}/uk/{{ p.kind }}/{{ p.id }}/">
-<link rel="alternate" hreflang="x-default" href="https://kozyr.club/">
+{% for hl in p.hreflang_links %}<link rel="alternate" hreflang="{{ hl.lang }}" href="{{ hl.href }}">
+{% endfor %}<link rel="alternate" hreflang="x-default" href="https://kozyr.club{{ p.home }}{{ p.kind }}/{{ p.id }}/">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -101,7 +100,7 @@
   "offers": {
     "@type": "Offer",
     "price": "0",
-    "priceCurrency": "USDT",
+    "priceCurrency": "{{ p.currency }}",
     "availability": "https://schema.org/InStock",
     "url": "https://kozyr.club/{{ p.country }}/{{ p.kind }}/{{ p.id }}/"
   }
@@ -123,8 +122,8 @@
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    {"@type": "ListItem", "position": 1, "name": "{{ t.bc_home }}", "item": "https://kozyr.club/ua/"},
-    {"@type": "ListItem", "position": 2, "name": "{{ t.nav_rooms }}", "item": "https://kozyr.club/ua/rooms/"},
+    {"@type": "ListItem", "position": 1, "name": "{{ t.bc_home }}", "item": "https://kozyr.club{{ p.home }}"},
+    {"@type": "ListItem", "position": 2, "name": "{{ t.nav_rooms }}", "item": "https://kozyr.club{{ p.home }}rooms/"},
     {"@type": "ListItem", "position": 3, "name": "{{ p.name }}", "item": "https://kozyr.club/{{ p.country }}/{{ p.kind }}/{{ p.id }}/"}
   ]
 }
@@ -1101,13 +1100,13 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outlin
 
 <div class="compliance" role="region" aria-label="{{ t.aria_legal }}">
   <div class="compliance-inner">
-    {{ t.compliance_pre }} <a href="/ua/legal/#terms">{{ t.terms }}</a> {{ t.and_word }} <a href="/ua/legal/#privacy">{{ t.privacy_doc }}</a>{{ t.compliance_post }}
+    {{ t.compliance_pre }} <a href="{{ p.home }}legal/#terms">{{ t.terms }}</a> {{ t.and_word }} <a href="{{ p.home }}legal/#privacy">{{ t.privacy_doc }}</a>{{ t.compliance_post }}
   </div>
 </div>
 
 <nav class="nav" aria-label="{{ t.aria_mainnav }}">
   <div class="nav-inner">
-    <a href="/ua/" class="logo" aria-label="{{ t.aria_home }}">
+    <a href="{{ p.home }}" class="logo" aria-label="{{ t.aria_home }}">
       <span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="ki1" x1="505" y1="628" x2="596" y2="628" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#14358F"/><stop offset="1" stop-color="#2A6BFF"/></linearGradient></defs><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
 fill="#000000" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 587 1 1071 0 1076 -3 16
 -32 42 583 -519 198 -180 547 -499 775 -709 228 -209 547 -501 708 -649 l294
@@ -1131,15 +1130,15 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <span>KOZYR</span>
     </a>
     <div class="nav-links">
-      <a href="/ua/#compare">{{ t.nav_deals }}</a>
-      <a href="/ua/rooms/">{{ t.nav_rooms }}</a>
-      <a href="/ua/clubs/">{{ t.nav_clubs }}</a>
-      <a href="/ua/#faq">{{ t.faq_word }}</a><a href="/ua/blog/">{{ t.nav_blog }}</a>
+      <a href="{{ p.home }}#compare">{{ t.nav_deals }}</a>
+      <a href="{{ p.home }}rooms/">{{ t.nav_rooms }}</a>
+      <a href="{{ p.home }}clubs/">{{ t.nav_clubs }}</a>
+      <a href="{{ p.home }}#faq">{{ t.faq_word }}</a><a href="{{ p.home }}blog/">{{ t.nav_blog }}</a>
     </div>
     <div class="nav-actions">
       <div class="lang" role="group" aria-label="{{ t.aria_lang }}">
-        <a href="/{{ p.country }}/{{ p.kind }}/{{ p.id }}/" hreflang="ru-UA" lang="ru"{% if p.lang_tag == "ru-UA" %} aria-current="page"{% endif %}>RU</a>
-        <a href="/{{ p.country }}/uk/{{ p.kind }}/{{ p.id }}/" hreflang="uk-UA" lang="uk"{% if p.lang_tag == "uk-UA" %} aria-current="page"{% endif %}>UA</a>
+{% for ls in p.lang_switch %}        <a href="{{ ls.href }}" hreflang="{{ ls.hreflang }}" lang="{{ ls.lang }}"{% if ls.current %} aria-current="page"{% endif %}>{{ ls.code }}</a>
+{% endfor %}
       </div>
       <a href="#cta" class="btn btn-primary">{{ t.cta_activate }}</a>
       <button class="nav-burger" id="nav-burger" aria-expanded="false" aria-controls="nav-drawer" aria-label="{{ t.aria_menu }}">
@@ -1149,10 +1148,10 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     </div>
   </div>
   <div class="nav-drawer" id="nav-drawer">
-    <a href="/ua/#partners">{{ t.partners }} <span aria-hidden="true">→</span></a>
+    <a href="{{ p.home }}#partners">{{ t.partners }} <span aria-hidden="true">→</span></a>
     <a href="/{{ p.country }}/{{ p.kind }}/{{ p.id }}/">{{ p.name }} <span aria-hidden="true">→</span></a>
-    <a href="/ua/rooms/pokerbet/">PokerBet <span aria-hidden="true">→</span></a>
-    <a href="/ua/#faq">{{ t.faq_word }} <span aria-hidden="true">→</span></a>
+    <a href="{{ p.home }}rooms/pokerbet/">PokerBet <span aria-hidden="true">→</span></a>
+    <a href="{{ p.home }}#faq">{{ t.faq_word }} <span aria-hidden="true">→</span></a>
     <a href="#cta" class="btn btn-dark">{{ t.cta_activate }}</a>
   </div>
 </nav>
@@ -1161,9 +1160,9 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 
 <div class="wrap">
   <nav class="breadcrumbs" aria-label="{{ t.aria_breadcrumbs }}">
-    <a href="/ua/">{{ t.bc_home }}</a>
+    <a href="{{ p.home }}">{{ t.bc_home }}</a>
     <span class="sep">/</span>
-    <a href="/ua/rooms/">{{ t.nav_rooms }}</a>
+    <a href="{{ p.home }}rooms/">{{ t.nav_rooms }}</a>
     <span class="sep">/</span>
     <span class="current">{{ p.name }}</span>
   </nav>
@@ -1173,7 +1172,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
   <div class="wrap room-hero-inner">
     <div>
       <div class="room-tag">
-        <span class="fi fi-ua"></span>{{ content.hero_badge }}</div>
+        <span class="fi fi-{{ p.flag_code }}"></span>{{ content.hero_badge }}</div>
       <h1>{{ p.name }} — {{ t.review_word }} <em>2026</em>.</h1>
       <p class="room-hero-lead">{{ content.hero_lead }}</p>
 
@@ -1328,11 +1327,11 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     <div class="side-related">
       <div class="side-related-title">{{ t.related_title }}</div>
       <ul>
-        <li><a href="/ua/rooms/pokerbet/">{{ t.rel_pokerbet }}</a></li>
-        <li><a href="/ua/clubs/klubok/">{{ t.rel_klubok }}</a></li>
-        <li><a href="/ua/#score">{{ t.rel_calc }}</a></li>
-        <li><a href="/ua/#faq">{{ t.rel_faq }}</a></li>
-        <li><a href="/ua/legal/#terms">{{ t.rel_terms }}</a></li>
+        <li><a href="{{ p.home }}rooms/pokerbet/">{{ t.rel_pokerbet }}</a></li>
+        <li><a href="{{ p.home }}clubs/klubok/">{{ t.rel_klubok }}</a></li>
+        <li><a href="{{ p.home }}#score">{{ t.rel_calc }}</a></li>
+        <li><a href="{{ p.home }}#faq">{{ t.rel_faq }}</a></li>
+        <li><a href="{{ p.home }}legal/#terms">{{ t.rel_terms }}</a></li>
       </ul>
     </div>
   </aside>
@@ -1344,7 +1343,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
   <div class="wrap">
     <div class="footer-inner">
       <div class="footer-brand">
-        <a href="/ua/" class="logo">
+        <a href="{{ p.home }}" class="logo">
           <span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="ki2" x1="505" y1="628" x2="596" y2="628" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#14358F"/><stop offset="1" stop-color="#2A6BFF"/></linearGradient></defs><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)"
 fill="#000000" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 587 1 1071 0 1076 -3 16
 -32 42 583 -519 198 -180 547 -499 775 -709 228 -209 547 -501 708 -649 l294
@@ -1372,39 +1371,39 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <div class="footer-col">
         <h3>{{ t.foot_product }}</h3>
         <ul>
-          <li><a href="/ua/#compare">{{ t.nav_deals }}</a></li>
-          <li><a href="/ua/rooms/">{{ t.foot_all_rooms }}</a></li>
-          <li><a href="/ua/clubs/">{{ t.foot_all_clubs }}</a></li>
-          <li><a href="/ua/#score">{{ t.foot_calc }}</a></li>
+          <li><a href="{{ p.home }}#compare">{{ t.nav_deals }}</a></li>
+          <li><a href="{{ p.home }}rooms/">{{ t.foot_all_rooms }}</a></li>
+          <li><a href="{{ p.home }}clubs/">{{ t.foot_all_clubs }}</a></li>
+          <li><a href="{{ p.home }}#score">{{ t.foot_calc }}</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h3>{{ t.nav_rooms }}</h3>
         <ul>
           <li><a href="/{{ p.country }}/{{ p.kind }}/{{ p.id }}/">{{ p.name }}</a></li>
-          <li><a href="/ua/rooms/pokerbet/">PokerBet</a></li>
-          <li><a href="/ua/clubs/klubok/">KlubOk (ClubGG)</a></li>
+          <li><a href="{{ p.home }}rooms/pokerbet/">PokerBet</a></li>
+          <li><a href="{{ p.home }}clubs/klubok/">KlubOk (ClubGG)</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h3>{{ t.foot_help }}</h3>
         <ul>
-          <li><a href="/ua/#faq">{{ t.faq_word }}</a></li>        </ul>
+          <li><a href="{{ p.home }}#faq">{{ t.faq_word }}</a></li>        </ul>
       </div>
       <div class="footer-col">
         <h3>{{ t.foot_legal }}</h3>
         <ul>
-          <li><a href="/ua/legal/#terms">{{ t.terms }}</a></li>
-          <li><a href="/ua/legal/#privacy">{{ t.foot_privacy }}</a></li>
-          <li><a href="/ua/legal/#responsible-gaming">{{ t.foot_rg }}</a>
-              <a href="/ua/legal/#partners">{{ t.foot_howwe }}</a></li>
-          <li><a href="/ua/legal/#disclaimer">{{ t.foot_disclaimer }}</a></li>
+          <li><a href="{{ p.home }}legal/#terms">{{ t.terms }}</a></li>
+          <li><a href="{{ p.home }}legal/#privacy">{{ t.foot_privacy }}</a></li>
+          <li><a href="{{ p.home }}legal/#responsible-gaming">{{ t.foot_rg }}</a>
+              <a href="{{ p.home }}legal/#partners">{{ t.foot_howwe }}</a></li>
+          <li><a href="{{ p.home }}legal/#disclaimer">{{ t.foot_disclaimer }}</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
       <div>{{ t.copyright }}</div>
-      <div><span>RU</span> · <span>UA</span></div>
+      <div>{% for ls in p.lang_switch %}<span>{{ ls.code }}</span>{% if not loop.last %} · {% endif %}{% endfor %}</div>
     </div>
   </div>
 </footer>

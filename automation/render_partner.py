@@ -253,6 +253,30 @@ def build_page(draft: dict, content: dict, lang: str = "ru", is_preview: bool = 
         p["lang_tag"] = f"{primary_lang}-{iso}"
         p["og_locale"] = f"{primary_lang}_{iso}"
         p["canonical"] = f"{base}/{p['kind']}/{draft['id']}/"
+
+    # ── МУЛЬТИГЕО: переменные страны для навигации/футера/крошек ──
+    # home = корень страны (/pl/ или /ua/); шаблон использует p.home вместо /ua/.
+    p["home"] = f"/{country}/"
+    p["flag_code"] = country            # для <span class="fi fi-{{p.flag_code}}">
+    p["iso_code"] = iso
+    p["primary_lang"] = primary_lang
+    # hreflang-ссылки на все языки страны (для <head> и переключателя)
+    _langs = draft.get("languages") or [primary_lang]
+    # Метки кнопок переключателя: uk исторически показывается как «UA»
+    # (украинская версия). Остальные — код языка в верхнем регистре.
+    _label = {"uk": "UA"}
+    p["hreflang_links"] = []
+    p["lang_switch"] = []
+    for _l in _langs:
+        _seg = "" if _l == primary_lang else f"{_l}/"
+        _href = f"/{country}/{_seg}{p['kind']}/{draft['id']}/"
+        p["hreflang_links"].append({"lang": f"{_l}-{iso}", "href": f"https://kozyr.club{_href}"})
+        p["lang_switch"].append({
+            "code": _label.get(_l, _l.upper()), "href": _href,
+            "hreflang": f"{_l}-{iso}", "lang": _l,
+            "current": (_l == (primary_lang if lang != "uk" else "uk")),
+        })
+
     html = Template(tpl).render(p=p, content=content, t=I18N.get(lang, I18N["ru"]))
     return _bump_js_versions(html)
 
