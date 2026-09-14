@@ -392,31 +392,7 @@
       },
       "markets": [
         "ua"
-      ],
-      "byMarket": {
-        "pl": {
-          "currency": "PLN",
-          "url": "/pl/rooms/grombet/",
-          "card": {
-            "logoImg": "/ua/blog/logos/grombet.webp",
-            "kind": "Grombet",
-            "dark": false,
-            "rows": [
-              [
-                "Рейкбек",
-                "do 70%",
-                true
-              ],
-              [
-                "Валюта",
-                "PLN",
-                false
-              ]
-            ]
-          },
-          "note": "Pokój pokerowy."
-        }
-      }
+      ]
     }
   ]
 }
