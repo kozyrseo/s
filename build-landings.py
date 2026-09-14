@@ -849,6 +849,9 @@ def render_page(cfg, lang, country='ua'):
 
 if __name__ == '__main__':
     import sys
+    from pathlib import Path as _P
+    # country_config лежит в automation/ — добавляем в путь (build-landings в корне)
+    sys.path.insert(0, str(_P(__file__).resolve().parent / "automation"))
     from country_config import get_country, resolve_langs_for_country
 
     # МУЛЬТИГЕО: страна из аргумента (--country xx) или "ua" по умолчанию.
@@ -863,9 +866,18 @@ if __name__ == '__main__':
     langs = resolve_langs_for_country(country)
 
     created = []
+    skipped = 0
     for cfg in LANDINGS:
         for lang in langs:
             slug = cfg['slug']
+            # МУЛЬТИГЕО: LANDINGS содержат контент под конкретные языки (сейчас
+            # ru/uk — украинские лендинги «na-grivnu» и т.п.). Для новой страны
+            # своего контента лендингов ещё нет → пропускаем, не падаем.
+            # Свои лендинги для страны добавишь отдельно (они специфичны:
+            # «na-grivnu» для Польши бессмысленен, там будут свои темы).
+            if lang not in cfg:
+                skipped += 1
+                continue
             seg = '' if lang == primary else lang
             if seg:
                 out = ROOT / prefix / seg / 'rooms' / slug / 'index.html'
@@ -875,6 +887,8 @@ if __name__ == '__main__':
             html = render_page(cfg, lang, country)
             out.write_text(html, encoding='utf-8')
             created.append((str(out.relative_to(ROOT)), len(html)))
+    if skipped:
+        print(f"ℹ️  Пропущено {skipped} лендингов (нет контента для языков страны {prefix}) — это норма для новой страны.")
 
     print(f"Создано {len(created)} страниц:")
     for path, size in created:

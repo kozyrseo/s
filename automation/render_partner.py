@@ -239,13 +239,19 @@ def build_page(draft: dict, content: dict, lang: str = "ru", is_preview: bool = 
     p["exclude_attr"] = ",".join(str(c).strip().lower() for c in _ex)
     country = draft.get("country", "ua")
     base = f"https://kozyr.club/{country}"
+    # МУЛЬТИГЕО: локаль/hreflang строятся из страны + языка, а не жёстко ru-UA.
+    # ISO-код страны: из draft или UPPER(country) как фолбэк.
+    iso = (draft.get("iso_country") or country.upper())
+    # primary-язык страны (для основной версии): из draft или ru как фолбэк.
+    primary_lang = draft.get("primary_language") or "ru"
     if lang == "uk":
-        p["lang_tag"] = "uk-UA"
-        p["og_locale"] = "uk_UA"
+        p["lang_tag"] = f"uk-{iso}"
+        p["og_locale"] = f"uk_{iso}"
         p["canonical"] = f"{base}/uk/{p['kind']}/{draft['id']}/"
     else:
-        p["lang_tag"] = "ru-UA"
-        p["og_locale"] = "ru_UA"
+        # основная версия — на primary-языке страны (ru для UA, pl для PL...)
+        p["lang_tag"] = f"{primary_lang}-{iso}"
+        p["og_locale"] = f"{primary_lang}_{iso}"
         p["canonical"] = f"{base}/{p['kind']}/{draft['id']}/"
     html = Template(tpl).render(p=p, content=content, t=I18N.get(lang, I18N["ru"]))
     return _bump_js_versions(html)
