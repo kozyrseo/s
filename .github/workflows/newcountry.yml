@@ -74,6 +74,18 @@ jobs:
             python automation/apply_country_partners.py --code "$CODE" --job "$JOB" || true
           fi
 
+      - name: Generate partner HTML pages for the new country
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          # МУЛЬТИГЕО (Вариант Б): генерим живые HTML-страницы партнёров
+          # /{code}/rooms/{id}/index.html из данных byMarket, через
+          # существующий render_partner (тот же дизайн, что у Украины).
+          CODE="${{ inputs.code }}"
+          JOB=".bot_state/country_jobs/${CODE}.json"
+          python automation/rollout_partner_pages.py --code "$CODE" --job "$JOB" || true
+
       - name: Rebuild partners.js and llms.txt
         run: |
           python automation/build_partners.py || true
