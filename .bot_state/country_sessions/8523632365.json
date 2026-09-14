@@ -13,9 +13,10 @@
     "grombet",
     "tonpoker"
   ],
-  "partner_currencies": {},
+  "partner_currencies": {
+    "grombet": "PLN"
+  },
   "currency_queue": [
-    "grombet",
     "tonpoker"
   ]
 }
