@@ -451,8 +451,7 @@ def render_llms_full(partners: list[dict],
              "финансовой организацией или платёжной системой. Рейкбек, "
              "депозиты и выплаты ведёт сам рум или клуб напрямую с игроком.")
     L.append("")
-    L.append("География: сейчас основной фокус — Украина, расчёты в UAH, "
-             "поддержка на русском и украинском. В планах — Польша и Германия.")
+    L.append(_geo_line())
     L.append("")
 
     # Глоссарий
@@ -549,13 +548,61 @@ def render_llms_full(partners: list[dict],
 
 
 # ── main ───────────────────────────────────────────────────────────────────
-def build() -> tuple[str, str]:
+def _geo_line() -> str:
+    """Строка про географию для llms.txt — из РЕАЛЬНОГО списка стран.
+    МУЛЬТИГЕО: перечисляет все страны сайта с их валютами и языками.
+    Добавил страну → фраза обновилась сама (масштабируемо).
+    """
+    try:
+        from country_config import COUNTRY_CONFIG
+        from lang_texts import get_lang_texts
+        parts = []
+        for code, c in COUNTRY_CONFIG.items():
+            langs = c.get("languages", [])
+            cur = c.get("default_currency", "")
+            # коды языков через запятую (корректно в любом контексте)
+            parts.append(f"{c.get('name', code)} ({cur}, языки: {', '.join(langs)})")
+        if not parts:
+            return "География: Украина (UAH, русский, українська)."
+        return "География: " + "; ".join(parts) + "."
+    except Exception:
+        return "География: Украина (UAH, русский, українська)."
+
+
+def build(country: str = "ua") -> tuple[str, str]:
+    """Собирает llms.txt / llms-full.txt.
+
+    МУЛЬТИГЕО (частично): пути к блогу/таксономии и url-префиксы берутся из
+    фабрики get_cfg(lang, country) — единый источник правды, не хардкод.
+    Структура «RU + UK» пока сохранена для дефолтной страны (Украина);
+    полная мультистрановость (N стран в одном файле) — Этап 3, когда у стран
+    появится реальный контент для проверки.
+    """
+    from lang_config import get_cfg
+    from country_config import get_country
+
     partners = load_partners()
-    ru_articles = collect_articles(BLOG_RU_DIR, TAXONOMY_RU, "/ua/blog/")
-    uk_articles = collect_articles(BLOG_UK_DIR, TAXONOMY_UK, "/ua/uk/blog/")
+    ccfg = get_country(country)
+    langs = ccfg["languages"]
+    primary = ccfg["primary_language"]
+
+    # Пути и url-префиксы для primary и вторичного языка — из фабрики
+    def _articles_for(lang):
+        cfg = get_cfg(lang, country)
+        blog_dir = cfg["blog_dir"]
+        taxonomy = cfg["taxonomy"]
+        # url_prefix в конфиге = "/ua/blog" → для collect_articles нужен "/ua/blog/"
+        url_prefix = cfg["url_prefix"].rstrip("/") + "/"
+        return collect_articles(blog_dir, taxonomy, url_prefix)
+
+    primary_articles = _articles_for(primary)
+    # вторичный язык (в текущей модели — один, uk для Украины)
+    secondary_langs = [l for l in langs if l != primary]
+    secondary_articles = _articles_for(secondary_langs[0]) if secondary_langs else []
+
     return (
-        render_llms_txt(partners, ru_articles, uk_articles),
-        render_llms_full(partners, ru_articles, uk_articles),
+        render_llms_txt(partners, primary_articles, secondary_articles),
+        render_llms_full(partners, primary_articles, secondary_articles),
     )
 
 

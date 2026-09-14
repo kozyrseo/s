@@ -40,10 +40,21 @@ def discover_pending_versions(slug: str) -> dict[str, Path]:
     Возвращает: {"ru": Path("_pending/foo"), "uk": Path("_pending_uk/foo"), ...}
     """
     found = {}
-    for lang, cfg in LANG_CONFIG.items():
-        candidate = cfg["pending_dir"] / slug
+    # МУЛЬТИГЕО: LANG_CONFIG теперь содержит и составные ключи (ua_ru), и
+    # алиасы-по-языку (ru) — они указывают на одни pending_dir. Чтобы не найти
+    # одну статью дважды, итерируем по УНИКАЛЬНЫМ pending_dir, а ключ результата
+    # берём как чистый код языка (html_lang) — он нужен дальше для hreflang.
+    seen_dirs = set()
+    for key, cfg in LANG_CONFIG.items():
+        pending_dir = cfg["pending_dir"]
+        dir_str = str(pending_dir)
+        if dir_str in seen_dirs:
+            continue
+        seen_dirs.add(dir_str)
+        candidate = pending_dir / slug
         if candidate.exists() and (candidate / "meta.json").exists():
-            found[lang] = candidate
+            lang_code = cfg["html_lang"]  # чистый код языка (ru/uk), не составной
+            found[lang_code] = candidate
     return found
 
 

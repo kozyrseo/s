@@ -1299,21 +1299,24 @@ def publish_article(slug: str, cli_lang: str | None = None) -> int:
 
     # Resolve final language and load its config (prompt+taxonomy must exist)
     lang = _resolve_lang_from_meta(meta, cli_lang)
+    # МУЛЬТИГЕО: страна из meta.json (кладётся генератором). Fallback "ua" для
+    # старых статей без поля. Вместе с lang даёт точный конфиг страны.
+    country = meta.get("country") or "ua"
     try:
         # Only validate taxonomy file exists — system_prompt isn't needed at
         # publish time, but the centralized validator checks both. We catch
         # the system_prompt error specifically because it's harmless here.
-        if not get_cfg(lang)["taxonomy"].exists():
+        if not get_cfg(lang, country)["taxonomy"].exists():
             print(
-                f"❌ Taxonomy for lang={lang!r} not found at {get_cfg(lang)['taxonomy']}.",
+                f"❌ Taxonomy for lang={lang!r} country={country!r} not found at {get_cfg(lang, country)['taxonomy']}.",
                 file=sys.stderr,
             )
             return 1
     except ValueError as e:
         print(f"❌ {e}", file=sys.stderr)
         return 1
-    lang_cfg = get_cfg(lang)
-    print(f"ℹ️  Publishing as lang={lang!r} from {pending_dir}")
+    lang_cfg = get_cfg(lang, country)
+    print(f"ℹ️  Publishing as lang={lang!r} country={country!r} from {pending_dir}")
 
     md_text = body_md_path.read_text(encoding="utf-8")
 

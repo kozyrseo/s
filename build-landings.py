@@ -29,37 +29,64 @@ def logo_svg():
     return '<span class="logo-mark" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="ki1" x1="505" y1="628" x2="596" y2="628" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#14358F"/><stop offset="1" stop-color="#2A6BFF"/></linearGradient></defs><g transform="translate(-30.13,-28.03) scale(0.09558)"><g transform="translate(0.000000,1254.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none"><path d="M3770 6260 l0 -3090 650 0 650 0 1 1068 c1 587 1 1071 0 1076 -3 16 -32 42 583 -519 198 -180 547 -499 775 -709 228 -209 547 -501 708 -649 l294 -267 905 0 c497 0 904 2 904 4 0 5 18 -12 -530 502 -228 214 -562 526 -740 694 -425 398 -844 786 -1006 931 -71 63 -228 203 -349 310 -376 334 -500 446 -581 524 l-79 75 66 63 c339 322 703 669 789 752 58 55 197 188 310 295 113 107 311 296 440 420 129 124 368 351 530 505 162 154 389 370 505 481 115 110 308 292 428 404 119 113 217 208 217 212 0 4 -405 8 -901 8 l-901 0 -132 -128 c-471 -459 -1377 -1326 -1841 -1762 -143 -134 -290 -273 -327 -308 -36 -36 -66 -58 -66 -51 1 8 0 517 0 1132 l-2 1117 -650 0 -650 0 0 -3090z" fill="#2668FF"/></g></g></svg></span>'
 
 
-def render_header(lang, current_slug):
-    """Header nav + language switcher"""
+def render_header(lang, current_slug, country='ua'):
+    """Header nav + language switcher.
+
+    МУЛЬТИГЕО: пути строятся из country + языкового сегмента. Тексты навигации
+    сохранены как есть (лендинговая структура: Каталог/Рейкбек/Сравнение/
+    PokerBet/KlubOk) — для новой страны названия партнёров/пути подставятся
+    по тем же правилам. Для Украины вывод байт-в-байт идентичен прежнему.
+    """
+    from country_config import get_country
+    ccfg = get_country(country)
+    prefix = ccfg['url_prefix'].rstrip('/')                 # "/ua"
+    primary = ccfg['primary_language']
+    # языковой сегмент: primary → "", вторичный → "{lang}/"
+    seg = '' if lang == primary else f'{lang}/'
+    base = f'{prefix}/{seg}'.rstrip('/')                    # "/ua" или "/ua/uk"
+    home = f'{base}/'                                       # "/ua/" или "/ua/uk/"
+    iso = ccfg['iso_country']                               # "UA"
+
+    # hreflang-метки для переключателя (по primary + вторичным)
+    langs = ccfg['languages']
+    hreflang = f'{lang}-{iso}'
+
     if lang == 'uk':
         aria = 'KOZYR — на головну'
         nav = [
-            ('/ua/uk/',              'Каталог'),
-            ('/ua/uk/#rakeback',     'Рейкбек'),
-            ('/ua/uk/#compare',      'Порівняння'),
-            ('/ua/uk/rooms/pokerbet/', 'PokerBet'),
-            ('/ua/uk/clubs/klubok/',   'KlubOk'),
+            (f'{base}/',              'Каталог'),
+            (f'{base}/#rakeback',     'Рейкбек'),
+            (f'{base}/#compare',      'Порівняння'),
+            (f'{base}/rooms/pokerbet/', 'PokerBet'),
+            (f'{base}/clubs/klubok/',   'KlubOk'),
         ]
         cta = 'Відкрити каталог'
-        ru_href = f'/ua/rooms/{current_slug}/'
-        uk_href = f'/ua/uk/rooms/{current_slug}/'
-        home = '/ua/uk/'
     else:
         aria = 'KOZYR — на главную'
         nav = [
-            ('/ua/',              'Каталог'),
-            ('/ua/#rakeback',     'Рейкбек'),
-            ('/ua/#compare',      'Сравнение'),
-            ('/ua/rooms/pokerbet/', 'PokerBet'),
-            ('/ua/clubs/klubok/',   'KlubOk'),
+            (f'{base}/',              'Каталог'),
+            (f'{base}/#rakeback',     'Рейкбек'),
+            (f'{base}/#compare',      'Сравнение'),
+            (f'{base}/rooms/pokerbet/', 'PokerBet'),
+            (f'{base}/clubs/klubok/',   'KlubOk'),
         ]
         cta = 'Открыть каталог'
-        ru_href = f'/ua/rooms/{current_slug}/'
-        uk_href = f'/ua/uk/rooms/{current_slug}/'
-        home = '/ua/'
+
+    # Переключатель языков: строим ссылки на все языки страны.
+    # Для 2-язычной модели (ru/uk) — как раньше. Метки: RU для ru, UA для uk.
+    lang_labels = {'ru': 'RU', 'uk': 'UA'}
+    lang_links = []
+    for l in langs:
+        l_seg = '' if l == primary else f'{l}/'
+        l_href = f'{prefix}/{l_seg}rooms/{current_slug}/'
+        l_cls = ' aria-current="page"' if l == lang else ''
+        l_label = lang_labels.get(l, l.upper())
+        lang_links.append(
+            f'<a href="{l_href}" hreflang="{l}-{iso}" lang="{l}"{l_cls}>{l_label}</a>'
+        )
+    lang_html = ''.join(lang_links)
+
     nav_html = '\n      '.join(f'<a href="{h}">{t}</a>' for h, t in nav)
-    ru_class = ' aria-current="page"' if lang == 'ru' else ''
-    uk_class = ' aria-current="page"' if lang == 'uk' else ''
     return f'''<header class="header" role="banner">
   <div class="container header-inner">
     <a href="{home}" class="logo" aria-label="{aria}">
@@ -76,27 +103,33 @@ def render_header(lang, current_slug):
     <nav class="nav" aria-label="{'Основна навігація' if lang == 'uk' else 'Основная навигация'}">
       {nav_html}
     </nav>
-    <div class="lang" role="group" aria-label="{'Вибір мови' if lang == 'uk' else 'Выбор языка'}"><a href="{ru_href}" hreflang="ru-UA" lang="ru"{ru_class}>RU</a><a href="{uk_href}" hreflang="uk-UA" lang="uk"{uk_class}>UA</a></div>
+    <div class="lang" role="group" aria-label="{'Вибір мови' if lang == 'uk' else 'Выбор языка'}">{lang_html}</div>
     <a href="{home}" class="header-cta">{cta}</a>
   </div>
 </header>'''
 
 
-def render_footer(lang):
+def render_footer(lang, country='ua'):
+    from country_config import get_country
+    ccfg = get_country(country)
+    prefix = ccfg['url_prefix'].rstrip('/')
+    primary = ccfg['primary_language']
+    seg = '' if lang == primary else f'{lang}/'
+    base = f'{prefix}/{seg}'.rstrip('/')                    # "/ua" или "/ua/uk"
     if lang == 'uk':
         about = 'KOZYR — вітрина рейкбек-угод. Каталог румів та клубів, чесні умови, прямі партнерські посилання. Рейкбек нараховує і виплачує сам рум або клуб.'
         h1_label = 'Розділи'
         h2_label = 'Проєкт'
         sections = [
-            ('/ua/uk/',                'Каталог угод'),
-            ('/ua/uk/rooms/pokerbet/', 'PokerBet'),
-            ('/ua/uk/clubs/klubok/',   'KlubOk'),
-            ('/ua/uk/#compare',        'Порівняння'),
+            (f'{base}/',                'Каталог угод'),
+            (f'{base}/rooms/pokerbet/', 'PokerBet'),
+            (f'{base}/clubs/klubok/',   'KlubOk'),
+            (f'{base}/#compare',        'Порівняння'),
         ]
         project = [
-            ('/ua/uk/blog/', 'Блог'),
-            ('/ua/uk/#faq',  'FAQ'),
-            ('/ua/uk/legal/', 'Правова інформація'),
+            (f'{base}/blog/', 'Блог'),
+            (f'{base}/#faq',  'FAQ'),
+            (f'{base}/legal/', 'Правова інформація'),
         ]
         bottom = '© 2026 KOZYR · Вітрина рейкбек-угод'
     else:
@@ -104,15 +137,15 @@ def render_footer(lang):
         h1_label = 'Разделы'
         h2_label = 'Проект'
         sections = [
-            ('/ua/',                'Каталог сделок'),
-            ('/ua/rooms/pokerbet/', 'PokerBet'),
-            ('/ua/clubs/klubok/',   'KlubOk'),
-            ('/ua/#compare',        'Сравнение'),
+            (f'{base}/',                'Каталог сделок'),
+            (f'{base}/rooms/pokerbet/', 'PokerBet'),
+            (f'{base}/clubs/klubok/',   'KlubOk'),
+            (f'{base}/#compare',        'Сравнение'),
         ]
         project = [
-            ('/ua/blog/', 'Блог'),
-            ('/ua/#faq',  'FAQ'),
-            ('/ua/legal/', 'Правовая информация'),
+            (f'{base}/blog/', 'Блог'),
+            (f'{base}/#faq',  'FAQ'),
+            (f'{base}/legal/', 'Правовая информация'),
         ]
         bottom = '© 2026 KOZYR · Витрина рейкбек-сделок'
 
@@ -390,7 +423,7 @@ LANDINGS = [
 # Рендер одной landing-страницы
 # ============================================================================
 
-def render_page(cfg, lang):
+def render_page(cfg, lang, country='ua'):
     slug = cfg['slug']
     c = cfg[lang]
     # Партнёры на лендинге: приоритет АВТО-фильтру по свойствам (data-filter),
@@ -403,18 +436,26 @@ def render_page(cfg, lang):
     else:
         partners_attr = ''
     is_uk = lang == 'uk'
-    lang_code = 'uk' if is_uk else 'ru'
-    hreflang_self = 'uk-UA' if is_uk else 'ru-UA'
-    url_path = f'/ua/uk/rooms/{slug}/' if is_uk else f'/ua/rooms/{slug}/'
+    lang_code = lang
+    # МУЛЬТИГЕО: пути и hreflang строятся из страны
+    from country_config import get_country
+    _ccfg = get_country(country)
+    _prefix = _ccfg['url_prefix'].rstrip('/')
+    _primary = _ccfg['primary_language']
+    _iso = _ccfg['iso_country']
+    _seg = '' if lang == _primary else f'{lang}/'
+    _base = f'{_prefix}/{_seg}'.rstrip('/')                  # "/ua" или "/ua/uk"
+    hreflang_self = f'{lang}-{_iso}'
+    url_path = f'{_base}/rooms/{slug}/'
     url_full = BASE_URL + url_path
 
     # Хлебные крошки: Главная > Румы > <slug>
     if is_uk:
-        crumbs_home = ('/ua/uk/', 'Головна')
-        crumbs_rooms = ('/ua/uk/', 'Каталог')  # /ua/uk/rooms/ ещё нет как страницы
+        crumbs_home = (f'{_base}/', 'Головна')
+        crumbs_rooms = (f'{_base}/', 'Каталог')  # rooms-хаб как отдельная страница ещё нет
     else:
-        crumbs_home = ('/ua/', 'Главная')
-        crumbs_rooms = ('/ua/', 'Каталог')
+        crumbs_home = (f'{_base}/', 'Главная')
+        crumbs_rooms = (f'{_base}/', 'Каталог')
 
     # SEO текст
     why_html = '\n        '.join(f'<p>{para}</p>' for para in c['why'])
@@ -482,9 +523,9 @@ def render_page(cfg, lang):
 <meta name="description" content="{c['description']}">
 
 <link rel="canonical" href="{url_full}">
-<link rel="alternate" hreflang="ru-UA" href="{BASE_URL}/ua/rooms/{slug}/">
-<link rel="alternate" hreflang="uk-UA" href="{BASE_URL}/ua/uk/rooms/{slug}/">
-<link rel="alternate" hreflang="x-default" href="{BASE_URL}/ua/rooms/{slug}/">
+<link rel="alternate" hreflang="{_ccfg['primary_language']}-{_iso}" href="{BASE_URL}{_prefix}/rooms/{slug}/">
+<link rel="alternate" hreflang="{[l for l in _ccfg['languages'] if l != _primary][0]}-{_iso}" href="{BASE_URL}{_prefix}/{[l for l in _ccfg['languages'] if l != _primary][0]}/rooms/{slug}/">
+<link rel="alternate" hreflang="x-default" href="{BASE_URL}{_prefix}/rooms/{slug}/">
 
 <!-- Favicon -->
 <link rel="icon" href="/favicon.ico" sizes="any">
@@ -715,7 +756,7 @@ def render_page(cfg, lang):
 
 <a class="skip-link" href="#main">{'Перейти до основного вмісту' if is_uk else 'Перейти к основному содержанию'}</a>
 
-{render_header(lang, slug)}
+{render_header(lang, slug, country)}
 
 <nav class="breadcrumbs" aria-label="{'Хлібні крихти' if is_uk else 'Хлебные крошки'}">
   <div class="container">
@@ -785,14 +826,14 @@ def render_page(cfg, lang):
       <div class="landing-cta">
         <h2>{c['cta_h']}</h2>
         <p>{c['cta_desc']}</p>
-        <a class="btn" href="{'/ua/uk/#partners' if is_uk else '/ua/#partners'}">{c['cta_btn']}</a>
+        <a class="btn" href="{_base}/#partners">{c['cta_btn']}</a>
       </div>
     </div>
   </section>
 
 </main>
 
-{render_footer(lang)}
+{render_footer(lang, country)}
 
 <script defer src="/partners.js?v=20260829"></script>
 <script defer src="/assets/kozyr-geo.js?v=20260829"></script>
@@ -807,16 +848,31 @@ def render_page(cfg, lang):
 # ============================================================================
 
 if __name__ == '__main__':
+    import sys
+    from country_config import get_country, resolve_langs_for_country
+
+    # МУЛЬТИГЕО: страна из аргумента (--country xx) или "ua" по умолчанию.
+    country = 'ua'
+    for i, a in enumerate(sys.argv):
+        if a == '--country' and i + 1 < len(sys.argv):
+            country = sys.argv[i + 1]
+
+    ccfg = get_country(country)
+    prefix = ccfg['url_prefix'].strip('/')                  # "ua"
+    primary = ccfg['primary_language']
+    langs = resolve_langs_for_country(country)
+
     created = []
     for cfg in LANDINGS:
-        for lang in ('ru', 'uk'):
+        for lang in langs:
             slug = cfg['slug']
-            if lang == 'ru':
-                out = ROOT / 'ua' / 'rooms' / slug / 'index.html'
+            seg = '' if lang == primary else lang
+            if seg:
+                out = ROOT / prefix / seg / 'rooms' / slug / 'index.html'
             else:
-                out = ROOT / 'ua' / 'uk' / 'rooms' / slug / 'index.html'
+                out = ROOT / prefix / 'rooms' / slug / 'index.html'
             out.parent.mkdir(parents=True, exist_ok=True)
-            html = render_page(cfg, lang)
+            html = render_page(cfg, lang, country)
             out.write_text(html, encoding='utf-8')
             created.append((str(out.relative_to(ROOT)), len(html)))
 

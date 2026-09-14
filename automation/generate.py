@@ -470,6 +470,10 @@ def save_article(article: dict, topic: dict, lang_cfg, lang: str) -> tuple[Path,
         # if the field is missing (older _pending/ dirs).
         "url_slug": url_slug,
         "lang": lang,
+        # `country` (added for multigeo): publish.py uses it together with
+        # `lang` to resolve the correct country-specific config via
+        # get_cfg(lang, country). Falls back to "ua" for older dirs.
+        "country": topic.get("country") or "ua",
         "translation_of": article.get("translation_of") or topic.get("translation_of") or None,
         "meta_title": article["meta_title"],
         "meta_description": article["meta_description"],

@@ -1,0 +1,21 @@
+{
+  "_meta": {
+    "purpose": "KOZYR — единая точка правды о СТРАНАХ (мультигео). Читается country_config.py.",
+    "note": "Паспорт страны: name, flag, languages, primary_language, url_prefix, iso_country, default_currency. Первый язык в languages = primary.",
+    "version": "1.0"
+  },
+  "countries": {
+    "ua": {
+      "name": "Украина",
+      "flag": "🇺🇦",
+      "languages": [
+        "ru",
+        "uk"
+      ],
+      "primary_language": "ru",
+      "url_prefix": "/ua",
+      "iso_country": "UA",
+      "default_currency": "UAH"
+    }
+  }
+}

@@ -38,6 +38,10 @@ class CountryCfg(TypedDict):
     languages: list[str]         # Все языки страны, порядок ВАЖЕН: [0] = primary
     primary_language: str        # Дублируется отдельно для явности
     url_prefix: str              # Корневой путь страны ("/ua")
+    iso_country: str             # ISO-3166 код страны для локалей ("UA" → ru_UA, ru-UA)
+    default_currency: str        # Дефолтная валюта страны ("UAH") — подсказка мастеру
+                                 # при раскатке партнёра. Не жёсткое правило:
+                                 # крипто-румы (USDT) валюту не меняют.
 
 
 COUNTRY_CONFIG: dict[str, CountryCfg] = {
@@ -47,24 +51,37 @@ COUNTRY_CONFIG: dict[str, CountryCfg] = {
         "languages": ["ru", "uk"],
         "primary_language": "ru",
         "url_prefix": "/ua",
+        "iso_country": "UA",
+        "default_currency": "UAH",
     },
-    # Заготовки на будущее — раскомментируй когда будешь запускать регион:
-    #
-    # "pl": {
-    #     "name": "Польша",
-    #     "flag": "🇵🇱",
-    #     "languages": ["pl", "uk"],
-    #     "primary_language": "pl",
-    #     "url_prefix": "/pl",
-    # },
-    # "kz": {
-    #     "name": "Казахстан",
-    #     "flag": "🇰🇿",
-    #     "languages": ["ru", "kk"],
-    #     "primary_language": "ru",
-    #     "url_prefix": "/kz",
-    # },
 }
+
+# ─────────────────────────────────────────────────────────────────────────
+# МУЛЬТИГЕО: страны подгружаются из data/countries.json (единая точка правды,
+# редактируется программно — генератором страны и ботом, как partners.json).
+# Встроенный словарь выше — fallback/эталон (Украина всегда доступна, даже
+# если JSON повреждён). JSON-страны ДОПОЛНЯЮТ/переопределяют встроенные.
+# ─────────────────────────────────────────────────────────────────────────
+def _load_countries_json() -> None:
+    import json
+    from pathlib import Path
+    json_path = Path(__file__).resolve().parent / "data" / "countries.json"
+    if not json_path.exists():
+        return  # нет файла — работаем на встроенном словаре (Украина)
+    try:
+        data = json.loads(json_path.read_text(encoding="utf-8"))
+        countries = data.get("countries", {})
+        for code, cfg in countries.items():
+            # JSON — источник правды; переопределяет/добавляет
+            COUNTRY_CONFIG[code] = cfg
+    except Exception as e:
+        # Повреждённый JSON не должен ронять весь пайплайн — остаётся fallback
+        import sys
+        print(f"⚠️  countries.json не прочитан ({e}) — использую встроенный конфиг",
+              file=sys.stderr)
+
+
+_load_countries_json()
 
 
 def get_country(country_code: str) -> CountryCfg:

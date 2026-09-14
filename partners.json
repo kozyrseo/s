@@ -1,9 +1,12 @@
 {
   "_meta": {
     "purpose": "KOZYR — ЕДИНАЯ точка правды о партнёрах. Редактируй ТОЛЬКО этот файл. partners.js генерируется автоматически через build_partners.py.",
-    "version": "2.0",
+    "version": "2.1",
     "count": 4,
-    "warning": "НЕ редактируй partners.js вручную — он пересобирается из этого файла!"
+    "warning": "НЕ редактируй partners.js вручную — он пересобирается из этого файла!",
+    "fields_doc": {
+      "markets": "Список стран (коды), где партнёр РАСКАТАН/годится. Бот предлагает партнёра для страны, если она в markets. Явный контроль раскатки."
+    }
   },
   "partners": [
     {
@@ -91,7 +94,10 @@
       },
       "type": "room",
       "networkLabel": "PokerBet",
-      "country": "ua"
+      "country": "ua",
+      "markets": [
+        "ua"
+      ]
     },
     {
       "id": "klubok",
@@ -192,7 +198,10 @@
       },
       "type": "club",
       "networkLabel": "ClubGG",
-      "country": "ua"
+      "country": "ua",
+      "markets": [
+        "ua"
+      ]
     },
     {
       "id": "tonpoker",
@@ -276,7 +285,10 @@
             false
           ]
         ]
-      }
+      },
+      "markets": [
+        "ua"
+      ]
     },
     {
       "id": "grombet",
@@ -377,7 +389,10 @@
             false
           ]
         ]
-      }
+      },
+      "markets": [
+        "ua"
+      ]
     }
   ]
 }

@@ -96,7 +96,10 @@
         },
         "type": "room",
         "networkLabel": "PokerBet",
-        "country": "ua"
+        "country": "ua",
+        "markets": [
+              "ua"
+        ]
   },
   {
         "id": "klubok",
@@ -198,7 +201,10 @@
         },
         "type": "club",
         "networkLabel": "ClubGG",
-        "country": "ua"
+        "country": "ua",
+        "markets": [
+              "ua"
+        ]
   },
   {
         "id": "tonpoker",
@@ -282,7 +288,10 @@
                           false
                     ]
               ]
-        }
+        },
+        "markets": [
+              "ua"
+        ]
   },
   {
         "id": "grombet",
@@ -383,7 +392,10 @@
                           false
                     ]
               ]
-        }
+        },
+        "markets": [
+              "ua"
+        ]
   }
   ];
 
@@ -399,13 +411,44 @@ window.KOZYR_PARTNERS = PARTNERS;
     });
   }
 
-  /* Язык текущей страницы: 'uk' для украинских страниц, иначе 'ru'.
-     Определяем по <html lang> и по пути (/ua/uk/...). */
+  /* Язык текущей страницы. Раньше: только 'uk' для /ua/uk/, иначе 'ru'.
+     Теперь (мультигео): читаем <html lang> для ЛЮБОГО языка (pl, kk, de…),
+     с фолбэком на путь. Для Украины поведение прежнее: /ua/uk/ → uk, /ua/ → ru. */
   function pageLang() {
     var htmlLang = (document.documentElement.getAttribute("lang") || "").toLowerCase();
-    if (htmlLang.indexOf("uk") === 0) return "uk";
+    if (htmlLang) return htmlLang.slice(0, 2);
+    // фолбэк по пути (на случай отсутствия lang)
     if (/\/ua\/uk(\/|$)/.test(location.pathname)) return "uk";
+    var m = location.pathname.match(/^\/([a-z]{2})\/([a-z]{2})(\/|$)/);
+    if (m) return m[2];
     return "ru";
+  }
+
+  /* Страна текущей страницы по URL: /pl/… → 'pl', /ua/… → 'ua'.
+     МУЛЬТИГЕО: определяет, какой набор данных партнёра (byMarket) показывать. */
+  function pageCountry() {
+    var m = location.pathname.match(/^\/([a-z]{2})(\/|$)/);
+    return m ? m[1] : "ua";
+  }
+
+  /* Данные партнёра для ТЕКУЩЕЙ страны.
+     МУЛЬТИГЕО: если у партнёра есть byMarket[страна] — берём оттуда
+     (валюта, card, url, note этой страны). Иначе — плоские поля партнёра
+     (обратная совместимость: Украина работает как раньше, без byMarket).
+     Возвращает объект с полями card/url/currency/note для текущей страны. */
+  function marketData(p) {
+    var c = pageCountry();
+    if (p.byMarket && p.byMarket[c]) {
+      var m = p.byMarket[c];
+      // подмешиваем к базовому партнёру рыночные поля (не мутируя оригинал)
+      return {
+        card: m.card || p.card,
+        url: m.url || p.url,
+        currency: m.currency || p.currency,
+        note: m.note || p.note,
+      };
+    }
+    return { card: p.card, url: p.url, currency: p.currency, note: p.note };
   }
 
   /* URL партнёра с учётом языка страницы.
@@ -414,13 +457,20 @@ window.KOZYR_PARTNERS = PARTNERS;
      ссылка локализуется автоматически, если UK-версия страницы существует по
      стандартному пути. Если структура нестандартная — задай p.urlUk явно. */
   function partnerUrl(p) {
-    if (pageLang() !== "uk") return p.url;
-    if (p.urlUk) return p.urlUk;
-    // /ua/rooms/pokerbet/ → /ua/uk/rooms/pokerbet/  (но не трогаем уже-uk)
-    if (/^\/ua\/(?!uk\/)/.test(p.url)) {
-      return p.url.replace(/^\/ua\//, "/ua/uk/");
+    var md = marketData(p);
+    // Если есть byMarket с явным url для текущей страны — используем его как есть
+    // (он уже содержит правильный /pl/... путь).
+    var c = pageCountry();
+    if (p.byMarket && p.byMarket[c] && p.byMarket[c].url) {
+      return p.byMarket[c].url;
     }
-    return p.url;
+    // Иначе — старая логика Украины: ru → p.url, uk → локализуем /ua/ → /ua/uk/
+    if (pageLang() !== "uk") return md.url;
+    if (p.urlUk) return p.urlUk;
+    if (/^\/ua\/(?!uk\/)/.test(md.url)) {
+      return md.url.replace(/^\/ua\//, "/ua/uk/");
+    }
+    return md.url;
   }
   // ── Локализация витрины каталога RU→UK ──
   // Метки/единицы/CTA карточек хранятся в partners.json по-русски. На
@@ -451,7 +501,9 @@ window.KOZYR_PARTNERS = PARTNERS;
   }
 
   function cardHTML(p) {
-    var c = p.card || {};
+    // МУЛЬТИГЕО: карточка берётся для текущей страны (byMarket) или плоская
+    // (Украина). Логотип — общий (лежит в /ua/blog/logos/, не зависит от страны).
+    var c = marketData(p).card || {};
     var rows = (c.rows || []).map(function (r) {
       var label = r[0];
       var val = r[1] === "rake" ? rakeText(p) : r[1];
@@ -480,6 +532,20 @@ window.KOZYR_PARTNERS = PARTNERS;
     if (!boxes.length) return;
     boxes.forEach(function (box) {
       var list = PARTNERS.slice();
+
+      // МУЛЬТИГЕО: показываем только партнёров, РАСКАТАННЫХ на текущую страну.
+      // Украина (дефолт) — партнёры без byMarket (плоские) видны как раньше.
+      // Другая страна (/pl/…) — только те, у кого есть byMarket[страна] ИЛИ
+      // страна указана в markets. Так на польской странице не появятся
+      // украинские партнёры, не раскатанные на Польшу.
+      var _country = pageCountry();
+      if (_country !== "ua") {
+        list = list.filter(function (p) {
+          if (p.byMarket && p.byMarket[_country]) return true;
+          if (Array.isArray(p.markets) && p.markets.indexOf(_country) !== -1) return true;
+          return false;
+        });
+      }
 
       // Фильтр по ТИПУ партнёра (для страниц-каталогов):
       //   data-partner-type="club"  → только клубы (access === "club")
@@ -522,7 +588,9 @@ window.KOZYR_PARTNERS = PARTNERS;
               var want = (parts[1] || "").trim();
               if (!key || !want) return true;
               key = KEY_ALIAS[key] || key;
-              var val = p[key];
+              // МУЛЬТИГЕО: currency берём для ТЕКУЩЕЙ страны (byMarket), не плоское.
+              // Так фильтр «currency:PLN» на /pl/ отберёт партнёров со злотыми.
+              var val = (key === "currency") ? marketData(p).currency : p[key];
               // Массивы (limits, software, games, payments, bonus) — ищем вхождение.
               if (Array.isArray(val)) {
                 return val.some(function (x) {

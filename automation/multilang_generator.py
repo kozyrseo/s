@@ -410,11 +410,11 @@ def run_multilang_pipeline(topic: dict, force: bool = False) -> dict:
     print(f"Primary: {primary_lang}, others: {other_langs or 'нет'}")
     print(f"Тема: {topic.get('topic', '')!r}\n")
 
-    # 1. Валидируем конфиги для всех языков
+    # 1. Валидируем конфиги для всех языков (с учётом страны — мультигео)
     for lang in langs:
-        validate_cfg_files_exist(lang)
+        validate_cfg_files_exist(lang, country_code)
 
-    lang_cfgs = {lang: get_cfg(lang) for lang in langs}
+    lang_cfgs = {lang: get_cfg(lang, country_code) for lang in langs}
 
     # 2. Генерим primary
     result = generate_primary_article(

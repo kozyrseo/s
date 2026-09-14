@@ -298,11 +298,28 @@ def _games_label(games):
                      for x in (games or []))
 
 
+def currency_for_market(draft: dict, country: str = "") -> str:
+    """Валюта партнёра для показа на странице конкретной СТРАНЫ.
+
+    МУЛЬТИГЕО: один партнёр может быть раскатан на несколько стран с РАЗНОЙ
+    валютой (grombet: UAH на /ua/, PLN на /pl/). Валюта-по-рынку хранится в
+    draft["currencyByMarket"] = {"ua": "UAH", "pl": "PLN"}.
+
+    Порядок: currencyByMarket[country] → currency (общая) → "USDT".
+    Украина не ломается: если currencyByMarket нет, используется старое currency.
+    """
+    cbm = draft.get("currencyByMarket") or {}
+    c = (country or draft.get("country") or "ua")
+    if c in cbm and cbm[c]:
+        return str(cbm[c])
+    return str(draft.get("currency", "USDT"))
+
+
 def build_card_rows(draft):
     """Строки карточки каталога (до 5) из анкеты."""
     rows = [
         ["Рейкбек", _rake_label(draft), True],
-        ["Валюта", str(draft.get("currency", "USDT")), False],
+        ["Валюта", currency_for_market(draft), False],
     ]
     if draft.get("minDeposit"):
         rows.append(["Мин. депозит", draft["minDeposit"], False])
@@ -331,7 +348,9 @@ def build_partner_object(draft):
         # анкете. Используется в llms.txt и как источник точной прозы для ИИ.
         **({"rakeText": draft["rakeText"]} if draft.get("rakeText") else {}),
         **({"rakeLabel": draft["rakeLabel"]} if draft.get("rakeLabel") else {}),
-        "currency": draft.get("currency", "USDT"),
+        "currency": currency_for_market(draft),
+        **({"currencyByMarket": draft["currencyByMarket"]}
+           if draft.get("currencyByMarket") else {}),
         "license": draft.get("license", ""),
         "url": "/" + partner_path(draft) + "/",
         "access": draft.get("access", "direct"),

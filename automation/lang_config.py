@@ -111,7 +111,13 @@ SITE_URL = "https://kozyr.club"
 TELEGRAM_ENABLED = True
 
 
-LANG_CONFIG: dict[str, LangCfg] = {
+# ─────────────────────────────────────────────────────────────────────────
+# _LEGACY_LANG_CONFIG — исторический статичный словарь (эталон для Украины).
+# СОХРАНЁН как резерв/эталон. Актуальный LANG_CONFIG ниже строится ФАБРИКОЙ
+# (make_lang_cfg) из country_config + lang_texts — это масштабируемая модель.
+# Не удаляем: используется для сверки байт-в-байт и как аварийный откат.
+# ─────────────────────────────────────────────────────────────────────────
+_LEGACY_LANG_CONFIG: dict[str, LangCfg] = {
     # Ключ "ru" исторический (первый язык проекта) — сейчас это
     # "украинская русскоязычная" версия. При переходе на мульти-страны
     # роль языка определяется в country_config.py, а этот ключ остаётся
@@ -280,18 +286,90 @@ LANG_CONFIG: dict[str, LangCfg] = {
 }
 
 
-def get_cfg(lang: str) -> LangCfg:
-    if lang not in LANG_CONFIG:
-        valid = ", ".join(sorted(LANG_CONFIG.keys()))
+# ─────────────────────────────────────────────────────────────────────────
+# LANG_CONFIG — АВТОГЕНЕРИРУЕМЫЙ из фабрики для ВСЕХ стран и языков.
+# ─────────────────────────────────────────────────────────────────────────
+# Ключи:
+#   • составной "{country}_{lang}" для каждой (страна, язык) пары
+#     (ua_ru, ua_uk, + будущие pl_pl, kz_ru, kz_kk...)
+#   • алиасы-по-языку для дефолтной страны (Украина): "ru"→ua_ru, "uk"→ua_uk
+#     — сохраняют обратную совместимость со всем существующим кодом.
+#
+# Любой код, итерирующий LANG_CONFIG.items(), автоматически увидит все страны.
+# Добавление страны в country_config.py → появляется здесь без правок кода.
+def _build_lang_config() -> dict[str, "LangCfg"]:
+    from country_config import COUNTRY_CONFIG, build_lang_key
+    from lang_factory import make_lang_cfg
+
+    result: dict[str, LangCfg] = {}
+    default_country = "ua"
+
+    for country_code, ccfg in COUNTRY_CONFIG.items():
+        for lang in ccfg["languages"]:
+            try:
+                cfg = make_lang_cfg(country_code, lang)
+            except KeyError:
+                # Язык страны ещё без UI-текстов (напр. страна только что
+                # добавлена в countries.json, а тексты пишутся тем же процессом).
+                # Пропускаем — соберётся при следующем импорте (новый процесс
+                # workflow прочитает уже полные файлы). Не роняем весь конфиг.
+                import sys
+                print(f"⚠️  Пропущен {country_code}/{lang}: нет UI-текстов "
+                      f"(соберётся при следующем запуске)", file=sys.stderr)
+                continue
+            # составной ключ (ua_ru, ua_uk, kz_ru...)
+            composite = f"{country_code}_{lang}"
+            result[composite] = cfg
+            # алиас-по-языку ТОЛЬКО для дефолтной страны (обратная совместимость)
+            if country_code == default_country and lang not in result:
+                result[lang] = cfg
+
+    return result
+
+
+LANG_CONFIG: dict[str, LangCfg] = _build_lang_config()
+
+
+def get_cfg(lang: str, country: str | None = None) -> LangCfg:
+    """Конфиг языковой версии.
+
+    МУЛЬТИГЕО-МОДЕЛЬ: конфиг собирается фабрикой make_lang_cfg(country, lang)
+    из country_config + lang_texts. Это позволяет одному языку (напр. ru)
+    работать в нескольких странах без коллизий путей.
+
+    Обратная совместимость: get_cfg("ru") без страны → резолвится в дефолтную
+    страну (Украина), т.е. ведёт себя как исторический LANG_CONFIG["ru"].
+
+    Явный вызов: get_cfg("ru", country="ua") или get_cfg("kk", country="kz").
+    """
+    from country_config import country_of_lang, COUNTRY_CONFIG
+
+    # Определяем страну: явная > поиск по языку > дефолт "ua"
+    resolved_country = country
+    if resolved_country is None:
+        resolved_country = country_of_lang(lang)  # первая страна с этим языком
+    if resolved_country is None:
+        resolved_country = "ua"  # дефолт для полной обратной совместимости
+
+    if resolved_country not in COUNTRY_CONFIG:
+        valid = ", ".join(sorted(COUNTRY_CONFIG.keys()))
         raise ValueError(
-            f"Неизвестный язык: {lang!r}. Доступны: {valid}. "
-            f"Добавь язык в automation/lang_config.py LANG_CONFIG."
+            f"Неизвестная страна: {resolved_country!r}. Доступны: {valid}. "
+            f"Добавь страну в automation/country_config.py COUNTRY_CONFIG."
         )
-    return LANG_CONFIG[lang]
+    if lang not in COUNTRY_CONFIG[resolved_country]["languages"]:
+        valid = ", ".join(COUNTRY_CONFIG[resolved_country]["languages"])
+        raise ValueError(
+            f"Язык {lang!r} не входит в страну {resolved_country!r} "
+            f"(её языки: {valid}). Проверь country_config.py."
+        )
+
+    from lang_factory import make_lang_cfg
+    return make_lang_cfg(resolved_country, lang)
 
 
-def validate_cfg_files_exist(lang: str) -> None:
-    cfg = get_cfg(lang)
+def validate_cfg_files_exist(lang: str, country: str | None = None) -> None:
+    cfg = get_cfg(lang, country)
     if not cfg["system_prompt"].exists():
         raise FileNotFoundError(
             f"System prompt для lang={lang!r} не найден: {cfg['system_prompt']}."
@@ -316,13 +394,13 @@ def _is_valid_slug(slug) -> bool:
     return True
 
 
-def canonical_url_for(lang: str, slug: str) -> str:
+def canonical_url_for(lang: str, slug: str, country: str | None = None) -> str:
     if not _is_valid_slug(slug):
         raise ValueError(
             f"canonical_url_for({lang!r}, {slug!r}): slug должен быть "
             f"kebab-case строкой; получено {type(slug).__name__} {slug!r}."
         )
-    cfg = get_cfg(lang)
+    cfg = get_cfg(lang, country)
     return f"{cfg['canonical_base']}/{slug}/"
 
 
