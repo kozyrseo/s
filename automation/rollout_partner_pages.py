@@ -61,6 +61,65 @@ def build_draft_for_market(partner: dict, code: str, cmeta: dict) -> dict:
     return draft
 
 
+def _translate_content_to(content: dict, draft: dict, lang: str) -> dict:
+    """Переводит контент страницы партнёра на произвольный язык (напр. pl).
+
+    В отличие от generate_partner_tpl.translate_content (жёстко ru→uk),
+    переводит на любой язык страны. Использует Claude через OpenRouter.
+    Переводит и текстовые поля анкеты (pros/cons/faq), чтобы страница была
+    полностью на языке страны. Fallback: если перевод упал — вернёт оригинал.
+    """
+    import os
+    import json as _json
+    try:
+        from openai import OpenAI
+    except ImportError:
+        return content
+    key = os.environ.get("OPENROUTER_API_KEY")
+    if not key:
+        return content
+
+    _LANG = {"pl": "польский", "kk": "казахский", "de": "немецкий",
+             "cs": "чешский", "ro": "румынский", "es": "испанский",
+             "en": "английский", "tr": "турецкий", "uk": "украинский"}
+    lang_name = _LANG.get(lang, lang)
+
+    bundle = dict(content)
+    bundle["__pros"] = draft.get("pros", [])
+    bundle["__cons"] = draft.get("cons", [])
+    bundle["__faq"] = draft.get("faq", [])
+
+    system = (f"Ты профессиональный переводчик. Переведи значения JSON с русского "
+              f"на {lang_name}. Переводи ВСЕ значения (включая массивы "
+              f"__pros/__cons/__faq). Сохраняй HTML-теги и разметку. Термины "
+              f"(Rakeback, VIP, FAQ) — как принято в {lang_name}-сегменте. "
+              f"Верни СТРОГО JSON с теми же ключами, без markdown.")
+    user = "Переведи:\n```json\n" + _json.dumps(bundle, ensure_ascii=False, indent=2) + "\n```"
+    try:
+        from generate_partner_tpl import MODEL, MAX_TOKENS, OPENROUTER_BASE_URL, parse_content_json, apply_content_fixups, _clamp_meta_title, _clamp_meta_desc
+        client = OpenAI(api_key=key, base_url=OPENROUTER_BASE_URL)
+        resp = client.chat.completions.create(
+            model=MODEL, max_tokens=MAX_TOKENS,
+            messages=[{"role": "system", "content": system},
+                      {"role": "user", "content": user}],
+        )
+        tr = parse_content_json(resp.choices[0].message.content or "")
+        # обновляем pros/cons/faq в draft (для карточки страницы)
+        if "__pros" in tr:
+            draft["pros"] = tr.pop("__pros", draft.get("pros"))
+        if "__cons" in tr:
+            draft["cons"] = tr.pop("__cons", draft.get("cons"))
+        if "__faq" in tr:
+            draft["faq"] = tr.pop("__faq", draft.get("faq"))
+        result = apply_content_fixups({k: v for k, v in tr.items() if not k.startswith("__")}, lang)
+        result["meta_title"] = _clamp_meta_title(result.get("meta_title", ""))
+        result["meta_description"] = _clamp_meta_desc(result.get("meta_description", ""))
+        return result
+    except Exception as e:
+        print(f"  ⚠️ перевод контента на {lang} упал ({e}) — оставляю русский")
+        return content
+
+
 def generate_partner_page(partner: dict, code: str, cmeta: dict) -> list[str]:
     """Генерит HTML-страницу(ы) партнёра под страну. Возвращает список путей.
 
@@ -78,12 +137,18 @@ def generate_partner_page(partner: dict, code: str, cmeta: dict) -> list[str]:
 
     created = []
 
-    # Контент страницы: генерим через Claude (как для Украины) на primary-языке
+    # Контент страницы: генерим на русском (базовый промпт), затем переводим
+    # на PRIMARY-язык страны через универсальный переводчик. Для Украины
+    # (primary=ru) перевод не нужен. Для Польши (primary=pl) — переводим на pl.
     try:
         content = gpt.generate_content(draft)
     except Exception as e:
         print(f"  ⚠️ {pid}: generate_content упал ({e}) — пропуск")
         return created
+
+    # Перевод контента на primary-язык страны (если не русский)
+    if primary != "ru":
+        content = _translate_content_to(content, draft, primary)
 
     # Основная версия (primary-язык страны) → /{code}/{kind}/{id}/
     html = rp.build_page(draft, content, lang="ru", is_preview=False)
