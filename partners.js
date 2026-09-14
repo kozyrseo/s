@@ -221,7 +221,8 @@
         "networkLabel": "TON Poker (Telegram)",
         "country": "ua",
         "countries": [
-              "ua"
+              "ua",
+              "pl"
         ],
         "acceptedCountries": [
               "all"
@@ -290,8 +291,48 @@
               ]
         },
         "markets": [
-              "ua"
-        ]
+              "ua",
+              "pl"
+        ],
+        "byMarket": {
+              "pl": {
+                    "currency": "USDT",
+                    "url": "/pl/rooms/tonpoker/",
+                    "card": {
+                          "logoImg": "/ua/blog/logos/tonpoker.webp",
+                          "kind": "TON Poker (Telegram)",
+                          "dark": true,
+                          "rows": [
+                                [
+                                      "Рейкбек",
+                                      "do 30%",
+                                      true
+                                ],
+                                [
+                                      "Валюта",
+                                      "USDT",
+                                      false
+                                ],
+                                [
+                                      "Мин. депозит",
+                                      "$0.20",
+                                      false
+                                ],
+                                [
+                                      "Форматы",
+                                      "Cash, MTT",
+                                      false
+                                ],
+                                [
+                                      "Выплаты",
+                                      "0–24 godziny",
+                                      false
+                                ]
+                          ]
+                    },
+                    "note": "Покер-рум прямо в Telegram: без скачивания приложений, мгновенные крипто-депозиты и выводы, мягкие поля."
+              }
+        }
   },
   {
         "id": "grombet",
@@ -308,7 +349,8 @@
         "networkLabel": "Grombet",
         "country": "ua",
         "countries": [
-              "ua"
+              "ua",
+              "pl"
         ],
         "acceptedCountries": [
               "all"
@@ -394,8 +436,48 @@
               ]
         },
         "markets": [
-              "ua"
-        ]
+              "ua",
+              "pl"
+        ],
+        "byMarket": {
+              "pl": {
+                    "currency": "PLN",
+                    "url": "/pl/rooms/grombet/",
+                    "card": {
+                          "logoImg": "/ua/blog/logos/grombet.webp",
+                          "kind": "Grombet",
+                          "dark": false,
+                          "rows": [
+                                [
+                                      "Рейкбек",
+                                      "do 70%",
+                                      true
+                                ],
+                                [
+                                      "Валюта",
+                                      "PLN",
+                                      false
+                                ],
+                                [
+                                      "Мин. депозит",
+                                      "300 ₴ (kartą), 1 ₴ (krypto)",
+                                      false
+                                ],
+                                [
+                                      "Форматы",
+                                      "Cash, Spiny, MTT",
+                                      false
+                                ],
+                                [
+                                      "Выплаты",
+                                      "5–60 minut",
+                                      false
+                                ]
+                          ]
+                    },
+                    "note": "Покер-рум с мягкими полями, рейкбеком до 70% и быстрыми выплатами за 5–60 минут."
+              }
+        }
   }
   ];
 

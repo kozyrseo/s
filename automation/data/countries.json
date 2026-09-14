@@ -16,6 +16,17 @@
       "url_prefix": "/ua",
       "iso_country": "UA",
       "default_currency": "UAH"
+    },
+    "pl": {
+      "name": "PL",
+      "flag": "🇵🇱",
+      "languages": [
+        "pl"
+      ],
+      "primary_language": "pl",
+      "url_prefix": "/pl",
+      "iso_country": "PL",
+      "default_currency": "USDT"
     }
   }
 }

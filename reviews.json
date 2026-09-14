@@ -362,6 +362,126 @@
         "ru": "Сижу на маке, клиент работает стабильно, лимиты от NL2 до NL5000 — есть куда расти. Вывел крипту вечером, деньги были через полчаса. Рекреационных много, играть комфортно.",
         "uk": "Сиджу на маку, клієнт працює стабільно, ліміти від NL2 до NL5000 — є куди рости. Вивів крипту ввечері, гроші були за півгодини. Рекреаційних багато, грати комфортно."
       }
+    },
+    {
+      "id": "r-3111",
+      "partner": "tonpoker",
+      "rating": 5,
+      "date": "2026-08-17",
+      "verified": true,
+      "country": "pl",
+      "author": {
+        "pl": "Michał K."
+      },
+      "text": {
+        "pl": "Gram na NL25 od kilku miesięcy, pola miękkie zwłaszcza wieczorami. Wypłata przez BLIK doszła w 15 minut, jestem pozytywnie zaskoczony."
+      },
+      "_generated": true
+    },
+    {
+      "id": "r-3112",
+      "partner": "tonpoker",
+      "rating": 4,
+      "date": "2026-08-28",
+      "verified": false,
+      "country": "pl",
+      "author": {
+        "pl": "Katarzyna W."
+      },
+      "text": {
+        "pl": "Solidny rum, softClient działa stabilnie na moim laptopie. Jedyny minus to czasami mała frekwencja na wyższych limitach za dnia."
+      },
+      "_generated": true
+    },
+    {
+      "id": "r-3113",
+      "partner": "tonpoker",
+      "rating": 5,
+      "date": "2026-08-22",
+      "verified": false,
+      "country": "pl",
+      "author": {
+        "pl": "Tomasz Nowak"
+      },
+      "text": {
+        "pl": "Przelew na konto w mBanku przyszedł następnego dnia, wszystko zgodnie z opisem. Limity od NL10 do NL50 w sam raz dla mnie, ruch jest przyzwoity."
+      },
+      "_generated": true
+    },
+    {
+      "id": "r-3114",
+      "partner": "tonpoker",
+      "rating": 3,
+      "date": "2026-07-07",
+      "verified": true,
+      "country": "pl",
+      "author": {
+        "pl": "Agnieszka Z."
+      },
+      "text": {
+        "pl": "Ogólnie w porządku, ale weryfikacja konta trochę mi się przeciągnęła. Regularsów na NL50 sporo, więc trzeba uważać z doborem stołów."
+      },
+      "_generated": true
+    },
+    {
+      "id": "r-3115",
+      "partner": "grombet",
+      "rating": 5,
+      "date": "2026-07-09",
+      "verified": false,
+      "country": "pl",
+      "author": {
+        "pl": "Kamil W."
+      },
+      "text": {
+        "pl": "Gram na NL25 od kilku miesięcy i naprawdę nie mam się do czego przyczepić. Wypłata przez BLIK przyszła w niecałe 20 minut, konkret."
+      },
+      "_generated": true
+    },
+    {
+      "id": "r-3116",
+      "partner": "grombet",
+      "rating": 4,
+      "date": "2026-07-01",
+      "verified": true,
+      "country": "pl",
+      "author": {
+        "pl": "Agnieszka M."
+      },
+      "text": {
+        "pl": "Pola całkiem miękkie na niższych limitach, sporo rekreacyjnych graczy wieczorami. Software mógłby być trochę lżejszy na starszym laptopie, ale generalnie działa stabilnie."
+      },
+      "_generated": true
+    },
+    {
+      "id": "r-3117",
+      "partner": "grombet",
+      "rating": 5,
+      "date": "2026-08-10",
+      "verified": false,
+      "country": "pl",
+      "author": {
+        "pl": "Piotr Zieliński"
+      },
+      "text": {
+        "pl": "Przelew na konto w mBanku doszedł następnego dnia rano, zero problemów z weryfikacją. Polecam każdemu kto szuka spokojnego rumu na NL10-NL50."
+      },
+      "_generated": true
+    },
+    {
+      "id": "r-3118",
+      "partner": "grombet",
+      "rating": 3,
+      "date": "2026-08-15",
+      "verified": true,
+      "country": "pl",
+      "author": {
+        "pl": "Tomasz K."
+      },
+      "text": {
+        "pl": "Ogólnie ok, ale przy większej wypłacie trochę dłużej trzeba czekać na przelew Przelewy24. Ruch przy stołach spory, więc gra się przyjemnie."
+      },
+      "_generated": true
     }
   ]
 }
