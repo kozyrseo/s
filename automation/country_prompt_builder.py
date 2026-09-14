@@ -274,6 +274,13 @@ def build_country_prompt(*, country_code: str, country_name: str,
         b if b.endswith("\n") else b + "\n" for b in rebuilt
     )
 
+    # МУЛЬТИГЕО: в универсальных секциях базового промпта остаются примеры с
+    # украинскими путями (/ua/blog/, /ua/). Для не-украинской страны заменяем
+    # их на путь страны — иначе Claude будет вставлять /ua/ в статьи новой
+    # страны. Для country_code=ua замена /ua/→/ua/ безопасна (ничего не меняет).
+    if country_code != "ua":
+        prompt = prompt.replace("/ua/", f"/{country_code}/")
+
     # Усиленная проверка легалки (по объединённому легальному тексту)
     legal_review = review_legal_section("\n\n".join(legal_chunks), country_name)
 

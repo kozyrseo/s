@@ -64,6 +64,29 @@ def build_draft_for_market(partner: dict, code: str, cmeta: dict) -> dict:
 _I18N_CACHE: dict = {}
 
 
+def _fix_internal_links(content: dict, country: str):
+    """Заменяет украинские внутренние ссылки /ua/ на путь текущей страны /{country}/
+    во всех текстовых полях контента. Claude вставляет /ua/ по образцу — чиним.
+    Для country=ua замена /ua/→/ua/ безопасна (ничего не меняет).
+    """
+    import re
+    if country == "ua":
+        return content  # для Украины ничего менять не нужно
+    pat = re.compile(r"/ua/")
+    repl = f"/{country}/"
+
+    def _fix(v):
+        if isinstance(v, str):
+            return pat.sub(repl, v)
+        if isinstance(v, list):
+            return [_fix(x) for x in v]
+        if isinstance(v, dict):
+            return {k: _fix(x) for k, x in v.items()}
+        return v
+
+    return {k: _fix(v) for k, v in content.items()}
+
+
 def _translate_i18n_to(lang: str) -> dict:
     """Переводит UI-подписи шаблона (I18N) на язык страны. Кэш по языку —
     83 подписи переводятся ОДИН раз на язык, не для каждого партнёра.
@@ -197,9 +220,16 @@ def generate_partner_page(partner: dict, code: str, cmeta: dict) -> list[str]:
         print(f"  ⚠️ {pid}: generate_content упал ({e}) — пропуск")
         return created
 
+    # МУЛЬТИГЕО: Claude при генерации контента вставляет внутренние ссылки с
+    # украинскими путями (/ua/rooms/..., /ua/#faq) — он видит их в образце.
+    # Заменяем /ua/ на путь текущей страны во ВСЕХ текстовых полях контента.
+    # Для Украины (code=ua) замена /ua/→/ua/ ничего не меняет (безопасно).
+    content = _fix_internal_links(content, code)
+
     # Перевод контента на primary-язык страны (если не русский)
     if primary != "ru":
         content = _translate_content_to(content, draft, primary)
+        content = _fix_internal_links(content, code)  # ещё раз после перевода
 
     # Перевод UI-подписей шаблона (I18N: «Румы», «Сделки», «обзор»...) на язык
     # страны — иначе они останутся русскими. Один раз на страну (кэшируем).
