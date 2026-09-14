@@ -1,18 +1,5 @@
 {
-  "collected_at": "2026-09-14T07:48:11.536970+00:00",
+  "collected_at": "2026-09-14T07:48:39.349844+00:00",
   "status": "queued",
-  "rows": [
-    {
-      "status": "queued",
-      "topic": "Покер на телефон: Android APK, iOS и браузерная версия",
-      "primary_keyword": "покер на телефон",
-      "secondary_keywords": "покер на андроид apk, покер приложение ios, мобильный покер украина",
-      "intent": "commercial",
-      "target_page": "/ua/rooms/pokerbet/",
-      "notes": "У PokerBet самый полный мобайл (iOS + Android + web + HUD) — линк на него. APK не в Google Play, качают с сайта. Информационная подача.",
-      "country": "ua",
-      "lang": "ru",
-      "_row": 4
-    }
-  ]
+  "rows": []
 }
