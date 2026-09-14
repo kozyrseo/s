@@ -1,21 +1,5 @@
 {
   "chat_id": 8523632365,
-  "stage": "generating",
-  "started_at": "2026-09-14T16:24:51.390Z",
-  "code": "pl",
-  "name": "PL",
-  "flag": "🇵🇱",
-  "iso_country": "PL",
-  "langs": [
-    "pl"
-  ],
-  "selected_partners": [
-    "grombet",
-    "tonpoker"
-  ],
-  "partner_currencies": {
-    "grombet": "PLN",
-    "tonpoker": "USDT"
-  },
-  "currency_queue": []
+  "stage": "await_country",
+  "started_at": "2026-09-14T16:55:57.177Z"
 }
