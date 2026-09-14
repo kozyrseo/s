@@ -1,0 +1,101 @@
+name: New country (multigeo)
+
+# Генерация каркаса новой страны. Запускается ботом (мастер /newcountry) через
+# workflow_dispatch с кодом страны. Читает задание .bot_state/country_jobs/{code}.json.
+#
+# Порядок:
+#   1. newcountry_generator.py — паспорт страны, перевод UI, промпт статей,
+#      проверка легалки, структура папок. Шлёт превью в Telegram.
+#   2. build-landings.py --country {code} — хабы rooms/clubs
+#   3. generate_partner_tpl для выбранных партнёров (раскатка с валютой рынка)
+#   4. build_llms.py — обновление llms.txt
+#
+# Всё коммитится в _pending_{code} и конфиги для проверки оператором.
+
+on:
+  workflow_dispatch:
+    inputs:
+      code:
+        description: 'Код страны (pl/kz/de…). Обязателен.'
+        required: true
+        type: string
+      chat_id:
+        description: 'Telegram chat_id для превью (подставляет бот).'
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  # Отдельная группа НА КАЖДУЮ страну — генерация разных стран не блокирует
+  # друг друга, но одна страна не запускается дважды параллельно.
+  group: newcountry-${{ inputs.code }}
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r automation/requirements.txt
+
+      - name: Generate country core (config, UI translation, prompt, legal check)
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          NEWCOUNTRY_CHAT_ID: ${{ inputs.chat_id }}
+        run: python automation/newcountry_generator.py --code "${{ inputs.code }}"
+
+      - name: Build landing hubs for the new country
+        run: python build-landings.py --country "${{ inputs.code }}" || true
+
+      - name: Mark selected partners for the new country
+        run: |
+          # Помечаем выбранных партнёров: добавляем код страны в их markets.
+          # Фактические страницы партнёров под страну генерирует партнёрский
+          # pipeline (читает markets). Здесь только проставляем markets.
+          CODE="${{ inputs.code }}"
+          JOB=".bot_state/country_jobs/${CODE}.json"
+          if [ -f "$JOB" ]; then
+            python automation/apply_country_partners.py --code "$CODE" --job "$JOB" || true
+          fi
+
+      - name: Rebuild partners.js and llms.txt
+        run: |
+          python automation/build_partners.py || true
+          python automation/build_llms.py || true
+
+      - name: Commit new country to TEST BRANCH (not main → not on live site)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          CODE="${{ inputs.code }}"
+          BRANCH="test-country-${CODE}"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "Nothing to commit."
+          else
+            # МУЛЬТИГЕО ТЕСТ: коммитим в ОТДЕЛЬНУЮ ветку test-country-{code},
+            # НЕ в main. Cloudflare Pages публикует только main → тестовая
+            # страна НЕ попадает на живой сайт kozyr.club. Смотреть можно в
+            # preview-деплое ветки (если включён) или в файлах ветки на GitHub.
+            # Когда проверишь и захочешь опубликовать — смержишь ветку в main.
+            git checkout -b "$BRANCH" 2>/dev/null || (git branch -D "$BRANCH" 2>/dev/null; git checkout -b "$BRANCH")
+            git commit -m "TEST country: ${CODE} (branch only, NOT on live site)"
+            git push -f origin "$BRANCH"
+            echo "✅ Запушено в ветку $BRANCH (НЕ в main, сайт не тронут)"
+          fi
