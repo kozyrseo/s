@@ -274,6 +274,21 @@ async function handleCallback(cb, env) {
   const segments = data.split(":");
   const action = segments[0];
 
+  // ── РЕПОСТ на внешние площадки: repost:{platform}:{slug} ──
+  if (action === "repost") {
+    const platform = segments[1];
+    const slug = segments.slice(2).join(":");
+    await answerCallback(cb.id, env, "📡 Запускаю репост…");
+    const ok = await triggerWorkflow("repost.yml", { slug, platform }, env);
+    await sendMessage(cb.message.chat.id, env, ok
+      ? `📡 *Репост на ${platform}* запущен: \`${escapeMd(slug)}\`\n\n` +
+        `🇺🇦 UK-версия публикуется сейчас.\n` +
+        `🇷🇺 RU-версия выйдет автоматически через ~4 часа.\n\n` +
+        `Пришлю ссылки, когда будет готово.`
+      : `❌ Не удалось запустить repost.yml. Проверь, что workflow залит.`);
+    return;
+  }
+
   // Простые "просмотр"-действия
   if (action === "fulltext") {
     const slug = segments[1];
@@ -1713,6 +1728,10 @@ async function cmdPending(chatId, args, msg, env) {
       return { text: `✏️ ${flag}`, callback_data: `edit_menu_lang:${l}:${slug}` };
     });
     kb.push(editRow);
+    // Репост на внешние площадки (ссылочный профиль): UK сразу + RU через ~4ч
+    kb.push([
+      { text: "📡 Репост Telegraph", callback_data: `repost:telegraph:${slug}` },
+    ]);
     kb.push([
       { text: "🧾 Исходники", callback_data: `sources:${slug}` },
       { text: langs.length > 1 ? "❌ Отклонить всё" : "❌ Отклонить",
