@@ -1,19 +1,7 @@
 {
-  "collected_at": "2026-09-15T12:25:48.248972+00:00",
+  "collected_at": "2026-09-15T12:26:45.011158+00:00",
   "status": "suggested",
   "rows": [
-    {
-      "status": "suggested",
-      "topic": "Покер на криптовалюте USDT в Украине: как играть",
-      "primary_keyword": "покер на криптовалюте",
-      "secondary_keywords": "покер usdt, депозит крипта покер, покер биткоин украина",
-      "intent": "commercial",
-      "target_page": "/ua/rooms/tonpoker/",
-      "notes": "TonPoker — крипто-нативный рум (только USDT), это главный линк. Grombet упомянуть как card+crypto. Без «занеси и выиграй».",
-      "country": "ua",
-      "lang": "ru",
-      "_row": 5
-    },
     {
       "status": "suggested",
       "topic": "Налог на выигрыш в покере в Украине 2026: сколько и кто платит",
