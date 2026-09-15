@@ -146,11 +146,21 @@ def send_multilang_published_notification(slug: str, results: dict[str, dict]) -
             lines.append(f"{lang_flag} *{lang.upper()}*: ❌ `{escape_md(str(err))}`")
 
     text = "\n".join(lines)
+    # МУЛЬТИГЕО-РЕПОСТ: кнопки репоста на внешние площадки (ссылочный профиль).
+    # Появляются ПОСЛЕ публикации (статья уже на сайте — есть на что ссылаться).
+    # UK постится сразу, RU — в очередь (~4ч). Обработка в воркере (action=repost).
+    reply_markup = {
+        "inline_keyboard": [[
+            {"text": "📡 Telegraph", "callback_data": f"repost:telegraph:{slug}"},
+            {"text": "📝 Blogger", "callback_data": f"repost:blogger:{slug}"},
+        ]]
+    }
     payload = {
         "chat_id": chat_id,
         "text": text,
         "parse_mode": "Markdown",
         "disable_web_page_preview": True,
+        "reply_markup": reply_markup,
     }
     req = urllib.request.Request(
         f"https://api.telegram.org/bot{token}/sendMessage",
@@ -204,6 +214,14 @@ def publish_all(slug: str, langs_filter: list[str] | None = None) -> int:
 
     # Notify
     send_multilang_published_notification(slug, results)
+
+    # Обновляем индекс статей для команды /repost (список всегда свежий)
+    try:
+        from build_articles_index import save_index
+        n = save_index()
+        print(f"✅ Индекс статей обновлён: {n} статей")
+    except Exception as e:
+        print(f"⚠️  Индекс статей не обновлён: {e}")
 
     # Return code
     all_ok = all(r.get("status") == "ok" for r in results.values())

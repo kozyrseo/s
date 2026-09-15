@@ -222,6 +222,7 @@ function getCommandHandler(cmd) {
     "/translate":   cmdTranslate,
     "/menu":        cmdMenu,
     "/addpartner":  cmdAddPartner,
+    "/repost":      cmdRepost,
     "/newcountry":  cmdNewCountry,
     "/addcountry":  cmdNewCountry,   // алиас
     "/country":     cmdNewCountry,   // алиас
@@ -236,6 +237,7 @@ async function showMoreMenu(chatId, env) {
   const kb = [
     [{ text: "➕ Добавить партнёра", callback_data: "menu_action:add_partner" }],
     [{ text: "🌍 Добавить страну (мультигео)", callback_data: "menu_action:add_country" }],
+    [{ text: "📡 Репостнуть статью", callback_data: "menu_action:repost" }],
     [{ text: "🔍 Найти новые темы", callback_data: "menu_action:research" }],
     [{ text: "🔄 Обновить список тем", callback_data: "menu_action:refresh" }],
     [{ text: "📊 Аналитика: выбрать период", callback_data: "menu_action:analytics_period" }],
@@ -273,6 +275,12 @@ async function handleCallback(cb, env) {
   // Мы допускаем 2-3 сегмента: action:slug или action:slug:field или action:row
   const segments = data.split(":");
   const action = segments[0];
+
+  // ── UI команды /repost: список, карточка, обе ──
+  if (action === "rp_page" || action === "rp_pick" || action === "rp_both") {
+    await handleRepostUICallback(action, segments, cb, env);
+    return;
+  }
 
   // ── РЕПОСТ на внешние площадки: repost:{platform}:{slug} ──
   if (action === "repost") {
@@ -468,6 +476,8 @@ async function handleCallback(cb, env) {
       await cmdAddPartner(chatId, [], cb.message, env);
     } else if (which === "add_country") {
       await cmdNewCountry(chatId, [], cb.message, env);
+    } else if (which === "repost") {
+      await cmdRepost(chatId, [], cb.message, env);
     } else if (which === "research") {
       await cmdResearch(chatId, [], cb.message, env);
     } else if (which === "refresh") {
@@ -4245,6 +4255,150 @@ async function editMessageWithKb(chatId, messageId, text, kb, env) {
     });
   } catch (e) {
     console.error("editMessageWithKb failed:", e);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  КОМАНДА /repost — репост статей на внешние площадки (ссылочный профиль)
+//  UX: список статей со статусами → карточка → Telegraph/Blogger/Обе.
+//  3 точки входа: /repost, кнопка меню, кнопки после публикации.
+//  Пагинация, статусы репоста (✅/⚪) из repost_log.json.
+// ═══════════════════════════════════════════════════════════════════════════
+
+const REPOST_PAGE_SIZE = 8;
+const REPOST_PLATFORMS = [
+  { key: "telegraph", icon: "📡", name: "Telegraph" },
+  { key: "blogger", icon: "📝", name: "Blogger" },
+];
+
+// Читает индекс статей (собран build_articles_index.py)
+async function repostLoadArticles(env) {
+  const data = await ghReadJSON(".bot_state/cache/articles_index.json", env);
+  return (data && data.articles) ? data.articles : [];
+}
+
+// Читает лог репостов → карта {slug: {platform: true}}
+async function repostLoadLog(env) {
+  const log = await ghReadJSON(".bot_state/repost_log.json", env);
+  const map = {};
+  if (Array.isArray(log)) {
+    for (const e of log) {
+      if (e.ok && e.slug && e.platform) {
+        if (!map[e.slug]) map[e.slug] = {};
+        map[e.slug][e.platform] = true;
+      }
+    }
+  }
+  return map;
+}
+
+// Статус-значки репоста для статьи (📡✅ 📝⚪)
+function repostStatusBadges(slug, logMap) {
+  const st = logMap[slug] || {};
+  return REPOST_PLATFORMS.map(p =>
+    `${p.icon}${st[p.key] ? "✅" : "⚪"}`).join(" ");
+}
+
+// ── /repost — список статей (страница page) ──
+async function cmdRepost(chatId, args, msg, env) {
+  const page = Math.max(0, parseInt((args && args[0]) || "0", 10));
+  const articles = await repostLoadArticles(env);
+  if (!articles.length) {
+    await sendMessage(chatId, env,
+      "📭 Список статей пуст. Опубликуй статью или обнови индекс.");
+    return;
+  }
+  const logMap = await repostLoadLog(env);
+
+  const totalPages = Math.ceil(articles.length / REPOST_PAGE_SIZE);
+  const start = page * REPOST_PAGE_SIZE;
+  const pageArticles = articles.slice(start, start + REPOST_PAGE_SIZE);
+
+  const kb = [];
+  for (const a of pageArticles) {
+    const badges = repostStatusBadges(a.slug, logMap);
+    // заголовок обрезаем, чтобы кнопка не была огромной
+    const titleShort = (a.title || a.slug).slice(0, 40);
+    kb.push([{
+      text: `${badges}  ${titleShort}`,
+      callback_data: `rp_pick:${a.slug}`,
+    }]);
+  }
+  // пагинация
+  const nav = [];
+  if (page > 0) nav.push({ text: "◀️ Назад", callback_data: `rp_page:${page - 1}` });
+  if (page < totalPages - 1) nav.push({ text: "Ещё ▶️", callback_data: `rp_page:${page + 1}` });
+  if (nav.length) kb.push(nav);
+
+  const text = `📡 *Репост статей* — стр. ${page + 1}/${totalPages}\n\n` +
+    `Выбери статью для репоста на Telegraph/Blogger.\n` +
+    `_Статус: 📡 Telegraph · 📝 Blogger (✅ уже репостнута · ⚪ нет)_`;
+  await sendMessage(chatId, env, text, kb);
+}
+
+// ── Карточка статьи: выбор площадки ──
+async function repostShowCard(chatId, slug, env, messageId) {
+  const articles = await repostLoadArticles(env);
+  const a = articles.find(x => x.slug === slug);
+  const logMap = await repostLoadLog(env);
+  const st = logMap[slug] || {};
+
+  const title = a ? a.title : slug;
+  const badges = repostStatusBadges(slug, logMap);
+
+  const kb = [];
+  // кнопки площадок (с отметкой если уже репостнута)
+  const platRow = REPOST_PLATFORMS.map(p => ({
+    text: `${p.icon} ${p.name}${st[p.key] ? " ✅" : ""}`,
+    callback_data: `repost:${p.key}:${slug}`,
+  }));
+  kb.push(platRow);
+  // обе сразу
+  kb.push([{ text: "📡📝 Обе сразу", callback_data: `rp_both:${slug}` }]);
+  kb.push([{ text: "◀️ К списку", callback_data: `rp_page:0` }]);
+
+  const text = `📄 *${escapeMd(title)}*\n\n` +
+    `Репосты: ${badges}\n\n` +
+    `Куда репостнуть? UK выйдет сразу, RU — через ~4ч автоматически.`;
+
+  if (messageId) {
+    await editMessageWithKb(chatId, messageId, text, kb, env);
+  } else {
+    await sendMessage(chatId, env, text, kb);
+  }
+}
+
+// ── Диспетчер callback'ов /repost (префикс rp_) ──
+async function handleRepostUICallback(action, segments, cb, env) {
+  const chatId = cb.message.chat.id;
+
+  if (action === "rp_page") {
+    const page = parseInt(segments[1] || "0", 10);
+    await answerCallback(cb.id, env, "");
+    await cmdRepost(chatId, [String(page)], cb.message, env);
+    return;
+  }
+  if (action === "rp_pick") {
+    const slug = segments.slice(1).join(":");
+    await answerCallback(cb.id, env, "");
+    await repostShowCard(chatId, slug, env, cb.message.message_id);
+    return;
+  }
+  if (action === "rp_both") {
+    const slug = segments.slice(1).join(":");
+    await answerCallback(cb.id, env, "📡📝 Запускаю обе…");
+    // запускаем оба репоста
+    let okCount = 0;
+    for (const p of REPOST_PLATFORMS) {
+      const ok = await triggerWorkflow("repost.yml", { slug, platform: p.key }, env);
+      if (ok) okCount++;
+    }
+    await sendMessage(chatId, env,
+      `📡📝 *Репост на обе площадки* запущен: \`${escapeMd(slug)}\`\n\n` +
+      `🇺🇦 UK-версии публикуются сейчас.\n` +
+      `🇷🇺 RU-версии выйдут через ~4 часа автоматически.\n\n` +
+      `Пришлю ссылки, когда будет готово.`);
+    return;
   }
 }
 
