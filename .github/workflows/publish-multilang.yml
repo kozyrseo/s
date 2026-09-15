@@ -64,6 +64,8 @@ jobs:
           done
           # Sitemaps и taxonomy
           git add -A -f sitemap.xml automation/taxonomy*.json 2>/dev/null || true
+          # Индекс статей для /repost (в .bot_state — форсируем через -f, обходя gitignore)
+          git add -f .bot_state/cache/articles_index.json 2>/dev/null || true
           # Удалённые pending
           git add -A -u _pending _pending_* 2>/dev/null || true
           # Подхватываем ВСЁ, включая файлы вне списка директорий (hero.webp и т.п.),
