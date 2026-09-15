@@ -51,7 +51,13 @@
         "topic:beginners",
         "audience:beginner"
       ],
-      "behavior": {},
+      "behavior": {
+        "views": 1,
+        "users": 1,
+        "avg_engagement_s": 7.0,
+        "engagement_rate": 0.0,
+        "bounce_rate": 1.0
+      },
       "conversions": {},
       "conv_rate": 0.0
     },
@@ -149,10 +155,10 @@
       "url": "https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/",
       "category": "flat",
       "stats": {
-        "impressions": 12,
+        "impressions": 13,
         "clicks": 2,
-        "ctr": 0.1667,
-        "position": 12.1
+        "ctr": 0.1538,
+        "position": 11.5
       },
       "top_queries": [],
       "published_at": null,
@@ -407,9 +413,39 @@
         "audience:beginner"
       ],
       "behavior": {
+        "views": 2,
+        "users": 2,
+        "avg_engagement_s": 121.0,
+        "engagement_rate": 0.5,
+        "bounce_rate": 0.5
+      },
+      "conversions": {},
+      "conv_rate": 0.0
+    },
+    {
+      "slug": "poker-na-telefon-android-apk-ios-brauzer",
+      "title": "Покер на телефон: Android APK, iOS и браузер",
+      "url": "https://kozyr.club/ua/blog/poker-na-telefon-android-apk-ios-brauzer/",
+      "category": "flat",
+      "stats": {
+        "impressions": 0,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": null
+      },
+      "top_queries": [],
+      "published_at": null,
+      "tags": [
+        "format:mixed",
+        "topic:room-review",
+        "topic:payments",
+        "platform:pokerbet",
+        "audience:beginner"
+      ],
+      "behavior": {
         "views": 1,
         "users": 1,
-        "avg_engagement_s": 228.0,
+        "avg_engagement_s": 38.0,
         "engagement_rate": 0.0,
         "bounce_rate": 1.0
       },
@@ -470,7 +506,13 @@
           "topic:beginners",
           "audience:beginner"
         ],
-        "behavior": {},
+        "behavior": {
+          "views": 1,
+          "users": 1,
+          "avg_engagement_s": 7.0,
+          "engagement_rate": 0.0,
+          "bounce_rate": 1.0
+        },
         "conversions": {},
         "conv_rate": 0.0
       }
@@ -570,10 +612,10 @@
         "url": "https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/",
         "category": "flat",
         "stats": {
-          "impressions": 12,
+          "impressions": 13,
           "clicks": 2,
-          "ctr": 0.1667,
-          "position": 12.1
+          "ctr": 0.1538,
+          "position": 11.5
         },
         "top_queries": [],
         "published_at": null,
@@ -828,9 +870,39 @@
           "audience:beginner"
         ],
         "behavior": {
+          "views": 2,
+          "users": 2,
+          "avg_engagement_s": 121.0,
+          "engagement_rate": 0.5,
+          "bounce_rate": 0.5
+        },
+        "conversions": {},
+        "conv_rate": 0.0
+      },
+      {
+        "slug": "poker-na-telefon-android-apk-ios-brauzer",
+        "title": "Покер на телефон: Android APK, iOS и браузер",
+        "url": "https://kozyr.club/ua/blog/poker-na-telefon-android-apk-ios-brauzer/",
+        "category": "flat",
+        "stats": {
+          "impressions": 0,
+          "clicks": 0,
+          "ctr": 0.0,
+          "position": null
+        },
+        "top_queries": [],
+        "published_at": null,
+        "tags": [
+          "format:mixed",
+          "topic:room-review",
+          "topic:payments",
+          "platform:pokerbet",
+          "audience:beginner"
+        ],
+        "behavior": {
           "views": 1,
           "users": 1,
-          "avg_engagement_s": 228.0,
+          "avg_engagement_s": 38.0,
           "engagement_rate": 0.0,
           "bounce_rate": 1.0
         },
@@ -843,43 +915,85 @@
   "ga4": {
     "available": true,
     "totals": {
-      "users": 9,
-      "views": 25,
-      "sessions": 11
+      "users": 10,
+      "views": 59,
+      "sessions": 24
     },
     "behavior_by_page": {
-      "/ua/": {
-        "views": 11,
+      "/ua/uk/": {
+        "views": 19,
         "users": 4,
-        "avg_engagement_s": 24.0,
-        "engagement_rate": 0.0,
-        "bounce_rate": 1.0
+        "avg_engagement_s": 28.5,
+        "engagement_rate": 0.6364,
+        "bounce_rate": 0.3636
+      },
+      "/ua/": {
+        "views": 14,
+        "users": 4,
+        "avg_engagement_s": 37.5,
+        "engagement_rate": 0.7143,
+        "bounce_rate": 0.2857
       },
       "/": {
-        "views": 6,
-        "users": 6,
-        "avg_engagement_s": 1.5,
-        "engagement_rate": 0.0,
-        "bounce_rate": 1.0
+        "views": 9,
+        "users": 7,
+        "avg_engagement_s": 2.1,
+        "engagement_rate": 0.5455,
+        "bounce_rate": 0.4545
       },
-      "/ua/uk/": {
-        "views": 4,
-        "users": 3,
-        "avg_engagement_s": 17.7,
-        "engagement_rate": 0.0,
-        "bounce_rate": 1.0
+      "/ua/blog/legalen-li-poker-v-ukraine-2026-playcity/": {
+        "views": 2,
+        "users": 2,
+        "avg_engagement_s": 121.0,
+        "engagement_rate": 0.5,
+        "bounce_rate": 0.5
+      },
+      "/ua/rooms/grombet/": {
+        "views": 2,
+        "users": 2,
+        "avg_engagement_s": 1.0,
+        "engagement_rate": 0.3333,
+        "bounce_rate": 0.6667
+      },
+      "/ua/uk/blog/legalen-li-poker-v-ukraine-2026-playcity/": {
+        "views": 2,
+        "users": 2,
+        "avg_engagement_s": 17.5,
+        "engagement_rate": 1.0,
+        "bounce_rate": 0.0
+      },
+      "/countries/": {
+        "views": 1,
+        "users": 1,
+        "avg_engagement_s": 8.0,
+        "engagement_rate": 1.0,
+        "bounce_rate": 0.0
       },
       "/int/": {
+        "views": 1,
+        "users": 1,
+        "avg_engagement_s": 3.0,
+        "engagement_rate": 1.0,
+        "bounce_rate": 0.0
+      },
+      "/ua/blog/": {
         "views": 1,
         "users": 1,
         "avg_engagement_s": 0.0,
         "engagement_rate": 0.0,
         "bounce_rate": 1.0
       },
-      "/ua/blog/legalen-li-poker-v-ukraine-2026-playcity/": {
+      "/ua/blog/chto-takoe-reykbek-v-pokere/": {
         "views": 1,
         "users": 1,
-        "avg_engagement_s": 228.0,
+        "avg_engagement_s": 7.0,
+        "engagement_rate": 0.0,
+        "bounce_rate": 1.0
+      },
+      "/ua/blog/poker-na-telefon-android-apk-ios-brauzer/": {
+        "views": 1,
+        "users": 1,
+        "avg_engagement_s": 38.0,
         "engagement_rate": 0.0,
         "bounce_rate": 1.0
       },
@@ -887,22 +1001,43 @@
         "views": 1,
         "users": 1,
         "avg_engagement_s": 16.0,
-        "engagement_rate": 0.0,
-        "bounce_rate": 1.0
+        "engagement_rate": 1.0,
+        "bounce_rate": 0.0
       },
-      "/ua/uk/blog/legalen-li-poker-v-ukraine-2026-playcity/": {
+      "/ua/uk/blog/": {
+        "views": 1,
+        "users": 1,
+        "avg_engagement_s": 21.0,
+        "engagement_rate": 1.0,
+        "bounce_rate": 0.0
+      },
+      "/ua/uk/blog/myagkie-polya-v-pokere-gde-iskat/": {
+        "views": 1,
+        "users": 1,
+        "avg_engagement_s": 3.0,
+        "engagement_rate": 1.0,
+        "bounce_rate": 0.0
+      },
+      "/ua/uk/clubs/": {
+        "views": 1,
+        "users": 1,
+        "avg_engagement_s": 1.0,
+        "engagement_rate": 1.0,
+        "bounce_rate": 0.0
+      },
+      "/ua/uk/rooms/": {
         "views": 1,
         "users": 1,
         "avg_engagement_s": 0.0,
         "engagement_rate": 0.0,
         "bounce_rate": 1.0
       },
-      "/countries/": {
-        "views": 0,
+      "/ua/uk/rooms/grombet/": {
+        "views": 1,
         "users": 1,
-        "avg_engagement_s": 1.0,
-        "engagement_rate": 0.0,
-        "bounce_rate": 1.0
+        "avg_engagement_s": 9.0,
+        "engagement_rate": 1.0,
+        "bounce_rate": 0.0
       }
     },
     "conversions_by_page": {
@@ -918,6 +1053,18 @@
           "dlya-novichkov": 1,
           "grombet": 1
         }
+      },
+      "/ua/rooms/grombet/": {
+        "total": 1,
+        "by_source": {
+          "link": 1
+        },
+        "by_event": {
+          "affiliate_click": 1
+        },
+        "by_label": {
+          "GrombetРейкбек до 70%Играть": 1
+        }
       }
     },
     "conversions_by_partner": {
@@ -927,14 +1074,15 @@
         "internal": 1
       },
       "grombet": {
-        "total": 1,
-        "outbound": 0,
+        "total": 2,
+        "outbound": 1,
         "internal": 1
       }
     },
     "traffic_sources": {
-      "Unassigned": 7,
-      "Direct": 4
+      "Direct": 10,
+      "Unassigned": 3,
+      "Organic Search": 1
     },
     "ai_referrals": {
       "by_ai": {},
@@ -943,8 +1091,8 @@
       "raw_sources": {}
     },
     "by_country": {
-      "Ukraine": 3,
-      "—": 1,
+      "Ukraine": 4,
+      "(not set)": 1,
       "Albania": 1,
       "Netherlands": 1,
       "Poland": 1,
@@ -952,17 +1100,17 @@
       "United States": 1
     },
     "by_device": {
-      "desktop": 7,
+      "desktop": 8,
       "mobile": 2
     },
-    "collected_at": "2026-09-13T13:56:24.119130+00:00"
+    "collected_at": "2026-09-14T16:11:18.284091+00:00"
   },
   "site": {
     "totals": {
-      "impressions": 559,
-      "clicks": 36,
-      "ctr": 0.0644,
-      "position": 23.0
+      "impressions": 569,
+      "clicks": 39,
+      "ctr": 0.0685,
+      "position": 23.2
     },
     "pages": [
       {
@@ -985,10 +1133,10 @@
       },
       {
         "url": "https://kozyr.club/ua/uk/",
-        "impressions": 89,
-        "clicks": 3,
-        "ctr": 0.0337,
-        "position": 38.1,
+        "impressions": 96,
+        "clicks": 6,
+        "ctr": 0.0625,
+        "position": 39,
         "path": "/ua/uk/",
         "title": "/ua/uk/"
       },
@@ -1084,10 +1232,10 @@
       },
       {
         "url": "https://kozyr.club/ua/blog/pokernyy-klub-clubgg-ukraina/",
-        "impressions": 12,
+        "impressions": 13,
         "clicks": 2,
-        "ctr": 0.1667,
-        "position": 12.1,
+        "ctr": 0.1538,
+        "position": 11.5,
         "path": "/ua/blog/pokernyy-klub-clubgg-ukraina/",
         "title": "Покерный клуб ClubGG Украина: вступление и рейкбек до 65%"
       },
@@ -1101,6 +1249,15 @@
         "title": "/ua/uk/blog/"
       },
       {
+        "url": "https://kozyr.club/countries/",
+        "impressions": 9,
+        "clicks": 1,
+        "ctr": 0.1111,
+        "position": 3.3,
+        "path": "/countries/",
+        "title": "/countries/"
+      },
+      {
         "url": "https://kozyr.club/ua/blog/kak-rabotayut-privatnye-pokerclubi/",
         "impressions": 9,
         "clicks": 0,
@@ -1108,15 +1265,6 @@
         "position": 6.2,
         "path": "/ua/blog/kak-rabotayut-privatnye-pokerclubi/",
         "title": "Как работают приватные покерные клубы в ClubGG"
-      },
-      {
-        "url": "https://kozyr.club/countries/",
-        "impressions": 8,
-        "clicks": 1,
-        "ctr": 0.125,
-        "position": 3.2,
-        "path": "/countries/",
-        "title": "/countries/"
       },
       {
         "url": "https://kozyr.club/ua/legal/",
@@ -1272,6 +1420,15 @@
         "title": "/ua/rooms/"
       },
       {
+        "url": "https://kozyr.club/ua/uk/blog/chto-takoe-bedbid-dzhekpot-v-pokere/",
+        "impressions": 1,
+        "clicks": 0,
+        "ctr": 0.0,
+        "position": 5,
+        "path": "/ua/uk/blog/chto-takoe-bedbid-dzhekpot-v-pokere/",
+        "title": "/ua/uk/blog/chto-takoe-bedbid-dzhekpot-v-pokere/"
+      },
+      {
         "url": "https://kozyr.club/ua/uk/blog/chto-takoe-reykbek-v-pokere/",
         "impressions": 1,
         "clicks": 0,
@@ -1302,15 +1459,15 @@
     "top_queries": [
       {
         "query": "покер руми україни",
-        "impressions": 35,
-        "clicks": 2,
-        "position": 35.8
+        "impressions": 36,
+        "clicks": 3,
+        "position": 35.5
       },
       {
         "query": "українські покер руми",
-        "impressions": 20,
-        "clicks": 2,
-        "position": 38.4
+        "impressions": 21,
+        "clicks": 3,
+        "position": 39
       },
       {
         "query": "kozyr",
@@ -1331,16 +1488,16 @@
         "position": 44.7
       },
       {
+        "query": "покер руми в україні",
+        "impressions": 6,
+        "clicks": 2,
+        "position": 29.3
+      },
+      {
         "query": "klubok покер",
         "impressions": 5,
         "clicks": 1,
         "position": 13
-      },
-      {
-        "query": "покер руми в україні",
-        "impressions": 5,
-        "clicks": 1,
-        "position": 24.8
       },
       {
         "query": "покер повернення рейка",
@@ -1451,9 +1608,9 @@
         "position": 49
       }
     ],
-    "pages_count": 37
+    "pages_count": 38
   },
   "period_label": "последние 60 дней",
   "period_days": 60,
-  "collected_at": "2026-09-13T13:56:24.456966+00:00"
+  "collected_at": "2026-09-14T16:11:18.667981+00:00"
 }
