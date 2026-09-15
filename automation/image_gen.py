@@ -10,7 +10,7 @@ Pipeline:
   4. Stamp a small semi-transparent KOZYR "K" mark in the bottom-right corner
   5. Convert to WebP, save next to body.md in the pending dir
 
-Design decisions (KOZYR, differs from the old two-panel PokerNet layout):
+Design decisions (KOZYR, KOZYR layout):
   - NO left brand panel. The photo uses the full frame — cleaner, more
     editorial, lets the poker imagery breathe.
   - A small "K" watermark (bottom-right) gives quiet brand presence without

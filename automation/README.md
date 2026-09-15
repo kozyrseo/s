@@ -5,7 +5,7 @@ Claude генерит текст + (опционально) картинку →
 `_pending/` → ты проверяешь → публикуешь → она рендерится в HTML,
 обновляются sitemap и taxonomy.
 
-Адаптировано из пайплайна PokerNet AI. Telegram-канал **заложен, но
+Адаптировано из пайплайна KOZYR. Telegram-канал **заложен, но
 выключен** (`TELEGRAM_ENABLED = False` в `lang_config.py`).
 
 ---
