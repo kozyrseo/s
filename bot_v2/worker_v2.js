@@ -159,6 +159,13 @@ async function handleMessage(message, env) {
     //     handlePartnerAnswer сам разберётся со стадией (await_text /
     //     await_more / parsing / await_confirm). Свободный текст в любой
     //     из этих стадий = ввод или дополнение анкеты.
+    // 1a-0. Сессия добавления СТРАНЫ (мультигео) — проверяем ПЕРВОЙ,
+    //       отдельная от партнёрской, не смешиваются.
+    const countrySession = await getCountrySession(chatId, env);
+    if (countrySession) {
+      await handleCountryAnswer(chatId, text, message, env);
+      return;
+    }
     const partnerSession = await getPartnerSession(chatId, env);
     if (partnerSession) {
       await handlePartnerAnswer(chatId, text, message, env);
@@ -215,6 +222,10 @@ function getCommandHandler(cmd) {
     "/translate":   cmdTranslate,
     "/menu":        cmdMenu,
     "/addpartner":  cmdAddPartner,
+    "/repost":      cmdRepost,
+    "/newcountry":  cmdNewCountry,
+    "/addcountry":  cmdNewCountry,   // алиас
+    "/country":     cmdNewCountry,   // алиас
     "/newpartner":  cmdAddPartner,   // алиас
     "/partner":     cmdAddPartner,   // алиас
   };
@@ -225,6 +236,8 @@ function getCommandHandler(cmd) {
 async function showMoreMenu(chatId, env) {
   const kb = [
     [{ text: "➕ Добавить партнёра", callback_data: "menu_action:add_partner" }],
+    [{ text: "🌍 Добавить страну (мультигео)", callback_data: "menu_action:add_country" }],
+    [{ text: "📡 Репостнуть статью", callback_data: "menu_action:repost" }],
     [{ text: "🔍 Найти новые темы", callback_data: "menu_action:research" }],
     [{ text: "🔄 Обновить список тем", callback_data: "menu_action:refresh" }],
     [{ text: "📊 Аналитика: выбрать период", callback_data: "menu_action:analytics_period" }],
@@ -262,6 +275,27 @@ async function handleCallback(cb, env) {
   // Мы допускаем 2-3 сегмента: action:slug или action:slug:field или action:row
   const segments = data.split(":");
   const action = segments[0];
+
+  // ── UI команды /repost: список, карточка, обе ──
+  if (action === "rp_page" || action === "rp_pick" || action === "rp_both") {
+    await handleRepostUICallback(action, segments, cb, env);
+    return;
+  }
+
+  // ── РЕПОСТ на внешние площадки: repost:{platform}:{slug} ──
+  if (action === "repost") {
+    const platform = segments[1];
+    const slug = segments.slice(2).join(":");
+    await answerCallback(cb.id, env, "📡 Запускаю репост…");
+    const ok = await triggerWorkflow("repost.yml", { slug, platform }, env);
+    await sendMessage(cb.message.chat.id, env, ok
+      ? `📡 *Репост на ${platform}* запущен: \`${escapeMd(slug)}\`\n\n` +
+        `🇺🇦 UK-версия публикуется сейчас.\n` +
+        `🇷🇺 RU-версия выйдет автоматически через ~4 часа.\n\n` +
+        `Пришлю ссылки, когда будет готово.`
+      : `❌ Не удалось запустить repost.yml. Проверь, что workflow залит.`);
+    return;
+  }
 
   // Простые "просмотр"-действия
   if (action === "fulltext") {
@@ -374,11 +408,21 @@ async function handleCallback(cb, env) {
   //    pshow:{id}          → показать сводку по конкретному черновику
   //    pshow_latest        → показать последний черновик (если авто-сводка не дошла)
   // ═══════════════════════════════════════════════════════════════════
+  // ── МАСТЕР СТРАНЫ (мультигео) — префикс nc ──
+  if (action === "nc_cancel" || action === "nc_lang" || action === "nc_cur" ||
+      action === "nc_ptoggle" || action === "nc_pall" || action === "nc_pnone" ||
+      action === "nc_pdone" || action === "nc_back_partners" || action === "nc_confirm" ||
+      action === "nc_pcur") {
+    await handleCountryCallback(action, segments, cb, env);
+    return;
+  }
+
   if (action === "pcountry" || action === "pconfirm" || action === "pmore" ||
-      action === "pcancel" || action === "ppublish" ||
+      action === "pcancel" || action === "ppublish" || action === "ppubok" ||
       action === "pshow" || action === "pshow_latest" ||
       action === "pedit" || action === "pfield" || action === "pacc" ||
-      action === "pfull" || action === "ptype") {
+      action === "pfull" || action === "ptype" ||
+      action === "pwiz" || action === "pwset" || action === "pwskip") {
     await handlePartnerCallback(action, segments, cb, env);
     return;
   }
@@ -430,6 +474,10 @@ async function handleCallback(cb, env) {
     const chatId = cb.message.chat.id;
     if (which === "add_partner") {
       await cmdAddPartner(chatId, [], cb.message, env);
+    } else if (which === "add_country") {
+      await cmdNewCountry(chatId, [], cb.message, env);
+    } else if (which === "repost") {
+      await cmdRepost(chatId, [], cb.message, env);
     } else if (which === "research") {
       await cmdResearch(chatId, [], cb.message, env);
     } else if (which === "refresh") {
@@ -776,6 +824,8 @@ async function showAnalyticsDashboard(chatId, env) {
   const report = await ghReadJSON("analytics/report.json", env);
   const summary = renderInstantSummary(report);
   const kb = [
+    // Практический раздел — авто-выводы «что делать»
+    [{ text: "💡 Что делать (выводы)", callback_data: "an_section:insights" }],
     // Разделы дашборда — каждый открывается новым сообщением
     [
       { text: "📄 Статьи", callback_data: "an_section:articles" },
@@ -788,6 +838,9 @@ async function showAnalyticsDashboard(chatId, env) {
     [
       { text: "🌍 Трафик", callback_data: "an_section:traffic" },
       { text: "⚙️ GA4-поведение", callback_data: "an_section:ga4" },
+    ],
+    [
+      { text: "🤖 Нейросети", callback_data: "an_section:ai" },
     ],
     // Свежий сбор за период
     [{ text: "📊 Собрать за 60 дней", callback_data: "an_period:default" }],
@@ -820,9 +873,11 @@ async function sendAnalyticsSection(chatId, which, env) {
   switch (which) {
     case "articles":  text = renderSectionArticles(report); break;
     case "partners":  text = renderSectionPartners(report); break;
+    case "insights":  text = renderSectionInsights(report); break;
     case "dynamics":  text = await renderSectionDynamics(report, env); break;
     case "queries":   text = renderSectionQueries(report); break;
     case "traffic":   text = renderSectionTraffic(report); break;
+    case "ai":        text = renderSectionAI(report); break;
     case "ga4":       text = renderSectionGA4(report); break;
     default:          text = "Неизвестный раздел.";
   }
@@ -896,17 +951,16 @@ function renderSectionPartners(report) {
     L.push("");
     L.push("Как только пойдёт трафик, здесь появится:");
     L.push("• сколько человек ушло на *каждого* партнёра");
+    L.push("• воронка: показы → открыли обзор → ушли к партнёру");
+    L.push("• CR по каждому партнёру (кто реально конвертит)");
     L.push("• откуда кликнули (виджет / CTA / карточка / панель)");
-    L.push("• с какой страницы шёл переход");
-    L.push("• внешние переходы (outbound) vs на страницу-обзор");
     return L.join("\n");
   }
 
-  const byPartner = {};   // partner → total (из link_label)
-  const bySource = {};    // источник блока → total
+  // ── Агрегаты по событиям / источникам / страницам (из статей) ──
+  const bySource = {};
   const byEvent = { affiliate_click: 0, partner_page_click: 0 };
-  const byPage = {};      // страница → total
-
+  const byPage = {};
   for (const a of articles) {
     const conv = a.conversions || {};
     const total = conv.total || 0;
@@ -919,27 +973,79 @@ function renderSectionPartners(report) {
       byEvent[ev] = (byEvent[ev] || 0) + n;
     }
   }
-  const convByPage = ga4.conversions_by_page || {};
-  for (const rec of Object.values(convByPage)) {
-    for (const [label, n] of Object.entries(rec.by_label || {})) {
-      byPartner[label] = (byPartner[label] || 0) + n;
+
+  // ── Партнёры: приоритет — чистый partner_id (conversions_by_partner).
+  //    Фолбэк — старый by_label, если custom dimension ещё не наполнился.
+  const byPartner = {};
+  const cbp = ga4.conversions_by_partner || {};
+  let usingCleanIds = false;
+  for (const [pid, rec] of Object.entries(cbp)) {
+    if (!rec || !(rec.total || rec.outbound || rec.internal)) continue;
+    usingCleanIds = true;
+    byPartner[pid] = {
+      outbound: rec.outbound || 0,
+      internal: rec.internal || 0,
+      total: rec.total || ((rec.outbound || 0) + (rec.internal || 0)),
+    };
+  }
+  if (!usingCleanIds) {
+    const convByPage = ga4.conversions_by_page || {};
+    for (const rec of Object.values(convByPage)) {
+      for (const [label, n] of Object.entries(rec.by_label || {})) {
+        const k = String(label);
+        byPartner[k] = byPartner[k] || { outbound: 0, internal: 0, total: 0 };
+        byPartner[k].total += n;
+      }
     }
   }
 
-  const totalClicks = articles.reduce((s, a) => s + ((a.conversions && a.conversions.total) || 0), 0);
+  // ── Воронка affiliate-сайта: показы → открыли обзор → ушли к партнёру ──
   const totalViews = (ga4.totals && ga4.totals.views) || 0;
+  const openedReview = byEvent.partner_page_click || 0;
+  const wentOut = byEvent.affiliate_click || 0;
+  const totalClicks = articles.reduce(
+    (s, a) => s + ((a.conversions && a.conversions.total) || 0), 0);
   const cr = totalViews ? (totalClicks / totalViews * 100) : 0;
-  L.push(`Всего переходов: *${totalClicks}* · конверсия *${cr.toFixed(2)}%*`);
-  L.push(`Внешние: *${byEvent.affiliate_click || 0}* · на обзор: *${byEvent.partner_page_click || 0}*`);
+
+  L.push("*Воронка сайта:*");
+  L.push(`👁 Просмотры: *${totalViews}*`);
+  const pReview = totalViews ? (openedReview / totalViews * 100) : 0;
+  L.push(`  ↓ открыли обзор: *${openedReview}* (${pReview.toFixed(1)}%)`);
+  const pOut = openedReview ? (wentOut / openedReview * 100)
+                           : (totalViews ? (wentOut / totalViews * 100) : 0);
+  const pOutBase = openedReview ? "из обзоров" : "из просмотров";
+  L.push(`  ↓ ушли к партнёру: *${wentOut}* (${pOut.toFixed(0)}% ${pOutBase})`);
+  L.push("");
+  L.push(`Всего кликов: *${totalClicks}* · общая конв. *${cr.toFixed(2)}%*`);
   L.push("");
 
-  const partners = Object.entries(byPartner).sort((a, b) => b[1] - a[1]);
+  const partners = Object.entries(byPartner)
+    .sort((a, b) => (b[1].total || 0) - (a[1].total || 0));
+  const sumOut = partners.reduce((s, [, r]) => s + (r.outbound || 0), 0);
+  const sumLabelTotal = partners.reduce((s, [, r]) => s + (r.total || 0), 0);
   if (partners.length) {
-    L.push("*По партнёрам:*");
-    for (const [p, n] of partners) {
-      const share = totalClicks ? (n / totalClicks * 100).toFixed(0) : 0;
-      L.push(`• ${escapeMd(p)}: *${n}* (${share}%)`);
+    L.push(usingCleanIds
+      ? "*По партнёрам* (🎯 ушли · 👁 обзор · CR · доля):"
+      : "*По партнёрам* (по меткам кнопок):");
+    for (const [pid, r] of partners.slice(0, 12)) {
+      if (usingCleanIds) {
+        const crP = r.internal ? (r.outbound / r.internal * 100) : null;
+        const shareP = sumOut ? (r.outbound / sumOut * 100) : 0;
+        const crStr = crP !== null ? `CR ${crP.toFixed(0)}%` : "CR —";
+        L.push(`• ${escapeMd(pid)} — 🎯 *${r.outbound}* · 👁 ${r.internal} · ${crStr} · ${shareP.toFixed(0)}%`);
+      } else {
+        const shareP = sumLabelTotal ? (r.total / sumLabelTotal * 100).toFixed(0) : 0;
+        L.push(`• ${escapeMd(pid)}: *${r.total}* (${shareP}%)`);
+      }
     }
+    if (!usingCleanIds) {
+      L.push("");
+      L.push("_⚠️ Данные по меткам кнопок (грязно). Для чистой статистики_");
+      L.push("_зарегистрируй custom dimension `partner_id` в GA4._");
+    }
+    L.push("");
+  } else {
+    L.push("_Переходов к партнёрам пока нет — накопятся по мере кликов._");
     L.push("");
   }
 
@@ -958,6 +1064,112 @@ function renderSectionPartners(report) {
     for (const [pg, n] of pages) {
       L.push(`• ${escapeMd(String(pg).slice(0, 40))} — *${n}*`);
     }
+  }
+  return L.join("\n");
+}
+
+// ── 💡 ЧТО ДЕЛАТЬ: авто-выводы из данных отчёта ──
+function renderSectionInsights(report) {
+  const articles = report.articles || [];
+  const site = report.site || {};
+  const ga4 = report.ga4 || {};
+  const cats = report.by_category || {};
+  const L = ["💡 *Что делать* — выводы из данных", ""];
+  let any = false;
+
+  const readNoClick = [];
+  for (const a of articles) {
+    const views = (a.behavior && a.behavior.views) || 0;
+    const crv = a.conv_rate || 0;
+    if (views >= 20 && crv < 0.01) {
+      readNoClick.push({ title: a.title || a.slug, views });
+    }
+  }
+  readNoClick.sort((x, y) => y.views - x.views);
+  if (readNoClick.length) {
+    any = true;
+    L.push("🔧 *Читают, но не кликают* — усилить CTA/виджет:");
+    for (const a of readNoClick.slice(0, 4)) {
+      L.push(`• ${escapeMd(String(a.title).slice(0, 42))} — ${a.views} 👁, ~0 переходов`);
+    }
+    L.push("");
+  }
+
+  let allQ = [];
+  if (Array.isArray(site.top_queries) && site.top_queries.length) {
+    allQ = site.top_queries.map(q => ({
+      q: q.query, impr: q.impressions || 0, pos: q.position }));
+  } else {
+    for (const a of articles) {
+      for (const q of (a.top_queries || [])) {
+        if (q.query) allQ.push({ q: q.query, impr: q.impressions || 0, pos: q.position });
+      }
+    }
+  }
+  const edge = allQ
+    .filter(q => typeof q.pos === "number" && q.pos > 10 && q.pos <= 20)
+    .sort((a, b) => a.pos - b.pos);
+  if (edge.length) {
+    any = true;
+    L.push("🎯 *На грани топ-10* — дожать эти запросы:");
+    for (const q of edge.slice(0, 5)) {
+      L.push(`• ${escapeMd(q.q.slice(0, 34))} — поз. ${q.pos.toFixed(1)} (${q.impr} 👁)`);
+    }
+    L.push("");
+  }
+
+  const cbp = ga4.conversions_by_partner || {};
+  const partnerRows = Object.entries(cbp)
+    .map(([pid, r]) => ({
+      pid,
+      out: (r && r.outbound) || 0,
+      inn: (r && r.internal) || 0,
+      total: (r && r.total) || 0,
+      cr: (r && r.internal) ? (r.outbound / r.internal) : null,
+    }))
+    .filter(p => p.total > 0);
+  if (partnerRows.length) {
+    const rated = partnerRows.filter(p => p.cr !== null && p.inn >= 3)
+      .sort((a, b) => b.cr - a.cr);
+    if (rated.length) {
+      any = true;
+      const best = rated[0];
+      L.push(`🏆 *Лучший оффер:* \`${escapeMd(best.pid)}\` — CR ${(best.cr * 100).toFixed(0)}% (масштабируй: больше ссылок/статей)`);
+      const weak = rated[rated.length - 1];
+      if (rated.length > 1 && weak.cr < 0.15) {
+        L.push(`⚠️ *Слабый оффер:* \`${escapeMd(weak.pid)}\` — CR ${(weak.cr * 100).toFixed(0)}% (пересмотри карточку/условия)`);
+      }
+      L.push("");
+    }
+  }
+
+  const winners = cats.winners || [];
+  if (winners.length) {
+    any = true;
+    L.push("🟢 *Растущие темы* — сделать ещё в этих кластерах:");
+    for (const w of winners.slice(0, 3)) {
+      const s = w.stats || {};
+      L.push(`• ${escapeMd(String(w.title || "").slice(0, 40))} — ${s.impressions || 0} 👁, поз. ${s.position || "—"}`);
+    }
+    L.push("");
+  }
+
+  const siteViews = (ga4.totals && ga4.totals.views) || 0;
+  const siteImpr = (site.totals && site.totals.impressions) || 0;
+  if (siteImpr < 1000 && siteViews < 500) {
+    any = true;
+    L.push("🌱 *Трафик ещё низкий* — сейчас главное объём:");
+    L.push(`• показы: ${siteImpr} · просмотры: ${siteViews}`);
+    L.push("• публикуй больше статей под low-competition запросы");
+    L.push("• фокус на индексации и внутренней перелинковке");
+    L.push("");
+  }
+
+  if (!any) {
+    L.push("_Пока недостаточно данных для выводов._");
+    L.push("Собери отчёт за более длинный период или дождись накопления кликов.");
+  } else {
+    L.push("_Выводы обновляются с каждым сбором отчёта._");
   }
   return L.join("\n");
 }
@@ -1061,6 +1273,58 @@ function renderSectionQueries(report) {
   }
   if (!allQ.length) {
     L.push("_Запросов пока нет — Search Console наберёт данные за несколько дней._");
+  }
+  return L.join("\n");
+}
+
+// ── 🤖 НЕЙРОСЕТИ: трафик из ИИ-ассистентов (ChatGPT, Perplexity, …) ──
+function renderSectionAI(report) {
+  const ga4 = report.ga4 || {};
+  const L = ["🤖 *Трафик из нейросетей*", ""];
+  if (!ga4.available) {
+    L.push("_GA4 ещё не отдаёт данные (нужны визиты + 24–48ч)._");
+    L.push("");
+    L.push("Здесь появятся переходы с ИИ-ассистентов:");
+    L.push("• ChatGPT, Perplexity, Gemini, Copilot, Claude и др.");
+    L.push("• сколько людей пришло с каждого");
+    return L.join("\n");
+  }
+  const ai = ga4.ai_referrals || {};
+  const by = ai.by_ai || {};
+  const entries = Object.entries(by).sort((a, b) => b[1] - a[1]);
+  const totalUsers = (ga4.totals && ga4.totals.users) || 0;
+
+  if (entries.length) {
+    const share = totalUsers ? (ai.total / totalUsers * 100) : 0;
+    L.push(`Всего с ИИ: *${ai.total || 0}* пользователей (${share.toFixed(1)}% трафика)`);
+    L.push(`Сессий: *${ai.sessions || 0}*`);
+    L.push("");
+    L.push("*По источникам:*");
+    for (const [name, users] of entries) {
+      const sh = ai.total ? (users / ai.total * 100).toFixed(0) : 0;
+      L.push(`• ${escapeMd(name)}: *${users}* (${sh}%)`);
+    }
+    L.push("");
+    const raw = ai.raw_sources || {};
+    const rawKeys = Object.keys(raw);
+    if (rawKeys.length) {
+      L.push("_Реальные домены-источники:_");
+      for (const [dom, n] of Object.entries(raw).slice(0, 6)) {
+        L.push(`  · ${escapeMd(dom)} — ${n}`);
+      }
+      L.push("");
+    }
+    L.push("_ℹ️ Учитываются только переходы по ссылке из ИИ._");
+    L.push("_Если ИИ пересказал ответ без клика — визита нет._");
+  } else {
+    L.push("_Переходов из нейросетей пока не зафиксировано._");
+    L.push("");
+    L.push("Это нормально на старте: ИИ-трафик появляется, когда");
+    L.push("ассистенты начинают цитировать твой контент со ссылкой.");
+    L.push("Твой `robots.txt` уже разрешает всем ИИ-ботам сканировать сайт —");
+    L.push("это ускоряет попадание в их ответы.");
+    L.push("");
+    L.push("_Проверь снова через несколько дней после роста органики._");
   }
   return L.join("\n");
 }
@@ -1203,6 +1467,13 @@ function renderInstantSummary(report) {
     L.push("*⚡ Итоги за период*");
     L.push(`👥 Пользователи: *${t.users || 0}*  ·  👁 Просмотры: *${views}*`);
     L.push(`🎯 Переходы к партнёрам: *${totalClicks}*  ·  📈 Конв.: *${cr.toFixed(2)}%*`);
+    const aiRef = ga4.ai_referrals || {};
+    if (aiRef.total > 0) {
+      const aiTop = Object.entries(aiRef.by_ai || {})
+        .sort((a, b) => b[1] - a[1]).slice(0, 3)
+        .map(([k, v]) => `${escapeMd(k)} ${v}`).join(" · ");
+      L.push(`🤖 Из нейросетей: *${aiRef.total}*${aiTop ? "  ·  " + aiTop : ""}`);
+    }
     L.push("");
 
     // Лидер по переходам к партнёрам
@@ -1467,6 +1738,11 @@ async function cmdPending(chatId, args, msg, env) {
       return { text: `✏️ ${flag}`, callback_data: `edit_menu_lang:${l}:${slug}` };
     });
     kb.push(editRow);
+    // Репост на внешние площадки (ссылочный профиль): UK сразу + RU через ~4ч
+    kb.push([
+      { text: "📡 Telegraph", callback_data: `repost:telegraph:${slug}` },
+      { text: "📝 Blogger", callback_data: `repost:blogger:${slug}` },
+    ]);
     kb.push([
       { text: "🧾 Исходники", callback_data: `sources:${slug}` },
       { text: langs.length > 1 ? "❌ Отклонить всё" : "❌ Отклонить",
@@ -1734,9 +2010,9 @@ async function cmdAddPartner(chatId, args, msg, env) {
     `• Платежи (карта / крипта — какие сети), сроки выплат\n` +
     `• Плюсы и минусы, как начать играть\n` +
     `• Ссылка для кнопки «Перейти»\n\n` +
-    `Я сам разберу текст на параметры и покажу, что понял.\n\n` +
-    `Отмена: /cancel`;
-  await sendMessage(chatId, env, text);
+    `Я сам разберу текст на параметры и покажу, что понял.`;
+  await sendMessage(chatId, env, text,
+    [[{ text: "❌ Отмена", callback_data: "pcancel" }]]);
 }
 
 // ── Приём свободного текста в рамках партнёрской сессии ──
@@ -1745,6 +2021,12 @@ async function handlePartnerAnswer(chatId, text, message, env) {
   if (!session) return;   // сессия истекла между проверкой и обработкой
 
   const stage = session.stage || "await_text";
+
+  // Мастер настройки имеет приоритет: любой текст в активном шаге — ввод шага.
+  if (session.wizard) {
+    await handlePartnerWizardText(chatId, session, text, env);
+    return;
+  }
 
   // Правка одного поля кнопкой: пришло новое значение — применяем к черновику.
   if (stage === "edit_field" && session.edit_field && validPartnerId(session.draft_id)) {
@@ -1856,6 +2138,64 @@ async function handlePartnerCallback(action, segments, cb, env) {
     return;
   }
 
+  // Старт мастера настройки.
+  if (action === "pwiz") {
+    const draftId = segments[1];
+    if (!validPartnerId(draftId)) { await answerCallback(cb.id, env, "⚠️ Некорректный id"); return; }
+    await answerCallback(cb.id, env, "⚙️ Мастер настройки");
+    await partnerWizardGoto(chatId, draftId, "geo_accept", env);
+    return;
+  }
+
+  // Кнопки-выборы внутри шагов мастера.
+  if (action === "pwset") {
+    const mode = segments[1];
+    const draftId = segments[2];
+    if (!validPartnerId(draftId)) { await answerCallback(cb.id, env, "⚠️ Некорректный id"); return; }
+    const draft = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
+    if (!draft) { await answerCallback(cb.id, env, "⚠️ Не найден"); return; }
+    if (mode === "accall") {
+      draft.acceptedCountries = ["all"];
+      await _wizSaveDraft(draftId, draft, env, "wizard accept=all");
+      await answerCallback(cb.id, env, "🌍 Весь мир");
+      await partnerWizardNext(chatId, draftId, "geo_accept", env);
+    } else if (mode === "acconly") {
+      draft.acceptedCountries = draft.country ? [draft.country] : [];
+      await _wizSaveDraft(draftId, draft, env, "wizard accept=only");
+      await answerCallback(cb.id, env, "📍 Только основная");
+      await partnerWizardNext(chatId, draftId, "geo_accept", env);
+    } else if (mode === "acclist") {
+      const session = (await getPartnerSession(chatId, env)) ||
+        { chat_id: chatId, started_at: new Date().toISOString() };
+      session.wizard = "geo_accept";
+      session.wizard_input = "acc_list";
+      session.draft_id = draftId;
+      await savePartnerSession(chatId, session, env);
+      await answerCallback(cb.id, env, "✍️ Жду список");
+      await sendMessage(chatId, env,
+        "✍️ Пришли коды стран через запятую (напр. `ua, pl, de`).",
+        [[{ text: "⏹ Выйти из мастера", callback_data: `pshow:${draftId}` }]]);
+    } else if (mode === "excnone") {
+      draft.excludedCountries = [];
+      await _wizSaveDraft(draftId, draft, env, "wizard exclude=none");
+      await answerCallback(cb.id, env, "🌍 Без исключений");
+      await partnerWizardNext(chatId, draftId, "geo_exclude", env);
+    } else {
+      await answerCallback(cb.id, env, "⚠️ Неизвестно");
+    }
+    return;
+  }
+
+  // Пропуск текущего шага мастера.
+  if (action === "pwskip") {
+    const step = segments[1];
+    const draftId = segments[2];
+    if (!validPartnerId(draftId)) { await answerCallback(cb.id, env, "⚠️ Некорректный id"); return; }
+    await answerCallback(cb.id, env, "⏭ Пропущено");
+    await partnerWizardNext(chatId, draftId, step, env);
+    return;
+  }
+
   // Меню правки полей.
   if (action === "pedit") {
     const draftId = segments[1];
@@ -1958,7 +2298,11 @@ async function handlePartnerCallback(action, segments, cb, env) {
     await savePartnerSession(chatId, session, env);
     await sendMessage(chatId, env,
       "✏️ Пришли *дополнение или исправление одним сообщением*. " +
-      "Я учту его вместе с прежним описанием и пере-соберу черновик.");
+      "Я учту его вместе с прежним описанием и пере-соберу черновик.",
+      validPartnerId(draftId)
+        ? [[{ text: "← Назад к сводке", callback_data: `pshow:${draftId}` }],
+           [{ text: "❌ Отмена", callback_data: "pcancel" }]]
+        : [[{ text: "❌ Отмена", callback_data: "pcancel" }]]);
     return;
   }
 
@@ -1972,6 +2316,31 @@ async function handlePartnerCallback(action, segments, cb, env) {
   }
 
   if (action === "ppublish") {
+    const draftId = segments[1];
+    if (!validPartnerId(draftId)) { await answerCallback(cb.id, env, "⚠️ Некорректный id"); return; }
+    // Стоп-публикация: если реф-ссылка похожа на заглушку/пуста — спросить.
+    const d = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
+    const ref = (d && d.ref_url) || "";
+    if (isPlaceholderRef(ref)) {
+      await answerCallback(cb.id, env, "⚠️ Проверь ссылку");
+      await sendMessage(chatId, env,
+        "⚠️ *Реф-ссылка похожа на заглушку или пуста:*\n`" + escapeMd(ref || "—") + "`\n\n" +
+        "Это денежная ссылка кнопки «Перейти» — без неё теряется партнёрский трафик. Точно публиковать в прод?",
+        [
+          [{ text: "✅ Да, публиковать", callback_data: `ppubok:${draftId}` }],
+          [{ text: "✏️ Исправить ссылку", callback_data: `pfield:${draftId}:ref_url` }],
+          [{ text: "❌ Отмена", callback_data: `pshow:${draftId}` }],
+        ]);
+      return;
+    }
+    await answerCallback(cb.id, env, "🌐 Публикую…");
+    await editMessageRemoveButtons(cb.message, env, "ppublish");
+    await publishPartner(chatId, draftId, env);
+    return;
+  }
+
+  // Публикация подтверждена, несмотря на заглушку-ссылку.
+  if (action === "ppubok") {
     const draftId = segments[1];
     if (!validPartnerId(draftId)) { await answerCallback(cb.id, env, "⚠️ Некорректный id"); return; }
     await answerCallback(cb.id, env, "🌐 Публикую…");
@@ -2034,6 +2403,7 @@ async function showPartnerDraftSummary(chatId, draftId, env) {
   } else {
     kb = [
       [{ text: "✅ Создать страницу", callback_data: `pconfirm:${draftId}` }],
+      [{ text: "⚙️ Мастер настройки (страны · ссылка · лого · цвета)", callback_data: `pwiz:${draftId}` }],
       [{ text: "👁 Показать всё", callback_data: `pfull:${draftId}` },
        { text: "✏️ Исправить поле", callback_data: `pedit:${draftId}` }],
       [{ text: "🌐 Принимает из…", callback_data: `pacc:${draftId}` }],
@@ -2093,6 +2463,9 @@ function renderPartnerSummary(draft) {
     const acc = accepted.includes("all") ? "весь мир" : accepted.join(", ");
     L.push(`🌐 Принимает: ${escapeMd(acc)}`);
   }
+  const excl = draft.excludedCountries || [];
+  if (excl.length) L.push(`🚫 Не принимает: ${escapeMd(excl.join(", "))}`);
+  if (draft.type === "club" && draft.union) L.push(`🏷 Союз: ${escapeMd(draft.union)}`);
   L.push(`💰 Рейкбек: ${escapeMd(draft.rakeLabel || "?")}`);
   L.push(`⭐ KOZYR score: ${escapeMd(String(draft.score ?? "?"))}`);
   const games = draft.games || [];
@@ -2124,9 +2497,31 @@ function renderPartnerSummary(draft) {
     L.push(`⚠️ _Не указано (будут дефолты): ${escapeMd(missing.slice(0, 8).join(", "))}_`);
   }
   L.push("");
+  L.push(partnerReadiness(draft));
+  L.push("");
   const kind = draft.type === "club" ? "clubs" : "rooms";
   L.push(`_Путь: /${escapeMd(country || "??")}/${kind}/${escapeMd(draft.id || "?")}/_`);
   return L.join("\n");
+}
+
+// Плейсхолдер-ссылка: пусто или «голый домен» без пути/параметров.
+function isPlaceholderRef(ref) {
+  return !ref || /^https?:\/\/[^\/]+\/?$/i.test(String(ref).trim());
+}
+
+// Компактный чеклист готовности партнёра — что заполнено, что доделать.
+function partnerReadiness(draft) {
+  const acc = (draft.acceptedCountries || []).length ? "✅" : "—";
+  const exclList = draft.excludedCountries || [];
+  const excl = exclList.length ? exclList.join(",") : "—";
+  const ref = draft.ref_url
+    ? (isPlaceholderRef(draft.ref_url) ? "⚠️ заглушка" : "✅")
+    : "❌ нет";
+  const logo = draft.logo_img ? "✅" : "❌ текст";
+  const DEF_FROM = "#14358F", DEF_TO = "#2A6BFF";
+  const colors = ((draft.logo_from && draft.logo_from !== DEF_FROM) ||
+                  (draft.logo_to && draft.logo_to !== DEF_TO)) ? "✅" : "⚠️ дефолт";
+  return `📋 *Готовность:*\n🌍 приём ${acc} · 🚫 искл. ${escapeMd(excl)} · 🔗 ссылка ${ref}\n🖼 лого ${logo} · 🎨 цвета ${colors}`;
 }
 
 // Полная карточка черновика — всё, что распарсено (для проверки перед сборкой).
@@ -2154,6 +2549,192 @@ async function showPartnerFullDraft(chatId, draftId, env) {
   if (faq.length) { L.push(""); L.push(`*FAQ (${faq.length}):*`); faq.slice(0, 6).forEach(q => L.push(`  ❓ ${escapeMd(q.q || "")}`)); }
   const kb = [[{ text: "← Назад к сводке", callback_data: `pshow:${draftId}` }]];
   await sendMessage(chatId, env, L.join("\n"), kb);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  МАСТЕР НАСТРОЙКИ ПАРТНЁРА — пошаговый ввод: гео → исключения → [союз] →
+//  ссылка → логотип → цвета. Состояние в сессии: session.wizard = шаг,
+//  session.wizard_input = под-режим ожидания текста.
+// ═══════════════════════════════════════════════════════════════════════════
+const WIZARD_COLOR_NAMES = {
+  "синий": "#2668FF", "синій": "#2668FF", "голубой": "#3B9EFF", "блакитний": "#3B9EFF",
+  "красный": "#E23A3A", "червоний": "#E23A3A", "зелёный": "#1FA85A", "зеленый": "#1FA85A",
+  "зелений": "#1FA85A", "золотой": "#D9A93B", "золотий": "#D9A93B",
+  "жёлтый": "#F2C230", "желтый": "#F2C230", "жовтий": "#F2C230",
+  "чёрный": "#111827", "черный": "#111827", "чорний": "#111827",
+  "белый": "#F3F4F6", "білий": "#F3F4F6", "серый": "#6B7280", "сірий": "#6B7280",
+  "фиолетовый": "#7C3AED", "фіолетовий": "#7C3AED", "оранжевый": "#F97316",
+  "помаранчевий": "#F97316", "розовый": "#EC4899", "рожевий": "#EC4899",
+  "бирюзовый": "#14B8A6", "бірюзовий": "#14B8A6", "коричневый": "#8B5A2B", "коричневий": "#8B5A2B"
+};
+
+function wizardSteps(draft) {
+  const steps = ["geo_accept", "geo_exclude"];
+  if (draft && draft.type === "club") steps.push("union");
+  steps.push("ref", "logo", "colors");
+  return steps;
+}
+
+function wizardStepNo(draft, step) {
+  const steps = wizardSteps(draft);
+  return { n: steps.indexOf(step) + 1, total: steps.length };
+}
+
+async function _wizSaveDraft(draftId, draft, env, msg) {
+  await ghWriteFile(PARTNER_DRAFT_PATH(draftId),
+    JSON.stringify(draft, null, 2), `partner: ${msg} for ${draftId}`, env);
+}
+
+// Разбор цветов: hex (#RRGGBB) или названия словами → {from, to}. null если не понял.
+function parseWizardColors(s) {
+  const hexes = String(s).match(/#[0-9a-fA-F]{6}/g) || [];
+  if (hexes.length >= 2) return { from: hexes[0], to: hexes[1] };
+  if (hexes.length === 1) return { from: hexes[0], to: hexes[0] };
+  const words = String(s).toLowerCase().split(/[\s,+/&]+|\bи\b|\bта\b/).map(w => w.trim()).filter(Boolean);
+  const found = [];
+  for (const w of words) if (WIZARD_COLOR_NAMES[w]) found.push(WIZARD_COLOR_NAMES[w]);
+  if (found.length >= 2) return { from: found[0], to: found[1] };
+  if (found.length === 1) return { from: found[0], to: found[0] };
+  return null;
+}
+
+// Отправить приглашение конкретного шага.
+async function partnerWizardGoto(chatId, draftId, step, env) {
+  const draft = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
+  if (!draft) { await sendMessage(chatId, env, "⚠️ Черновик не найден."); return; }
+  const session = (await getPartnerSession(chatId, env)) ||
+    { chat_id: chatId, started_at: new Date().toISOString() };
+  session.stage = "await_confirm";
+  session.draft_id = draftId;
+  session.wizard = step;
+  session.wizard_input = null;
+  await savePartnerSession(chatId, session, env);
+
+  const { n, total } = wizardStepNo(draft, step);
+  const head = `*Шаг ${n}/${total}* · `;
+  const exitRow = [{ text: "⏹ Выйти из мастера", callback_data: `pshow:${draftId}` }];
+
+  if (step === "geo_accept") {
+    await sendMessage(chatId, env,
+      head + "🌍 *Откуда принимаете игроков?*",
+      [
+        [{ text: "🌍 Весь мир", callback_data: `pwset:accall:${draftId}` }],
+        [{ text: "📍 Только основная страна", callback_data: `pwset:acconly:${draftId}` }],
+        [{ text: "✍️ Ввести список стран", callback_data: `pwset:acclist:${draftId}` }],
+        exitRow,
+      ]);
+  } else if (step === "geo_exclude") {
+    const cur = (draft.excludedCountries || []).join(", ") || "нет";
+    await sendMessage(chatId, env,
+      head + "🚫 *Откуда НЕ принимаете?*\n\nПришли коды стран через запятую (напр. `us, ru, ir`).\n" +
+      `Сейчас: ${escapeMd(cur)}.`,
+      [
+        [{ text: "🌍 Без исключений", callback_data: `pwset:excnone:${draftId}` }],
+        [{ text: "⏭ Пропустить", callback_data: `pwskip:geo_exclude:${draftId}` }],
+        exitRow,
+      ]);
+  } else if (step === "union") {
+    await sendMessage(chatId, env,
+      head + "🏷 *Союз / юнион* (для клубов).\n\nПришли название союза одним сообщением или пропусти.",
+      [[{ text: "⏭ Пропустить", callback_data: `pwskip:union:${draftId}` }], exitRow]);
+  } else if (step === "ref") {
+    const cur = draft.ref_url || "не задана";
+    await sendMessage(chatId, env,
+      head + "🔗 *Реф-ссылка* для кнопки «Перейти».\n\nПришли ссылку (`https://…` или `t.me/…`).\n" +
+      `Сейчас: ${escapeMd(cur)}.`,
+      [[{ text: "⏭ Пропустить", callback_data: `pwskip:ref:${draftId}` }], exitRow]);
+  } else if (step === "logo") {
+    const cur = draft.logo_img ? "загружен" : "текстовый (инициалы)";
+    await sendMessage(chatId, env,
+      head + "🖼 *Логотип.*\n\nПришли *фото или картинку-файл* (PNG/JPG/WebP). Обрежу и сделаю webp сам.\n" +
+      `Сейчас: ${cur}.`,
+      [[{ text: "⏭ Пропустить", callback_data: `pwskip:logo:${draftId}` }], exitRow]);
+  } else if (step === "colors") {
+    await sendMessage(chatId, env,
+      head + "🎨 *Фирменные цвета.*\n\nНапиши словами (напр. `синий и золотой`) или hex (`#2668FF #D9A93B`).\n" +
+      "Влияет на плитку логотипа, если нет фото.",
+      [[{ text: "⏭ Авто (по умолчанию)", callback_data: `pwskip:colors:${draftId}` }], exitRow]);
+  }
+}
+
+// Следующий шаг или завершение.
+async function partnerWizardNext(chatId, draftId, currentStep, env) {
+  const draft = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
+  const steps = wizardSteps(draft);
+  const idx = steps.indexOf(currentStep);
+  const next = (idx >= 0 && idx + 1 < steps.length) ? steps[idx + 1] : null;
+  if (next) await partnerWizardGoto(chatId, draftId, next, env);
+  else await partnerWizardFinish(chatId, draftId, env);
+}
+
+async function partnerWizardFinish(chatId, draftId, env) {
+  const session = (await getPartnerSession(chatId, env)) ||
+    { chat_id: chatId, started_at: new Date().toISOString() };
+  session.wizard = null;
+  session.wizard_input = null;
+  session.stage = "await_confirm";
+  session.draft_id = draftId;
+  await savePartnerSession(chatId, session, env);
+  await sendMessage(chatId, env, "✅ *Мастер завершён.* Проверь сводку и создавай страницу:");
+  await showPartnerDraftSummary(chatId, draftId, env);
+}
+
+// Обработка текстового ввода внутри шага мастера.
+async function handlePartnerWizardText(chatId, session, text, env) {
+  const draftId = session.draft_id;
+  const step = session.wizard;
+  if (!validPartnerId(draftId)) { await sendMessage(chatId, env, "⚠️ Черновик потерян. Начни заново."); return; }
+  const draft = await ghReadJSON(PARTNER_DRAFT_PATH(draftId), env);
+  if (!draft) { await sendMessage(chatId, env, "⚠️ Черновик не найден."); return; }
+  const val = (text || "").trim();
+  const codesOf = (s) => s.toLowerCase().split(/[\s,;]+/).map(x => x.trim()).filter(x => /^[a-z]{2}$/.test(x));
+
+  if (step === "geo_accept" && session.wizard_input === "acc_list") {
+    const codes = codesOf(val);
+    if (!codes.length) { await sendMessage(chatId, env, "⚠️ Не вижу кодов. Пример: `ua, pl, de`."); return; }
+    draft.acceptedCountries = codes;
+    await _wizSaveDraft(draftId, draft, env, "wizard accept list");
+    await partnerWizardNext(chatId, draftId, "geo_accept", env);
+    return;
+  }
+  if (step === "geo_exclude") {
+    const codes = codesOf(val);
+    if (!codes.length) { await sendMessage(chatId, env, "⚠️ Не вижу кодов. Пример: `us, ru, ir`. Или нажми «Без исключений»."); return; }
+    draft.excludedCountries = codes;
+    await _wizSaveDraft(draftId, draft, env, "wizard exclude");
+    await partnerWizardNext(chatId, draftId, "geo_exclude", env);
+    return;
+  }
+  if (step === "union") {
+    draft.union = val;
+    await _wizSaveDraft(draftId, draft, env, "wizard union");
+    await partnerWizardNext(chatId, draftId, "union", env);
+    return;
+  }
+  if (step === "ref") {
+    if (!/^(https?:\/\/|t\.me\/|tg:\/\/)/i.test(val)) {
+      await sendMessage(chatId, env, "⚠️ Ссылка должна начинаться с `https://`, `t.me/` или `tg://`."); return;
+    }
+    draft.ref_url = val;
+    await _wizSaveDraft(draftId, draft, env, "wizard ref");
+    await partnerWizardNext(chatId, draftId, "ref", env);
+    return;
+  }
+  if (step === "colors") {
+    const c = parseWizardColors(val);
+    if (!c) { await sendMessage(chatId, env, "⚠️ Не понял цвета. Пример: `синий и золотой` или `#2668FF #D9A93B`. Или нажми «Авто»."); return; }
+    draft.logo_from = c.from; draft.logo_to = c.to;
+    if (draft.logo && typeof draft.logo === "object") { draft.logo.from = c.from; draft.logo.to = c.to; }
+    await _wizSaveDraft(draftId, draft, env, "wizard colors");
+    await partnerWizardNext(chatId, draftId, "colors", env);
+    return;
+  }
+  if (step === "logo") {
+    await sendMessage(chatId, env, "🖼 Это шаг логотипа — пришли *фото или картинку*. Или нажми «Пропустить».");
+    return;
+  }
+  // geo_accept без под-режима — ждём кнопку
+  await sendMessage(chatId, env, "Выбери вариант кнопкой выше 👆");
 }
 
 // ── Проставить основную страну в черновике и показать сводку заново ──
@@ -2999,13 +3580,16 @@ async function handlePartnerLogo(chatId, message, env) {
         JSON.stringify(draft, null, 2), `partner: logo path ${id}`, env);
     }
     const ok = await triggerWorkflow("process-logo.yml", { partner_id: id }, env);
+    const inWizardLogo = session && session.wizard === "logo";
     await sendMessage(chatId, env, ok
-      ? `✅ Логотип принят · *${escapeMd((draft && draft.name) || id)}*.\n\n` +
-        `Обрабатываю: обрезаю поля, делаю квадрат и конвертирую в webp… ` +
-        `через ~1 минуту будет готов и привязан. Если превью уже собрано — ` +
-        `потом нажми «✏️ Дополнить и пересобрать».`
+      ? `✅ Логотип принят · *${escapeMd((draft && draft.name) || id)}*. ` +
+        `Обрабатываю: обрезаю поля, делаю квадрат и webp…` +
+        (inWizardLogo ? "" : `\n\nЕсли превью уже собрано — потом нажми «✏️ Дополнить и пересобрать».`)
       : `⚠️ Логотип сохранён, но не удалось запустить обработку (process-logo.yml). ` +
         `Проверь, что воркфлоу залит в .github/workflows/.`);
+    if (inWizardLogo) {
+      await partnerWizardNext(chatId, id, "logo", env);
+    }
     return;
   }
 
@@ -3124,6 +3708,697 @@ async function ghReadFileBase64(filePath, env) {
   } catch (e) {
     console.error("ghReadFileBase64 failed:", filePath, e);
     return null;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  МАСТЕР ДОБАВЛЕНИЯ СТРАНЫ (мультигео) — /newcountry
+//  UX уровня топ-разработчиков: всё кнопками, минимум ввода, видно прогресс.
+//
+//  Сессия ОТДЕЛЬНАЯ от партнёрской (.bot_state/country_sessions/{chatId}.json)
+//  — страны и партнёры не смешиваются. Callback-префикс "nc" (new country).
+//
+//  Поток (машина состояний session.stage):
+//    await_country (ввод "pl Польша 🇵🇱")
+//      → langs      (кнопки языков)
+//      → currency   (кнопки валюты)
+//      → partners   (чекбоксы партнёров)
+//      → confirm    (сводка → запуск)
+//      → generating (workflow создаёт страну → превью с легальными рисками)
+//
+//  Разведение стран: каждая пишется под свой код (_pending_{code}), генерация
+//  одной страны не задевает другую (заложено в ядре lang_factory).
+// ═══════════════════════════════════════════════════════════════════════════
+
+const COUNTRY_SESSION_TTL_MS = 60 * 60 * 1000;   // 60 минут
+const COUNTRY_SESSION_PATH = (chatId) => `.bot_state/country_sessions/${chatId}.json`;
+const COUNTRY_JOB_PATH = (code) => `.bot_state/country_jobs/${code}.json`;
+
+// Флаги-эмодзи для частых стран (подсказка/автоопределение)
+const NC_FLAGS = {
+  pl: "🇵🇱", kz: "🇰🇿", by: "🇧🇾", de: "🇩🇪", cs: "🇨🇿", ro: "🇷🇴",
+  es: "🇪🇸", pt: "🇵🇹", tr: "🇹🇷", ge: "🇬🇪", az: "🇦🇿", uz: "🇺🇿",
+  am: "🇦🇲", kg: "🇰🇬", md: "🇲🇩", lv: "🇱🇻", lt: "🇱🇹", ee: "🇪🇪",
+};
+// Дефолтная валюта по стране (подсказка мастера)
+const NC_CURRENCY = {
+  pl: "PLN", kz: "KZT", by: "BYN", de: "EUR", cs: "CZK", ro: "RON",
+  es: "EUR", pt: "EUR", tr: "TRY", ge: "GEL", az: "AZN", uz: "UZS",
+  am: "AMD", kg: "KGS", md: "MDL", lv: "EUR", lt: "EUR", ee: "EUR",
+};
+// Дефолтный основной язык по стране (подсказка)
+const NC_PRIMARY_LANG = {
+  pl: "pl", kz: "kk", by: "be", de: "de", cs: "cs", ro: "ro",
+  es: "es", pt: "pt", tr: "tr", ge: "ka", az: "az", uz: "uz",
+};
+
+// ── Хранение сессии страны ──
+async function getCountrySession(chatId, env) {
+  const data = await ghReadJSON(COUNTRY_SESSION_PATH(chatId), env);
+  if (!data) return null;
+  const startedAt = new Date(data.started_at || 0).getTime();
+  if (!startedAt || Date.now() - startedAt > COUNTRY_SESSION_TTL_MS) {
+    await deleteCountrySession(chatId, env);
+    return null;
+  }
+  return data;
+}
+async function saveCountrySession(chatId, session, env) {
+  await ghWriteFile(COUNTRY_SESSION_PATH(chatId),
+    JSON.stringify(session, null, 2),
+    `country session ${chatId} [${session.stage || "?"}]`, env);
+}
+async function deleteCountrySession(chatId, env) {
+  await ghDeleteFile(COUNTRY_SESSION_PATH(chatId), "close country session", env).catch(() => {});
+}
+
+function validCountryCode(code) {
+  return typeof code === "string" && /^[a-z]{2}$/.test(code);
+}
+
+// ── /newcountry — старт мастера ──
+async function cmdNewCountry(chatId, args, msg, env) {
+  // Свежая сессия
+  const session = {
+    chat_id: chatId,
+    stage: "await_country",
+    started_at: new Date().toISOString(),
+  };
+  await saveCountrySession(chatId, session, env);
+
+  // Покажем уже существующие страны (чтобы не дублировать)
+  const existing = await ncExistingCountries(env);
+  const existLine = existing.length
+    ? `\n\n_Уже есть:_ ${existing.map(c => `${c.flag || ""} ${c.code}`).join(" · ")}`
+    : "";
+
+  const text = `🌍 *Добавление новой страны*\n\n` +
+    `Шаг 1/5 — *какая страна?*\n\n` +
+    `Пришли *одним сообщением*: код, название и (опц.) флаг.\n` +
+    `Примеры:\n` +
+    `  \`pl Польша 🇵🇱\`\n` +
+    `  \`kz Казахстан\`\n` +
+    `  \`de Германия 🇩🇪\`\n\n` +
+    `Код — 2 буквы (ISO). Флаг подставлю сам, если не укажешь.${existLine}`;
+  await sendMessage(chatId, env, text,
+    [[{ text: "❌ Отмена", callback_data: "nc_cancel" }]]);
+}
+
+// Список существующих стран (из countries.json)
+async function ncExistingCountries(env) {
+  const data = await ghReadJSON("automation/data/countries.json", env);
+  if (!data || !data.countries) return [];
+  return Object.entries(data.countries).map(([code, c]) => ({
+    code, flag: c.flag, name: c.name,
+  }));
+}
+
+// ── Приём текста в сессии страны ──
+async function handleCountryAnswer(chatId, text, message, env) {
+  const session = await getCountrySession(chatId, env);
+  if (!session) return;
+
+  // Ввод под-режима (валюта вручную, языки вручную)
+  if (session.await_input === "currency") {
+    const cur = text.trim().toUpperCase().replace(/[^A-Z]/g, "").slice(0, 5);
+    if (!cur) { await sendMessage(chatId, env, "⚠️ Валюта — буквы, напр. `PLN`. Ещё раз."); return; }
+    session.currency = cur;
+    session.await_input = null;
+    await saveCountrySession(chatId, session, env);
+    await ncStepPartners(chatId, env);
+    return;
+  }
+  if (session.await_input === "langs") {
+    const langs = text.toLowerCase().split(/[\s,;]+/).map(x => x.trim())
+      .filter(x => /^[a-z]{2}$/.test(x));
+    if (!langs.length) { await sendMessage(chatId, env, "⚠️ Коды языков через запятую, напр. `pl, en`. Ещё раз."); return; }
+    session.langs = langs;
+    session.await_input = null;
+    await saveCountrySession(chatId, session, env);
+    await ncStepPartners(chatId, env);
+    return;
+  }
+
+  // Основной шаг — ввод страны
+  if (session.stage === "await_country") {
+    // Парсим: код (2 буквы) + название + опц. флаг-эмодзи
+    const parts = text.trim().split(/\s+/);
+    const code = (parts[0] || "").toLowerCase();
+    if (!validCountryCode(code)) {
+      await sendMessage(chatId, env,
+        "⚠️ Первым — 2-буквенный код страны. Пример: `pl Польша 🇵🇱`. Ещё раз.");
+      return;
+    }
+    // Проверка дубля
+    const existing = await ncExistingCountries(env);
+    if (existing.some(c => c.code === code)) {
+      await sendMessage(chatId, env,
+        `⚠️ Страна \`${escapeMd(code)}\` уже существует. Дублировать нельзя.\n` +
+        `Выбери другой код или /cancel.`);
+      return;
+    }
+    // Флаг: ищем эмодзи в тексте, иначе из таблицы
+    const flagMatch = text.match(/\p{Extended_Pictographic}/u);
+    const flag = flagMatch ? flagMatch[0] : (NC_FLAGS[code] || "🏴");
+    // Название: всё между кодом и флагом (или до конца)
+    let name = parts.slice(1).filter(p => !/\p{Extended_Pictographic}/u.test(p)).join(" ").trim();
+    if (!name) name = code.toUpperCase();
+
+    session.code = code;
+    session.name = name;
+    session.flag = flag;
+    session.iso_country = code.toUpperCase();
+    session.stage = "langs";
+    await saveCountrySession(chatId, session, env);
+
+    await sendMessage(chatId, env,
+      `✅ Понял: ${flag} *${escapeMd(name)}* (\`${code}\`)`);
+    await ncStepLangs(chatId, env);
+    return;
+  }
+
+  // fallback
+  await sendMessage(chatId, env, "Используй кнопки выше 👆 или /cancel.");
+}
+
+// ── Шаг 2: языки ──
+async function ncStepLangs(chatId, env) {
+  const session = await getCountrySession(chatId, env);
+  if (!session) return;
+  session.stage = "langs";
+  await saveCountrySession(chatId, session, env);
+
+  const code = session.code;
+  const primary = NC_PRIMARY_LANG[code] || code;   // угадываем основной язык
+  // Варианты: только основной / основной+en / основной+ru / свой список
+  const kb = [
+    [{ text: `${primary} (только основной)`, callback_data: `nc_lang:${primary}` }],
+    [{ text: `${primary} + en`, callback_data: `nc_lang:${primary}_en` }],
+    [{ text: `${primary} + ru`, callback_data: `nc_lang:${primary}_ru` }],
+    [{ text: "✍️ Ввести свой список", callback_data: "nc_lang:custom" }],
+    [{ text: "❌ Отмена", callback_data: "nc_cancel" }],
+  ];
+  await sendMessage(chatId, env,
+    `Шаг 2/5 — *языки страны* ${session.flag} ${escapeMd(session.name)}\n\n` +
+    `Первый язык = основной (в корне /${code}/), остальные — в подпапках.\n` +
+    `Выбери набор:`, kb);
+}
+
+// ── Шаг 3: валюта ──
+async function ncStepCurrency(chatId, env) {
+  const session = await getCountrySession(chatId, env);
+  if (!session) return;
+  session.stage = "currency";
+  await saveCountrySession(chatId, session, env);
+
+  const suggested = NC_CURRENCY[session.code] || "";
+  const kb = [];
+  if (suggested) {
+    kb.push([{ text: `✅ ${suggested}`, callback_data: `nc_cur:${suggested}` }]);
+  }
+  // Частые валюты
+  kb.push([
+    { text: "EUR", callback_data: "nc_cur:EUR" },
+    { text: "USD", callback_data: "nc_cur:USD" },
+    { text: "USDT", callback_data: "nc_cur:USDT" },
+  ]);
+  kb.push([{ text: "✍️ Ввести свою", callback_data: "nc_cur:custom" }]);
+  kb.push([{ text: "❌ Отмена", callback_data: "nc_cancel" }]);
+
+  const langsLine = (session.langs || []).join(", ");
+  await sendMessage(chatId, env,
+    `Шаг 3/5 — *валюта* для ${session.flag} ${escapeMd(session.name)}\n\n` +
+    `_Языки: ${langsLine}_\n\n` +
+    (suggested ? `Обычная валюта страны — *${suggested}*. ` : "") +
+    `Валюта показывается в карточках партнёров на страницах этой страны.`, kb);
+}
+
+// ── Шаг 4: партнёры (чекбоксы) ──
+async function ncStepPartners(chatId, env) {
+  const session = await getCountrySession(chatId, env);
+  if (!session) return;
+  session.stage = "partners";
+  if (!session.selected_partners) session.selected_partners = [];
+  await saveCountrySession(chatId, session, env);
+
+  await ncRenderPartnerCheckboxes(chatId, session, env, null);
+}
+
+// Рендер чекбоксов партнёров. Если messageId задан — редактируем, иначе новое.
+async function ncRenderPartnerCheckboxes(chatId, session, env, messageId) {
+  const partners = await ncAllPartners(env);
+  const selected = new Set(session.selected_partners || []);
+
+  const kb = [];
+  for (const p of partners) {
+    const mark = selected.has(p.id) ? "☑️" : "☐";
+    const typeIcon = p.type === "club" ? "🎴" : "🃏";
+    kb.push([{
+      text: `${mark} ${typeIcon} ${p.name} (${p.currency || "?"})`,
+      callback_data: `nc_ptoggle:${p.id}`,
+    }]);
+  }
+  kb.push([
+    { text: "✅ Все", callback_data: "nc_pall" },
+    { text: "⬜ Никого", callback_data: "nc_pnone" },
+  ]);
+  kb.push([{ text: `➡️ Готово (выбрано: ${selected.size})`, callback_data: "nc_pdone" }]);
+  kb.push([{ text: "❌ Отмена", callback_data: "nc_cancel" }]);
+
+  const text = `Шаг 4/5 — *каких партнёров раскатать* на ${session.flag} ${escapeMd(session.name)}?\n\n` +
+    `Отметь кнопками. Партнёр получит страницу \`/${session.code}/rooms/...\` с валютой ${session.currency}.\n` +
+    `_Можно никого — добавишь позже._`;
+
+  if (messageId) {
+    await editMessageWithKb(chatId, messageId, text, kb, env);
+  } else {
+    await sendMessage(chatId, env, text, kb);
+  }
+}
+
+// Все партнёры (из partners.json) — краткий список
+async function ncAllPartners(env) {
+  const data = await ghReadJSON("partners.json", env);
+  if (!data || !data.partners) return [];
+  return data.partners.map(p => ({
+    id: p.id, name: p.name, type: p.type, currency: p.currency,
+  }));
+}
+
+// ── Шаг 5: сводка + подтверждение ──
+// ── Под-цикл: валюта для КАЖДОГО выбранного партнёра (мультигео) ──
+// Проходим partner по partner. Крипто-партнёрам предлагаем их валюту (USDT),
+// фиатным — валюту страны. Оператор подтверждает/меняет кнопкой. Суммы карточки
+// потом сгенерит Claude в workflow, оператор правит в превью.
+async function ncAskPartnerCurrency(chatId, env) {
+  const session = await getCountrySession(chatId, env);
+  if (!session) return;
+  const queue = session.currency_queue || [];
+  if (!queue.length) {
+    // все партнёры настроены → confirm
+    await ncStepConfirm(chatId, env);
+    return;
+  }
+  const pid = queue[0];
+  // текущая валюта партнёра (для умного дефолта: крипта остаётся криптой)
+  const partners = await ncAllPartners(env);
+  const p = partners.find(x => x.id === pid) || {};
+  const isCrypto = /USDT|USDC|BTC|ETH|TON/i.test(p.currency || "");
+  const countryCur = NC_CURRENCY[session.code] || "";
+
+  const kb = [];
+  // умный дефолт первым
+  if (isCrypto) {
+    kb.push([{ text: `✅ ${p.currency} (крипта, как есть)`, callback_data: `nc_pcur:${p.currency}` }]);
+    if (countryCur) kb.push([{ text: `${countryCur} (валюта страны)`, callback_data: `nc_pcur:${countryCur}` }]);
+  } else {
+    if (countryCur) kb.push([{ text: `✅ ${countryCur} (валюта страны)`, callback_data: `nc_pcur:${countryCur}` }]);
+    kb.push([{ text: `${p.currency || "?"} (как в Украине)`, callback_data: `nc_pcur:${p.currency || countryCur}` }]);
+  }
+  kb.push([
+    { text: "USDT", callback_data: "nc_pcur:USDT" },
+    { text: "EUR", callback_data: "nc_pcur:EUR" },
+    { text: "USD", callback_data: "nc_pcur:USD" },
+  ]);
+  kb.push([{ text: "❌ Отмена", callback_data: "nc_cancel" }]);
+
+  const done = (session.selected_partners || []).length - queue.length + 1;
+  const total = (session.selected_partners || []).length;
+  const typeIcon = p.type === "club" ? "🎴" : "🃏";
+  await sendMessage(chatId, env,
+    `💰 *Валюта партнёра ${done}/${total}*\n\n` +
+    `${typeIcon} *${escapeMd(p.name || pid)}* на ${session.flag} ${escapeMd(session.name)}\n\n` +
+    (isCrypto
+      ? `_Это крипто-партнёр (${p.currency}). Обычно валюту не меняют._`
+      : `_В Украине: ${p.currency}. Для этой страны обычно — ${countryCur || "местная"}._`) +
+    `\n\nКакую валюту показывать в карточке?`, kb);
+}
+
+async function handlePartnerCurrencyPick(currency, cb, env) {
+  const chatId = cb.message.chat.id;
+  const session = await getCountrySession(chatId, env);
+  if (!session) { await answerCallback(cb.id, env, "⚠️ Сессия истекла"); return; }
+  const queue = session.currency_queue || [];
+  if (!queue.length) { await answerCallback(cb.id, env, "Готово"); await ncStepConfirm(chatId, env); return; }
+  const pid = queue.shift();  // убираем настроенного из очереди
+  session.partner_currencies = session.partner_currencies || {};
+  session.partner_currencies[pid] = currency;
+  session.currency_queue = queue;
+  await saveCountrySession(chatId, session, env);
+  await answerCallback(cb.id, env, `💰 ${pid}: ${currency}`);
+  await editMessageRemoveButtons(cb.message, env, "");
+  // следующий партнёр или confirm
+  await ncAskPartnerCurrency(chatId, env);
+}
+
+async function ncStepConfirm(chatId, env) {
+  const session = await getCountrySession(chatId, env);
+  if (!session) return;
+  session.stage = "confirm";
+  await saveCountrySession(chatId, session, env);
+
+  const partners = session.selected_partners || [];
+  const L = [
+    `Шаг 5/5 — *проверь и подтверди* 👇`, "",
+    `${session.flag} *${escapeMd(session.name)}* (\`${session.code}\`)`,
+    `🗣 Языки: ${(session.langs || []).join(", ")}`,
+    `💰 Валюты партнёров: ${session.partner_currencies ? Object.entries(session.partner_currencies).map(([k,v])=>k+"="+v).join(", ") : (session.currency||"—")}`,
+    `🎯 Партнёры (${partners.length}): ${partners.length ? partners.join(", ") : "нет"}`,
+    "",
+    `*Что произойдёт:*`,
+    `1. Запись страны в конфиг + структура папок /${session.code}/`,
+    `2. Перевод интерфейса на язык(и) страны (с проверкой)`,
+    `3. Генерация промпта для статей + *проверка легалки*`,
+    `4. Раскатка выбранных партнёров с валютой ${session.currency}`,
+    `5. Хабы, sitemap, llms — всё под новую страну`,
+    "",
+    `_🧪 ТЕСТ: всё уйдёт в ветку \`test-country-${session.code}\`, НЕ на живой сайт._`,
+    `_Украина и другие страны не затрагиваются._`,
+  ];
+  const kb = [
+    [{ text: "🚀 Создать страну", callback_data: "nc_confirm" }],
+    [{ text: "◀️ Изменить партнёров", callback_data: "nc_back_partners" }],
+    [{ text: "❌ Отмена", callback_data: "nc_cancel" }],
+  ];
+  await sendMessage(chatId, env, L.join("\n"), kb);
+}
+
+// ── Запуск генерации через workflow ──
+async function ncLaunch(chatId, env) {
+  const session = await getCountrySession(chatId, env);
+  if (!session) { await sendMessage(chatId, env, "⚠️ Сессия истекла. Начни заново — /newcountry."); return; }
+
+  // Пишем задание для workflow
+  const job = {
+    code: session.code,
+    name: session.name,
+    flag: session.flag,
+    iso_country: session.iso_country,
+    languages: session.langs,
+    currency: session.currency,
+    partner_currencies: session.partner_currencies || {},
+    partners: session.selected_partners || [],
+    chat_id: String(chatId),
+    created_at: new Date().toISOString(),
+  };
+  const wrote = await ghWriteFile(COUNTRY_JOB_PATH(session.code),
+    JSON.stringify(job, null, 2),
+    `newcountry: job for ${session.code}`, env);
+  if (!wrote) {
+    await sendMessage(chatId, env, "❌ Не удалось сохранить задание. Попробуй ещё раз.");
+    return;
+  }
+
+  const ok = await triggerWorkflow("newcountry.yml",
+    { code: session.code, chat_id: String(chatId) }, env);
+
+  session.stage = "generating";
+  await saveCountrySession(chatId, session, env);
+
+  await sendMessage(chatId, env, ok
+    ? `🚀 *Создаю страну ${session.flag} ${escapeMd(session.name)}* 🧪 (тест-режим)\n\n` +
+      `Это займёт несколько минут (перевод интерфейса + промпт + партнёры + отзывы + проверка легалки).\n\n` +
+      `Пришлю превью с результатом и *легальными рисками на проверку*, когда будет готово.\n\n` +
+      `🧪 Всё уйдёт в ветку \`test-country-${session.code}\` — *НЕ на живой сайт*. Украина не тронута.`
+    : `❌ Не удалось запустить newcountry.yml. Проверь, что workflow залит в .github/workflows/.`);
+}
+
+// ── Диспетчер callback'ов мастера страны (префикс nc) ──
+async function handleCountryCallback(action, segments, cb, env) {
+  const chatId = cb.message.chat.id;
+
+  if (action === "nc_cancel") {
+    await answerCallback(cb.id, env, "❌ Отменено");
+    await deleteCountrySession(chatId, env);
+    await editMessageText(cb.message,
+      (cb.message.text || cb.message.caption || "") + "\n\n❌ *Отменено*", env);
+    return;
+  }
+
+  // Выбор языков
+  if (action === "nc_lang") {
+    const combo = segments[1];
+    const session = await getCountrySession(chatId, env);
+    if (!session) { await answerCallback(cb.id, env, "⚠️ Сессия истекла"); return; }
+    if (combo === "custom") {
+      session.await_input = "langs";
+      await saveCountrySession(chatId, session, env);
+      await answerCallback(cb.id, env, "✍️ Жду список");
+      await sendMessage(chatId, env,
+        "✍️ Пришли коды языков через запятую (первый = основной).\n" +
+        "Пример: `pl, en, ru`",
+        [[{ text: "❌ Отмена", callback_data: "nc_cancel" }]]);
+      return;
+    }
+    session.langs = combo.split("_");
+    await saveCountrySession(chatId, session, env);
+    await answerCallback(cb.id, env, `🗣 ${session.langs.join(", ")}`);
+    // МУЛЬТИГЕО: валюта теперь по каждому партнёру (не одна на страну),
+    // поэтому после языков — сразу к выбору партнёров, затем под-цикл валют.
+    await ncStepPartners(chatId, env);
+    return;
+  }
+
+  // Выбор валюты
+  if (action === "nc_cur") {
+    const cur = segments[1];
+    const session = await getCountrySession(chatId, env);
+    if (!session) { await answerCallback(cb.id, env, "⚠️ Сессия истекла"); return; }
+    if (cur === "custom") {
+      session.await_input = "currency";
+      await saveCountrySession(chatId, session, env);
+      await answerCallback(cb.id, env, "✍️ Жду валюту");
+      await sendMessage(chatId, env, "✍️ Пришли код валюты, напр. `PLN`.",
+        [[{ text: "❌ Отмена", callback_data: "nc_cancel" }]]);
+      return;
+    }
+    session.currency = cur;
+    await saveCountrySession(chatId, session, env);
+    await answerCallback(cb.id, env, `💰 ${cur}`);
+    await ncStepPartners(chatId, env);
+    return;
+  }
+
+  // Переключение партнёра (чекбокс)
+  if (action === "nc_ptoggle") {
+    const pid = segments[1];
+    const session = await getCountrySession(chatId, env);
+    if (!session) { await answerCallback(cb.id, env, "⚠️ Сессия истекла"); return; }
+    const sel = new Set(session.selected_partners || []);
+    if (sel.has(pid)) sel.delete(pid); else sel.add(pid);
+    session.selected_partners = [...sel];
+    await saveCountrySession(chatId, session, env);
+    await answerCallback(cb.id, env, sel.has(pid) ? "☑️ Выбран" : "☐ Снят");
+    await ncRenderPartnerCheckboxes(chatId, session, env, cb.message.message_id);
+    return;
+  }
+  if (action === "nc_pall" || action === "nc_pnone") {
+    const session = await getCountrySession(chatId, env);
+    if (!session) { await answerCallback(cb.id, env, "⚠️ Сессия истекла"); return; }
+    if (action === "nc_pall") {
+      const all = await ncAllPartners(env);
+      session.selected_partners = all.map(p => p.id);
+    } else {
+      session.selected_partners = [];
+    }
+    await saveCountrySession(chatId, session, env);
+    await answerCallback(cb.id, env, action === "nc_pall" ? "✅ Все" : "⬜ Никого");
+    await ncRenderPartnerCheckboxes(chatId, session, env, cb.message.message_id);
+    return;
+  }
+  if (action === "nc_pdone") {
+    await answerCallback(cb.id, env, "➡️ Дальше");
+    const s = await getCountrySession(chatId, env);
+    if (!s) { await sendMessage(chatId, env, "⚠️ Сессия истекла — /newcountry"); return; }
+    // Если партнёры выбраны — идём в под-цикл валюты по каждому. Иначе — сразу confirm.
+    if ((s.selected_partners || []).length) {
+      s.partner_currencies = {};       // {pid: currency}
+      s.currency_queue = [...s.selected_partners];  // очередь на настройку
+      await saveCountrySession(chatId, s, env);
+      await ncAskPartnerCurrency(chatId, env);
+    } else {
+      await ncStepConfirm(chatId, env);
+    }
+    return;
+  }
+  // Выбор валюты КОНКРЕТНОГО партнёра (под-цикл)
+  if (action === "nc_pcur") {
+    await handlePartnerCurrencyPick(segments[1], cb, env);
+    return;
+  }
+  if (action === "nc_back_partners") {
+    await answerCallback(cb.id, env, "◀️ Партнёры");
+    await ncStepPartners(chatId, env);
+    return;
+  }
+  if (action === "nc_confirm") {
+    await answerCallback(cb.id, env, "🚀 Запускаю…");
+    await editMessageRemoveButtons(cb.message, env, "");
+    await ncLaunch(chatId, env);
+    return;
+  }
+}
+
+// Хелпер: редактировать сообщение с новой клавиатурой (для чекбоксов)
+async function editMessageWithKb(chatId, messageId, text, kb, env) {
+  try {
+    await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/editMessageText`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId, message_id: messageId,
+        text: String(text).slice(0, 4000),
+        parse_mode: "Markdown",
+        disable_web_page_preview: true,
+        reply_markup: { inline_keyboard: kb },
+      }),
+    });
+  } catch (e) {
+    console.error("editMessageWithKb failed:", e);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  КОМАНДА /repost — репост статей на внешние площадки (ссылочный профиль)
+//  UX: список статей со статусами → карточка → Telegraph/Blogger/Обе.
+//  3 точки входа: /repost, кнопка меню, кнопки после публикации.
+//  Пагинация, статусы репоста (✅/⚪) из repost_log.json.
+// ═══════════════════════════════════════════════════════════════════════════
+
+const REPOST_PAGE_SIZE = 8;
+const REPOST_PLATFORMS = [
+  { key: "telegraph", icon: "📡", name: "Telegraph" },
+  { key: "blogger", icon: "📝", name: "Blogger" },
+];
+
+// Читает индекс статей (собран build_articles_index.py)
+async function repostLoadArticles(env) {
+  const data = await ghReadJSON(".bot_state/cache/articles_index.json", env);
+  return (data && data.articles) ? data.articles : [];
+}
+
+// Читает лог репостов → карта {slug: {platform: true}}
+async function repostLoadLog(env) {
+  const log = await ghReadJSON(".bot_state/repost_log.json", env);
+  const map = {};
+  if (Array.isArray(log)) {
+    for (const e of log) {
+      if (e.ok && e.slug && e.platform) {
+        if (!map[e.slug]) map[e.slug] = {};
+        map[e.slug][e.platform] = true;
+      }
+    }
+  }
+  return map;
+}
+
+// Статус-значки репоста для статьи (📡✅ 📝⚪)
+function repostStatusBadges(slug, logMap) {
+  const st = logMap[slug] || {};
+  return REPOST_PLATFORMS.map(p =>
+    `${p.icon}${st[p.key] ? "✅" : "⚪"}`).join(" ");
+}
+
+// ── /repost — список статей (страница page) ──
+async function cmdRepost(chatId, args, msg, env) {
+  const page = Math.max(0, parseInt((args && args[0]) || "0", 10));
+  const articles = await repostLoadArticles(env);
+  if (!articles.length) {
+    await sendMessage(chatId, env,
+      "📭 Список статей пуст. Опубликуй статью или обнови индекс.");
+    return;
+  }
+  const logMap = await repostLoadLog(env);
+
+  const totalPages = Math.ceil(articles.length / REPOST_PAGE_SIZE);
+  const start = page * REPOST_PAGE_SIZE;
+  const pageArticles = articles.slice(start, start + REPOST_PAGE_SIZE);
+
+  const kb = [];
+  for (const a of pageArticles) {
+    const badges = repostStatusBadges(a.slug, logMap);
+    // заголовок обрезаем, чтобы кнопка не была огромной
+    const titleShort = (a.title || a.slug).slice(0, 40);
+    kb.push([{
+      text: `${badges}  ${titleShort}`,
+      callback_data: `rp_pick:${a.slug}`,
+    }]);
+  }
+  // пагинация
+  const nav = [];
+  if (page > 0) nav.push({ text: "◀️ Назад", callback_data: `rp_page:${page - 1}` });
+  if (page < totalPages - 1) nav.push({ text: "Ещё ▶️", callback_data: `rp_page:${page + 1}` });
+  if (nav.length) kb.push(nav);
+
+  const text = `📡 *Репост статей* — стр. ${page + 1}/${totalPages}\n\n` +
+    `Выбери статью для репоста на Telegraph/Blogger.\n` +
+    `_Статус: 📡 Telegraph · 📝 Blogger (✅ уже репостнута · ⚪ нет)_`;
+  await sendMessage(chatId, env, text, kb);
+}
+
+// ── Карточка статьи: выбор площадки ──
+async function repostShowCard(chatId, slug, env, messageId) {
+  const articles = await repostLoadArticles(env);
+  const a = articles.find(x => x.slug === slug);
+  const logMap = await repostLoadLog(env);
+  const st = logMap[slug] || {};
+
+  const title = a ? a.title : slug;
+  const badges = repostStatusBadges(slug, logMap);
+
+  const kb = [];
+  // кнопки площадок (с отметкой если уже репостнута)
+  const platRow = REPOST_PLATFORMS.map(p => ({
+    text: `${p.icon} ${p.name}${st[p.key] ? " ✅" : ""}`,
+    callback_data: `repost:${p.key}:${slug}`,
+  }));
+  kb.push(platRow);
+  // обе сразу
+  kb.push([{ text: "📡📝 Обе сразу", callback_data: `rp_both:${slug}` }]);
+  kb.push([{ text: "◀️ К списку", callback_data: `rp_page:0` }]);
+
+  const text = `📄 *${escapeMd(title)}*\n\n` +
+    `Репосты: ${badges}\n\n` +
+    `Куда репостнуть? UK выйдет сразу, RU — через ~4ч автоматически.`;
+
+  if (messageId) {
+    await editMessageWithKb(chatId, messageId, text, kb, env);
+  } else {
+    await sendMessage(chatId, env, text, kb);
+  }
+}
+
+// ── Диспетчер callback'ов /repost (префикс rp_) ──
+async function handleRepostUICallback(action, segments, cb, env) {
+  const chatId = cb.message.chat.id;
+
+  if (action === "rp_page") {
+    const page = parseInt(segments[1] || "0", 10);
+    await answerCallback(cb.id, env, "");
+    await cmdRepost(chatId, [String(page)], cb.message, env);
+    return;
+  }
+  if (action === "rp_pick") {
+    const slug = segments.slice(1).join(":");
+    await answerCallback(cb.id, env, "");
+    await repostShowCard(chatId, slug, env, cb.message.message_id);
+    return;
+  }
+  if (action === "rp_both") {
+    const slug = segments.slice(1).join(":");
+    await answerCallback(cb.id, env, "📡📝 Запускаю обе…");
+    // запускаем оба репоста
+    let okCount = 0;
+    for (const p of REPOST_PLATFORMS) {
+      const ok = await triggerWorkflow("repost.yml", { slug, platform: p.key }, env);
+      if (ok) okCount++;
+    }
+    await sendMessage(chatId, env,
+      `📡📝 *Репост на обе площадки* запущен: \`${escapeMd(slug)}\`\n\n` +
+      `🇺🇦 UK-версии публикуются сейчас.\n` +
+      `🇷🇺 RU-версии выйдут через ~4 часа автоматически.\n\n` +
+      `Пришлю ссылки, когда будет готово.`);
+    return;
   }
 }
 
