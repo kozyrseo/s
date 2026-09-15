@@ -1,0 +1,56 @@
+name: Repost drain queue
+
+# Разбирает очередь отложенных репостов (RU-версии, поставленные через repost.yml).
+# Запускается по расписанию раз в час: публикует те версии, у которых время
+# пришло (~4 часа после UK). Так второй язык выходит автоматически, естественно.
+
+on:
+  schedule:
+    - cron: "17 * * * *"    # каждый час в :17 (не в :00, чтобы не совпадать с пиком)
+  workflow_dispatch:          # можно запустить вручную для теста
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repost-drain
+  cancel-in-progress: false
+
+jobs:
+  drain:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r automation/requirements.txt
+
+      - name: Drain repost queue
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAPH_TOKEN: ${{ secrets.TELEGRAPH_TOKEN }}
+        run: python automation/repost_orchestrator.py drain
+
+      - name: Commit updated queue + log
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .bot_state/repost_queue.json .bot_state/repost_log.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Queue unchanged."
+          else
+            git commit -m "Repost drain: published due items"
+            git pull --rebase origin main
+            git push || (git pull --rebase origin main && git push)
+          fi
