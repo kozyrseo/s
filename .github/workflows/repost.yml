@@ -1,0 +1,66 @@
+name: Repost to platform
+
+# Репост статьи на внешнюю площадку (Telegraph и др.) для ссылочного профиля.
+# Запускается ботом по кнопке «📡 Репост». UK-версия постится сразу, RU-версия
+# ставится в очередь (публикуется автоматически через ~4 часа через repost-drain).
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: 'Slug статьи (напр. chto-takoe-reykbek-v-pokere)'
+        required: true
+        type: string
+      platform:
+        description: 'Площадка (telegraph/...)'
+        required: false
+        type: string
+        default: 'telegraph'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: repost-${{ inputs.slug }}-${{ inputs.platform }}
+  cancel-in-progress: false
+
+jobs:
+  repost:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r automation/requirements.txt
+
+      - name: Repost (UK now + RU queued)
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAPH_TOKEN: ${{ secrets.TELEGRAPH_TOKEN }}
+        run: |
+          python automation/repost_orchestrator.py post \
+            --slug "${{ inputs.slug }}" --platform "${{ inputs.platform }}"
+
+      - name: Commit queue + log
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .bot_state/repost_queue.json .bot_state/repost_log.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Nothing to commit."
+          else
+            git commit -m "Repost: ${{ inputs.slug }} (${{ inputs.platform }})"
+            git pull --rebase origin main
+            git push || (git pull --rebase origin main && git push)
+          fi
