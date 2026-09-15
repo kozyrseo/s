@@ -150,6 +150,17 @@
         "audience:beginner"
       ],
       "summary_for_related": "Покер на телефоні в Україні: чим відрізняються Android APK, застосунок iOS та браузерна версія, де повний мобайл з HUD і як грати."
+    },
+    "poker-na-kriptovalyute-usdt-ukraina": {
+      "title": "Покер на криптовалюті USDT в Україні: як грати",
+      "description": "Покер на криптовалюті USDT в Україні: як обрати мережу TRC-20, внести депозит, вивести на гривні та грати в крипто-румі без банку.",
+      "tags": [
+        "format:mixed",
+        "topic:payments",
+        "topic:withdrawal",
+        "audience:regular"
+      ],
+      "summary_for_related": "Покер на криптовалюті USDT в Україні: як обрати мережу TRC-20, внести депозит, вивести на гривні та грати в крипто-румі без банку."
     }
   }
 }
