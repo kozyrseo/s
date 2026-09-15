@@ -11,12 +11,13 @@ reposters/__init__.py — РЕЕСТР площадок для репоста.
 """
 from .base import Reposter, RepostResult
 from .telegraph import TelegraphReposter
+from .blogger import BloggerReposter
 
 # ─── РЕЕСТР ПЛОЩАДОК ───
 # key → класс. Раскомментируй/добавь строку, чтобы включить площадку.
 REPOSTERS: dict[str, type[Reposter]] = {
     "telegraph": TelegraphReposter,
-    # "blogger": BloggerReposter,     # ← добавить когда настроим Blogger API
+    "blogger": BloggerReposter,
     # "teletype": TeletypeReposter,
 }
 

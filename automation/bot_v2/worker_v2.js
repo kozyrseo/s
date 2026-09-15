@@ -1730,7 +1730,8 @@ async function cmdPending(chatId, args, msg, env) {
     kb.push(editRow);
     // Репост на внешние площадки (ссылочный профиль): UK сразу + RU через ~4ч
     kb.push([
-      { text: "📡 Репост Telegraph", callback_data: `repost:telegraph:${slug}` },
+      { text: "📡 Telegraph", callback_data: `repost:telegraph:${slug}` },
+      { text: "📝 Blogger", callback_data: `repost:blogger:${slug}` },
     ]);
     kb.push([
       { text: "🧾 Исходники", callback_data: `sources:${slug}` },
