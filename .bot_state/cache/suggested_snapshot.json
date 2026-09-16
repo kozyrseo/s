@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-09-16T16:58:48.581224+00:00",
+  "collected_at": "2026-09-16T17:06:00.944483+00:00",
   "status": "suggested",
   "rows": [
     {
@@ -13,18 +13,6 @@
       "country": "ua",
       "lang": "ru",
       "_row": 6
-    },
-    {
-      "status": "suggested",
-      "topic": "Банкролл-менеджмент в покере: сколько денег нужно для игры",
-      "primary_keyword": "банкролл менеджмент покер",
-      "secondary_keywords": "сколько денег нужно для покера, управление банкроллом, банкролл кэш и турниры",
-      "intent": "informational",
-      "target_page": "/ua/rooms/na-grivnu/",
-      "notes": "Правила банкролла для кэша и MTT, примеры в гривне. Линк на хаб румов на гривны. Обучающая.",
-      "country": "ua",
-      "lang": "ru",
-      "_row": 7
     },
     {
       "status": "suggested",
