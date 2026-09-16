@@ -81,7 +81,7 @@
   // ---- i18n ---------------------------------------------------------------
   var STRINGS = {
     en: {
-      title:       'Are you <em>{age} or older?</em>',
+      title:       'Are you <em>{age}</em> or older?',
       body:        'This site contains information about gambling. By law, you must be at least {age} years old to enter.',
       yes:         'Yes, I am {age}+',
       no:          'No, I am under {age}',
@@ -90,7 +90,7 @@
       brand_tag:   'KOZYR · POKER RAKEBACK'
     },
     ru: {
-      title:       'Тебе есть <em>{age}?</em>',
+      title:       'Тебе есть <em>{age}</em>?',
       body:        'Сайт содержит информацию об азартных играх. По закону ты должен быть старше {age} лет, чтобы продолжить.',
       yes:         'Да, мне есть {age}',
       no:          'Мне меньше {age}',
@@ -99,7 +99,7 @@
       brand_tag:   'KOZYR · РЕЙКБЕК В ПОКЕРЕ'
     },
     uk: {
-      title:       'Тобі є <em>{age}?</em>',
+      title:       'Тобі є <em>{age}</em>?',
       body:        'Сайт містить інформацію про азартні ігри. За законом ти повинен бути старшим за {age} років, щоб продовжити.',
       yes:         'Так, мені є {age}',
       no:          'Мені менше {age}',
@@ -197,9 +197,9 @@
     '.kz-age-title em {',
     '  font-family: "Instrument Serif", Georgia, serif;',
     '  font-style: italic; font-weight: 400;',
-    '  font-size: 1.08em; line-height: 1;',
-    '  vertical-align: baseline; position: relative; top: 0.04em;',
-    '  padding: 0 0.02em;',
+    '  font-size: 1.05em; line-height: 1;',
+    '  vertical-align: baseline;',
+    '  padding: 0 0.03em;',
     '  background: linear-gradient(180deg, #6DA0FF 0%, #2668FF 100%);',
     '  -webkit-background-clip: text; background-clip: text;',
     '  -webkit-text-fill-color: transparent;',
