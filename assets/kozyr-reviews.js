@@ -27,7 +27,8 @@
        rating: 5,                   — от 1 до 5
        date: '2026-07-14',          — ISO
        text: '...короткий текст...',
-       verified: true,              — есть ли скрин-подтверждение (галочка)
+       verified: false,             — скрин-подтверждение (галочка). Синтетическим
+                                      отзывам всегда false; true только реальным со скрином
        country: 'ua'                — гео игрока (для будущей фильтрации)
      }
   */
@@ -35,17 +36,17 @@
     /* ================ PokerBet · RU ================ */
     {
       id: 'r-2607', partner: 'pokerbet', lang: 'ru',
-      author: 'Тарас К.', rating: 5, date: '2026-07-20', verified: true, country: 'ua',
+      author: 'Тарас К.', rating: 5, date: '2026-07-20', verified: false, country: 'ua',
       text: 'Главное, ради чего перешёл — гривневый кэшер. Депозит через ПриватБанк без обменников, первый вывод на карту Моно пришёл минут за 40. На NL10–NL25 вечером играбельно, софт не тормозит.'
     },
     {
       id: 'r-2609', partner: 'pokerbet', lang: 'ru',
-      author: 'Денис Ш.', rating: 4, date: '2026-07-06', verified: true, country: 'ua',
+      author: 'Денис Ш.', rating: 4, date: '2026-07-06', verified: false, country: 'ua',
       text: 'Приложение на iOS стабильное, играю с телефона. Поздно ночью трафик проседает, PLO мало — но для NL-кэша на микро вполне норм.'
     },
     {
       id: 'r-2611', partner: 'pokerbet', lang: 'ru',
-      author: 'Марина П.', rating: 5, date: '2026-06-24', verified: true, country: 'ua',
+      author: 'Марина П.', rating: 5, date: '2026-06-24', verified: false, country: 'ua',
       text: 'Верификация по документу заняла вечер, дальше выводы без вопросов. За два месяца ни одной задержки, деньги на карту приходят за час-полтора.'
     },
     {
@@ -55,23 +56,23 @@
     },
     {
       id: 'r-2617', partner: 'pokerbet', lang: 'ru',
-      author: 'Костя Ж.', rating: 5, date: '2026-05-24', verified: true, country: 'ua',
+      author: 'Костя Ж.', rating: 5, date: '2026-05-24', verified: false, country: 'ua',
       text: 'Ушёл с международного рума ради гривны в кассе — больше не гоняю через крипту. Поля мягче, чем на GG на микро, приложение простое, но стабильное.'
     },
     /* ================ PokerBet · UK ================ */
     {
       id: 'r-2607-uk', partner: 'pokerbet', lang: 'uk',
-      author: 'Тарас К.', rating: 5, date: '2026-07-20', verified: true, country: 'ua',
+      author: 'Тарас К.', rating: 5, date: '2026-07-20', verified: false, country: 'ua',
       text: 'Головне, заради чого перейшов — гривневий кешер. Депозит через ПриватБанк без обмінників, перший вивід на картку Моно прийшов хвилин за 40. На NL10–NL25 увечері грабельно, софт не гальмує.'
     },
     {
       id: 'r-2609-uk', partner: 'pokerbet', lang: 'uk',
-      author: 'Денис Ш.', rating: 4, date: '2026-07-06', verified: true, country: 'ua',
+      author: 'Денис Ш.', rating: 4, date: '2026-07-06', verified: false, country: 'ua',
       text: 'Застосунок на iOS стабільний, граю з телефону. Пізно вночі трафік просідає, PLO мало — але для NL-кешу на мікро цілком норм.'
     },
     {
       id: 'r-2611-uk', partner: 'pokerbet', lang: 'uk',
-      author: 'Марина П.', rating: 5, date: '2026-06-24', verified: true, country: 'ua',
+      author: 'Марина П.', rating: 5, date: '2026-06-24', verified: false, country: 'ua',
       text: 'Верифікація за документом зайняла вечір, далі виводи без питань. За два місяці жодної затримки, гроші на картку приходять за годину-півтори.'
     },
     {
@@ -81,18 +82,18 @@
     },
     {
       id: 'r-2617-uk', partner: 'pokerbet', lang: 'uk',
-      author: 'Костя Ж.', rating: 5, date: '2026-05-24', verified: true, country: 'ua',
+      author: 'Костя Ж.', rating: 5, date: '2026-05-24', verified: false, country: 'ua',
       text: 'Пішов з міжнародного руму заради гривні в касі — більше не ганяю через крипту. Поля м\'якші, ніж на GG на мікро, застосунок простий, але стабільний.'
     },
     /* ================ KlubOk · RU ================ */
     {
       id: 'r-3101', partner: 'klubok', lang: 'ru',
-      author: 'Юрий М.', rating: 5, date: '2026-07-15', verified: true, country: 'ua',
+      author: 'Юрий М.', rating: 5, date: '2026-07-15', verified: false, country: 'ua',
       text: 'Мягкие поля на NL25–NL50, вечером в будни много любителей. Хост в Telegram отвечает за пять минут, выплаты на Моно за 15–30 минут в гривне. 1 фишка = 1 грн, без сюрпризов.'
     },
     {
       id: 'r-3103', partner: 'klubok', lang: 'ru',
-      author: 'Роман Д.', rating: 5, date: '2026-07-04', verified: true, country: 'ua',
+      author: 'Роман Д.', rating: 5, date: '2026-07-04', verified: false, country: 'ua',
       text: 'В клубе полгода. Рейкбек 40% приходит по воскресеньям без напоминаний. AoF и спины на 6-макс — редкость на других клубах.'
     },
     {
@@ -102,7 +103,7 @@
     },
     {
       id: 'r-3108', partner: 'klubok', lang: 'ru',
-      author: 'Павел С.', rating: 5, date: '2026-06-13', verified: true, country: 'ua',
+      author: 'Павел С.', rating: 5, date: '2026-06-13', verified: false, country: 'ua',
       text: 'Выбирал между KlubOk и клубами в PPPoker. Понравилось, что расчёты сразу в гривне без пересчёта по курсу — виден чистый рейкбек. Живых полей хватает на NL10–25.'
     },
     {
@@ -113,12 +114,12 @@
     /* ================ KlubOk · UK ================ */
     {
       id: 'r-3101-uk', partner: 'klubok', lang: 'uk',
-      author: 'Юрій М.', rating: 5, date: '2026-07-15', verified: true, country: 'ua',
+      author: 'Юрій М.', rating: 5, date: '2026-07-15', verified: false, country: 'ua',
       text: 'М\'які поля на NL25–NL50, увечері в будні багато аматорів. Хост у Telegram відповідає за п\'ять хвилин, виплати на Моно за 15–30 хвилин у гривні. 1 фішка = 1 грн, без сюрпризів.'
     },
     {
       id: 'r-3103-uk', partner: 'klubok', lang: 'uk',
-      author: 'Роман Д.', rating: 5, date: '2026-07-04', verified: true, country: 'ua',
+      author: 'Роман Д.', rating: 5, date: '2026-07-04', verified: false, country: 'ua',
       text: 'У клубі пів року. Рейкбек 40% приходить по неділях без нагадувань. AoF та спіни на 6-макс — рідкість на інших клубах.'
     },
     {
@@ -128,7 +129,7 @@
     },
     {
       id: 'r-3108-uk', partner: 'klubok', lang: 'uk',
-      author: 'Павло С.', rating: 5, date: '2026-06-13', verified: true, country: 'ua',
+      author: 'Павло С.', rating: 5, date: '2026-06-13', verified: false, country: 'ua',
       text: 'Обирав між KlubOk та клубами в PPPoker. Сподобалося, що розрахунки одразу в гривні без перерахунку за курсом — видно чистий рейкбек. Живих полів вистачає на NL10–25.'
     },
     {
@@ -139,17 +140,17 @@
     /* ================ TON Poker · RU ================ */
     {
       id: 'r-tp1', partner: 'tonpoker', lang: 'ru',
-      author: 'Артём В.', rating: 5, date: '2026-08-18', verified: true, country: 'ua',
+      author: 'Артём В.', rating: 5, date: '2026-08-18', verified: false, country: 'ua',
       text: 'Заходишь в бота — и сразу за столом, ничего скачивать не надо. Депозит в USDT через TON зашёл моментально, вывод пришёл на кошелёк минут за 10. Для казуалки идеально.'
     },
     {
       id: 'r-tp2', partner: 'tonpoker', lang: 'ru',
-      author: 'Никита Р.', rating: 4, date: '2026-08-05', verified: true, country: 'ua',
+      author: 'Никита Р.', rating: 4, date: '2026-08-05', verified: false, country: 'ua',
       text: 'Поля мягкие, много любителей вечером, катать в кайф. Минус — только крипта, карту не привяжешь, и турнирная сетка пока жидковата. Но кэш норм.'
     },
     {
       id: 'r-tp3', partner: 'tonpoker', lang: 'ru',
-      author: 'Максим Д.', rating: 5, date: '2026-07-22', verified: true, country: 'ua',
+      author: 'Максим Д.', rating: 5, date: '2026-07-22', verified: false, country: 'ua',
       text: 'Понравилось что всё в телеге, без отдельного приложения и без верификации. Закинул через Cryptobot, поиграл, вывел — за пару минут. Рейкбек капает.'
     },
     {
@@ -159,28 +160,28 @@
     },
     {
       id: 'r-tp5', partner: 'tonpoker', lang: 'ru',
-      author: 'Дмитрий К.', rating: 5, date: '2026-06-28', verified: true, country: 'ua',
+      author: 'Дмитрий К.', rating: 5, date: '2026-06-28', verified: false, country: 'ua',
       text: 'Выводы реально быстрые, USDT в TON падает почти сразу. Депозит можно даже мемкоинами закинуть, что забавно. Софт лёгкий, на телефоне не лагает.'
     },
     {
       id: 'r-tp6', partner: 'tonpoker', lang: 'ru',
-      author: 'Олег П.', rating: 4, date: '2026-06-15', verified: true, country: 'ua',
+      author: 'Олег П.', rating: 4, date: '2026-06-15', verified: false, country: 'ua',
       text: 'Мгновенные транзакции и вход без KYC — главный плюс. Из минусов: нет фиата вообще, и HUD не поставишь, трекеры банят. Регуляру может не зайти, любителю — самое то.'
     },
     /* ================ TON Poker · UK ================ */
     {
       id: 'r-tp1-uk', partner: 'tonpoker', lang: 'uk',
-      author: 'Артем В.', rating: 5, date: '2026-08-18', verified: true, country: 'ua',
+      author: 'Артем В.', rating: 5, date: '2026-08-18', verified: false, country: 'ua',
       text: 'Заходиш у бота — і одразу за столом, нічого качати не треба. Депозит у USDT через TON зайшов миттєво, вивід прийшов на гаманець хвилин за 10. Для казуалки ідеально.'
     },
     {
       id: 'r-tp2-uk', partner: 'tonpoker', lang: 'uk',
-      author: 'Микита Р.', rating: 4, date: '2026-08-05', verified: true, country: 'ua',
+      author: 'Микита Р.', rating: 4, date: '2026-08-05', verified: false, country: 'ua',
       text: 'Поля м\'які, багато любителів увечері, катати в кайф. Мінус — тільки крипта, картку не прив\'яжеш, і турнірна сітка поки рідкувата. Але кеш норм.'
     },
     {
       id: 'r-tp3-uk', partner: 'tonpoker', lang: 'uk',
-      author: 'Максим Д.', rating: 5, date: '2026-07-22', verified: true, country: 'ua',
+      author: 'Максим Д.', rating: 5, date: '2026-07-22', verified: false, country: 'ua',
       text: 'Сподобалося, що все в телезі, без окремого застосунку і без верифікації. Закинув через Cryptobot, пограв, вивів — за пару хвилин. Рейкбек капає.'
     },
     {
@@ -190,74 +191,74 @@
     },
     {
       id: 'r-tp5-uk', partner: 'tonpoker', lang: 'uk',
-      author: 'Дмитро К.', rating: 5, date: '2026-06-28', verified: true, country: 'ua',
+      author: 'Дмитро К.', rating: 5, date: '2026-06-28', verified: false, country: 'ua',
       text: 'Виводи реально швидкі, USDT у TON падає майже одразу. Депозит можна навіть мемкоїнами закинути, що кумедно. Софт легкий, на телефоні не лагає.'
     },
     {
       id: 'r-tp6-uk', partner: 'tonpoker', lang: 'uk',
-      author: 'Олег П.', rating: 4, date: '2026-06-15', verified: true, country: 'ua',
+      author: 'Олег П.', rating: 4, date: '2026-06-15', verified: false, country: 'ua',
       text: 'Миттєві транзакції і вхід без KYC — головний плюс. Із мінусів: немає фіату взагалі, і HUD не поставиш, трекери банять. Регуляру може не зайти, любителю — саме те.'
     },
     /* ================ Grombet · RU ================ */
     {
       id: 'r-grombet-1', partner: 'grombet', lang: 'ru',
-      author: 'Артём В.', rating: 5, date: '2026-08-28', verified: true, country: 'ua',
+      author: 'Артём В.', rating: 5, date: '2026-08-28', verified: false, country: 'ua',
       text: 'Играю на кэше NL5, поля реально мягкие, много рекреационных ребят. Вывел через крипту за минут 20, комиссии не сняли ни копейки. Рейкбек честный, всё видно в кабинете.'
     },
     {
       id: 'r-grombet-2', partner: 'grombet', lang: 'ru',
-      author: 'Оксана П.', rating: 5, date: '2026-08-08', verified: true, country: 'ua',
+      author: 'Оксана П.', rating: 5, date: '2026-08-08', verified: false, country: 'ua',
       text: 'Депозит картой в гривне прошёл сразу, без всяких заморочек. Верификация автоматическая, ничего не пришлось долго ждать. Спины гоняю с телефона на андроиде — всё летает.'
     },
     {
       id: 'r-grombet-3', partner: 'grombet', lang: 'ru',
-      author: 'Дмитрий К.', rating: 4, date: '2026-07-25', verified: true, country: 'ua',
+      author: 'Дмитрий К.', rating: 4, date: '2026-07-25', verified: false, country: 'ua',
       text: 'Рум хороший, рейкбек до 70% реально работает, выплаты быстрые. Единственное — нет нормального приложения под айфон, приходится сидеть в веб-версии. Работает, но родное приложение было бы удобнее.'
     },
     {
       id: 'r-grombet-4', partner: 'grombet', lang: 'ru',
-      author: 'Игорь М.', rating: 5, date: '2026-07-15', verified: true, country: 'ua',
+      author: 'Игорь М.', rating: 5, date: '2026-07-15', verified: false, country: 'ua',
       text: 'Гоняю MTT и участвую в рейк-рейсе, атмосфера топ. Хад подключил без проблем на винде. Первый вывод пришёл за 15 минут — приятно удивлён скоростью.'
     },
     {
       id: 'r-grombet-5', partner: 'grombet', lang: 'ru',
-      author: 'Наталья С.', rating: 4, date: '2026-07-04', verified: true, country: 'ua',
+      author: 'Наталья С.', rating: 4, date: '2026-07-04', verified: false, country: 'ua',
       text: 'Навигация по сайту простая, разобралась за пару минут. Фрироллы и велком-бонус порадовали новичка. Минус в том, что нельзя перекинуть деньги другому игроку — иногда это неудобно.'
     },
     {
       id: 'r-grombet-6', partner: 'grombet', lang: 'ru',
-      author: 'Сергей Л.', rating: 5, date: '2026-06-16', verified: true, country: 'ua',
+      author: 'Сергей Л.', rating: 5, date: '2026-06-16', verified: false, country: 'ua',
       text: 'Сижу на маке, клиент работает стабильно, лимиты от NL2 до NL5000 — есть куда расти. Вывел крипту вечером, деньги были через полчаса. Рекреационных много, играть комфортно.'
     },
     /* ================ Grombet · UK ================ */
     {
       id: 'r-grombet-1-uk', partner: 'grombet', lang: 'uk',
-      author: 'Артем В.', rating: 5, date: '2026-08-28', verified: true, country: 'ua',
+      author: 'Артем В.', rating: 5, date: '2026-08-28', verified: false, country: 'ua',
       text: 'Граю на кеші NL5, поля справді м\'які, багато рекреаційних гравців. Вивів через крипту хвилин за 20, комісії не зняли ні копійки. Рейкбек чесний, усе видно в кабінеті.'
     },
     {
       id: 'r-grombet-2-uk', partner: 'grombet', lang: 'uk',
-      author: 'Оксана П.', rating: 5, date: '2026-08-08', verified: true, country: 'ua',
+      author: 'Оксана П.', rating: 5, date: '2026-08-08', verified: false, country: 'ua',
       text: 'Депозит карткою в гривні пройшов одразу, без жодних заморочок. Верифікація автоматична, нічого довго чекати не довелося. Спіни ганяю з телефона на андроїді — усе літає.'
     },
     {
       id: 'r-grombet-3-uk', partner: 'grombet', lang: 'uk',
-      author: 'Дмитро К.', rating: 4, date: '2026-07-25', verified: true, country: 'ua',
+      author: 'Дмитро К.', rating: 4, date: '2026-07-25', verified: false, country: 'ua',
       text: 'Рум хороший, рейкбек до 70% справді працює, виплати швидкі. Єдине — немає нормального застосунку під айфон, доводиться сидіти у веб-версії. Працює, але рідний застосунок був би зручніший.'
     },
     {
       id: 'r-grombet-4-uk', partner: 'grombet', lang: 'uk',
-      author: 'Ігор М.', rating: 5, date: '2026-07-15', verified: true, country: 'ua',
+      author: 'Ігор М.', rating: 5, date: '2026-07-15', verified: false, country: 'ua',
       text: 'Ганяю MTT і беру участь у рейк-рейсі, атмосфера топ. ХАД під\'єднав без проблем на віндовсі. Перший вивід прийшов за 15 хвилин — приємно здивований швидкістю.'
     },
     {
       id: 'r-grombet-5-uk', partner: 'grombet', lang: 'uk',
-      author: 'Наталія С.', rating: 4, date: '2026-07-04', verified: true, country: 'ua',
+      author: 'Наталія С.', rating: 4, date: '2026-07-04', verified: false, country: 'ua',
       text: 'Навігація по сайту проста, розібралася за пару хвилин. Фриролли та велком-бонус потішили новачка. Мінус у тому, що не можна перекинути гроші іншому гравцю — іноді це незручно.'
     },
     {
       id: 'r-grombet-6-uk', partner: 'grombet', lang: 'uk',
-      author: 'Сергій Л.', rating: 5, date: '2026-06-16', verified: true, country: 'ua',
+      author: 'Сергій Л.', rating: 5, date: '2026-06-16', verified: false, country: 'ua',
       text: 'Сиджу на маку, клієнт працює стабільно, ліміти від NL2 до NL5000 — є куди рости. Вивів крипту ввечері, гроші були за півгодини. Рекреаційних багато, грати комфортно.'
     },
   ];

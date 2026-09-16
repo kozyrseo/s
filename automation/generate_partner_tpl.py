@@ -315,6 +315,31 @@ def currency_for_market(draft: dict, country: str = "") -> str:
     return str(draft.get("currency", "USDT"))
 
 
+# Валюты, которых НЕТ в ISO 4217 (крипта и т.п.). schema.org Offer.priceCurrency
+# требует строго ISO 4217 — иначе Google даёт ошибку "Invalid ISO 4217 currency
+# code" и выкидывает Product-сниппет. Для таких валют в JSON-LD подставляем
+# фиатный код рынка (для страны), а крипту показываем игроку только в ВИДИМОМ
+# тексте страницы, не в разметке.
+_NON_ISO_CURRENCIES = {"USDT", "USDC", "BTC", "ETH", "TON", "USD₮", "USDTRC20"}
+# Фиат по умолчанию для рынка (страны) — для priceCurrency в схеме.
+_MARKET_FIAT = {"ua": "UAH", "pl": "PLN", "kz": "KZT", "ru": "RUB"}
+
+
+def price_currency_iso(draft: dict, country: str = "") -> str:
+    """Возвращает валидный ISO 4217 код для Offer.priceCurrency в JSON-LD.
+
+    Если валюта партнёра по рынку — крипта (USDT и т.п.), она НЕ является
+    валидным ISO 4217 кодом и ломает Product-сниппет в Google. В этом случае
+    подставляем фиатную валюту рынка (UAH для ua, PLN для pl и т.д.).
+    Видимая на странице валюта (currency) при этом не меняется.
+    """
+    c = (country or draft.get("country") or "ua")
+    cur = currency_for_market(draft, c)
+    if cur and cur.upper() not in _NON_ISO_CURRENCIES:
+        return cur
+    return _MARKET_FIAT.get(c, "UAH")
+
+
 def build_card_rows(draft):
     """Строки карточки каталога (до 5) из анкеты."""
     rows = [
@@ -349,6 +374,9 @@ def build_partner_object(draft):
         **({"rakeText": draft["rakeText"]} if draft.get("rakeText") else {}),
         **({"rakeLabel": draft["rakeLabel"]} if draft.get("rakeLabel") else {}),
         "currency": currency_for_market(draft),
+        # priceCurrency — валидный ISO 4217 код для JSON-LD (крипта → фиат рынка).
+        # Видимая currency остаётся как есть; в схему идёт только валидный код.
+        "priceCurrency": price_currency_iso(draft),
         **({"currencyByMarket": draft["currencyByMarket"]}
            if draft.get("currencyByMarket") else {}),
         "license": draft.get("license", ""),

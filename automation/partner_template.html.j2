@@ -52,55 +52,11 @@
     "name": "{{ p.name }}"
   },
   "category": "Online Poker Room",
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.4",
-    "bestRating": "5",
-    "worstRating": "1",
-    "ratingCount": "5",
-    "reviewCount": "5"
-  },
-  "review": [
-    {
-      "@type": "Review",
-      "author": {"@type": "Person", "name": "Артём В."},
-      "datePublished": "2026-08-18",
-      "reviewRating": {"@type": "Rating", "ratingValue": "5", "bestRating": "5", "worstRating": "1"},
-      "reviewBody": "Нашёл через KOZYR, регистрация без лишних сложностей. Выплаты приходят быстро, поддержка отвечает по делу. Играю регулярно, пока всё стабильно."
-    },
-    {
-      "@type": "Review",
-      "author": {"@type": "Person", "name": "Никита Р."},
-      "datePublished": "2026-08-02",
-      "reviewRating": {"@type": "Rating", "ratingValue": "4", "bestRating": "5", "worstRating": "1"},
-      "reviewBody": "Вечером за столами живо, соперники разные — поиграть есть с кем. Интерфейс понятный, начать легко. Отдельный плюс за скорость вывода."
-    },
-    {
-      "@type": "Review",
-      "author": {"@type": "Person", "name": "Оля Т."},
-      "datePublished": "2026-07-21",
-      "reviewRating": {"@type": "Rating", "ratingValue": "5", "bestRating": "5", "worstRating": "1"},
-      "reviewBody": "Регистрация заняла пару минут, ничего лишнего. Удобно, что можно играть и с телефона. Впечатления положительные."
-    },
-    {
-      "@type": "Review",
-      "author": {"@type": "Person", "name": "Дмитрий К."},
-      "datePublished": "2026-07-09",
-      "reviewRating": {"@type": "Rating", "ratingValue": "4", "bestRating": "5", "worstRating": "1"},
-      "reviewBody": "Кэш и турниры на месте, вечером трафик хороший. Пара мелочей в интерфейсе на любителя, но в целом доволен."
-    },
-    {
-      "@type": "Review",
-      "author": {"@type": "Person", "name": "Влад С."},
-      "datePublished": "2026-06-25",
-      "reviewRating": {"@type": "Rating", "ratingValue": "4", "bestRating": "5", "worstRating": "1"},
-      "reviewBody": "Рейкбек начисляется как обещали, к выплатам вопросов нет. Захожу несколько раз в неделю — стабильно."
-    }
-  ],
+  "image": "https://kozyr.club/og-{{ p.kind }}-{{ p.id }}.jpg",
   "offers": {
     "@type": "Offer",
     "price": "0",
-    "priceCurrency": "{{ p.currency }}",
+    "priceCurrency": "{{ p.priceCurrency or 'UAH' }}",
     "availability": "https://schema.org/InStock",
     "url": "https://kozyr.club/{{ p.country }}/{{ p.kind }}/{{ p.id }}/"
   }

@@ -28,32 +28,82 @@
   // Skip on legal/policy pages (users must be able to read policies)
   if (/\/legal(\/|$)/.test(window.location.pathname)) return;
 
+  // ---- Минимальный возраст по стране (гэмблинг) ---------------------------
+  // Возраст берётся АВТОМАТИЧЕСКИ по коду страны из URL (/ua/…, /pl/… и т.д.).
+  // При добавлении новой страны на сайт age-gate подхватит её сам, если она
+  // есть в справочнике ниже. Справочник — по легальному возрасту азартных игр.
+  // Источник по UA: Закон 768-IX ст.18 — 21 год. EU в основном 18.
+  var AGE_BY_COUNTRY = {
+    ua: 21,   // Украина — Закон 768-IX ст.18
+    us: 21,   // США — в большинстве штатов 21
+    pl: 18,   // Польша
+    de: 18,   // Германия
+    es: 18,   // Испания
+    gb: 18,   // Великобритания
+    uk: 18,   // (алиас Великобритании, если встретится код uk как страна)
+    ca: 18,   // Канада (большинство провинций)
+    nl: 18,   // Нидерланды
+    cz: 18,   // Чехия
+    ro: 18,   // Румыния
+    pt: 18,   // Португалия
+    it: 18,   // Италия
+    fr: 18,   // Франция
+    at: 18,   // Австрия
+    ie: 18,   // Ирландия
+    fi: 18,   // Финляндия
+    md: 18,   // Молдова
+    ge: 18    // Грузия
+  };
+  // Безопасный дефолт: если страны нет в справочнике — берём БОЛЕЕ СТРОГИЙ 21.
+  // Лучше показать 21 там, где хватило бы 18 (чуть строже), чем наоборот
+  // (пустить несовершеннолетнего = нарушение).
+  var DEFAULT_AGE = 21;
+
+  function detectCountry() {
+    // Страна = первый сегмент пути: /ua/…, /pl/… . Надёжнее geo-IP (нет VPN,
+    // нет стороннего запроса, совпадает с реальным гео-разделом контента).
+    var seg = window.location.pathname.split('/').filter(Boolean)[0];
+    if (seg) {
+      seg = seg.toLowerCase();
+      // сегмент 'uk' в URL — это украинская локаль (/ua/uk/), не страна;
+      // страна определяется первым сегментом, а он для сайта = 'ua'.
+      if (AGE_BY_COUNTRY.hasOwnProperty(seg)) return seg;
+    }
+    return null;
+  }
+
+  var minAge = (function () {
+    var c = detectCountry();
+    if (c && AGE_BY_COUNTRY[c]) return AGE_BY_COUNTRY[c];
+    return DEFAULT_AGE;
+  })();
+
   // ---- i18n ---------------------------------------------------------------
   var STRINGS = {
     en: {
-      title:       'Are you <em>21 or older?</em>',
-      body:        'This site contains information about gambling. By law, you must be at least 21 years old to enter.',
-      yes:         'Yes, I am 21+',
-      no:          'No, I am under 21',
-      compliance:  '21+ · Play responsibly · Gambling can be addictive.',
+      title:       'Are you <em>{age} or older?</em>',
+      body:        'This site contains information about gambling. By law, you must be at least {age} years old to enter.',
+      yes:         'Yes, I am {age}+',
+      no:          'No, I am under {age}',
+      compliance:  '{age}+ · Play responsibly · Gambling can be addictive.',
       leaving:     'Redirecting to responsible gaming resource…',
       brand_tag:   'KOZYR · POKER RAKEBACK'
     },
     ru: {
-      title:       'Тебе есть <em>21 год?</em>',
-      body:        'Сайт содержит информацию об азартных играх. По закону ты должен быть старше 21 года, чтобы продолжить.',
-      yes:         'Да, мне 21+',
-      no:          'Мне меньше 21',
-      compliance:  '21+ · Играй ответственно · Игры могут вызывать зависимость.',
+      title:       'Тебе есть <em>{age}?</em>',
+      body:        'Сайт содержит информацию об азартных играх. По закону ты должен быть старше {age} лет, чтобы продолжить.',
+      yes:         'Да, мне есть {age}',
+      no:          'Мне меньше {age}',
+      compliance:  '{age}+ · Играй ответственно · Игры могут вызывать зависимость.',
       leaving:     'Переходим к ресурсу по ответственной игре…',
       brand_tag:   'KOZYR · РЕЙКБЕК В ПОКЕРЕ'
     },
     uk: {
-      title:       'Тобі є <em>21 рік?</em>',
-      body:        'Сайт містить інформацію про азартні ігри. За законом ти повинен бути старшим за 21 рік, щоб продовжити.',
-      yes:         'Так, мені 21+',
-      no:          'Мені менше 21',
-      compliance:  '21+ · Грай відповідально · Ігри можуть викликати залежність.',
+      title:       'Тобі є <em>{age}?</em>',
+      body:        'Сайт містить інформацію про азартні ігри. За законом ти повинен бути старшим за {age} років, щоб продовжити.',
+      yes:         'Так, мені є {age}',
+      no:          'Мені менше {age}',
+      compliance:  '{age}+ · Грай відповідально · Ігри можуть викликати залежність.',
       leaving:     'Переходимо до ресурсу з відповідальної гри…',
       brand_tag:   'KOZYR · РЕЙКБЕК У ПОКЕРІ'
     }
@@ -79,6 +129,18 @@
 
   var lang = detectLang();
   var t = STRINGS[lang];
+
+  // Подставляем минимальный возраст ({age} → 21/18/…) во все строки текущего
+  // языка. Возраст уже определён выше по стране из URL (minAge).
+  (function applyAge() {
+    var filled = {};
+    for (var key in t) {
+      if (t.hasOwnProperty(key)) {
+        filled[key] = String(t[key]).replace(/\{age\}/g, minAge);
+      }
+    }
+    t = filled;
+  })();
 
   // ---- Inject styles ------------------------------------------------------
   var STYLE = [

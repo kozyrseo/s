@@ -10,7 +10,7 @@
       "partner": "pokerbet",
       "rating": 5,
       "date": "2026-07-20",
-      "verified": true,
+      "verified": false,
       "country": "ua",
       "author": {
         "ru": "Тарас К.",
@@ -26,7 +26,7 @@
       "partner": "pokerbet",
       "rating": 4,
       "date": "2026-07-06",
-      "verified": true,
+      "verified": false,
       "country": "ua",
       "author": {
         "ru": "Денис Ш.",
@@ -42,7 +42,7 @@
       "partner": "pokerbet",
       "rating": 5,
       "date": "2026-06-24",
-      "verified": true,
+      "verified": false,
       "country": "ua",
       "author": {
         "ru": "Марина П.",
@@ -74,7 +74,7 @@
       "partner": "pokerbet",
       "rating": 5,
       "date": "2026-05-24",
-      "verified": true,
+      "verified": false,
       "country": "ua",
       "author": {
         "ru": "Костя Ж.",
@@ -90,7 +90,7 @@
       "partner": "klubok",
       "rating": 5,
       "date": "2026-07-15",
-      "verified": true,
+      "verified": false,
       "country": "ua",
       "author": {
         "ru": "Юрий М.",
@@ -106,7 +106,7 @@
       "partner": "klubok",
       "rating": 5,
       "date": "2026-07-04",
-      "verified": true,
+      "verified": false,
       "country": "ua",
       "author": {
         "ru": "Роман Д.",
@@ -138,7 +138,7 @@
       "partner": "klubok",
       "rating": 5,
       "date": "2026-06-13",
-      "verified": true,
+      "verified": false,
       "country": "ua",
       "author": {
         "ru": "Павел С.",
@@ -170,7 +170,7 @@
       "partner": "tonpoker",
       "rating": 5,
       "date": "2026-08-18",
-      "verified": true,
+      "verified": false,
       "country": "ua",
       "author": {
         "ru": "Артём В.",
@@ -186,7 +186,7 @@
       "partner": "tonpoker",
       "rating": 4,
       "date": "2026-08-05",
-      "verified": true,
+      "verified": false,
       "country": "ua",
       "author": {
         "ru": "Никита Р.",
@@ -202,7 +202,7 @@
       "partner": "tonpoker",
       "rating": 5,
       "date": "2026-07-22",
-      "verified": true,
+      "verified": false,
       "country": "ua",
       "author": {
         "ru": "Максим Д.",
@@ -234,7 +234,7 @@
       "partner": "tonpoker",
       "rating": 5,
       "date": "2026-06-28",
-      "verified": true,
+      "verified": false,
       "country": "ua",
       "author": {
         "ru": "Дмитрий К.",
@@ -250,7 +250,7 @@
       "partner": "tonpoker",
       "rating": 4,
       "date": "2026-06-15",
-      "verified": true,
+      "verified": false,
       "country": "ua",
       "author": {
         "ru": "Олег П.",
@@ -266,7 +266,7 @@
       "partner": "grombet",
       "rating": 5,
       "date": "2026-08-28",
-      "verified": true,
+      "verified": false,
       "source": "editorial",
       "country": "ua",
       "author": {
@@ -283,7 +283,7 @@
       "partner": "grombet",
       "rating": 5,
       "date": "2026-08-08",
-      "verified": true,
+      "verified": false,
       "source": "editorial",
       "country": "ua",
       "author": {
@@ -300,7 +300,7 @@
       "partner": "grombet",
       "rating": 4,
       "date": "2026-07-25",
-      "verified": true,
+      "verified": false,
       "source": "editorial",
       "country": "ua",
       "author": {
@@ -317,7 +317,7 @@
       "partner": "grombet",
       "rating": 5,
       "date": "2026-07-15",
-      "verified": true,
+      "verified": false,
       "source": "editorial",
       "country": "ua",
       "author": {
@@ -334,7 +334,7 @@
       "partner": "grombet",
       "rating": 4,
       "date": "2026-07-04",
-      "verified": true,
+      "verified": false,
       "source": "editorial",
       "country": "ua",
       "author": {
@@ -351,7 +351,7 @@
       "partner": "grombet",
       "rating": 5,
       "date": "2026-06-16",
-      "verified": true,
+      "verified": false,
       "source": "editorial",
       "country": "ua",
       "author": {

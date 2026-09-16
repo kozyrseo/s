@@ -392,7 +392,9 @@ def run_from_job(code: str) -> int:
                                         name, primary_lang, count=4)
                 if revs:
                     backs = back_translate_reviews(revs, primary_lang)
-                    add_reviews_to_json(pid, code, primary_lang, revs, verified_ratio=0.6)
+                    # verified_ratio по умолчанию 0.0: синтетические отзывы не
+                    # помечаются "проверено" (см. review_generator.add_reviews_to_json)
+                    add_reviews_to_json(pid, code, primary_lang, revs)
                     review_flags_report.append((pid, revs, backs))
                     report["steps"].append(f"✅ Отзывы {pid}: {len(revs)} шт (на проверку)")
             except Exception as e:

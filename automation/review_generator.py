@@ -72,8 +72,9 @@ _GEN_SYSTEM = """Ты генерируешь реалистичные отзыв
 - Длина 1-3 предложения.
 
 Верни СТРОГО JSON-массив объектов:
-[{{"author": "Имя Ф.", "rating": 5, "text": "текст отзыва", "verified": true}}]
-rating 4-5 (в основном), изредка 3. Без markdown, только JSON."""
+[{{"author": "Имя Ф.", "rating": 5, "text": "текст отзыва"}}]
+rating 4-5 (в основном), изредка 3. Без markdown, только JSON.
+(Поле verified НЕ нужно — синтетическим отзывам оно всегда false, см. add_reviews_to_json.)"""
 
 
 def generate_reviews(partner_name: str, partner_type: str, country_name: str,
@@ -129,12 +130,15 @@ def _next_review_id(data: dict) -> int:
 
 def add_reviews_to_json(partner_id: str, country_code: str, lang: str,
                         reviews: list[dict], *,
-                        verified_ratio: float = 0.6,
+                        verified_ratio: float = 0.0,
                         reviews_path: Path | None = None) -> int:
     """Дописывает сгенерированные отзывы в reviews.json.
 
-    verified_ratio — доля отзывов с verified:true (0.6 = ~60%). Смешанно,
-    как в жизни (оператор выбрал: некоторые да, некоторые нет).
+    verified_ratio — доля отзывов с verified:true. ПО УМОЛЧАНИЮ 0.0:
+    сгенерированные (синтетические) отзывы НИКОГДА не помечаются "проверено",
+    т.к. под ними нет реального игрока/скрина депозита. Пометка "проверено" на
+    выдуманном отзыве = введение потребителя в заблуждение. verified:true
+    проставляется ТОЛЬКО вручную для реальных отзывов, подтверждённых скрином.
     Дата — распределяется на последние ~90 дней для реалистичности.
 
     Возвращает количество добавленных.

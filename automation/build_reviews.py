@@ -378,8 +378,15 @@ def process_page(partner: str, lang: str, reviews: list[dict], page_html: str) -
                      summary_html(part, lab))
     out = inject_div(out, "data-reviews", partner, "RV-LIST",
                      full_block_html(part, lab))
-    agg, items = build_schema(part)
-    out = rewrite_product_jsonld(out, agg, items)
+    # РЕШЕНИЕ (2026): AggregateRating/Review НЕ выводим в JSON-LD, пока отзывы
+    # синтетические. Схема-разметка с фейковым рейтингом = риск ручной санкции
+    # Google (Review snippet policy). Убираем рейтинг из Product JSON-LD.
+    # Видимые карточки отзывов на странице остаются (см. inject_div выше).
+    # Когда появятся реальные проверенные отзывы — здесь можно вернуть схему,
+    # отфильтровав по verified:
+    #     agg, items = build_schema([r for r in part if r.get("verified")])
+    #     out = rewrite_product_jsonld(out, agg, items)
+    out = strip_product_rating(out)
     return out
 
 
