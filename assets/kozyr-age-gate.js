@@ -87,6 +87,10 @@
       no:          'No, I am under {age}',
       compliance:  '{age}+ · Play responsibly · Gambling can be addictive.',
       leaving:     'Redirecting to responsible gaming resource…',
+      denied_title:  'Access restricted',
+      denied_body:   'This site is available only to those {age} and older.',
+      denied_go:     'Responsible gaming resource',
+      denied_back:   '← I mis-clicked, go back',
       brand_tag:   'KOZYR · POKER RAKEBACK'
     },
     ru: {
@@ -96,6 +100,10 @@
       no:          'Мне меньше {age}',
       compliance:  '{age}+ · Играй ответственно · Игры могут вызывать зависимость.',
       leaving:     'Переходим к ресурсу по ответственной игре…',
+      denied_title:  'Доступ ограничен',
+      denied_body:   'Сайт доступен только лицам от {age} лет.',
+      denied_go:     'Ресурс по ответственной игре',
+      denied_back:   '← Я ошибся, вернуться',
       brand_tag:   'KOZYR · РЕЙКБЕК В ПОКЕРЕ'
     },
     uk: {
@@ -105,6 +113,10 @@
       no:          'Мені менше {age}',
       compliance:  '{age}+ · Грай відповідально · Ігри можуть викликати залежність.',
       leaving:     'Переходимо до ресурсу з відповідальної гри…',
+      denied_title:  'Доступ обмежено',
+      denied_body:   'Сайт доступний лише для осіб від {age} років.',
+      denied_go:     'Ресурс з відповідальної гри',
+      denied_back:   '← Я помилився, повернутися',
       brand_tag:   'KOZYR · РЕЙКБЕК У ПОКЕРІ'
     }
   };
@@ -149,8 +161,8 @@
 
     '.kz-age-overlay {',
     '  position: fixed; inset: 0; z-index: 999999;',
-    '  background: rgba(0, 7, 20, 0.85);',
-    '  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);',
+    '  background: rgba(3, 8, 20, 0.55);',
+    '  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);',
     '  display: flex; align-items: center; justify-content: center;',
     '  padding: 20px; overflow-y: auto;',
     '  animation: kzAgeFadeIn 0.25s ease-out;',
@@ -348,14 +360,109 @@
   }
 
   function declineAge() {
-    // Show brief loading state before redirect
+    // Экран отказа: НЕ авто-редирект (можно случайно нажать и застрять).
+    // Даём осознанный выбор: уйти на ресурс помощи ИЛИ вернуться назад.
     var overlay = document.querySelector('.kz-age-overlay');
-    if (overlay) {
-      overlay.innerHTML = '<div class="kz-age-card"><p class="kz-age-body" style="margin:0;">' + t.leaving + '</p></div>';
-    }
-    setTimeout(function () {
-      window.location.href = REDIRECT_URL;
-    }, 400);
+    if (!overlay) return;
+    var card = overlay.querySelector('.kz-age-card');
+    if (!card) return;
+
+    card.innerHTML = '';
+
+    var brand = document.createElement('div');
+    brand.className = 'kz-age-brand';
+    brand.textContent = t.brand_tag;
+    card.appendChild(brand);
+
+    var title = document.createElement('h2');
+    title.className = 'kz-age-title';
+    title.textContent = t.denied_title;
+    card.appendChild(title);
+
+    var body = document.createElement('p');
+    body.className = 'kz-age-body';
+    body.textContent = t.denied_body;
+    card.appendChild(body);
+
+    var btnWrap = document.createElement('div');
+    btnWrap.className = 'kz-age-buttons';
+
+    // Кнопка "уйти на ресурс помощи" (осознанный переход, не авто)
+    var goBtn = document.createElement('a');
+    goBtn.className = 'kz-age-btn kz-age-btn--yes';
+    goBtn.href = REDIRECT_URL;
+    goBtn.rel = 'noopener';
+    goBtn.textContent = t.denied_go;
+    goBtn.style.textDecoration = 'none';
+    goBtn.style.textAlign = 'center';
+
+    // Кнопка "вернуться" — восстанавливает исходный экран возраста
+    var backBtn = document.createElement('button');
+    backBtn.className = 'kz-age-btn kz-age-btn--no';
+    backBtn.type = 'button';
+    backBtn.textContent = t.denied_back;
+    backBtn.addEventListener('click', rebuildAgePrompt);
+
+    btnWrap.appendChild(goBtn);
+    btnWrap.appendChild(backBtn);
+    card.appendChild(btnWrap);
+
+    var comp = document.createElement('div');
+    comp.className = 'kz-age-compliance';
+    comp.textContent = t.compliance;
+    card.appendChild(comp);
+  }
+
+  // Восстанавливает исходный вопрос о возрасте (для кнопки "вернуться")
+  function rebuildAgePrompt() {
+    var overlay = document.querySelector('.kz-age-overlay');
+    if (!overlay) return;
+    var card = overlay.querySelector('.kz-age-card');
+    if (!card) return;
+
+    card.innerHTML = '';
+
+    var brand = document.createElement('div');
+    brand.className = 'kz-age-brand';
+    brand.textContent = t.brand_tag;
+    card.appendChild(brand);
+
+    var title = document.createElement('h2');
+    title.className = 'kz-age-title';
+    title.id = 'kzAgeTitle';
+    title.innerHTML = t.title;
+    card.appendChild(title);
+
+    var body = document.createElement('p');
+    body.className = 'kz-age-body';
+    body.textContent = t.body;
+    card.appendChild(body);
+
+    var btnWrap = document.createElement('div');
+    btnWrap.className = 'kz-age-buttons';
+
+    var yesBtn = document.createElement('button');
+    yesBtn.className = 'kz-age-btn kz-age-btn--yes';
+    yesBtn.type = 'button';
+    yesBtn.textContent = t.yes;
+    yesBtn.addEventListener('click', confirmAge);
+
+    var noBtn = document.createElement('button');
+    noBtn.className = 'kz-age-btn kz-age-btn--no';
+    noBtn.type = 'button';
+    noBtn.textContent = t.no;
+    noBtn.addEventListener('click', declineAge);
+
+    btnWrap.appendChild(yesBtn);
+    btnWrap.appendChild(noBtn);
+    card.appendChild(btnWrap);
+
+    var comp = document.createElement('div');
+    comp.className = 'kz-age-compliance';
+    comp.textContent = t.compliance;
+    card.appendChild(comp);
+
+    try { yesBtn.focus(); } catch (e) {}
   }
 
   function close() {
