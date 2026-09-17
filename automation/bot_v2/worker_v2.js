@@ -1882,6 +1882,7 @@ const PARTNER_EDIT_FIELDS = {
   bonus:       { label: "Бонус",      type: "list", hint: "бонусы через запятую или с новой строки" },
   limits:      { label: "Лимиты",     type: "list", hint: "лимиты через запятую (NL10, NL25, NL50)" },
   payoutLabel: { label: "Выплаты",    type: "str",  hint: "скорость выплат (напр. «0–24 часа», «мгновенно»)" },
+  traffic:     { label: "Трафик",     type: "str",  hint: "трафик/живость столов (напр. «высокий, живо вечером», «мало игроков днём»)" },
   score:       { label: "Score",      type: "num",  hint: "оценку 1–10 (напр. 8.4)" },
   ref_url:     { label: "Реф-ссылка", type: "url",  hint: "ссылку кнопки «Перейти» (https://… или t.me/…)" },
   currency:    { label: "Валюта",     type: "cur",  hint: "валюту: UAH / USD / EUR / USDT" },
@@ -2453,6 +2454,48 @@ async function showLatestPartnerDraft(chatId, env) {
 // Резервный рендер сводки на стороне Worker'а. По основному пути сводку
 // присылает parse_partner.py (send_telegram_summary). Эта версия нужна для
 // pshow / pshow_latest / после выбора страны. Держим форматы согласованными.
+// Разбивка Kozyr Score — показывает, из чего сложился балл. Данные берёт из
+// draft._score_breakdown (кладёт score_partner.py при парсинге). Если разбивки
+// нет (старый черновик) — тихо возвращает пустую строку.
+function renderScoreBreakdown(draft) {
+  const br = draft._score_breakdown;
+  if (!br || typeof br !== "object") return "";
+  const LABELS = {
+    trust: "Надёжность", rake: "Рейкбек", payout: "Скорость выплат",
+    traffic: "Трафик/живость", games: "Игры и лимиты",
+    platform: "Платформы и софт", payments: "Платёжки",
+    bonus: "Бонусы", softness: "Мягкость поля",
+  };
+  const MAX = {
+    trust: 1.85, rake: 1.50, payout: 1.25, traffic: 1.00, games: 0.75,
+    platform: 0.60, payments: 0.55, bonus: 0.55, softness: 0.30,
+  };
+  // Порядок вывода — по важности критерия.
+  const order = ["trust", "rake", "payout", "traffic", "games",
+                 "platform", "payments", "bonus", "softness"];
+  const lines = ["", "📊 *Из чего балл:*"];
+  for (const k of order) {
+    if (!(k in br)) continue;
+    const val = br[k];
+    if (typeof val !== "number") continue;
+    const max = MAX[k] || 1;
+    // Простой бар из блоков (доля от максимума)
+    const filled = Math.max(0, Math.min(5, Math.round((val / max) * 5)));
+    const bar = "▰".repeat(filled) + "▱".repeat(5 - filled);
+    lines.push(`${bar} ${LABELS[k] || k}: ${val >= 0 ? "" : ""}${val.toFixed(2)}`);
+  }
+  // Пояснения по надёжности (почему такая)
+  const notes = br._trust_notes;
+  if (Array.isArray(notes) && notes.length) {
+    lines.push(`_надёжность: ${notes.join(", ")}_`);
+  }
+  // Красный флаг — предупреждение
+  if (br._redflag) {
+    lines.push("🚩 *балл снижен: красные флаги (жалобы/выплаты)*");
+  }
+  return lines.join("\n");
+}
+
 function renderPartnerSummary(draft) {
   const L = ["📋 *Вот что я понял:*", ""];
   L.push(`🎯 *${escapeMd(draft.name || "?")}* · ${escapeMd(draft.type || "?")} · ${escapeMd(draft.networkLabel || draft.network || "?")}`);
@@ -2467,7 +2510,9 @@ function renderPartnerSummary(draft) {
   if (excl.length) L.push(`🚫 Не принимает: ${escapeMd(excl.join(", "))}`);
   if (draft.type === "club" && draft.union) L.push(`🏷 Союз: ${escapeMd(draft.union)}`);
   L.push(`💰 Рейкбек: ${escapeMd(draft.rakeLabel || "?")}`);
-  L.push(`⭐ KOZYR score: ${escapeMd(String(draft.score ?? "?"))}`);
+  L.push(`⭐ KOZYR score: *${escapeMd(String(draft.score ?? "?"))}*`);
+  // Разбивка Score — из чего сложился балл (считает score_partner.py).
+  L.push(renderScoreBreakdown(draft));
   const games = draft.games || [];
   const limits = draft.limits || [];
   if (games.length || limits.length) {

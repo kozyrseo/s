@@ -241,6 +241,27 @@ def build_static_catalog_html(partners: list, country: str = "ua") -> str:
     return "\n        ".join(cards)
 
 
+def inject_partner_count(html_path: Path, count: int) -> bool:
+    """Подставляет число партнёров между маркерами KOZYR:PARTNER_COUNT.
+
+    Используется на странице «О нас» (стат «N румов проверено»), чтобы число
+    обновлялось автоматически при добавлении партнёра — как и каталог.
+    """
+    if not html_path.exists():
+        return False
+    html = html_path.read_text(encoding="utf-8")
+    start = "<!--KOZYR:PARTNER_COUNT-->"
+    end = "<!--/KOZYR:PARTNER_COUNT-->"
+    if start not in html or end not in html:
+        return False
+    pattern = re.compile(re.escape(start) + r".*?" + re.escape(end), re.S)
+    new_html = pattern.sub(f"{start}{count}{end}", html)
+    if new_html != html:
+        html_path.write_text(new_html, encoding="utf-8")
+        return True
+    return False
+
+
 def inject_static_catalog(html_path: Path, partners: list, country: str = "ua") -> bool:
     """Впечатывает статический каталог между маркерами в HTML-странице.
 
@@ -330,6 +351,19 @@ def main():
                 print(f"  Статический каталог актуален: {page_path.relative_to(REPO_ROOT)}")
         except Exception as e:
             print(f"⚠️ Не удалось обновить каталог в {page_path.relative_to(REPO_ROOT)}: {e}")
+
+    # Число партнёров на страницах «О нас» (стат «N румов проверено»).
+    # Обновляется автоматически из того же partners.json.
+    ABOUT_PAGES = [
+        REPO_ROOT / "ua" / "about" / "index.html",
+        REPO_ROOT / "ua" / "uk" / "about" / "index.html",
+    ]
+    for about_path in ABOUT_PAGES:
+        try:
+            if inject_partner_count(about_path, len(normalized)):
+                print(f"✓ Число партнёров обновлено: {about_path.relative_to(REPO_ROOT)}")
+        except Exception as e:
+            print(f"⚠️ Не удалось обновить число партнёров в {about_path.relative_to(REPO_ROOT)}: {e}")
 
 
 if __name__ == "__main__":
