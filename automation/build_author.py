@@ -161,25 +161,35 @@ def render(lang: str) -> str:
 *{{box-sizing:border-box;margin:0;padding:0}}
 body{{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;line-height:1.6;min-height:100vh}}
 a{{color:inherit}}
-.wrap{{max-width:760px;margin:0 auto;padding:32px 20px 64px}}
-nav.crumbs{{font-size:13px;color:var(--ink2);margin-bottom:28px}}
+.wrap{{max-width:860px;margin:0 auto;padding:32px 20px 64px}}
+nav.crumbs{{font-size:13px;color:var(--ink2);margin-bottom:24px}}
 nav.crumbs a{{text-decoration:none;color:var(--ink2)}}
 nav.crumbs a:hover{{color:var(--ink)}}
-.eyebrow{{font-family:'Space Grotesk',sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600}}
-.hero{{display:flex;gap:22px;align-items:center;margin:10px 0 26px}}
-.hero img{{width:104px;height:104px;border-radius:50%;object-fit:cover;border:2px solid var(--bd);flex:0 0 auto}}
-h1{{font-family:'Space Grotesk',sans-serif;font-size:30px;line-height:1.15;margin-bottom:6px}}
-.role{{color:var(--gold);font-weight:600;font-size:15px}}
-.bio{{color:var(--ink2);font-size:16px;margin:18px 0 26px}}
-.card{{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:22px;margin:16px 0}}
-.card h2{{font-family:'Space Grotesk',sans-serif;font-size:17px;margin-bottom:12px}}
-.chips{{list-style:none;display:flex;flex-wrap:wrap;gap:8px}}
-.chips li{{background:rgba(38,104,255,.12);border:1px solid rgba(38,104,255,.3);color:#cfe0ff;font-size:13px;padding:6px 12px;border-radius:999px}}
+.eyebrow{{font-family:'Space Grotesk',sans-serif;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:600}}
+/* HERO — тёмный, с градиентом и золотым свечением (стиль about) */
+.hero{{position:relative;overflow:hidden;border-radius:26px;padding:40px 40px 36px;margin:14px 0 26px;
+  background:radial-gradient(130% 170% at 8% -10%, #17244E 0%, #0A1128 52%, #06060F 100%);
+  box-shadow:0 26px 64px rgba(6,17,40,.38)}}
+.hero::before{{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(55% 120% at 90% -10%, rgba(228,185,91,.20), transparent 62%)}}
+.hero>*{{position:relative}}
+.hero-top{{display:flex;gap:24px;align-items:center}}
+.hero img{{width:110px;height:110px;border-radius:20px;object-fit:cover;
+  border:2px solid rgba(255,255,255,.14);flex:0 0 auto;box-shadow:0 10px 28px rgba(0,0,0,.4)}}
+h1{{font-family:'Space Grotesk',sans-serif;font-size:38px;line-height:1.1;letter-spacing:-0.02em;margin-bottom:8px;color:#fff}}
+.role{{font-family:'JetBrains Mono',monospace;color:var(--gold);font-weight:600;font-size:13px;letter-spacing:.04em}}
+.bio{{color:rgba(255,255,255,.82);font-size:16px;line-height:1.65;margin:22px 0 0;max-width:64ch}}
+.card{{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:26px;margin:18px 0}}
+.card h2{{font-family:'Space Grotesk',sans-serif;font-size:19px;margin-bottom:16px;color:#fff}}
+.chips{{list-style:none;display:flex;flex-wrap:wrap;gap:9px}}
+.chips li{{background:rgba(38,104,255,.12);border:1px solid rgba(38,104,255,.3);color:#cfe0ff;font-size:13px;padding:8px 14px;border-radius:999px}}
 .links{{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}}
-.links a{{text-decoration:none;color:#fff;background:var(--accent);padding:11px 18px;border-radius:10px;font-weight:600;font-size:14px}}
-.links a.ghost{{background:transparent;border:1px solid var(--bd);color:var(--ink)}}
+.links a{{text-decoration:none;color:#fff;background:var(--accent);padding:12px 20px;border-radius:12px;font-weight:600;font-size:14px;font-family:'Space Grotesk',sans-serif;transition:background .15s ease}}
+.links a:hover{{background:#1E52D9}}
+.links a.ghost{{background:rgba(255,255,255,.06);border:1px solid var(--bd);color:var(--ink)}}
+.links a.ghost:hover{{background:rgba(255,255,255,.1)}}
 .disc{{color:var(--ink2);font-size:12px;margin-top:30px;border-top:1px solid var(--bd);padding-top:16px}}
-@media(max-width:520px){{.hero{{flex-direction:column;text-align:center;gap:14px}}h1{{font-size:25px}}}}
+@media(max-width:560px){{.hero{{padding:28px 22px 24px}}.hero-top{{flex-direction:column;text-align:center;gap:16px}}h1{{font-size:28px}}.bio{{font-size:15px}}}}
 </style>
 <script src="/analytics.js" defer></script>
 </head>
@@ -188,15 +198,17 @@ h1{{font-family:'Space Grotesk',sans-serif;font-size:30px;line-height:1.15;margi
   <nav class="crumbs" aria-label="breadcrumb">
     <a href="{home_url}">{esc(t['home'])}</a> · <a href="{blog_url}">{esc(t['blog'])}</a> · {esc(name)}
   </nav>
-  <span class="eyebrow">{esc(t['eyebrow'])}</span>
   <div class="hero">
-    <img src="{PHOTO}" alt="{esc(name)}" width="104" height="104">
-    <div>
-      <h1>{esc(name)}</h1>
-      <div class="role">{esc(role)}</div>
+    <span class="eyebrow">{esc(t['eyebrow'])}</span>
+    <div class="hero-top" style="margin-top:14px">
+      <img src="{PHOTO}" alt="{esc(name)}" width="110" height="110">
+      <div>
+        <h1>{esc(name)}</h1>
+        <div class="role">{esc(role)}</div>
+      </div>
     </div>
+    <p class="bio">{esc(bio)}</p>
   </div>
-  <p class="bio">{esc(bio)}</p>
 
   <div class="card">
     <h2>{esc(t['specializes'])}</h2>
