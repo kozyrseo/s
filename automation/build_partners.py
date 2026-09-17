@@ -135,6 +135,138 @@ def build_partners_array(partners: list) -> str:
     return "  var PARTNERS = [\n" + body + "\n  ];\n"
 
 
+def _esc(s) -> str:
+    """HTML-escape (как esc() в index.html)."""
+    s = "" if s is None else str(s)
+    return (s.replace("&", "&amp;").replace("<", "&lt;")
+             .replace(">", "&gt;").replace('"', "&quot;"))
+
+
+# Человекочитаемые подписи для платёжек и лимитов (для fallback-каталога).
+_PAY_LABELS = {
+    "card": "Карта", "bank": "Банк", "crypto": "Крипта",
+    "p2p": "P2P", "ewallet": "Кошелёк", "agent": "Агент",
+}
+
+
+def build_static_catalog_html(partners: list, country: str = "ua") -> str:
+    """HTML статического каталога (SEO + fallback без JS) из данных партнёров.
+
+    Простой семантический блок: лого, название, рейкбек, валюта, заметка,
+    ключевые факты (лимиты/платёжки/выплата), ссылка на обзор. НЕ копирует
+    интерактивный финдер и НЕ содержит runtime-зависимостей (гео и т.п.).
+    Фильтрует партнёров по стране (по полю countries), чтобы работать и для
+    новых гео. Порядок — по убыванию рейкбека (как логичный дефолт).
+    """
+    # Фильтр по стране: партнёр показывается, если обслуживает эту страну
+    # (или помечен 'all'/'*'), либо если поле не задано.
+    def serves(p):
+        cs = p.get("countries") or []
+        if not cs:
+            return True
+        return country in cs or "all" in cs or "*" in cs
+
+    items = [p for p in partners if serves(p)]
+
+    # Сортировка: сначала с бо́льшим рейкбеком, потом остальные.
+    def rake_key(p):
+        r = p.get("rake")
+        return r if isinstance(r, (int, float)) else -1
+    items.sort(key=rake_key, reverse=True)
+
+    cards = []
+    for p in items:
+        name = _esc(p.get("name", ""))
+        url = _esc(p.get("url", "#"))
+        cur = _esc(p.get("currency", ""))
+        note = _esc(p.get("note", ""))
+
+        # Логотип: картинка или градиентные инициалы
+        logo = p.get("logo") or {}
+        logo_img = (p.get("card") or {}).get("logoImg") or p.get("logoImg")
+        if logo_img:
+            logo_html = (f'<span class="kf-static-logo" style="padding:0;overflow:hidden">'
+                         f'<img src="{_esc(logo_img)}" alt="" width="44" height="44" '
+                         f'loading="lazy" style="width:100%;height:100%;object-fit:cover"></span>')
+        else:
+            frm = _esc(logo.get("from", "#2668FF"))
+            to = _esc(logo.get("to", "#1E52D9"))
+            txt = _esc(logo.get("text", (name[:2].upper() if name else "?")))
+            logo_html = (f'<span class="kf-static-logo" '
+                         f'style="background:linear-gradient(135deg,{frm},{to})">{txt}</span>')
+
+        # Рейкбек
+        rake = p.get("rake")
+        if isinstance(rake, (int, float)) and rake > 0:
+            rake_html = (f'<span class="kf-static-rake">'
+                         f'<span class="kf-static-rake__num">до&nbsp;{int(rake)}</span>'
+                         f'<span class="kf-static-rake__pct">%</span></span>')
+        else:
+            rake_html = ('<span class="kf-static-rake kf-static-rake--none">'
+                         '<span class="kf-static-rake__num">Без рейкбека</span></span>')
+
+        # Факты: лимиты (первые 3), платёжки, выплата
+        facts = []
+        limits = p.get("limits") or []
+        if limits:
+            facts.append(f'<span class="kf-static-fact">{_esc(" · ".join(limits[:3]))}</span>')
+        pays = p.get("payments") or []
+        if pays:
+            pay_txt = ", ".join(_PAY_LABELS.get(x, x) for x in pays[:3])
+            facts.append(f'<span class="kf-static-fact">{_esc(pay_txt)}</span>')
+        payout = p.get("payoutLabel")
+        if payout:
+            facts.append(f'<span class="kf-static-fact">Вывод: {_esc(payout)}</span>')
+        facts_html = "".join(facts)
+
+        card = (
+            '<article class="kf-static-item">'
+            '<div class="kf-static-item__top">'
+            f'{logo_html}'
+            '<div>'
+            f'<div class="kf-static-item__name">{name}</div>'
+            f'<div class="kf-static-item__meta"><span class="kf-static-item__cur">{cur}</span></div>'
+            '</div>'
+            '</div>'
+            f'<div>{rake_html}</div>'
+            + (f'<p class="kf-static-item__note">{note}</p>' if note else '')
+            + (f'<div class="kf-static-item__facts">{facts_html}</div>' if facts_html else '')
+            + f'<a class="kf-static-item__go" href="{url}">Открыть обзор'
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
+              '<path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a>'
+            '</article>'
+        )
+        cards.append(card)
+
+    return "\n        ".join(cards)
+
+
+def inject_static_catalog(html_path: Path, partners: list, country: str = "ua") -> bool:
+    """Впечатывает статический каталог между маркерами в HTML-странице.
+
+    Маркеры: <!-- KOZYR:STATIC_CATALOG:START --> ... :END -->.
+    Возвращает True если файл изменён. Идемпотентно (можно гонять многократно).
+    """
+    if not html_path.exists():
+        return False
+    html = html_path.read_text(encoding="utf-8")
+    start = "<!-- KOZYR:STATIC_CATALOG:START -->"
+    end = "<!-- KOZYR:STATIC_CATALOG:END -->"
+    if start not in html or end not in html:
+        return False
+
+    cards_html = build_static_catalog_html(partners, country)
+    new_block = f"{start}\n        {cards_html}\n        {end}"
+
+    pattern = re.compile(re.escape(start) + r".*?" + re.escape(end), re.S)
+    new_html = pattern.sub(new_block, html)
+
+    if new_html != html:
+        html_path.write_text(new_html, encoding="utf-8")
+        return True
+    return False
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true", help="только проверка")
@@ -181,6 +313,23 @@ def main():
 
     print(f"\n✓ Собран {OUTPUT.relative_to(REPO_ROOT)} ({len(output.splitlines())} строк)")
     print("  Не редактируй partners.js вручную — правь partners.json + пересобирай.")
+
+    # Статический каталог (SEO + fallback без JS) на главной UA.
+    # Генерируется из тех же данных partners.json — одна точка правды.
+    # Для новых гео сюда можно добавить их главные страницы с country=код.
+    STATIC_PAGES = [
+        (REPO_ROOT / "ua" / "index.html", "ua"),
+        (REPO_ROOT / "ua" / "uk" / "index.html", "ua"),
+    ]
+    for page_path, country in STATIC_PAGES:
+        try:
+            changed = inject_static_catalog(page_path, normalized, country)
+            if changed:
+                print(f"✓ Статический каталог обновлён: {page_path.relative_to(REPO_ROOT)}")
+            elif page_path.exists():
+                print(f"  Статический каталог актуален: {page_path.relative_to(REPO_ROOT)}")
+        except Exception as e:
+            print(f"⚠️ Не удалось обновить каталог в {page_path.relative_to(REPO_ROOT)}: {e}")
 
 
 if __name__ == "__main__":
