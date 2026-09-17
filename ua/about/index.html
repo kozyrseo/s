@@ -3454,7 +3454,8 @@ body::before {
 .about-cta-sub { font-size: 15px; line-height: 1.55; color: rgba(255,255,255,.85); margin: 0; max-width: 52ch; }
 .about-cta-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 .about-cta .btn-primary { background: #fff; color: var(--accent-deep); border-color: #fff; }
-.about-cta .btn-ghost { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.3); }
+.about-cta .btn-ghost { background: transparent; color: #fff; border: 2px solid #fff; font-weight: 600; }
+.about-cta .btn-ghost:hover { background: #fff; color: var(--accent-deep); }
 @media (max-width: 860px){
   .about-cta { padding: 30px 24px; flex-direction: column; align-items: flex-start; }
   .about-cta-title { font-size: 20px; }
