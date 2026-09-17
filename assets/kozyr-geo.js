@@ -15,7 +15,7 @@
                                    если пользователь выбрал регион вручную)
 
    Хранение: localStorage['kozyr_country'] = 'ua' (в нижнем регистре).
-   Источник: fetch к ipapi.co/json/, TTL 24 часа.
+   Источник: /cdn-cgi/trace (Cloudflare), TTL 24 часа. Без стороннего сервиса.
    ==========================================================================*/
 (function () {
   'use strict';
@@ -67,23 +67,27 @@
     } catch (e) {}
   }
 
-  /* ---------- fetch до ipapi -------------------------------------- */
+  /* ---------- определение страны через Cloudflare -------------------
+     Источник: /cdn-cgi/trace — встроенный endpoint Cloudflare (сайт на
+     Cloudflare Pages). Отдаёт страну по IP на СТОРОНЕ Cloudflare, без
+     стороннего сервиса и без утечки IP третьим лицам (в отличие от ipapi.co).
+     Ответ — текст вида "...\nloc=UA\n...". Берём loc. */
 
   function fetchGeo() {
-    fetch('https://ipapi.co/json/', {
-      method: 'GET',
-      headers: { 'Accept': 'application/json' }
-    }).then(function (r) {
-      if (!r.ok) throw new Error('bad status');
-      return r.json();
-    }).then(function (data) {
-      var code = data && data.country_code ? String(data.country_code).toLowerCase() : null;
-      if (code) saveToCache(code);
-      markReady(code);
-    }).catch(function () {
-      /* сеть не отдала — отдаём null, ui не рушится, просто прячет плашку */
-      markReady(null);
-    });
+    fetch('/cdn-cgi/trace', { method: 'GET' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('bad status');
+        return r.text();
+      }).then(function (text) {
+        var code = null;
+        var m = /(?:^|\n)loc=([A-Za-z]{2})/.exec(text);
+        if (m) code = m[1].toLowerCase();
+        if (code) saveToCache(code);
+        markReady(code);
+      }).catch(function () {
+        /* не отдалось — отдаём null, ui не рушится, просто прячет плашку */
+        markReady(null);
+      });
   }
 
   /* ---------- public API ------------------------------------------ */
@@ -112,7 +116,7 @@
     /* моментально помечаем ready — UI получает плашку в первом кадре */
     markReady(cached);
   } else {
-    /* нет кэша — ждём ответа ipapi */
+    /* нет кэша — спрашиваем Cloudflare */
     fetchGeo();
   }
 

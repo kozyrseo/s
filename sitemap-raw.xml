@@ -612,4 +612,32 @@
       <image:title>Покер на криптовалюте USDT в Украине: как играть</image:title>
     </image:image>
   </url>
+
+  <url>
+    <loc>https://kozyr.club/ua/uk/blog/legalen-li-poker-v-ukraine-2026-playcity/</loc>
+    <lastmod>2026-09-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/legalen-li-poker-v-ukraine-2026-playcity/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/blog/legalen-li-poker-v-ukraine-2026-playcity/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+  </url>
+  <url>
+    <loc>https://kozyr.club/ua/uk/blog/poker-na-kriptovalyute-usdt-ukraina/</loc>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/poker-na-kriptovalyute-usdt-ukraina/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/blog/poker-na-kriptovalyute-usdt-ukraina/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+  </url>
+  <url>
+    <loc>https://kozyr.club/ua/uk/blog/poker-na-telefon-android-apk-ios-brauzer/</loc>
+    <lastmod>2026-08-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/blog/poker-na-telefon-android-apk-ios-brauzer/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/blog/poker-na-telefon-android-apk-ios-brauzer/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/"/>
+  </url>
 </urlset>
