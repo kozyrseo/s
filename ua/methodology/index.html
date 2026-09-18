@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#2668FF">
-<link rel="canonical" href="https://kozyr.club/ua/uk/about/">
+<link rel="canonical" href="https://kozyr.club/ua/methodology/">
 <link rel="alternate" hreflang="ru-UA" href="https://kozyr.club/ua/">
 <link rel="alternate" hreflang="uk-UA" href="https://kozyr.club/ua/uk/">
 <link rel="alternate" hreflang="en"    href="https://kozyr.club/">
@@ -32,8 +32,8 @@
 <meta name="twitter:title" content="KOZYR — рейкбек и сравнение покер-румов и клубов">
 <meta name="twitter:description" content="KOZYR — сравнение проверенных покер-румов и клубов по рейкбеку, лимитам и условиям выплат. Собери сделку под свою игру и возвращай часть рейка.">
 <meta name="twitter:image" content="https://kozyr.club/og-image.png">
-<title>Про проєкт KOZYR — чесний рейкбек і порівняння покер-румів | KOZYR</title>
-<meta name="description" content="KOZYR — незалежний проєкт: порівнюємо покерні руми і клуби за реальним рейкбеком, виплатами і мякістю полів. Засновано гравцями. Оцінки не купуються.">
+<title>Как мы считаем Kozyr Score — методология оценки покер-румов | KOZYR</title>
+<meta name="description" content="Kozyr Score — прозрачная формула из 9 критериев для оценки покер-румов. Показываем веса, шкалу и защиту от скама. Балл нельзя купить.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -3466,6 +3466,39 @@ main > .about-section:last-child { padding-bottom: 64px; }
 </style>
 
 
+<style>
+/* ============ Методология: специфичные блоки ============ */
+/* Критерии с весами — горизонтальный индикатор веса */
+.method-criteria { display: flex; flex-direction: column; gap: 12px; }
+.method-crit { padding: 20px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-card); box-shadow: var(--kf-shadow-1); }
+.method-crit-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 10px; }
+.method-crit-name { font-family: var(--f-display); font-weight: 700; font-size: 17px; color: var(--ink); white-space: nowrap; }
+.method-crit-pct { font-family: var(--f-display); font-weight: 700; font-size: 22px; color: var(--accent); flex: 0 0 auto; }
+.method-crit-track { height: 7px; background: var(--accent-tint); border-radius: 999px; overflow: hidden; margin-bottom: 10px; }
+.method-crit-track > span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-deep)); border-radius: 999px; }
+.method-crit-desc { font-size: 14px; line-height: 1.55; color: var(--ink-2); margin: 0; }
+
+/* Шкала оценок */
+.method-scale { display: flex; flex-direction: column; gap: 12px; }
+.method-scale-row { display: flex; gap: 18px; align-items: center; padding: 18px 22px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-card); box-shadow: var(--kf-shadow-1); }
+.method-scale-badge { flex: 0 0 auto; min-width: 88px; text-align: center; font-family: var(--f-display); font-weight: 700; font-size: 16px; padding: 8px 14px; border-radius: 12px; color: #fff; }
+.method-scale-top { background: linear-gradient(135deg,#1FA85A,#178048); }
+.method-scale-good { background: linear-gradient(135deg,#2668FF,#1E52D9); }
+.method-scale-mid { background: linear-gradient(135deg,#D9A93B,#B8841C); }
+.method-scale-low { background: linear-gradient(135deg,#6B7280,#4B5563); }
+.method-scale-title { font-family: var(--f-display); font-weight: 700; font-size: 16px; color: var(--ink); }
+.method-scale-desc { font-size: 13.5px; line-height: 1.5; color: var(--ink-2); margin-top: 3px; }
+
+@media (max-width: 640px){
+  .method-crit { padding: 16px 18px; }
+  .method-crit-name { font-size: 15px; white-space: normal; }
+  .method-crit-pct { font-size: 19px; }
+  .method-scale-row { padding: 14px 16px; gap: 14px; flex-wrap: wrap; }
+  .method-scale-badge { min-width: 72px; font-size: 14px; }
+}
+</style>
+
+
 </head>
 <body>
 <nav class="nav" aria-label="Основная навигация">
@@ -3494,19 +3527,19 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <span>KOZYR</span>
     </a>
     <div class="nav-links">
-      <a href="/ua/uk/#partners">Партнери</a>
-      <a href="/ua/uk/rooms/">Руми</a>
-      <a href="/ua/uk/clubs/">Клуби</a>
-      <a href="/ua/uk/#compare">Порівняння</a>
-      <a href="/ua/uk/blog/">Блог</a>
-      <a href="/ua/uk/#faq">FAQ</a>
+      <a href="/ua/#partners">Партнёры</a>
+      <a href="/ua/rooms/">Румы</a>
+      <a href="/ua/clubs/">Клубы</a>
+      <a href="/ua/#compare">Сравнение</a>
+      <a href="/ua/blog/">Блог</a>
+      <a href="/ua/#faq">FAQ</a>
     </div>
     <div class="nav-actions">
-      <div class="lang" role="group" aria-label="Вибір мови">
-        <a href="/ua/about/" hreflang="ru-UA" lang="ru">RU</a>
-        <a href="/ua/uk/about/" hreflang="uk-UA" lang="uk" aria-current="page">UA</a>
+      <div class="lang" role="group" aria-label="Выбор языка">
+        <a href="/ua/methodology/" hreflang="ru-UA" lang="ru" aria-current="page">RU</a>
+        <a href="/ua/uk/methodology/" hreflang="uk-UA" lang="uk">UA</a>
       </div>
-      <a href="/ua/uk/#partners" class="btn btn-primary">Дивитися партнерів</a>
+      <a href="/ua/#partners" class="btn btn-primary">Смотреть партнёров</a>
       <button class="nav-burger" id="nav-burger" aria-expanded="false" aria-controls="nav-drawer" aria-label="Меню">
         <svg class="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
         <svg class="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -3514,14 +3547,14 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     </div>
   </div>
   <div class="nav-drawer" id="nav-drawer">
-    <a href="/ua/uk/#partners">Партнери <span aria-hidden="true">→</span></a>
-    <a href="/ua/uk/rooms/pokerbet/">PokerBet <span aria-hidden="true">→</span></a>
-    <a href="/ua/uk/clubs/klubok/">KlubOk <span aria-hidden="true">→</span></a>
-    <a href="/ua/uk/#compare">Порівняння румів <span aria-hidden="true">→</span></a>
-    <a href="/ua/uk/blog/">Блог <span aria-hidden="true">→</span></a>
-    <a href="/ua/uk/#score">Калькулятор <span aria-hidden="true">→</span></a>
-    <a href="/ua/uk/#faq">FAQ <span aria-hidden="true">→</span></a>
-    <a href="/ua/uk/#partners" class="btn btn-dark">Дивитися партнерів</a>
+    <a href="/ua/#partners">Партнёры <span aria-hidden="true">→</span></a>
+    <a href="/ua/rooms/pokerbet/">PokerBet <span aria-hidden="true">→</span></a>
+    <a href="/ua/clubs/klubok/">KlubOk <span aria-hidden="true">→</span></a>
+    <a href="/ua/#compare">Сравнение румов <span aria-hidden="true">→</span></a>
+    <a href="/ua/blog/">Блог <span aria-hidden="true">→</span></a>
+    <a href="/ua/#score">Калькулятор <span aria-hidden="true">→</span></a>
+    <a href="/ua/#faq">FAQ <span aria-hidden="true">→</span></a>
+    <a href="/ua/#partners" class="btn btn-dark">Смотреть партнёров</a>
   </div>
 </nav>
 <main>
@@ -3529,74 +3562,102 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     <div class="about-hero">
       <div class="about-hero-badge">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 6.9H21l-5.3 4 2 6.6L12 15.8 6.3 19.5l2-6.6L3 8.9h6.6z"/></svg>
-        ПРО ПРОЄКТ KOZYR
+        МЕТОДОЛОГИЯ
       </div>
-      <h1 class="about-hero-title">Обирай рум <em>за фактами, а не за рекламою</em></h1>
+      <h1 class="about-hero-title">Как мы считаем <em>Kozyr Score</em></h1>
       <p class="about-hero-lede">
-        KOZYR — незалежний проєкт, який порівнює покерні руми і клуби за реальними умовами:
-        ефективним рейкбеком, надійністю виплат і м&#39;якістю полів. Ми робимо це для гравців,
-        яким набридли обіцянки «занеси і виграй» — без води, без проплачених місць, без реклами замість фактів.
+        Kozyr Score — это не мнение и не цифра «с потолка». Это балл от 1 до 10, который
+        считается по прозрачной формуле из девяти критериев. У одинаковых данных всегда
+        одинаковый балл — никакой субъективности и никаких проданных мест в рейтинге.
       </p>
       <div class="about-hero-stats">
-        <div class="about-stat"><span class="about-stat-num">10<em>+</em></span><span class="about-stat-label">років за покерними столами у нашої редакції</span></div>
-        <div class="about-stat"><span class="about-stat-num"><!--KOZYR:PARTNER_COUNT-->4<!--/KOZYR:PARTNER_COUNT--></span><span class="about-stat-label">рума і клуба перевірено і в каталозі</span></div>
-        <div class="about-stat"><span class="about-stat-num">0</span><span class="about-stat-label">проданих місць у рейтингу — оцінки не купуються</span></div>
+        <div class="about-stat"><span class="about-stat-num">9</span><span class="about-stat-label">критериев в формуле оценки</span></div>
+        <div class="about-stat"><span class="about-stat-num">100<em>%</em></span><span class="about-stat-label">расчёт по формуле, а не вручную</span></div>
+        <div class="about-stat"><span class="about-stat-num">0</span><span class="about-stat-label">проданных мест — балл нельзя купить</span></div>
       </div>
     </div>
   </section>
 
+  <!-- ГЛАВНЫЙ ПРИНЦИП -->
   <section class="wrap about-section">
-    <div class="about-section-head"><div class="about-eyebrow">Навіщо ми існуємо</div><h2 class="about-h2">Три речі, заради яких зроблено KOZYR</h2></div>
+    <div class="about-section-head"><div class="about-eyebrow">Главный принцип</div><h2 class="about-h2">Формула, а не суждение</h2>
+      <p class="about-section-sub">Большинство рейтингов ставят баллы «на глаз». Мы считаем Kozyr Score по детерминированной формуле: собираем проверенные данные о руме, оцениваем их по девяти критериям и получаем итоговый балл. Это значит, что оценка воспроизводима, объяснима и не зависит от настроения редактора.</p>
+    </div>
     <div class="about-grid-3">
       <article class="about-card">
-        <div class="about-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-        <h3 class="about-card-title">Чесний рейкбек</h3>
-        <p class="about-card-text">Показуємо реальний відсоток повернення, а не рекламну цифру із зірочкою. Рахуємо ефективний рейкбек — те, що гравець отримує на руки, з урахуванням умов руму.</p>
+        <div class="about-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <h3 class="about-card-title">Воспроизводимость</h3>
+        <p class="about-card-text">Одни и те же данные о руме всегда дают один и тот же балл. Никакой случайности — если условия рума не изменились, оценка стабильна.</p>
       </article>
       <article class="about-card">
-        <div class="about-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h12"/></svg></div>
-        <h3 class="about-card-title">Порівняння без води</h3>
-        <p class="about-card-text">Сухі факти в одному місці: ліміти, платіжки, строки виплат, м&#39;якість поля. Жодної реклами замість даних — тільки те, що допомагає обрати рум під свою гру.</p>
+        <div class="about-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+        <h3 class="about-card-title">Прозрачность</h3>
+        <p class="about-card-text">Мы показываем, из чего складывается балл: какой критерий сколько весит и как оценивается. Ничего не спрятано в чёрном ящике.</p>
       </article>
       <article class="about-card">
-        <div class="about-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg></div>
-        <h3 class="about-card-title">Локальні умови</h3>
-        <p class="about-card-text">Враховуємо те, що важливо на практиці: валюту, місцеві платіжки і підтримку мовою гравця. Умови під конкретний ринок, а не універсальна вітрина «для всіх».</p>
+        <div class="about-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
+        <h3 class="about-card-title">На стороне игрока</h3>
+        <p class="about-card-text">Веса критериев подобраны под то, что важно игроку: безопасность денег, реальный рейкбек, живые столы. Не под то, кто больше платит.</p>
       </article>
     </div>
   </section>
 
+  <!-- 9 КРИТЕРИЕВ С ВЕСАМИ -->
+  <section class="wrap about-section">
+    <div class="about-section-head"><div class="about-eyebrow">Из чего складывается балл</div><h2 class="about-h2">Девять критериев и их вес</h2>
+      <p class="about-section-sub">Каждый критерий вносит свой вклад в итоговый балл. Чем важнее фактор для игрока, тем больше его вес. Вот полная разбивка — без утаиваний.</p>
+    </div>
+    <div class="method-criteria">
+      <div class="method-crit"><div class="method-crit-top"><span class="method-crit-name">Надёжность</span><span class="method-crit-pct">22%</span></div><div class="method-crit-track"><span style="width:100%"></span></div><p class="method-crit-desc">Насколько безопасны деньги игрока: модель работы рума, проверенность инфраструктуры, репутация. Самый весомый фактор.</p></div>
+      <div class="method-crit"><div class="method-crit-top"><span class="method-crit-name">Рейкбек и бонусы</span><span class="method-crit-pct">18%</span></div><div class="method-crit-track"><span style="width:82%"></span></div><p class="method-crit-desc">Реальный возврат рейка на руки — главная причина, зачем игрок идёт через аффилиата.</p></div>
+      <div class="method-crit"><div class="method-crit-top"><span class="method-crit-name">Скорость выплат</span><span class="method-crit-pct">15%</span></div><div class="method-crit-track"><span style="width:68%"></span></div><p class="method-crit-desc">Как быстро игрок реально получает свои деньги. Мгновенные выплаты ценятся выше всего.</p></div>
+      <div class="method-crit"><div class="method-crit-top"><span class="method-crit-name">Трафик и живость</span><span class="method-crit-pct">12%</span></div><div class="method-crit-track"><span style="width:55%"></span></div><p class="method-crit-desc">Есть ли живые столы и достаточно игроков. Мёртвый рум бесполезен, даже с большим рейкбеком.</p></div>
+      <div class="method-crit"><div class="method-crit-top"><span class="method-crit-name">Игры и лимиты</span><span class="method-crit-pct">9%</span></div><div class="method-crit-track"><span style="width:41%"></span></div><p class="method-crit-desc">Разнообразие форматов (кэш, турниры, спины) и широта линейки лимитов.</p></div>
+      <div class="method-crit"><div class="method-crit-top"><span class="method-crit-name">Платформы и софт</span><span class="method-crit-pct">7%</span></div><div class="method-crit-track"><span style="width:32%"></span></div><p class="method-crit-desc">Наличие клиентов под iOS, Android, десктоп и веб, поддержка трекеров.</p></div>
+      <div class="method-crit"><div class="method-crit-top"><span class="method-crit-name">Бонусы</span><span class="method-crit-pct">7%</span></div><div class="method-crit-track"><span style="width:30%"></span></div><p class="method-crit-desc">Приветственные бонусы, рейк-гонки, фрироллы и прочие промо.</p></div>
+      <div class="method-crit"><div class="method-crit-top"><span class="method-crit-name">Платёжки</span><span class="method-crit-pct">6%</span></div><div class="method-crit-track"><span style="width:27%"></span></div><p class="method-crit-desc">Способы ввода и вывода под рынок игрока: карты, крипта, локальные методы.</p></div>
+      <div class="method-crit"><div class="method-crit-top"><span class="method-crit-name">Мягкость поля</span><span class="method-crit-pct">4%</span></div><div class="method-crit-track"><span style="width:16%"></span></div><p class="method-crit-desc">Уровень соперников — насколько легко обыгрывать столы.</p></div>
+    </div>
+  </section>
+
+  <!-- НАДЁЖНОСТЬ (коротко) + ЗАЩИТА ОТ СКАМА -->
   <section class="wrap about-section">
     <div class="about-trust">
-      <div class="about-trust-head"><div class="about-eyebrow" style="color:#D9A93B">Чому нам можна вірити</div><h2 class="about-h2" style="color:#fff">Ми на боці гравця, а не руму</h2></div>
+      <div class="about-trust-head"><div class="about-eyebrow" style="color:#D9A93B">Что делает оценку честной</div><h2 class="about-h2" style="color:#fff">Два принципа, которые защищают игрока</h2></div>
       <div class="about-trust-grid">
-        <div class="about-trust-item"><div class="about-trust-num">01</div><h3 class="about-trust-title">Засновано гравцями</h3><p class="about-trust-text">За проєктом — люди, які самі грають у покер. Ми оцінюємо руми за тим, що реально бачимо за столом, а не за пресрелізами.</p></div>
-        <div class="about-trust-item"><div class="about-trust-num">02</div><h3 class="about-trust-title">Дані перевіряємо</h3><p class="about-trust-text">Умови звіряємо напряму з партнерами, агентами й операторами та оновлюємо в міру змін. Якщо відсоток не підтверджено — так і пишемо.</p></div>
-        <div class="about-trust-item"><div class="about-trust-num">03</div><h3 class="about-trust-title">Оцінки не купуються</h3><p class="about-trust-text">Місце в рейтингу не можна купити. Ми заробляємо на партнерських посиланнях, але це не впливає на оцінку — плюси і мінуси пишемо чесно.</p></div>
-        <div class="about-trust-item"><div class="about-trust-num">04</div><h3 class="about-trust-title">Чесно про мінуси</h3><p class="about-trust-text">Ідеальних румів не буває. Якщо у руму слабке поле вдень чи повільне виведення на карту — ми це вкажемо, а не сховаємо заради конверсії.</p></div>
+        <div class="about-trust-item"><div class="about-trust-num">01</div><h3 class="about-trust-title">Надёжность — по сути, а не по бумажке</h3><p class="about-trust-text">Мы оцениваем надёжность по модели работы рума и совокупности сигналов доверия, а не только по наличию лицензии. На покерном рынке безопасность денег определяется тем, как устроены расчёты, а не формальной бумагой.</p></div>
+        <div class="about-trust-item"><div class="about-trust-num">02</div><h3 class="about-trust-title">Красные флаги обрушивают балл</h3><p class="about-trust-text">Если есть подтверждённые жалобы на невыплаты или признаки обмана, итоговый балл резко снижается — независимо от того, насколько привлекателен рейкбек. Рейтинг не порекомендует сомнительный рум ради высокой цифры.</p></div>
       </div>
     </div>
   </section>
 
+  <!-- ШКАЛА -->
   <section class="wrap about-section">
-    <div class="about-section-head"><div class="about-eyebrow">Наша редакція</div><h2 class="about-h2">Хто готує огляди</h2><p class="about-section-sub">Невелика редакція KOZYR — люди з реальним покерним досвідом. Матеріали готуються і перевіряються вручну, а не збираються автоматично з рекламних текстів.</p></div>
-    <a class="about-author" href="/ua/uk/blog/authors/nikita/">
-      <img class="about-author-photo" src="/ua/blog/authors/nikita.webp" alt="Нікіта Волошин" width="104" height="104" loading="lazy">
-      <div class="about-author-info">
-        <div class="about-author-name">Нікіта Волошин</div>
-        <div class="about-author-role">Рейкбек-аналітик · KOZYR</div>
-        <p class="about-author-bio">В онлайн-покері більше 10 років — пройшов шлях від мікролімітів NL2 до регуляра мідстейксу. Рахує ефективний рейкбек, перевіряє м&#39;якість полів і надійність виплат. Без маркетингового туману.</p>
-        <span class="about-author-link">Профіль автора і матеріали<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></span>
-      </div>
-    </a>
+    <div class="about-section-head"><div class="about-eyebrow">Как читать балл</div><h2 class="about-h2">Что означает цифра</h2>
+      <p class="about-section-sub">Шкала помогает быстро понять уровень рума. Верхняя планка бережётся для действительно исключительных площадок.</p>
+    </div>
+    <div class="method-scale">
+      <div class="method-scale-row"><span class="method-scale-badge method-scale-top">9.0+</span><div><div class="method-scale-title">Топ-выбор</div><div class="method-scale-desc">Лучшие площадки рынка по совокупности факторов. Редкая оценка.</div></div></div>
+      <div class="method-scale-row"><span class="method-scale-badge method-scale-good">8.0–8.9</span><div><div class="method-scale-title">Сильный рум</div><div class="method-scale-desc">Надёжный вариант с хорошими условиями — можно смело играть.</div></div></div>
+      <div class="method-scale-row"><span class="method-scale-badge method-scale-mid">7.0–7.9</span><div><div class="method-scale-title">Хороший вариант</div><div class="method-scale-desc">Достойный рум, но есть по чему уступает лидерам.</div></div></div>
+      <div class="method-scale-row"><span class="method-scale-badge method-scale-low">ниже 7.0</span><div><div class="method-scale-title">С оговорками</div><div class="method-scale-desc">Есть заметные минусы — стоит внимательно изучить перед игрой.</div></div></div>
+    </div>
   </section>
 
+  <!-- ЧЕСТНАЯ ОГОВОРКА -->
+  <section class="wrap about-section">
+    <div class="about-section-head"><div class="about-eyebrow">Честно</div><h2 class="about-h2">Что стоит знать про оценку</h2>
+      <p class="about-section-sub">Kozyr Score считается из данных, которые предоставляют партнёры и которые мы проверяем и сверяем с агентами и операторами. Часть факторов (надёжность, мягкость поля) оценивается по косвенным признакам — мы честно это помечаем и не выдаём предположение за факт. Методология развивается: по мере роста числа румов и накопления данных мы уточняем веса и критерии, чтобы оценка была ещё точнее.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
   <section class="wrap about-section">
     <div class="about-cta">
-      <div class="about-cta-text"><h2 class="about-cta-title">Є питання або потрібного руму немає в каталозі?</h2><p class="about-cta-sub">Напишіть нам у Telegram — розкажемо, що в роботі, і допоможемо підібрати умови під вашу гру.</p></div>
+      <div class="about-cta-text"><h2 class="about-cta-title">Есть вопрос по оценке рума?</h2><p class="about-cta-sub">Напишите нам в Telegram — объясним, почему у рума такой балл, или разберём конкретную площадку.</p></div>
       <div class="about-cta-actions">
-        <a class="btn btn-primary" href="https://t.me/kozyr_support">Написати в Telegram</a>
-        <a class="btn btn-ghost" href="/ua/uk/#partners">Дивитися каталог</a>
+        <a class="btn btn-primary" href="https://t.me/kozyr_support">Написать в Telegram</a>
+        <a class="btn btn-ghost" href="/ua/#partners">Смотреть каталог</a>
       </div>
     </div>
   </section>
@@ -3629,7 +3690,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 17 5 25 28 34 -2 8 -132 -113z" fill="#14358F"/></g></g></svg></span>
           <span>KOZYR</span>
         </a>
-        <p>Платформа угод у покер-румах. Повертаємо гравцям до 75% рейка через прозорий калькулятор.</p>
+        <p>Платформа сделок в покер-румах. Возвращаем игрокам до 75% рейка через прозрачный калькулятор.</p>
         <div class="footer-social">
           <a href="https://t.me/kozyr_support" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.5 4.5L2.5 12l6 2 2 6 3-4 5 4 3-15z"/></svg></a>
           <a href="https://t.me/kozyr_support" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 4H21l-6.6 7.5L22 20h-6.3l-4.9-6.4L5 20H3l7.1-8.1L2 4h6.4l4.5 5.9L18.9 4z"/></svg></a>
@@ -3639,39 +3700,39 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <div class="footer-col">
         <h3>Продукт</h3>
         <ul>
-          <li><a href="/ua/uk/#partners">Партнери</a></li>
-          <li><a href="/ua/uk/#score">Калькулятор</a></li>
-          <li><a href="/ua/uk/#how">Як це працює</a></li>
-          <li><a href="/countries/">Легальність</a></li>
+          <li><a href="/ua/#partners">Партнёры</a></li>
+          <li><a href="/ua/#score">Калькулятор</a></li>
+          <li><a href="/ua/#how">Как это работает</a></li>
+          <li><a href="/countries/">Легальность</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h3>Партнери</h3>
+        <h3>Партнёры</h3>
         <ul>
-          <li><a href="/ua/uk/rooms/">Руми</a></li>
-          <li><a href="/ua/uk/clubs/klubok/">KlubOk (ClubGG)</a></li>
+          <li><a href="/ua/rooms/">Румы</a></li>
+          <li><a href="/ua/clubs/klubok/">KlubOk (ClubGG)</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h3>Допомога</h3>
+        <h3>Помощь</h3>
         <ul>
-          <li><a href="/ua/uk/blog/">Блог</a></li>
-          <li><a href="/ua/uk/#faq">FAQ</a></li>
-          <li><a href="https://t.me/kozyr_support">Telegram-підтримка</a></li>        </ul>
+          <li><a href="/ua/blog/">Блог</a></li>
+          <li><a href="/ua/#faq">FAQ</a></li>
+          <li><a href="https://t.me/kozyr_support">Telegram-поддержка</a></li>        </ul>
       </div>
       <div class="footer-col">
-        <h3>Юридичне</h3>
+        <h3>Юридическое</h3>
         <ul>
-          <li><a href="/ua/uk/about/">Про проєкт</a></li><li><a href="/ua/uk/methodology/">Методологія</a></li>
-            <li><a href="/ua/uk/legal/#terms">Користувацьку угоду</a></li>
-          <li><a href="/ua/uk/legal/#privacy">Приватність</a></li>
-          <li><a href="/ua/uk/legal/#responsible-gaming">Відповідальна гра</a></li>
-          <li><a href="/ua/uk/legal/#disclaimer">Відмова від відповідальності</a></li>
+          <li><a href="/ua/about/">О проекте</a></li>
+            <li><a href="/ua/legal/#terms">Пользовательское соглашение</a></li>
+          <li><a href="/ua/legal/#privacy">Приватность</a></li>
+          <li><a href="/ua/legal/#responsible-gaming">Ответственная игра</a></li>
+          <li><a href="/ua/legal/#disclaimer">Отказ от ответственности</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
-      <div>© 2026 KOZYR · Грай відповідально · 21+</div>
+      <div>© 2026 KOZYR · Играй ответственно · 21+</div>
       <div class="footer-countries">
         <span class="active">RU</span>
         <span>UA</span>
