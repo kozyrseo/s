@@ -669,4 +669,40 @@
     <priority>0.6</priority>
     <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/methodology/"/>
   </url>
+  <url>
+    <loc>https://kozyr.club/ua/affiliate-disclosure/</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/affiliate-disclosure/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/affiliate-disclosure/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/ua/affiliate-disclosure/"/>
+  </url>
+  <url>
+    <loc>https://kozyr.club/ua/uk/affiliate-disclosure/</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/affiliate-disclosure/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/affiliate-disclosure/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/ua/affiliate-disclosure/"/>
+  </url>
+  <url>
+    <loc>https://kozyr.club/ua/editorial-policy/</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/editorial-policy/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/editorial-policy/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/ua/editorial-policy/"/>
+  </url>
+  <url>
+    <loc>https://kozyr.club/ua/uk/editorial-policy/</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/editorial-policy/"/>
+    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/editorial-policy/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/ua/editorial-policy/"/>
+  </url>
 </urlset>
