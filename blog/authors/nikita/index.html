@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#2668FF">
-<link rel="canonical" href="https://kozyr.club/ua/">
+<link rel="canonical" href="https://kozyr.club/ua/blog/authors/nikita/">
 <link rel="alternate" hreflang="ru-UA" href="https://kozyr.club/ua/">
 <link rel="alternate" hreflang="uk-UA" href="https://kozyr.club/ua/uk/">
 <link rel="alternate" hreflang="en"    href="https://kozyr.club/">
@@ -32,8 +32,8 @@
 <meta name="twitter:title" content="KOZYR — рейкбек и сравнение покер-румов и клубов">
 <meta name="twitter:description" content="KOZYR — сравнение проверенных покер-румов и клубов по рейкбеку, лимитам и условиям выплат. Собери сделку под свою игру и возвращай часть рейка.">
 <meta name="twitter:image" content="https://kozyr.club/og-image.png">
-<title>Покер Украина 2026 — рейкбек, легальные румы и клубы | KOZYR</title>
-<meta name="description" content="Покер в Украине на гривны: сравни румы и клубы ClubGG по рейкбеку, лимитам и выплатам. PokerBet, KlubOk — реальные условия без маркетинга.">
+<title>Никита Волошин — рейкбек-аналитик KOZYR | KOZYR</title>
+<meta name="description" content="Никита Волошин — рейкбек-аналитик KOZYR. 10+ лет в онлайн-покере, разбирает румы и клубы по реальным данным, без маркетингового тумана.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -3307,39 +3307,170 @@ body::before {
 }
 </style>
   <script defer src="/assets/kozyr-age-gate.js?v=20260916"></script>
+
+<style>
+/* ============================================================
+   Страница «О нас» — в фирменном стиле KOZYR (уровень главной)
+   ============================================================ */
+.about-section { padding-top: 56px; }
+@media (max-width: 640px){ .about-section { padding-top: 40px; } }
+
+/* --- HERO (тёмный, как kza-hero) --- */
+.about-hero {
+  position: relative; overflow: hidden;
+  border-radius: 26px;
+  padding: 48px 48px 44px;
+  color: #fff;
+  background: radial-gradient(130% 170% at 8% -10%, #17244E 0%, #0A1128 52%, #06060F 100%);
+  box-shadow: 0 26px 64px rgba(6,17,40,.38);
+}
+.about-hero::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(55% 120% at 88% -10%, rgba(217,169,59,.28), transparent 62%);
+}
+.about-hero > * { position: relative; }
+.about-hero-badge {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .16em;
+  text-transform: uppercase; color: #D9A93B; font-weight: 600; margin-bottom: 22px;
+}
+.about-hero-badge svg { width: 17px; height: 17px; }
+.about-hero-title {
+  font-family: var(--f-display); font-weight: 700;
+  font-size: 46px; line-height: 1.08; letter-spacing: -0.02em;
+  margin: 0 0 20px; max-width: 16em;
+}
+.about-hero-title em {
+  font-family: var(--f-serif); font-style: italic; font-weight: 400;
+  background: linear-gradient(180deg, #6DA0FF 0%, #2668FF 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+}
+.about-hero-lede {
+  font-size: 17px; line-height: 1.6; color: rgba(255,255,255,.78);
+  max-width: 62ch; margin: 0 0 36px;
+}
+.about-hero-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  padding-top: 32px; border-top: 1px solid rgba(255,255,255,.12);
+}
+.about-stat { display: flex; flex-direction: column; gap: 8px; }
+.about-stat-num {
+  font-family: var(--f-display); font-weight: 700; font-size: 48px; line-height: 1;
+  color: #fff;
+}
+.about-stat-num em {
+  font-style: normal; font-size: 30px;
+  background: linear-gradient(180deg,#E7BC56,#B8841C);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+}
+.about-stat-label { font-size: 13px; line-height: 1.45; color: rgba(255,255,255,.62); max-width: 24ch; }
+@media (max-width: 860px){
+  .about-hero { padding: 34px 26px 30px; }
+  .about-hero-title { font-size: 34px; }
+  .about-hero-lede { font-size: 15px; }
+  .about-hero-stats { grid-template-columns: 1fr; gap: 24px; }
+  .about-stat-num { font-size: 40px; }
+  .about-stat-label { max-width: none; }
+}
+
+/* --- Заголовки секций --- */
+.about-section-head { margin-bottom: 30px; max-width: 62ch; }
+.about-eyebrow {
+  font-family: var(--f-mono); font-size: 11.5px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--accent); font-weight: 600; margin-bottom: 12px;
+}
+.about-h2 {
+  font-family: var(--f-display); font-weight: 700; font-size: 30px;
+  line-height: 1.15; letter-spacing: -0.015em; color: var(--ink); margin: 0;
+}
+.about-section-sub { font-size: 16px; line-height: 1.6; color: var(--ink-2); margin: 14px 0 0; }
+
+/* --- Сетка 3 карточки (миссия) --- */
+.about-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.about-card {
+  padding: 28px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-card); box-shadow: var(--kf-shadow-1);
+}
+.about-card-icon {
+  width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center;
+  background: var(--accent-tint); color: var(--accent); margin-bottom: 18px;
+}
+.about-card-icon svg { width: 24px; height: 24px; }
+.about-card-title { font-family: var(--f-display); font-weight: 700; font-size: 18px; color: var(--ink); margin: 0 0 10px; }
+.about-card-text { font-size: 14px; line-height: 1.6; color: var(--ink-2); margin: 0; }
+@media (max-width: 860px){ .about-grid-3 { grid-template-columns: 1fr; } }
+
+/* --- Блок доверия (тёмный) --- */
+.about-trust {
+  position: relative; overflow: hidden; border-radius: 26px; padding: 48px;
+  background: radial-gradient(120% 150% at 92% -10%, #17244E 0%, #0A1128 55%, #06060F 100%);
+  box-shadow: 0 26px 64px rgba(6,17,40,.34);
+}
+.about-trust::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(50% 110% at 6% -10%, rgba(38,104,255,.22), transparent 60%);
+}
+.about-trust > * { position: relative; }
+.about-trust-head { margin-bottom: 34px; max-width: 62ch; }
+.about-trust-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px 40px; }
+.about-trust-num {
+  font-family: var(--f-mono); font-weight: 700; font-size: 15px; color: #D9A93B;
+  margin-bottom: 12px; letter-spacing: .05em;
+}
+.about-trust-title { font-family: var(--f-display); font-weight: 700; font-size: 19px; color: #fff; margin: 0 0 10px; }
+.about-trust-text { font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,.7); margin: 0; }
+@media (max-width: 860px){
+  .about-trust { padding: 32px 24px; }
+  .about-trust-grid { grid-template-columns: 1fr; gap: 26px; }
+}
+
+/* --- Карточка автора --- */
+.about-author {
+  display: flex; gap: 26px; align-items: flex-start;
+  padding: 30px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-card); box-shadow: var(--kf-shadow-1);
+  text-decoration: none; transition: box-shadow .18s ease, transform .18s ease;
+}
+.about-author:hover { box-shadow: var(--kf-shadow-2); transform: translateY(-2px); }
+.about-author-photo { width: 104px; height: 104px; border-radius: 16px; object-fit: cover; flex: 0 0 auto; }
+.about-author-name { font-family: var(--f-display); font-weight: 700; font-size: 20px; color: var(--ink); }
+.about-author-role { font-family: var(--f-mono); font-size: 12px; color: var(--accent); margin: 4px 0 12px; letter-spacing: .04em; }
+.about-author-bio { font-size: 14.5px; line-height: 1.6; color: var(--ink-2); margin: 0 0 14px; max-width: 60ch; }
+.about-author-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--f-display); font-weight: 600; font-size: 14px; color: var(--accent); }
+.about-author-link svg { width: 15px; height: 15px; }
+@media (max-width: 640px){
+  .about-author { flex-direction: column; gap: 18px; padding: 24px; }
+  .about-author-photo { width: 84px; height: 84px; }
+}
+
+/* --- CTA --- */
+.about-cta {
+  display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap;
+  padding: 40px 44px; border-radius: 22px;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+  color: #fff;
+}
+.about-cta-title { font-family: var(--f-display); font-weight: 700; font-size: 24px; margin: 0 0 8px; color: #fff; }
+.about-cta-sub { font-size: 15px; line-height: 1.55; color: rgba(255,255,255,.85); margin: 0; max-width: 52ch; }
+.about-cta-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.about-cta .btn-primary { background: #fff; color: var(--accent-deep); border-color: #fff; }
+.about-cta .btn-ghost { background: transparent; color: #fff; border: 2px solid #fff; font-weight: 600; }
+.about-cta .btn-ghost:hover { background: #fff; color: var(--accent-deep); }
+@media (max-width: 860px){
+  .about-cta { padding: 30px 24px; flex-direction: column; align-items: flex-start; }
+  .about-cta-title { font-size: 20px; }
+}
+
+/* Чипы специализации на странице автора */
+.about-chip { display:inline-flex; align-items:center; font-family:var(--f-display); font-weight:600; font-size:13px; padding:9px 16px; border-radius:999px; background:var(--surface); border:1px solid var(--border); color:var(--ink); box-shadow:var(--kf-shadow-1); }
+
+/* Воздух между последней секцией (CTA) и футером */
+main > .about-section:last-child { padding-bottom: 64px; }
+</style>
+
+
 </head>
 <body>
-<a href="#main" class="skip-link">Перейти к основному содержанию</a>
-
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <defs>
-    <symbol id="suit-spade" viewBox="0 0 24 24">
-      <path d="M12 2 C12 2, 5 8, 5 13 C5 16, 7 18, 9 18 C10 18, 11 17.5, 11.5 17 L10 22 L14 22 L12.5 17 C13 17.5, 14 18, 15 18 C17 18, 19 16, 19 13 C19 8, 12 2, 12 2 Z" fill="currentColor"/>
-    </symbol>
-    <symbol id="suit-heart" viewBox="0 0 24 24">
-      <path d="M12 21 C12 21, 3 14, 3 8 C3 5, 5.5 3, 8 3 C10 3, 11.5 4.5, 12 6 C12.5 4.5, 14 3, 16 3 C18.5 3, 21 5, 21 8 C21 14, 12 21, 12 21 Z" fill="currentColor"/>
-    </symbol>
-    <symbol id="suit-diamond" viewBox="0 0 24 24">
-      <path d="M12 2 L20 12 L12 22 L4 12 Z" fill="currentColor"/>
-    </symbol>
-    <symbol id="suit-club" viewBox="0 0 24 24">
-      <path d="M12 3 C9.5 3, 7.5 5, 7.5 7.5 C7.5 8.5, 8 9.5, 8.5 10 C7 9.5, 5 10, 4 11.5 C3 13, 3 15, 4.5 16.5 C6 18, 8 18, 9.5 17 C9 18, 10 20, 10 20 L14 20 C14 20, 15 18, 14.5 17 C16 18, 18 18, 19.5 16.5 C21 15, 21 13, 20 11.5 C19 10, 17 9.5, 15.5 10 C16 9.5, 16.5 8.5, 16.5 7.5 C16.5 5, 14.5 3, 12 3 Z" fill="currentColor"/>
-    </symbol>
-    <symbol id="icon-plus" viewBox="0 0 24 24">
-      <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </symbol>
-    <symbol id="icon-arrow-ne" viewBox="0 0 24 24">
-      <path d="M7 17L17 7M17 7H8M17 7V16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </symbol>
-  </defs>
-</svg>
-
-<div class="compliance" role="region" aria-label="Правовое уведомление">
-  <div class="compliance-inner">
-    Используя сайт, ты принимаешь <a href="/ua/legal/#terms">Пользовательское соглашение</a> и <a href="/ua/legal/#privacy">Политику конфиденциальности</a>. Только для лиц старше 21 года.
-  </div>
-</div>
-
 <nav class="nav" aria-label="Основная навигация">
   <div class="nav-inner">
     <a href="/" class="logo" aria-label="KOZYR — на главную">
@@ -3366,19 +3497,19 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <span>KOZYR</span>
     </a>
     <div class="nav-links">
-      <a href="#partners">Партнёры</a>
+      <a href="/ua/#partners">Партнёры</a>
       <a href="/ua/rooms/">Румы</a>
       <a href="/ua/clubs/">Клубы</a>
-      <a href="#compare">Сравнение</a>
+      <a href="/ua/#compare">Сравнение</a>
       <a href="/ua/blog/">Блог</a>
-      <a href="#faq">FAQ</a>
+      <a href="/ua/#faq">FAQ</a>
     </div>
     <div class="nav-actions">
       <div class="lang" role="group" aria-label="Выбор языка">
-        <a href="/ua/" hreflang="ru-UA" lang="ru" aria-current="page">RU</a>
-        <a href="/ua/uk/" hreflang="uk-UA" lang="uk">UA</a>
+        <a href="/ua/blog/authors/nikita/" hreflang="ru-UA" lang="ru" aria-current="page">RU</a>
+        <a href="/ua/uk/blog/authors/nikita/" hreflang="uk-UA" lang="uk">UA</a>
       </div>
-      <a href="#partners" class="btn btn-primary">Смотреть партнёров</a>
+      <a href="/ua/#partners" class="btn btn-primary">Смотреть партнёров</a>
       <button class="nav-burger" id="nav-burger" aria-expanded="false" aria-controls="nav-drawer" aria-label="Меню">
         <svg class="icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
         <svg class="icon-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -3386,507 +3517,67 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     </div>
   </div>
   <div class="nav-drawer" id="nav-drawer">
-    <a href="#partners">Партнёры <span aria-hidden="true">→</span></a>
+    <a href="/ua/#partners">Партнёры <span aria-hidden="true">→</span></a>
     <a href="/ua/rooms/">Румы <span aria-hidden="true">→</span></a>
     <a href="/ua/clubs/">Клубы <span aria-hidden="true">→</span></a>
-    <a href="#compare">Сравнение <span aria-hidden="true">→</span></a>
+    <a href="/ua/#compare">Сравнение <span aria-hidden="true">→</span></a>
     <a href="/ua/blog/">Блог <span aria-hidden="true">→</span></a>
-    <a href="#faq">FAQ <span aria-hidden="true">→</span></a>
-    <a href="#partners" class="btn btn-dark">Смотреть партнёров</a>
+    <a href="/ua/#faq">FAQ <span aria-hidden="true">→</span></a>
+    <a href="/ua/#partners" class="btn btn-dark">Смотреть партнёров</a>
   </div>
 </nav>
-
-<main id="main">
-<section class="hero" aria-labelledby="hero-title">
-  <div class="wrap hero-inner">
-    <div class="hero-copy">
-      <div class="eyebrow">
-        <span class="eyebrow-dot"></span>
-        <span>Рейкбек в покер-румах · Украина</span>
+<main>
+  <section class="wrap" style="padding-top:24px">
+    <nav style="font-size:13px;color:var(--ink-2);margin-bottom:20px">
+      <a href="/ua/" style="color:var(--ink-2);text-decoration:none">На главную</a> ·
+      <a href="/ua/blog/" style="color:var(--ink-2);text-decoration:none">Блог</a> · Никита Волошин
+    </nav>
+    <div class="about-hero">
+      <div class="about-hero-badge">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 6.9H21l-5.3 4 2 6.6L12 15.8 6.3 19.5l2-6.6L3 8.9h6.6z"/></svg>
+        АВТОР
       </div>
-      <h1 id="hero-title">Твой <em>козырь</em><br>в&nbsp;покере.</h1>
-      <p class="hero-desc">Прозрачные партнёрские сделки с проверенными покер-румами. Возвращаем часть комиссии рума игроку — легально, регулярно, без скрытых условий.</p>
-      <div class="hero-ctas">
-        <a href="#partners" class="btn btn-dark btn-xl">Смотреть партнёров →</a>
-        <a href="#how" class="btn btn-ghost btn-xl">Как это работает</a>
-      </div>
-      <div class="hero-stats">
+      <div style="display:flex;gap:26px;align-items:center;margin-top:8px">
+        <img src="/ua/blog/authors/nikita.webp" alt="Никита Волошин" width="110" height="110" style="width:110px;height:110px;border-radius:20px;object-fit:cover;flex:0 0 auto;border:2px solid rgba(255,255,255,.14);box-shadow:0 10px 28px rgba(0,0,0,.4)">
         <div>
-          <div class="stat-num" data-partners-count>4</div>
-          <div class="stat-label">Проверенных партнёра</div>
+          <h1 class="about-hero-title" style="margin:0 0 8px">Никита Волошин</h1>
+          <div style="font-family:var(--f-mono);color:#D9A93B;font-weight:600;font-size:13px;letter-spacing:.04em">Рейкбек-аналитик · KOZYR</div>
         </div>
-        <div>
-          <div class="stat-num">Kozyr Score</div>
-          <div class="stat-label">Прозрачный рейтинг</div>
-        </div>
-        <div>
-          <div class="stat-num">21+</div>
-          <div class="stat-label">Ответственная игра</div>
-        </div>
-        <div>
-          <div class="stat-num">24/7</div>
-          <div class="stat-label">Поддержка в Telegram</div>
-        </div>
+      </div>
+      <p class="about-hero-lede" style="margin:22px 0 0">Никита в онлайн-покере больше 10 лет — прошёл путь от микролимитов NL2 до регуляра мидстейкса, поэтому оценивает румы и клубы по тому, что реально видит за столом, а не по рекламе. В KOZYR считает эффективный рейкбек, проверяет мягкость полей, сроки и надёжность выплат — по данным партнёров, которые сверяются с агентами и операторами и обновляются по мере изменений. Без маркетингового тумана и обещаний «занеси и выиграй».</p>
+      <div class="about-hero-stats">
+        <div class="about-stat"><span class="about-stat-num">10<em>+</em></span><span class="about-stat-label">лет в онлайн-покере</span></div>
+        <div class="about-stat"><span class="about-stat-num">NL2<em>→</em></span><span class="about-stat-label">путь до регуляра мидстейкса</span></div>
+        <div class="about-stat"><span class="about-stat-num">0</span><span class="about-stat-label">рекламы вместо фактов</span></div>
       </div>
     </div>
+  </section>
 
-    <div class="hero-card">
-      <article class="trump" itemscope itemtype="https://schema.org/Offer">
-        <div class="trump-corner trump-corner--tl">
-          <span class="trump-rank">01</span>
-          <svg class="trump-suit"><use href="#suit-diamond"/></svg>
-        </div>
+  <section class="wrap about-section">
+    <div class="about-section-head"><div class="about-eyebrow">Специализация</div><h2 class="about-h2">Темы, в которых разбирается</h2></div>
+    <div style="display:flex;flex-wrap:wrap;gap:9px"><span class="about-chip">Покерный рейкбек</span><span class="about-chip">Эффективный рейкбек</span><span class="about-chip">Обзоры румов</span><span class="about-chip">Обзоры клубов</span><span class="about-chip">Приватные клубы ClubGG</span><span class="about-chip">Мягкие поля и выбор стола</span><span class="about-chip">Лимиты и выплаты</span><span class="about-chip">Платёжки и криптовалюта</span><span class="about-chip">Банкролл-менеджмент</span><span class="about-chip">Правовой статус и налоги</span></div>
+  </section>
 
-                <div class="trump-tag">Флагман</div>
-
-        <div class="trump-logo-badge">
-          <img src="/ua/blog/logos/pokerbet.webp" alt="Логотип PokerBet" width="60" height="60" loading="lazy">
-          <span class="trump-verified" title="Проверенный партнёр"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
-        </div>
-
-        <div class="trump-content">
-          <div class="trump-eyebrow">Выбор редакции</div>
-          <div class="trump-bonus">
-            <span class="trump-bonus-label">Приветственный бонус</span>
-            <span class="trump-bonus-amount">до <strong>40 000</strong> <span class="trump-bonus-cur">₴</span></span>
-          </div>
-        </div>
-
-        <hr class="trump-rule">
-
-        <div class="trump-room">
-          <h2 class="trump-room-name" itemprop="name">PokerBet</h2>
-          <div class="trump-stars"><span class="trump-stars-icons"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg><svg viewBox="0 0 24 24"><defs><linearGradient id="thalf"><stop offset="50%" stop-color="#F5A623"/><stop offset="50%" stop-color="#E2E5EC"/></linearGradient></defs><path fill="url(#thalf)" d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><span class="trump-stars-num">4.6</span><span class="trump-stars-count">· 5 отзывов</span></div>
-          <div class="trump-pills">
-            <span class="trump-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 10h4a2 2 0 010 4H9"/></svg>Гривна UAH</span>
-            <span class="trump-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg>Лицензия Curaçao</span>
-            <span class="trump-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Выплаты ~100 мин</span>
-          </div>
-        </div>
-
-        <hr class="trump-rule">
-
-        <div class="trump-footer">
-          <div class="trump-access">Прямая реф-ссылка · Kozyr Score 8.2</div>
-          <a href="/ua/rooms/pokerbet/" class="trump-cta">
-            <span>Открыть обзор</span>
-            <svg><use href="#icon-arrow-ne"/></svg>
-          </a>
-        </div>
-      </article>
+  <section class="wrap about-section">
+    <div class="about-trust">
+      <div class="about-trust-head"><div class="about-eyebrow" style="color:#D9A93B">Подход</div><h2 class="about-h2" style="color:#fff">Как я оцениваю румы</h2></div>
+      <div class="about-trust-grid"><div class="about-trust-item"><div class="about-trust-num">01</div><h3 class="about-trust-title">По игре, а не по рекламе</h3><p class="about-trust-text">Оцениваю румы и клубы по тому, что реально вижу за столом — мягкость поля, скорость выплат, честность условий.</p></div><div class="about-trust-item"><div class="about-trust-num">02</div><h3 class="about-trust-title">Эффективный рейкбек</h3><p class="about-trust-text">Считаю не рекламный процент, а реальный возврат на руки — с учётом условий и модели рума.</p></div><div class="about-trust-item"><div class="about-trust-num">03</div><h3 class="about-trust-title">Проверенные данные</h3><p class="about-trust-text">Условия сверяю с агентами и операторами и обновляю по мере изменений. Не подтверждено — так и пишу.</p></div><div class="about-trust-item"><div class="about-trust-num">04</div><h3 class="about-trust-title">Честно про минусы</h3><p class="about-trust-text">Если у рума слабое поле днём или медленный вывод — укажу. Идеальных румов не бывает.</p></div></div>
     </div>
-  </div>
-</section>
+  </section>
 
-
-<section class="finder" aria-labelledby="finder-title" id="partners">
-  <div class="wrap">
-
-    <div class="kf-head">
-      <div>
-        <div class="section-tag"><span class="accent-text">● Каталог сделок</span></div>
-        <h2 id="finder-title">Собери сделку <em>под свою игру</em>.</h2>
-        <p class="kf-lead">Жми на заголовок колонки — рейкбек, страна, лимиты, формат, платёжки — и оставляй только те условия, которые тебе подходят. Каталог пересобирается на лету, до трёх румов можно поставить рядом и сравнить построчно.</p>
+  <section class="wrap about-section">
+    <div class="about-cta">
+      <div class="about-cta-text">
+        <h2 class="about-cta-title">Материалы автора</h2>
+        <p class="about-cta-sub">Разборы условий румов и клубов — рейкбек, поля, выводы, без маркетингового тумана.</p>
       </div>
-
-      <div class="kf-readout" role="status" aria-live="polite">
-        <div>
-          <div class="kf-readout-label">Подходит сделок</div>
-          <div class="kf-readout-top">
-            <span class="kf-readout-num" id="kf-count">0</span>
-            <span class="kf-readout-of">из <span id="kf-total">0</span></span>
-          </div>
-        </div>
-        <div class="kf-readout-bar"><div class="kf-readout-fill" id="kf-fill" style="width:100%"></div></div>
-        <div class="kf-readout-best" id="kf-best"></div>
+      <div class="about-cta-actions">
+        <a class="btn btn-primary" href="/ua/blog/">Все статьи в блоге</a>
+        <a class="btn btn-ghost" href="/ua/#partners">Каталог рейкбек-сделок</a>
       </div>
     </div>
-
-    <div class="kf-demo-flag" id="kf-demo-flag" hidden>
-      <span>Демо-данные включены · выключи KOZYR_DEMO перед деплоем</span>
-    </div>
-
-    <!-- Быстрый подбор: три вопроса, которые сразу выставляют фильтры -->
-    <div class="kf-quickpick" role="group" aria-label="Быстрый подбор сделки">
-      <div class="kf-qp-title">Подбор за 15 секунд</div>
-
-      <div>
-        <div class="kf-qp-group-label" id="kf-qp-game-label">Что играешь</div>
-        <div class="kf-qp-opts" id="kf-qp-games" role="group" aria-labelledby="kf-qp-game-label"></div>
-      </div>
-
-      <div>
-        <div class="kf-qp-group-label" id="kf-qp-limit-label">Твой лимит</div>
-        <div class="kf-qp-opts" id="kf-qp-limits" role="group" aria-labelledby="kf-qp-limit-label"></div>
-      </div>
-
-      <div>
-        <div class="kf-qp-group-label" id="kf-qp-country-label">Откуда играешь</div>
-        <div class="kf-qp-opts" id="kf-qp-countries" role="group" aria-labelledby="kf-qp-country-label"></div>
-      </div>
-
-      <button class="btn btn-dark" id="kf-qp-apply">Показать →</button>
-    </div>
-
-    <div class="kf-bar">
-      <div class="kf-seg" role="group" aria-label="Вид каталога">
-        <button id="kf-view-table" aria-pressed="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-          Таблица
-        </button>
-        <button id="kf-view-cards" aria-pressed="false">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-          Карточки
-        </button>
-      </div>
-
-      <button class="btn btn-ghost kf-mobile-filters" id="kf-open-sheet">
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M6 12h12M10 19h4"/></svg>
-        Фильтры <span id="kf-sheet-count"></span>
-      </button>
-
-      <div class="kf-bar-spacer"></div>
-
-      <label class="kf-sr" for="kf-sort">Сортировка</label>
-      <div class="kf-select-wrap">
-        <select class="kf-select" id="kf-sort">
-          <option value="score">Сортировка: Kozyr Score</option>
-          <option value="rake">Сортировка: рейкбек</option>
-          <option value="payout">Сортировка: скорость выплат</option>
-          <option value="name">Сортировка: по алфавиту</option>
-        </select>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-      </div>
-
-      <button class="kf-reset" id="kf-reset" hidden>
-        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-        Сбросить фильтры
-      </button>
-    </div>
-
-    <div class="kf-active" id="kf-active"></div>
-
-    <div class="kf-table-wrap" id="kf-table-wrap">
-      <table class="kf-table">
-        <caption class="kf-sr">Сравнение партнёрских сделок с фильтрами по колонкам</caption>
-        <thead><tr id="kf-thead"></tr></thead>
-        <tbody id="kf-tbody"></tbody>
-      </table>
-    </div>
-
-    <div class="kf-cards" id="kf-cards" hidden></div>
-
-    <!-- Статический каталог: SEO + fallback без JS. Содержимое между
-         маркерами генерируется автоматически из partners.json скриптом
-         automation/build_partners.py — ВРУЧНУЮ НЕ РЕДАКТИРОВАТЬ. -->
-    <section class="kf-static-catalog" id="kf-static-catalog" aria-label="Каталог покер-румов и клубов">
-      <div class="kf-static-catalog__head">
-        <h2 class="kf-static-catalog__title">Покер-румы и клубы с рейкбеком</h2>
-        <p class="kf-static-catalog__sub">Актуальные предложения партнёров. Проценты и условия подтверждаются напрямую у румов.</p>
-      </div>
-      <div class="kf-static-grid" id="kf-static-grid">
-        <!-- KOZYR:STATIC_CATALOG:START -->
-        <article class="kf-static-item"><div class="kf-static-item__top"><span class="kf-static-logo" style="padding:0;overflow:hidden"><img src="/ua/blog/logos/grombet.webp" alt="" width="44" height="44" loading="lazy" style="width:100%;height:100%;object-fit:cover"></span><div><div class="kf-static-item__name">Grombet</div><div class="kf-static-item__meta"><span class="kf-static-item__cur">UAH</span></div></div></div><div><span class="kf-static-rake"><span class="kf-static-rake__num">до&nbsp;70</span><span class="kf-static-rake__pct">%</span></span></div><p class="kf-static-item__note">Покер-рум с мягкими полями, рейкбеком до 70% и быстрыми выплатами за 5–60 минут.</p><div class="kf-static-item__facts"><span class="kf-static-fact">NL2 · NL5 · NL10</span><span class="kf-static-fact">Карта, Крипта</span><span class="kf-static-fact">Вывод: 5–60 минут</span></div><a class="kf-static-item__go" href="/ua/rooms/grombet/">Открыть обзор<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a></article>
-        <article class="kf-static-item"><div class="kf-static-item__top"><span class="kf-static-logo" style="padding:0;overflow:hidden"><img src="/ua/blog/logos/klubok.webp" alt="" width="44" height="44" loading="lazy" style="width:100%;height:100%;object-fit:cover"></span><div><div class="kf-static-item__name">KlubOk</div><div class="kf-static-item__meta"><span class="kf-static-item__cur">UAH</span></div></div></div><div><span class="kf-static-rake"><span class="kf-static-rake__num">до&nbsp;40</span><span class="kf-static-rake__pct">%</span></span></div><p class="kf-static-item__note">Приватный клуб в ClubGG. Мягкие поля, расчёты в гривне через Telegram. Welcome-бонус 100% к первому депозиту.</p><div class="kf-static-item__facts"><span class="kf-static-fact">NL10 · NL25 · NL50</span><span class="kf-static-fact">Карта, Банк</span><span class="kf-static-fact">Вывод: 15–60 минут</span></div><a class="kf-static-item__go" href="/ua/clubs/klubok/">Открыть обзор<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a></article>
-        <article class="kf-static-item"><div class="kf-static-item__top"><span class="kf-static-logo" style="padding:0;overflow:hidden"><img src="/ua/blog/logos/tonpoker.webp" alt="" width="44" height="44" loading="lazy" style="width:100%;height:100%;object-fit:cover"></span><div><div class="kf-static-item__name">TON Poker</div><div class="kf-static-item__meta"><span class="kf-static-item__cur">USDT</span></div></div></div><div><span class="kf-static-rake"><span class="kf-static-rake__num">до&nbsp;30</span><span class="kf-static-rake__pct">%</span></span></div><p class="kf-static-item__note">Покер-рум прямо в Telegram: без скачивания приложений, мгновенные крипто-депозиты и выводы, мягкие поля.</p><div class="kf-static-item__facts"><span class="kf-static-fact">NL10 · NL25 · NL50</span><span class="kf-static-fact">Крипта</span><span class="kf-static-fact">Вывод: 0–24 часа</span></div><a class="kf-static-item__go" href="/ua/rooms/tonpoker/">Открыть обзор<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a></article>
-        <article class="kf-static-item"><div class="kf-static-item__top"><span class="kf-static-logo" style="padding:0;overflow:hidden"><img src="/ua/blog/logos/pokerbet.webp" alt="" width="44" height="44" loading="lazy" style="width:100%;height:100%;object-fit:cover"></span><div><div class="kf-static-item__name">PokerBet</div><div class="kf-static-item__meta"><span class="kf-static-item__cur">UAH</span></div></div></div><div><span class="kf-static-rake kf-static-rake--none"><span class="kf-static-rake__num">Без рейкбека</span></span></div><p class="kf-static-item__note">Покер-рум на гривны с лицензией Curaçao. Рейкбека нет — только бонусы.</p><div class="kf-static-item__facts"><span class="kf-static-fact">NL10 · NL25 · NL50</span><span class="kf-static-fact">Карта, Банк</span><span class="kf-static-fact">Вывод: 1–2 часа</span></div><a class="kf-static-item__go" href="/ua/rooms/pokerbet/">Открыть обзор<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a></article>
-        <!-- KOZYR:STATIC_CATALOG:END -->
-      </div>
-    </section>
-
-    <div class="kf-empty" id="kf-empty" hidden>
-      <svg class="kf-empty-suit"><use href="#suit-spade"/></svg>
-      <h3>Под такие условия сделок нет</h3>
-      <p>Слишком узкий набор фильтров. Сними самый жёсткий из них — обычно это минимальный рейкбек — или сбрось всё и начни заново.</p>
-      <div class="kf-empty-actions">
-        <button class="btn btn-dark" id="kf-empty-reset">Сбросить фильтры</button>
-        <a href="https://t.me/kozyr_support" class="btn btn-ghost">Спросить в Telegram</a>
-      </div>
-    </div>
-
-    <p class="kf-note">
-      Проценты и условия подтверждаются напрямую у партнёров и обновляются по мере поступления данных.
-      Нет нужного рума? <a href="https://t.me/kozyr_support">Напиши в Telegram</a> — расскажем, что в работе.
-    </p>
-  </div>
-
-  <div class="kf-compare-bar" id="kf-compare-bar">
-    <div class="kf-compare-list" id="kf-compare-list"></div>
-    <span class="kf-compare-hint">Можно до трёх</span>
-    <button class="btn btn-primary" id="kf-compare-go">Сравнить</button>
-    <button class="kf-compare-close" id="kf-compare-close" type="button" aria-label="Скрыть сравнение">×</button>
-  </div>
-</section>
-
-
-<section class="how" aria-labelledby="how-title" id="how">
-  <div class="wrap">
-    <div class="section-tag">
-      <span>Как это работает</span>
-    </div>
-    <h2 id="how-title">Три клика между тобой и <em>первым возвратом</em>.</h2>
-    <div class="how-steps">
-      <div class="how-step">
-        <div class="how-step-num">01</div>
-        <h3>Выбираешь партнёра</h3>
-        <p>В разделе <a href="#partners">Партнёры</a> — все актуальные сделки. У каждой указан Kozyr Score, процент возврата и тип доступа (прямая ссылка или клубный формат). Читаешь обзор — понимаешь что подходит именно тебе.</p>
-      </div>
-      <div class="how-step">
-        <div class="how-step-num">02</div>
-        <h3>Активируешь одним кликом</h3>
-        <p>Для прямых сделок — переходишь по ссылке KOZYR и регистрируешься в руме как обычно. Для клубных форматов — ссылка ведёт в клуб ClubGG, где хост даёт доступ к приложению. KOZYR передаёт тебя партнёру и в игру не вмешивается.</p>
-      </div>
-      <div class="how-step">
-        <div class="how-step-num">03</div>
-        <h3>Получаешь возврат</h3>
-        <p>Играешь как обычно — рейкбек начисляет сам рум или клуб по своим условиям. Периодичность и валюта выплат зависят от партнёра: у лицензированных румов обычно на игровой счёт, в клубных форматах — на карту напрямую от клуба. KOZYR в расчётах и выплатах не участвует.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Тематические подборки — компактные ссылки на гео-лендинги -->
-<section class="topics" aria-labelledby="topics-title" id="topics">
-  <div class="wrap">
-    <div class="topics-head">
-      <div class="section-tag"><span>◆ Подборки под задачу</span></div>
-      <h2 id="topics-title" class="topics-title">Тематические <em>гиды</em></h2>
-      <p class="topics-lede">Быстрый переход к партнёрам, отобранным под конкретный запрос — гривня, старт с нуля, мобилка.</p>
-    </div>
-    <div class="topics-grid">
-      <a href="/ua/rooms/na-grivnu/" class="topic-card topic-card--gold">
-        <div class="topic-card-suit" aria-hidden="true">
-          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="20" cy="12" rx="11" ry="4.5" fill="currentColor" fill-opacity="0.16"/><ellipse cx="20" cy="12" rx="11" ry="4.5"/><path d="M9 12v8c0 2.5 4.9 4.5 11 4.5s11-2 11-4.5v-8"/><path d="M9 20v8c0 2.5 4.9 4.5 11 4.5s11-2 11-4.5v-8"/></svg>
-        </div>
-        <div class="topic-card-eyebrow">Валюта</div>
-        <h3 class="topic-card-title">Игра в <em>гривне</em></h3>
-        <p class="topic-card-desc">Румы и клубы с прямым UAH-депозитом через Monobank и ПриватБанк. Без обменников, крипты и P2P.</p>
-        <div class="topic-card-meta">
-          <span class="topic-card-count">2 партнёра</span>
-          <span class="topic-card-arrow" aria-hidden="true">Открыть →</span>
-        </div>
-      </a>
-      <a href="/ua/rooms/dlya-novichkov/" class="topic-card topic-card--blue">
-        <div class="topic-card-suit" aria-hidden="true">
-          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 5c5.2 3 8 8.2 8 15.4L24.5 24h-9L12 20.4C12 13.2 14.8 8 20 5z" fill="currentColor" fill-opacity="0.16"/><path d="M20 5c5.2 3 8 8.2 8 15.4L24.5 24h-9L12 20.4C12 13.2 14.8 8 20 5z"/><circle cx="20" cy="16" r="2.8"/><path d="M15.5 27l-2.5 6M24.5 27l2.5 6M20 27v6.5"/></svg>
-        </div>
-        <div class="topic-card-eyebrow">Первый рум</div>
-        <h3 class="topic-card-title">Для <em>новичков</em></h3>
-        <p class="topic-card-desc">Микро-лимиты от NL2, депозит от 200 ₴, простая верификация. Место где комфортно учиться без страха слить.</p>
-        <div class="topic-card-meta">
-          <span class="topic-card-count">2 партнёра</span>
-          <span class="topic-card-arrow" aria-hidden="true">Открыть →</span>
-        </div>
-      </a>
-      <a href="/ua/rooms/mobilnye/" class="topic-card topic-card--dark">
-        <div class="topic-card-suit" aria-hidden="true">
-          <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="12.5" y="5" width="15" height="30" rx="3.5" fill="currentColor" fill-opacity="0.16"/><rect x="12.5" y="5" width="15" height="30" rx="3.5"/><path d="M18 30.5h4"/><circle cx="20" cy="13" r="2.2" fill="currentColor" stroke="none"/></svg>
-        </div>
-        <div class="topic-card-eyebrow">Мобильные</div>
-        <h3 class="topic-card-title">С <em>телефона</em></h3>
-        <p class="topic-card-desc">Партнёры с полноценными приложениями iOS и Android. Все проверены, поддерживают украинские карты.</p>
-        <div class="topic-card-meta">
-          <span class="topic-card-count">2 партнёра</span>
-          <span class="topic-card-arrow" aria-hidden="true">Открыть →</span>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-
-<section class="compare" aria-labelledby="compare-title" id="compare">
-  <div class="wrap">
-    <div class="compare-head">
-      <div class="section-tag"><span class="accent-text">● PokerBet vs KlubOk</span></div>
-      <h2 id="compare-title">Что выбрать <em>под свою задачу</em>.</h2>
-      <p class="compare-lead">Два разных подхода: покер-рум на гривны с лицензией Curaçao — или приватный клуб в ClubGG с мягкими полями. Сравнение по ключевым параметрам.</p>
-    </div>
-
-    <div class="compare-wrap" id="kozyr-compare-wrap">
-      <table class="compare-table">
-        <thead>
-          <tr>
-            <th class="compare-param"></th>
-            <th>
-              <div class="compare-room">
-                <div class="compare-logo compare-logo--img"><img src="/ua/blog/logos/pokerbet.webp" alt="PokerBet" width="44" height="44"></div>
-                <div><div class="compare-name">PokerBet</div><div class="compare-sub">Лицензия Curaçao (CGA)</div></div>
-              </div>
-            </th>
-            <th>
-              <div class="compare-room">
-                <div class="compare-logo compare-logo--img"><img src="/ua/blog/logos/klubok.webp" alt="KlubOk" width="44" height="44"></div>
-                <div><div class="compare-name">KlubOk</div><div class="compare-sub">Клуб в ClubGG</div></div>
-              </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><th scope="row">Рейкбек</th><td>нет</td><td class="compare-best">40%</td></tr>
-          <tr><th scope="row">Модель начисления</th><td>—</td><td>еженедельно</td></tr>
-          <tr><th scope="row">Юрисдикция лицензии</th><td>Curaçao (CGA)</td><td>офшорная юрисдикция</td></tr>
-          <tr><th scope="row">Лимиты кэша</th><td>0.50/1 – 50/100 ₴</td><td>0.50/1 – 100/200 ₴</td></tr>
-          <tr><th scope="row">Форматы</th><td>Холдем, Омаха, Short Deck, MTT, fast-fold</td><td>Холдем, PLO5, AoF, 6+, SNG, MTT</td></tr>
-          <tr><th scope="row">Платёжки</th><td>карта / P2P / крипта</td><td>перевод / крипта</td></tr>
-          <tr><th scope="row">Мин. депозит</th><td>300 ₴</td><td class="compare-best">100 ₴</td></tr>
-          <tr><th scope="row">Срок вывода</th><td>~100 минут</td><td class="compare-best">до 1 часа</td></tr>
-          <tr><th scope="row">Верификация</th><td>обязательна</td><td>не требуется*</td></tr>
-          <tr><th scope="row">Поля</th><td>фишовые, слабые оппоненты</td><td>фишовые, слабые оппоненты</td></tr>
-          <tr><th scope="row">Валюта</th><td>гривна (UAH)</td><td>гривна (1 фишка = 1 ₴)</td></tr>
-          <tr>
-            <th scope="row"></th>
-            <td><a href="/ua/rooms/pokerbet/" class="btn btn-dark compare-cta">Обзор PokerBet →</a></td>
-            <td><a href="/ua/clubs/klubok/" class="btn btn-dark compare-cta">Обзор KlubOk →</a></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <p class="compare-note">Ищешь игру на гривны с депозитами картой, через P2P или крипту — PokerBet. Ищешь высокий рейкбек и мягкие поля без верификации — KlubOk. Условия подтверждаются у партнёров и обновляются по мере поступления данных.</p>
-  </div>
-</section>
-
-
-<section class="match-sec" aria-labelledby="match-title-h2" id="score">
-  <div class="wrap match-inner">
-    <div class="match-copy">
-      <div class="section-tag"><span class="accent-text">● Kozyr Match</span></div>
-      <h2 id="match-title-h2">Посчитай <em>свой</em> возврат.</h2>
-      <p>Введи лимит кэша и часы игры в неделю — покажем ориентировочный возврат через наших партнёров. Ставки рейка — усреднённые для NL-cash.</p>
-      <ul class="match-checklist">
-        <li>Формула публичная — никаких скрытых коэффициентов</li>
-        <li>Проценты возврата подтверждаются партнёрами</li>
-        <li>Расчёт в USD с ориентиром по актуальному курсу</li>
-      </ul>
-    </div>
-    <div class="match" role="region" aria-label="Калькулятор Kozyr Match">
-      <div class="match-title">
-        <span>Kozyr Match Calculator</span>
-        <span class="match-tag">Live</span>
-      </div>
-      <div class="field">
-        <div class="field-label">
-          <span>Твой лимит</span>
-          <span class="value" id="limit-value">NL50</span>
-        </div>
-        <div class="limit-grid" id="limits">
-          <button class="limit-btn" data-limit="NL10">NL10</button>
-          <button class="limit-btn" data-limit="NL25">NL25</button>
-          <button class="limit-btn active" data-limit="NL50">NL50</button>
-          <button class="limit-btn" data-limit="NL100">NL100</button>
-          <button class="limit-btn" data-limit="NL200">NL200</button>
-          <button class="limit-btn" data-limit="NL500">NL500</button>
-        </div>
-      </div>
-      <div class="field">
-        <div class="field-label">
-          <span>Часов в неделю</span>
-          <span class="value"><span id="hours-value">20</span> ч</span>
-        </div>
-        <input type="range" min="5" max="60" value="20" step="1" class="slider" id="hours" aria-label="Часов в неделю">
-      </div>
-      <div class="result-block">
-        <div class="result-title">Через KOZYR ты вернёшь</div>
-        <div class="result-total"><span class="accent">$<span id="total">847</span></span>/мес</div>
-        <div class="result-note" id="loss-note">Без сделки теряешь $565 в месяц</div>
-        <div class="result-rooms" id="result-rooms"></div>
-      </div>
-      <a href="#partners" class="btn btn-dark btn-lg match-cta">Смотреть партнёров →</a>
-    </div>
-  </div>
-</section>
-
-<section class="faq" aria-labelledby="faq-title" id="faq">
-  <div class="wrap faq-inner">
-    <div class="faq-side">
-      <div class="section-tag"><span>FAQ · Часто задаваемые</span></div>
-      <h2 id="faq-title">Всё, что нужно знать <em>до</em> первой сделки.</h2>
-      <p>Если ответа нет — пиши в Telegram @kozyr_support, отвечаем за 15 минут в любое время суток.</p>
-      <a href="https://t.me/kozyr_support" class="btn btn-primary">Написать в Telegram →</a>
-    </div>
-    <div class="faq-list">
-      <div class="faq-item">
-        <button class="faq-q">
-          Что такое рейкбек и как он работает?
-          <svg class="faq-icon"><use href="#icon-plus"/></svg>
-        </button>
-        <div class="faq-a">
-          <p>Рейкбек — это возврат части рейка (комиссии рума с каждой раздачи) игроку. Механика простая: покер-рум платит партнёрскую комиссию за каждого приведённого игрока. KOZYR как партнёр получает эту комиссию и возвращает её большую часть игроку. Регистрация через нашу реф-ссылку = получаешь рейкбек. Регистрация напрямую = вся комиссия остаётся у рума.</p>
-        </div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q">
-          Как активировать сделку?
-          <svg class="faq-icon"><use href="#icon-plus"/></svg>
-        </button>
-        <div class="faq-a">
-          <p>Выбираешь партнёра в разделе <a href="#partners">Партнёры</a>, читаешь обзор, нажимаешь CTA. Дальше два сценария в зависимости от типа партнёра. <strong>Прямая ссылка</strong> — переходишь по реф-ссылке в рум, регистрируешься как обычно, рейкбек начисляется автоматически. <strong>Клубный формат</strong> — CTA ведёт в Telegram-чат клуба, где получаешь доступ к приложению. Обе схемы прозрачные, никаких промокодов или скрытых шагов.</p>
-        </div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q">
-          Что такое Kozyr Score?
-          <svg class="faq-icon"><use href="#icon-plus"/></svg>
-        </button>
-        <div class="faq-a">
-          <p>Наш рейтинг покерных партнёров от 0 до 10 по пяти параметрам: рейкбек, качество трафика, скорость выплат, промо и поддержка. Оценка каждого партнёра публикуется на его странице обзора с разбивкой по критериям. Методология открытая, обновляется по мере накопления данных. Ни один партнёр не может «купить» повышенную оценку.</p>
-        </div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q">
-          Что означают типы партнёров: «Прямая ссылка» и «Клубный формат»?
-          <svg class="faq-icon"><use href="#icon-plus"/></svg>
-        </button>
-        <div class="faq-a">
-          <p><strong>Прямая ссылка</strong> (♦ бубна) — классические покер-румы: регистрируешься через нашу реф-ссылку, играешь на их платформе. Обычно это лицензированные операторы с прямыми банковскими депозитами. <strong>Клубный формат</strong> (♣ треф) — приватные покерные приложения (ClubGG, PPPoker, PokerBros), где игроки объединяются в клубы. Обычно мягче поля и клубные расчёты через Telegram-администратора клуба.</p>
-        </div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q">
-          Как часто и как выплачивается рейкбек?
-          <svg class="faq-icon"><use href="#icon-plus"/></svg>
-        </button>
-        <div class="faq-a">
-          <p>Зависит от типа партнёра. У лицензированных румов рейкбек обычно начисляется еженедельно или ежемесячно на игровой счёт или отдельным переводом. В клубных форматах — как правило, еженедельные расчёты через Telegram-администрацию клуба напрямую на карту. Точные условия и валюта выплат указаны на странице каждого партнёра.</p>
-        </div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q">
-          С какими странами работает KOZYR?
-          <svg class="faq-icon"><use href="#icon-plus"/></svg>
-        </button>
-        <div class="faq-a">
-          <p>Сейчас основной фокус — <strong>Украина</strong>: партнёры адаптированы под украинских игроков, расчёты в UAH, поддержка на русском и украинском. В планах добавление партнёрств для Польши и Германии. Актуальный список доступных сделок фильтруется по стране в разделе <a href="#partners">Партнёры</a>. Правовая ответственность за соблюдение локального законодательства — на игроке, подробности в <a href="/ua/legal/#terms">Пользовательском соглашении</a>.</p>
-        </div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q">
-          Возможно ли использование KOZYR анонимно?
-          <svg class="faq-icon"><use href="#icon-plus"/></svg>
-        </button>
-        <div class="faq-a">
-          <p>Использование сайта KOZYR — да, без регистрации: смотришь партнёров, читаешь обзоры, пользуешься калькулятором. Регистрация в покер-руме — по правилам самого рума. Лицензированные операторы требуют полную KYC-верификацию (паспорт, ИНН, подтверждение адреса). Клубные приложения обычно более гибкие в этом плане. Мы не запрашиваем ваши документы — все KYC-процедуры проходят между тобой и румом.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="final" aria-labelledby="final-title">
-  <div class="final-inner">
-    <h2 id="final-title">Готов сыграть <em>свой</em> козырь?</h2>
-    <p>30 секунд на выбор, один клик на активацию, стабильный возврат каждый месяц.</p>
-    <a href="#partners" class="btn btn-primary btn-xl">Смотреть партнёров →</a>
-    <div class="final-suits">
-      <svg><use href="#suit-spade"/></svg>
-      <svg><use href="#suit-heart"/></svg>
-      <svg><use href="#suit-diamond"/></svg>
-      <svg><use href="#suit-club"/></svg>
-    </div>
-  </div>
-</section>
+  </section>
 </main>
-
 <footer class="footer" role="contentinfo">
   <div class="wrap">
     <div class="footer-inner">
@@ -3924,9 +3615,9 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
       <div class="footer-col">
         <h3>Продукт</h3>
         <ul>
-          <li><a href="#partners">Партнёры</a></li>
-          <li><a href="#score">Калькулятор</a></li>
-          <li><a href="#how">Как это работает</a></li>
+          <li><a href="/ua/#partners">Партнёры</a></li>
+          <li><a href="/ua/#score">Калькулятор</a></li>
+          <li><a href="/ua/#how">Как это работает</a></li>
           <li><a href="/countries/">Легальность</a></li>
         </ul>
       </div>
@@ -3941,7 +3632,7 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
         <h3>Помощь</h3>
         <ul>
           <li><a href="/ua/blog/">Блог</a></li>
-          <li><a href="#faq">FAQ</a></li>
+          <li><a href="/ua/#faq">FAQ</a></li>
           <li><a href="https://t.me/kozyr_support">Telegram-поддержка</a></li>        </ul>
       </div>
       <div class="footer-col">
@@ -3964,1426 +3655,5 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
     </div>
   </div>
 </footer>
-
-<!-- Единый источник данных о партнёрах (одна точка правды: главная + блог) -->
-<script src="/partners.js?v=472788b8"></script>
-
-<script>
-// Kozyr Match calculator — Ukraine focus (PokerBet + KlubOk)
-// Единый источник данных: реальные партнёры берутся из финдера (window.KOZYR_PARTNERS).
-// Заполни поле rake у партнёра в LIVE_ROOMS — калькулятор подхватит % автоматически.
-// Пока % не подтверждён (rake:null), используется запасной ориентир ниже.
-function getCalcRooms() {
-  var src = (window.KOZYR_PARTNERS || []).filter(function (r) {
-    return typeof r.rake === 'number' && r.rake > 0;
-  });
-  if (src.length) {
-    return src.map(function (r) {
-      return {
-        code: (r.logo && r.logo.text) || (r.name || '').slice(0, 2).toUpperCase(),
-        name: r.name,
-        score: r.score,
-        pct: r.rake / 100
-      };
-    });
-  }
-  // Запасной ориентир, пока партнёры не подтвердили процент возврата
-  return [
-    { code: 'PB', name: 'PokerBet', score: 8.2, pct: 0.50 },
-    { code: 'KO', name: 'KlubOk',   score: 7.9, pct: 0.40 },
-  ];
-}
-
-const limitRake = { NL10: 1.4, NL25: 3.5, NL50: 7, NL100: 14, NL200: 28, NL500: 62 };
-let state = { limit: 'NL50', hours: 20 };
-
-function calc() {
-  const monthlyHours = state.hours * 4.33;
-  const monthlyRake = monthlyHours * limitRake[state.limit];
-  return getCalcRooms().map(r => ({
-    ...r,
-    monthlyReturn: Math.round(monthlyRake * r.pct)
-  })).sort((a,b) => b.monthlyReturn - a.monthlyReturn);
-}
-
-function animate(el, from, to, dur=400) {
-  const start = performance.now();
-  function step(now) {
-    const t = Math.min(1, (now - start)/dur);
-    const e = 1 - Math.pow(1 - t, 3);
-    el.textContent = Math.round(from + (to - from) * e).toLocaleString('ru-RU');
-    if (t < 1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
-
-function render() {
-  const res = calc();
-  const top = res.slice(0, 2);
-  const topReturn = res[0].monthlyReturn;
-  const monthlyRake = Math.round(state.hours * 4.33 * limitRake[state.limit]);
-  const loss = monthlyRake - topReturn;
-
-  document.getElementById('limit-value').textContent = state.limit;
-  document.getElementById('hours-value').textContent = state.hours;
-  const totalEl = document.getElementById('total');
-  const cur = parseInt(totalEl.textContent.replace(/[\s,]/g,'')) || 0;
-  animate(totalEl, cur, topReturn);
-  document.getElementById('loss-note').textContent = `Без сделки теряешь $${loss.toLocaleString('ru-RU')} в месяц`;
-
-  document.getElementById('result-rooms').innerHTML = top.map(r => `
-    <div class="result-room">
-      <div class="result-room-head">
-        <span class="result-room-code">${r.code}</span>
-        <span class="result-room-score">${r.score}</span>
-      </div>
-      <div class="result-room-value">$${r.monthlyReturn.toLocaleString('ru-RU')}</div>
-      <div class="result-room-label">${r.name}</div>
-    </div>
-  `).join('');
-}
-
-document.getElementById('limits').addEventListener('click', e => {
-  const b = e.target.closest('.limit-btn'); if (!b) return;
-  state.limit = b.dataset.limit;
-  document.querySelectorAll('.limit-btn').forEach(x => x.classList.toggle('active', x === b));
-  render();
-});
-document.getElementById('hours').addEventListener('input', e => {
-  state.hours = parseInt(e.target.value); render();
-});
-
-document.querySelectorAll('.faq-item').forEach(item => {
-  item.querySelector('.faq-q').addEventListener('click', () => {
-    item.classList.toggle('open');
-  });
-});
-
-render();
-// Перерисовываем после загрузки финдера — чтобы подхватить реальных партнёров
-window.addEventListener('load', function () { try { render(); } catch (e) {} });
-</script>
-
-
-<script>
-/* ============================================================
-   KOZYR DEAL FINDER — каталог сделок с фильтрацией по колонкам
-   ------------------------------------------------------------
-   ВСЁ, ЧТО НУЖНО РЕДАКТИРОВАТЬ, ЛЕЖИТ В ДВУХ МЕСТАХ:
-   1) KOZYR_DEMO — переключатель демо-данных (перед деплоем: false)
-   2) LIVE_ROOMS — реальные партнёры
-
-   TODO перед публикацией (данные подтверждаются у партнёров):
-   · rake      — реальный % возврата (сейчас null → «уточняется»)
-   · limits    — реально доступные лимиты
-   · games     — реально доступные форматы
-   · payments  — карта / крипта / банк (уже сгруппировано)
-   · bonus     — что реально даёт рум
-   · url       — реф-ссылка вместо страницы обзора, если нужно
-   ============================================================ */
-(function () {
-  'use strict';
-
-  // Демо-данные: показывают, как каталог работает на 10 румах.
-  // ПЕРЕД ДЕПЛОЕМ ПОСТАВЬ false.
-  var KOZYR_DEMO = false;
-
-  /* ---------- Словари значений ---------- */
-
-  var DICT = {
-    countries: {
-      /* активные и в разработке — уже были */
-      ua:  { label: 'Украина',       flag: 'ua' },
-      pl:  { label: 'Польша',        flag: 'pl' },
-      de:  { label: 'Германия',      flag: 'de' },
-      cz:  { label: 'Чехия',         flag: 'cz' },
-      int: { label: 'International', flag: null },
-      /* русскоязычных стран — для корректной работы плашки acceptance */
-      ru:  { label: 'Россия',        flag: 'ru' },
-      by:  { label: 'Беларусь',      flag: 'by' },
-      kz:  { label: 'Казахстан',     flag: 'kz' },
-      md:  { label: 'Молдова',       flag: 'md' },
-      ge:  { label: 'Грузия',        flag: 'ge' },
-      am:  { label: 'Армения',       flag: 'am' },
-      az:  { label: 'Азербайджан',   flag: 'az' },
-      /* Балтия */
-      lt:  { label: 'Литва',         flag: 'lt' },
-      lv:  { label: 'Латвия',        flag: 'lv' },
-      ee:  { label: 'Эстония',       flag: 'ee' },
-      /* Прочие типовые EU */
-      sk:  { label: 'Словакия',      flag: 'sk' },
-      hu:  { label: 'Венгрия',       flag: 'hu' },
-      ro:  { label: 'Румыния',       flag: 'ro' },
-      bg:  { label: 'Болгария',      flag: 'bg' },
-      at:  { label: 'Австрия',       flag: 'at' },
-      it:  { label: 'Италия',        flag: 'it' },
-      es:  { label: 'Испания',       flag: 'es' },
-      pt:  { label: 'Португалия',    flag: 'pt' },
-      fr:  { label: 'Франция',       flag: 'fr' },
-      nl:  { label: 'Нидерланды',    flag: 'nl' },
-      be:  { label: 'Бельгия',       flag: 'be' },
-      gb:  { label: 'Великобритания', flag: 'gb' },
-      ie:  { label: 'Ирландия',      flag: 'ie' },
-      tr:  { label: 'Турция',        flag: 'tr' },
-      il:  { label: 'Израиль',       flag: 'il' },
-      cy:  { label: 'Кипр',          flag: 'cy' }
-    },
-    games: {
-      cash:  { label: 'Кэш' },
-      mtt:   { label: 'МТТ' },
-      spins: { label: 'Спины' },
-      plo:   { label: 'Омаха' },
-      sng:   { label: 'SNG' }
-    },
-    payments: {
-      card:   { label: 'Карта' },
-      crypto: { label: 'Крипта' },
-      bank:   { label: 'Банк-перевод' }
-    },
-    payout: {
-      fast: { label: 'До 1 часа',   dot: 'fast' },
-      day:  { label: 'До 24 часов', dot: 'mid'  },
-      slow: { label: 'Дольше суток', dot: 'slow' }
-    },
-    network: {
-      pokerbet: { label: 'PokerBet' },
-      clubgg:   { label: 'ClubGG' },
-      ipoker:   { label: 'iPoker' },
-      winning:  { label: 'Winning' },
-      chico:    { label: 'Chico' },
-      indep:    { label: 'Независимый' }
-    },
-    software: {
-      win:     { label: 'Windows' },
-      mac:     { label: 'macOS' },
-      ios:     { label: 'iOS' },
-      android: { label: 'Android' },
-      web:     { label: 'Браузер' },
-      hud:     { label: 'HUD разрешён' }
-    },
-    bonus: {
-      welcome:  { label: 'Приветственный' },
-      freeroll: { label: 'Фрироллы' },
-      rakerace: { label: 'Рейк-гонки' },
-      missions: { label: 'Миссии' },
-      none:     { label: 'Без бонуса' }
-    },
-    access: {
-      direct: { label: 'Прямая ссылка' },
-      club:   { label: 'Клубный формат' }
-    }
-  };
-
-  /* ---------- Реальные партнёры ---------- */
-
-  var LIVE_ROOMS = [
-    {
-      id: 'pokerbet',
-      name: 'PokerBet',
-      logo: { text: 'PB', from: '#2668FF', to: '#1E52D9' },
-      score: 8.2,
-      rake: null,                       // рейкбека нет
-      access: 'direct',
-      countries: ['ua'],
-      limits: ['NL10', 'NL25', 'NL50', 'NL100', 'NL200'],
-      games: ['cash', 'mtt', 'spins'],
-      network: 'pokerbet',
-      payments: ['card', 'bank', 'crypto'],
-      software: ['win', 'android', 'ios', 'web', 'hud'],
-      bonus: ['welcome', 'freeroll'],
-      payoutHours: 2,
-      payoutLabel: '~100 минут',
-      currency: 'UAH',
-      license: 'Лицензия Curaçao (CGA)',
-      note: 'Покер-рум с игрой в гривне. Депозиты картой, через P2P или в крипте. Рейкбека нет.',
-      url: '/ua/rooms/pokerbet/'
-    },
-    {
-      id: 'klubok',
-      name: 'KlubOk',
-      logo: { text: 'KO', from: '#D9A93B', to: '#7E5512' },
-      score: 7.9,
-      rake: 40,                         // рейкбек (подтверждено на /ua/clubs/klubok/)
-      access: 'club',
-      countries: ['ua'],
-      limits: ['NL10', 'NL25', 'NL50', 'NL100'],
-      games: ['cash', 'mtt'],
-      network: 'clubgg',
-      payments: ['card', 'bank'],
-      software: ['ios', 'android', 'win'],
-      bonus: ['rakerace'],
-      payoutHours: 1,
-      payoutLabel: '15–60 минут',
-      currency: 'UAH',
-      license: 'Офшорная юрисдикция',
-      note: 'Приватный клуб в ClubGG. Мягкие поля, расчёты в гривне через Telegram.',
-      url: '/ua/clubs/klubok/'
-    }
-  ];
-
-  /* Единый источник данных: если загружен /partners.js — берём его,
-     иначе используем инлайновый LIVE_ROOMS как fallback (не ломаемся). */
-  if (window.KOZYR_PARTNERS && window.KOZYR_PARTNERS.length) {
-    LIVE_ROOMS = window.KOZYR_PARTNERS;
-  } else {
-    try { window.KOZYR_PARTNERS = LIVE_ROOMS; } catch (e) {}
-  }
-
-  /* ---------- Демо-набор (чтобы увидеть фильтры в работе) ---------- */
-
-  var DEMO_ROOMS = [
-    { id:'d3', demo:true, name:'Демо-рум 03', logo:{text:'03',from:'#7C3AED',to:'#5B21B6'}, score:8.6, rake:60, access:'direct', countries:['ua','pl'], limits:['NL25','NL50','NL100','NL200','NL500'], games:['cash','mtt','plo'], network:'ipoker', payments:['card','crypto'], software:['win','mac','web','hud'], bonus:['welcome','rakerace'], payoutHours:6, payoutLabel:'до 6 часов', currency:'EUR', license:'MGA', note:'Демо-запись. Заменить на реального партнёра.', url:'#' },
-    { id:'d4', demo:true, name:'Демо-рум 04', logo:{text:'04',from:'#05A661',to:'#047857'}, score:7.4, rake:45, access:'club', countries:['ua','kz'], limits:['NL10','NL25','NL50'], games:['cash','spins'], network:'clubgg', payments:['crypto'], software:['ios','android'], bonus:['missions'], payoutHours:1, payoutLabel:'до часа', currency:'USDT', license:'Офшор', note:'Демо-запись.', url:'#' },
-    { id:'d5', demo:true, name:'Демо-рум 05', logo:{text:'05',from:'#E63946',to:'#B91C1C'}, score:6.8, rake:35, access:'direct', countries:['pl'], limits:['NL50','NL100','NL200'], games:['cash','mtt'], network:'winning', payments:['card','bank'], software:['win','mac','android'], bonus:['welcome'], payoutHours:48, payoutLabel:'1–3 дня', currency:'PLN', license:'Ustawa hazardowa', note:'Демо-запись.', url:'#' },
-    { id:'d6', demo:true, name:'Демо-рум 06', logo:{text:'06',from:'#0EA5E9',to:'#0369A1'}, score:8.9, rake:70, access:'club', countries:['int'], limits:['NL100','NL200','NL500'], games:['cash','plo'], network:'indep', payments:['crypto'], software:['win','web','hud'], bonus:['rakerace','missions'], payoutHours:2, payoutLabel:'1–3 часа', currency:'USDT', license:'Офшор', note:'Демо-запись.', url:'#' },
-    { id:'d7', demo:true, name:'Демо-рум 07', logo:{text:'07',from:'#F59E0B',to:'#B45309'}, score:7.1, rake:50, access:'direct', countries:['de','cz'], limits:['NL10','NL25','NL50','NL100'], games:['cash','sng','mtt'], network:'chico', payments:['card','bank'], software:['win','mac','ios','android'], bonus:['freeroll'], payoutHours:24, payoutLabel:'до суток', currency:'EUR', license:'Glücksspielstaatsvertrag', note:'Демо-запись.', url:'#' },
-    { id:'d8', demo:true, name:'Демо-рум 08', logo:{text:'08',from:'#8B5CF6',to:'#6D28D9'}, score:6.2, rake:30, access:'direct', countries:['ua','pl','cz'], limits:['NL10','NL25'], games:['spins','sng'], network:'ipoker', payments:['card'], software:['android','ios','web'], bonus:['none'], payoutHours:72, payoutLabel:'2–3 дня', currency:'EUR', license:'MGA', note:'Демо-запись.', url:'#' },
-    { id:'d9', demo:true, name:'Демо-рум 09', logo:{text:'09',from:'#14B8A6',to:'#0F766E'}, score:8.0, rake:55, access:'club', countries:['ua','int'], limits:['NL25','NL50','NL100','NL200'], games:['cash','mtt','plo','spins'], network:'clubgg', payments:['card','crypto'], software:['ios','android','win','hud'], bonus:['rakerace'], payoutHours:1, payoutLabel:'15–45 минут', currency:'UAH', license:'Офшор', note:'Демо-запись.', url:'#' },
-    { id:'d10', demo:true, name:'Демо-рум 10', logo:{text:'10',from:'#64748B',to:'#334155'}, score:5.9, rake:25, access:'direct', countries:['kz','int'], limits:['NL500'], games:['cash'], network:'indep', payments:['crypto'], software:['win'], bonus:['none'], payoutHours:12, payoutLabel:'до 12 часов', currency:'USDT', license:'Офшор', note:'Демо-запись.', url:'#' }
-  ];
-
-  var ROOMS = KOZYR_DEMO ? LIVE_ROOMS.concat(DEMO_ROOMS) : LIVE_ROOMS.slice();
-
-  /* ---------- Значения, вычисляемые из рума ---------- */
-
-  function payoutBucket(r) {
-    if (r.payoutHours <= 1) return 'fast';
-    if (r.payoutHours <= 24) return 'day';
-    return 'slow';
-  }
-
-  function valuesOf(room, key) {
-    switch (key) {
-      case 'countries': return room.countries;
-      case 'limits':    return room.limits;
-      case 'games':     return room.games;
-      case 'payments':  return room.payments;
-      case 'software':  return room.software;
-      case 'bonus':     return room.bonus && room.bonus.length ? room.bonus : ['none'];
-      case 'network':   return [room.network];
-      case 'access':    return [room.access];
-      case 'payout':    return [payoutBucket(room)];
-      default:          return [];
-    }
-  }
-
-  /* ---------- Конфигурация фасетов ---------- */
-
-  var LIMIT_ORDER = ['NL2','NL5','NL10','NL25','NL50','NL100','NL200','NL500','NL1000','NL2000','NL5000'];
-
-  var FACETS = [
-    { key:'rake',      label:'Рейкбек',  type:'min' },
-    { key:'countries', label:'Страна',   type:'multi' },
-    { key:'limits',    label:'Лимиты',   type:'multi', order:LIMIT_ORDER },
-    { key:'games',     label:'Формат',   type:'multi' },
-    { key:'payments',  label:'Платёжки', type:'multi' },
-    { key:'payout',    label:'Выплата',  type:'multi', order:['fast','day','slow'] },
-    { key:'network',   label:'Сеть',     type:'multi' },
-    { key:'software',  label:'Софт',     type:'multi' },
-    { key:'bonus',     label:'Бонус',    type:'multi' },
-    { key:'access',    label:'Доступ',   type:'multi' }
-  ];
-
-  function facet(key) {
-    for (var i = 0; i < FACETS.length; i++) if (FACETS[i].key === key) return FACETS[i];
-    return null;
-  }
-
-  // Колонки таблицы. group — какие фасеты открываются из этого заголовка.
-  var COLUMNS = [
-    { id:'room',     label:'Рум',      filters:[] },
-    { id:'score',    label:'Score',    filters:[] },
-    { id:'rake',     label:'Рейкбек',  filters:['rake'] },
-    { id:'country',  label:'Страна',   filters:['countries'] },
-    { id:'limits',   label:'Лимиты',   filters:['limits'] },
-    { id:'games',    label:'Формат',   filters:['games'] },
-    { id:'payments', label:'Платёжки', filters:['payments'], hideMd:true },
-    { id:'payout',   label:'Выплата',  filters:['payout'],   hideMd:true },
-    { id:'more',     label:'Ещё',      filters:['network','software','bonus','access'] },
-    { id:'actions',  label:'',         filters:[] }
-  ];
-
-  /* ---------- Состояние ---------- */
-
-  var state = {
-    min: 0,               // минимальный рейкбек, %
-    pending: true,        // показывать сделки без подтверждённого %
-    sel: {},              // key -> [значения]
-    sort: 'score',
-    view: 'table',
-    compare: []
-  };
-
-  FACETS.forEach(function (f) { if (f.type === 'multi') state.sel[f.key] = []; });
-
-  /* ---------- Утилиты ---------- */
-
-
-  var PAY_ICON = {
-    card:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M2 10h20"/></svg>',
-    crypto: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9.5 8.5h4a2 2 0 0 1 0 4h-4m0 0h4.3a2 2 0 0 1 0 4H9.5m0-8V7m0 12.5V16m2.5-9v1.5m0 7.5V19"/></svg>',
-    bank:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10l9-6 9 6"/><path d="M5 10v9m5-9v9m4-9v9m5-9v9M3 21h18"/></svg>'
-  };
-
-  var $ = function (id) { return document.getElementById(id); };
-
-  function esc(s) {
-    return String(s).replace(/[&<>"']/g, function (c) {
-      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
-    });
-  }
-
-  function labelOf(key, val) {
-    var d = DICT[key];
-    if (d && d[val]) return d[val].label;
-    return val;
-  }
-
-  function flagHtml(code) {
-    var d = DICT.countries[code];
-    if (d && d.flag) return '<span class="fi fi-' + d.flag + '"></span>';
-    return '<span aria-hidden="true" style="font-size:11px;color:var(--ink-3)">◈</span>';
-  }
-
-  /* Плашка "Принимает вашу страну / Не принимает" — рядом с флагами.
-     Возвращает пустую строку, если гео ещё не пришло или неизвестно —
-     карточка перерендерится по событию kozyr:geo (см. слушатель ниже). */
-  function acceptanceBadge(room) {
-    var geo = (window.KozyrGeo && window.KozyrGeo.get) ? window.KozyrGeo.get() : null;
-    if (!geo) return '';
-    var d = DICT.countries[geo];
-    if (!d) return '';
-    var _acc = room.acceptedCountries || room.countries || [];
-    var accepted = _acc.indexOf('all') !== -1 || _acc.indexOf('*') !== -1 || _acc.indexOf(geo) !== -1;
-    var flag = d.flag ? '<span class="fi fi-' + d.flag + '"></span>' : '';
-    var mainText = accepted ? 'Доступен для ' + esc(d.label) : 'Недоступен для ' + esc(d.label);
-    var iconYes = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>';
-    var iconNo  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg>';
-    return '<span class="kf-accept ' + (accepted ? 'kf-accept--yes' : 'kf-accept--no') +
-      '" title="' + (accepted
-        ? 'Партнёр работает с игроками из региона: ' + esc(d.label)
-        : 'Партнёр не обслуживает игроков из региона: ' + esc(d.label)) + '">' +
-      '<span class="kf-accept-icon" aria-hidden="true">' + (accepted ? iconYes : iconNo) + '</span>' +
-      '<span class="kf-accept-text">' + mainText + '</span>' +
-      flag +
-    '</span>';
-  }
-
-  function checkSvg() {
-    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2"><path d="M20 6L9 17l-5-5"/></svg>';
-  }
-
-  function activeCount() {
-    var n = state.min > 0 ? 1 : 0;
-    Object.keys(state.sel).forEach(function (k) { n += state.sel[k].length; });
-    return n;
-  }
-
-  /* ---------- Фильтрация ---------- */
-
-  function matches(room, skipKey) {
-    if (skipKey !== 'rake') {
-      if (room.rake === null || room.rake === undefined) {
-        if (state.min > 0 && !state.pending) return false;
-      } else if (room.rake < state.min) return false;
-    }
-    var keys = Object.keys(state.sel);
-    for (var i = 0; i < keys.length; i++) {
-      var k = keys[i];
-      if (k === skipKey) continue;
-      var want = state.sel[k];
-      if (!want.length) continue;
-      var have = valuesOf(room, k);
-      var hit = false;
-      for (var j = 0; j < want.length; j++) {
-        if (have.indexOf(want[j]) !== -1) { hit = true; break; }
-      }
-      if (!hit) return false;
-    }
-    return true;
-  }
-
-  function results() {
-    var out = ROOMS.filter(function (r) { return matches(r, null); });
-    var dir = { score:'desc', rake:'desc', payout:'asc', name:'asc' }[state.sort];
-    out.sort(function (a, b) {
-      var av, bv;
-      if (state.sort === 'name') return a.name.localeCompare(b.name, 'ru');
-      if (state.sort === 'payout') { av = a.payoutHours; bv = b.payoutHours; }
-      else if (state.sort === 'rake') { av = a.rake === null ? -1 : a.rake; bv = b.rake === null ? -1 : b.rake; }
-      else { av = a.score; bv = b.score; }
-      return dir === 'asc' ? av - bv : bv - av;
-    });
-    return out;
-  }
-
-  // Сколько румов даст каждое значение фасета при текущих остальных фильтрах
-  function optionsFor(key) {
-    var f = facet(key);
-    var counts = {};
-    ROOMS.forEach(function (r) {
-      valuesOf(r, key).forEach(function (v) { if (!(v in counts)) counts[v] = 0; });
-    });
-    ROOMS.filter(function (r) { return matches(r, key); }).forEach(function (r) {
-      valuesOf(r, key).forEach(function (v) { counts[v] = (counts[v] || 0) + 1; });
-    });
-    var list = Object.keys(counts);
-    if (f && f.order) {
-      list.sort(function (a, b) { return f.order.indexOf(a) - f.order.indexOf(b); });
-    } else {
-      list.sort(function (a, b) { return counts[b] - counts[a] || labelOf(key, a).localeCompare(labelOf(key, b), 'ru'); });
-    }
-    return list.map(function (v) { return { value:v, n:counts[v] }; });
-  }
-
-  /* ---------- URL ---------- */
-
-  function pushUrl() {
-    var p = new URLSearchParams();
-    if (state.min > 0) p.set('rake', state.min);
-    Object.keys(state.sel).forEach(function (k) {
-      if (state.sel[k].length) p.set(k, state.sel[k].join(','));
-    });
-    if (state.sort !== 'score') p.set('sort', state.sort);
-    if (state.view !== 'table') p.set('view', state.view);
-    var q = p.toString();
-    try {
-      history.replaceState(null, '', location.pathname + (q ? '?' + q : ''));
-    } catch (e) {}
-  }
-
-  function readUrl() {
-    var p = new URLSearchParams(location.search);
-    if (p.has('rake')) state.min = Math.max(0, Math.min(100, parseInt(p.get('rake'), 10) || 0));
-    Object.keys(state.sel).forEach(function (k) {
-      if (p.has(k)) state.sel[k] = p.get(k).split(',').filter(Boolean);
-    });
-    if (p.has('sort')) state.sort = p.get('sort');
-    if (p.has('view')) state.view = p.get('view');
-  }
-
-  /* ---------- Рендер: заголовок таблицы ---------- */
-
-  function renderHead() {
-    var tr = $('kf-thead');
-    tr.innerHTML = COLUMNS.map(function (c) {
-      var cls = c.hideMd ? ' class="kf-col-hide-md"' : (c.hideLg ? ' class="kf-col-hide-lg"' : '');
-      if (!c.filters.length) {
-        return '<th' + cls + ' scope="col"><div class="kf-th-plain">' + esc(c.label) + '</div></th>';
-      }
-      var n = 0;
-      c.filters.forEach(function (k) {
-        n += k === 'rake' ? (state.min > 0 ? 1 : 0) : state.sel[k].length;
-      });
-      return '<th' + cls + ' scope="col">' +
-        '<button class="kf-col' + (n ? ' is-on' : '') + '" data-col="' + c.id + '" ' +
-        'aria-expanded="false" aria-haspopup="dialog">' +
-        '<span>' + esc(c.label) + '</span>' +
-        (n ? '<span class="kf-col-count">' + n + '</span>' : '') +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>' +
-        '</button></th>';
-    }).join('');
-  }
-
-  /* ---------- Рендер: ячейки ---------- */
-
-  function tagList(room, key, max) {
-    var sel = state.sel[key] || [];
-    var vals = valuesOf(room, key);
-    var shown = vals.slice(0, max);
-    var html = shown.map(function (v) {
-      var hit = sel.indexOf(v) !== -1;
-      return '<span class="kf-tag' + (hit ? ' is-hit' : '') + '">' + esc(labelOf(key, v)) + '</span>';
-    }).join('');
-    if (vals.length > max) html += '<span class="kf-tag kf-tag--more">+' + (vals.length - max) + '</span>';
-    return '<div class="kf-tags">' + html + '</div>';
-  }
-
-  function rakeHtml(room, big) {
-    if (room.rake === null || room.rake === undefined) {
-      return '<div class="kf-rake kf-rake--pending">Уточняется</div>' +
-             '<div class="kf-rake-note">Ждём данные партнёра</div>';
-    }
-    if (room.rake === 'none') {
-      return '<div class="kf-rake kf-rake--pending">нет</div>';
-    }
-    return '<div class="kf-rake">до&nbsp;' + room.rake + '<em>%</em></div>' +
-           (big ? '' : '<div class="kf-rake-note">Возврат рейка</div>');
-  }
-
-  function logoHtml(room) {
-    var img = (room.card && room.card.logoImg) || room.logoImg;
-    if (img) {
-      return '<div class="kf-logo kf-logo--img" aria-hidden="true"><img src="' + img +
-        '" alt="" width="44" height="44" loading="lazy"></div>';
-    }
-    return '<div class="kf-logo" style="background:linear-gradient(135deg,' + room.logo.from + ',' + room.logo.to + ')" aria-hidden="true">' + esc(room.logo.text) + '</div>';
-  }
-
-  function roomCell(room, rank) {
-    return '<div class="kf-room">' + logoHtml(room) +
-      '<div><div class="kf-room-name">' + esc(room.name) +
-        (room.demo ? ' <span class="kf-tagline kf-tagline--demo">демо</span>' :
-         rank === 0 ? ' <span class="kf-tagline kf-tagline--top">топ</span>' : '') +
-      '</div>' +
-      '<div class="kf-room-meta">' + room.countries.map(flagHtml).join('') +
-        '<span class="kf-access kf-access--' + room.access + '">' + esc(labelOf('access', room.access)) + '</span><span class="kf-cur">' + esc(room.currency) + '</span>' +
-        acceptanceBadge(room) +
-      '</div>' +
-      '</div></div>';
-  }
-
-
-  function paymentsCell(room) {
-    var sel = state.sel.payments || [];
-    return '<div class="kf-pay">' + room.payments.map(function (v) {
-      var hit = sel.indexOf(v) !== -1;
-      return '<span class="kf-pay-badge kf-pay-badge--' + v + (hit ? ' is-hit' : '') + '">' +
-        (PAY_ICON[v] || '') + esc(labelOf('payments', v)) + '</span>';
-    }).join('') + '</div>';
-  }
-
-  function payoutCell(room) {
-    var b = payoutBucket(room);
-    return '<div class="kf-payout"><span class="kf-dot kf-dot--' + DICT.payout[b].dot + '"></span>' +
-      esc(room.payoutLabel) + '</div>';
-  }
-
-  function renderRows(list) {
-    var tb = $('kf-tbody');
-    tb.innerHTML = list.map(function (r, i) {
-      var checked = state.compare.indexOf(r.id) !== -1;
-      return '<tr class="kf-row-in' + (checked ? ' is-checked' : '') + '" data-access="' + r.access + '" style="animation-delay:' + Math.min(i * 24, 240) + 'ms">' +
-        '<td>' + roomCell(r, state.sort === 'score' ? i : -1) + '</td>' +
-        '<td><div class="kf-score"><span class="kf-score-num">' + r.score.toFixed(1) + '</span>' +
-          '<span class="kf-score-bar"><span class="kf-score-fill" style="width:' + (r.score * 10) + '%"></span></span></div></td>' +
-        '<td>' + rakeHtml(r) + '</td>' +
-        '<td>' + tagList(r, 'countries', 2) + '</td>' +
-        '<td>' + tagList(r, 'limits', 3) + '</td>' +
-        '<td class="kf-col-hide-lg">' + tagList(r, 'games', 3) + '</td>' +
-        '<td class="kf-col-hide-md">' + paymentsCell(r) + '</td>' +
-        '<td class="kf-col-hide-md">' + payoutCell(r) + '</td>' +
-        '<td>' + tagList(r, 'network', 1) + '</td>' +
-        '<td><div class="kf-actions">' +
-          '<button class="kf-check" data-cmp="' + r.id + '" aria-pressed="' + checked + '" ' +
-            'aria-label="Добавить ' + esc(r.name) + ' к сравнению" title="К сравнению">' + checkSvg() + '</button>' +
-          '<a class="kf-go" href="' + esc(r.url) + '">Открыть<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a>' +
-        '</div></td>' +
-      '</tr>';
-    }).join('');
-  }
-
-  function renderCards(list) {
-    var wrap = $('kf-cards');
-    wrap.innerHTML = list.map(function (r, i) {
-      var checked = state.compare.indexOf(r.id) !== -1;
-      return '<article class="kf-card' + (checked ? ' is-checked' : '') + '" style="animation-delay:' + Math.min(i * 30, 300) + 'ms">' +
-        '<div class="kf-card-head">' + roomCell(r, state.sort === 'score' ? i : -1) +
-          '<div class="kf-score" style="align-items:flex-end"><span class="kf-score-num">' + r.score.toFixed(1) + '</span>' +
-          '<span class="kf-score-bar" style="width:52px"><span class="kf-score-fill" style="width:' + (r.score * 10) + '%"></span></span></div>' +
-        '</div>' +
-        '<div class="kf-card-rake">' + rakeHtml(r, true) + '</div>' +
-        '<div class="kf-card-spec">' +
-          '<div class="kf-spec-row"><span class="kf-spec-key">Лимиты</span>' + tagList(r, 'limits', 4) + '</div>' +
-          '<div class="kf-spec-row"><span class="kf-spec-key">Формат</span>' + tagList(r, 'games', 4) + '</div>' +
-          '<div class="kf-spec-row"><span class="kf-spec-key">Платёжки</span>' + paymentsCell(r) + '</div>' +
-          '<div class="kf-spec-row"><span class="kf-spec-key">Выплата</span>' + payoutCell(r) + '</div>' +
-          '<div class="kf-spec-row"><span class="kf-spec-key">Сеть</span>' + tagList(r, 'network', 1) + '</div>' +
-        '</div>' +
-        '<div class="kf-card-foot">' +
-          '<a class="kf-go" href="' + esc(r.url) + '">Открыть обзор<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a>' +
-          '<button class="kf-check" data-cmp="' + r.id + '" aria-pressed="' + checked + '" aria-label="Добавить ' + esc(r.name) + ' к сравнению">' + checkSvg() + '</button>' +
-        '</div>' +
-      '</article>';
-    }).join('');
-  }
-
-  /* ---------- Рендер: пилюли активных фильтров ---------- */
-
-  function renderActive() {
-    var box = $('kf-active');
-    var pills = [];
-    if (state.min > 0) {
-      pills.push('<span class="kf-pill"><span class="kf-pill-key">рейкбек</span>от ' + state.min + '%' +
-        '<button data-drop="rake" aria-label="Убрать фильтр по рейкбеку">×</button></span>');
-    }
-    Object.keys(state.sel).forEach(function (k) {
-      state.sel[k].forEach(function (v) {
-        pills.push('<span class="kf-pill"><span class="kf-pill-key">' + esc(facet(k).label) + '</span>' +
-          esc(labelOf(k, v)) +
-          '<button data-drop="' + k + '" data-val="' + esc(v) + '" aria-label="Убрать фильтр ' + esc(labelOf(k, v)) + '">×</button></span>');
-      });
-    });
-    box.innerHTML = pills.join('');
-    $('kf-reset').hidden = pills.length === 0;
-    var sc = $('kf-sheet-count');
-    if (sc) sc.textContent = pills.length ? '· ' + pills.length : '';
-  }
-
-  /* ---------- Рендер: табло ---------- */
-
-  function rakePct(r) { var v = r && r.rake; return (typeof v === 'number' && v > 0) ? v : null; }
-
-  function renderReadout(list) {
-    var n = list.length, total = ROOMS.length;
-    var el = $('kf-count');
-    el.textContent = n;
-    el.classList.toggle('is-zero', n === 0);
-    $('kf-total').textContent = total;
-    $('kf-fill').style.width = total ? (n / total * 100) + '%' : '0%';
-
-    var top = null;
-    list.forEach(function (r) { if (!top || r.score > top.score) top = r; });
-    $('kf-best').innerHTML = top
-      ? '<span>Топ по Kozyr Score</span><strong>' + esc(top.name) + ' · ' + top.score.toFixed(1) + '</strong>'
-      : '<span>Ослабь фильтры, чтобы увидеть сделки</span>';
-  }
-
-  /* ---------- Главный рендер ---------- */
-
-  function draw() {
-    var list;
-    try { list = results(); }
-    catch (e) { list = ROOMS.slice(); }   /* если фильтр упал — показываем все румы */
-
-    /* Вспомогательные блоки оборачиваем по отдельности:
-       ошибка в шапке/табло НЕ должна прятать саму таблицу с румами. */
-    try { renderHead(); } catch (e) {}
-    try { renderActive(); } catch (e) {}
-    try { renderReadout(list); } catch (e) {}
-
-    var empty = list.length === 0;
-    try { $('kf-empty').hidden = !empty; } catch (e) {}
-    try { $('kf-table-wrap').hidden = empty || state.view !== 'table'; } catch (e) {}
-    try { $('kf-cards').hidden = empty || state.view !== 'cards'; } catch (e) {}
-
-    if (!empty) {
-      try {
-        if (state.view === 'table') renderRows(list); else renderCards(list);
-      } catch (e) {
-        /* последний рубеж: если основной рендер упал — рисуем простую таблицу,
-           чтобы румы ВСЕГДА были видны */
-        try { renderRowsFallback(list); } catch (e2) {}
-      }
-    }
-
-    try {
-      $('kf-view-table').setAttribute('aria-pressed', state.view === 'table');
-      $('kf-view-cards').setAttribute('aria-pressed', state.view === 'cards');
-      $('kf-sort').value = state.sort;
-    } catch (e) {}
-
-    try { renderCompareBar(); } catch (e) {}
-    try { pushUrl(); } catch (e) {}
-  }
-
-  /* Аварийный рендер строк — минимум разметки, без плашек и доп-ячеек,
-     срабатывает только если основной renderRows бросил исключение. */
-  function renderRowsFallback(list) {
-    var tb = $('kf-tbody');
-    if (!tb) return;
-    tb.innerHTML = list.map(function (r) {
-      return '<tr class="kf-row-in">' +
-        '<td><div class="kf-room"><div class="kf-room-main"><span class="kf-room-name">' + esc(r.name) + '</span></div></div></td>' +
-        '<td><div class="kf-score"><span class="kf-score-num">' + (r.score != null ? r.score.toFixed(1) : '—') + '</span></div></td>' +
-        '<td>' + (typeof r.rake === 'number' ? 'до ' + r.rake + '%' : (r.rake === 'none' ? 'нет' : 'Уточняется')) + '</td>' +
-        '<td>' + (r.countries || []).slice(0, 2).map(function (c) { return labelOf('countries', c); }).join(', ') + '</td>' +
-        '<td>' + (r.limits || []).slice(0, 3).join(', ') + '</td>' +
-        '<td class="kf-col-hide-lg">' + (r.games || []).map(function (g) { return labelOf('games', g); }).join(', ') + '</td>' +
-        '<td class="kf-col-hide-md">' + (r.payments || []).join(', ') + '</td>' +
-        '<td class="kf-col-hide-md">' + esc(r.payoutLabel || '') + '</td>' +
-        '<td>' + labelOf('network', r.network) + '</td>' +
-        '<td><a class="kf-go" href="' + esc(r.url || '#') + '">Открыть</a></td>' +
-      '</tr>';
-    }).join('');
-  }
-
-  /* ---------- Поповер фильтра ---------- */
-
-  var pop = null, popBtn = null;
-
-  function closePop() {
-    if (!pop) return;
-    pop.remove(); pop = null;
-    if (popBtn) { popBtn.setAttribute('aria-expanded', 'false'); popBtn.focus(); popBtn = null; }
-  }
-
-  function groupHtml(key) {
-    var f = facet(key);
-    if (f.type === 'min') {
-      var quick = [0, 30, 40, 50, 60];
-      return '<div class="kf-group" data-key="rake">' +
-        '<div class="kf-slider-val"><span class="kf-slider-num" data-rake-out>' + state.min + '%</span>' +
-        '<span class="kf-slider-cap">минимум возврата</span></div>' +
-        '<input type="range" class="kf-range" min="0" max="75" step="5" value="' + state.min + '" data-rake aria-label="Минимальный рейкбек, %">' +
-        '<div class="kf-quick">' + quick.map(function (q) {
-          return '<button data-rake-quick="' + q + '" aria-pressed="' + (state.min === q) + '">' + (q === 0 ? 'Любой' : 'от ' + q + '%') + '</button>';
-        }).join('') + '</div>' +
-        '<button class="kf-opt" data-pending aria-pressed="' + state.pending + '">' +
-          '<span class="kf-box">' + checkSvg() + '</span>' +
-          '<span class="kf-opt-label">Показывать сделки без подтверждённого %</span></button>' +
-        '</div>';
-    }
-    var opts = optionsFor(key);
-    var sel = state.sel[key];
-    return '<div class="kf-group" data-key="' + key + '">' +
-      opts.map(function (o) {
-        var on = sel.indexOf(o.value) !== -1;
-        var flag = key === 'countries' ? flagHtml(o.value) : '';
-        return '<button class="kf-opt' + (o.n === 0 && !on ? ' is-empty' : '') + '" data-key="' + key + '" data-val="' + esc(o.value) + '" aria-pressed="' + on + '">' +
-          '<span class="kf-box">' + checkSvg() + '</span>' +
-          '<span class="kf-opt-label">' + flag + esc(labelOf(key, o.value)) + '</span>' +
-          '<span class="kf-opt-n">' + o.n + '</span></button>';
-      }).join('') + '</div>';
-  }
-
-  function openPop(btn, colId) {
-    var col = COLUMNS.filter(function (c) { return c.id === colId; })[0];
-    if (!col) return;
-    var wasOpen = pop && popBtn === btn;
-    closePop();
-    if (wasOpen) return;
-
-    pop = document.createElement('div');
-    pop.className = 'kf-pop';
-    pop.setAttribute('role', 'dialog');
-    pop.setAttribute('aria-label', 'Фильтр: ' + col.label);
-
-    var body = col.filters.map(function (k, i) {
-      var f = facet(k);
-      var head = col.filters.length > 1
-        ? '<div class="kf-pop-title" style="margin:' + (i ? '14px' : '0') + ' 0 8px">' + esc(f.label) + '</div>'
-        : '';
-      return head + groupHtml(k);
-    }).join('');
-
-    pop.innerHTML =
-      '<div class="kf-pop-head"><span class="kf-pop-title">' + esc(col.label) + '</span>' +
-      '<button class="kf-pop-clear" data-clear="' + colId + '">Очистить</button></div>' +
-      body +
-      '<div class="kf-pop-foot"><span>Esc — закрыть</span></div>';
-
-    document.body.appendChild(pop);
-    place(btn);
-    btn.setAttribute('aria-expanded', 'true');
-    popBtn = btn;
-    var first = pop.querySelector('button, input');
-    if (first) first.focus();
-  }
-
-  function place(btn) {
-    if (!pop || !btn) return;
-    var r = btn.getBoundingClientRect();
-    var w = pop.offsetWidth, h = pop.offsetHeight;
-    var left = Math.min(Math.max(12, r.left), window.innerWidth - w - 12);
-    var top = r.bottom + 8;
-    if (top + h > window.innerHeight - 12) top = Math.max(12, r.top - h - 8);
-    pop.style.left = left + 'px';
-    pop.style.top = top + 'px';
-  }
-
-  /* ---------- Сравнение ---------- */
-
-  function toggleCompare(id) {
-    var i = state.compare.indexOf(id);
-    if (i !== -1) state.compare.splice(i, 1);
-    else {
-      if (state.compare.length >= 3) state.compare.shift();
-      state.compare.push(id);
-    }
-    draw();
-  }
-
-  var _finderInView = true;
-  function setCompareBarVisible() {
-    var on = state.compare.length > 0 && _finderInView;
-    var bar = $('kf-compare-bar');
-    if (bar) bar.classList.toggle('is-up', on);
-    document.body.classList.toggle('kf-has-compare', on);
-  }
-  (function () {
-    var sec = document.getElementById('partners');
-    if (sec && 'IntersectionObserver' in window) {
-      new IntersectionObserver(function (e) { _finderInView = e[0].isIntersecting; setCompareBarVisible(); }, { rootMargin: '0px 0px -25% 0px' }).observe(sec);
-    }
-    var cb = document.getElementById('kf-compare-close');
-    if (cb) cb.addEventListener('click', function () { state.compare = []; draw(); });
-  })();
-
-  function renderCompareBar() {
-    var bar = $('kf-compare-bar'), list = $('kf-compare-list');
-    list.innerHTML = state.compare.map(function (id) {
-      var r = roomById(id);
-      return '<span class="kf-compare-chip">' + logoHtml(r) + esc(r.name) +
-        '<button data-uncmp="' + id + '" aria-label="Убрать ' + esc(r.name) + '">×</button></span>';
-    }).join('');
-    setCompareBarVisible();
-    $('kf-compare-go').disabled = state.compare.length < 2;
-    $('kf-compare-go').textContent = state.compare.length < 2 ? 'Выбери ещё один' : 'Сравнить';
-  }
-
-  function roomById(id) {
-    for (var i = 0; i < ROOMS.length; i++) if (ROOMS[i].id === id) return ROOMS[i];
-    return null;
-  }
-
-  function openCompare() {
-    var list = state.compare.map(roomById);
-    if (list.length < 2) return;
-
-    var bestRake = Math.max.apply(null, list.map(function (r) { var p = rakePct(r); return p === null ? -1 : p; }));
-    var bestScore = Math.max.apply(null, list.map(function (r) { return r.score; }));
-    var fastest = Math.min.apply(null, list.map(function (r) { return r.payoutHours; }));
-
-    var rows = [
-      { key:'Kozyr Score', cell:function (r) { return r.score.toFixed(1); }, best:function (r) { return r.score === bestScore; } },
-      { key:'Рейкбек', cell:function (r) { var p = rakePct(r); return p === null ? 'нет' : 'до ' + p + '%'; }, best:function (r) { var p = rakePct(r); return p !== null && p === bestRake; } },
-      { key:'Доступ', cell:function (r) { return labelOf('access', r.access); } },
-      { key:'Страны', cell:function (r) { return r.countries.map(function (c) { return labelOf('countries', c); }).join(', '); } },
-      { key:'Лимиты', cell:function (r) { return r.limits.join(' · '); } },
-      { key:'Форматы', cell:function (r) { return r.games.map(function (g) { return labelOf('games', g); }).join(', '); } },
-      { key:'Сеть', cell:function (r) { return labelOf('network', r.network); } },
-      { key:'Платёжки', cell:function (r) { return r.payments.map(function (p) { return labelOf('payments', p); }).join(', '); } },
-      { key:'Валюта', cell:function (r) { return r.currency; } },
-      { key:'Выплата', cell:function (r) { return r.payoutLabel; }, best:function (r) { return r.payoutHours === fastest; } },
-      { key:'Софт', cell:function (r) { return r.software.map(function (s) { return labelOf('software', s); }).join(', '); } },
-      { key:'Бонусы', cell:function (r) { return (r.bonus && r.bonus.length ? r.bonus : ['none']).map(function (b) { return labelOf('bonus', b); }).join(', '); } },
-      { key:'Правовой статус', cell:function (r) { return r.license; } },
-      { key:'Комментарий', cell:function (r) { return r.note; } }
-    ];
-
-    var m = document.createElement('div');
-    m.className = 'kf-modal';
-    m.setAttribute('role', 'dialog');
-    m.setAttribute('aria-modal', 'true');
-    m.setAttribute('aria-label', 'Сравнение сделок');
-    m.innerHTML =
-      '<div class="kf-modal-inner">' +
-      '<div class="kf-modal-head"><h3>Сравнение · ' + list.length + ' рума</h3>' +
-      '<button class="kf-modal-close" aria-label="Закрыть">×</button></div>' +
-      '<table class="kf-cmp"><thead><tr><th></th>' +
-      list.map(function (r) {
-        return '<th>' + roomCell(r, -1) + '</th>';
-      }).join('') + '</tr></thead><tbody>' +
-      rows.map(function (row) {
-        return '<tr><th scope="row">' + esc(row.key) + '</th>' + list.map(function (r) {
-          var isBest = row.best && row.best(r) && list.length > 1;
-          return '<td' + (isBest ? ' class="is-best"' : '') + '>' + esc(row.cell(r)) +
-            (isBest ? '<span class="kf-cmp-best-mark">лучший в подборке</span>' : '') + '</td>';
-        }).join('') + '</tr>';
-      }).join('') +
-      '<tr><th scope="row"></th>' + list.map(function (r) {
-        return '<td><a class="kf-go" href="' + esc(r.url) + '">Открыть обзор<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a></td>';
-      }).join('') + '</tr>' +
-      '</tbody></table></div>';
-
-    document.body.appendChild(m);
-    document.body.style.overflow = 'hidden';
-    var close = function () { m.remove(); document.body.style.overflow = ''; };
-    m.addEventListener('click', function (e) {
-      if (e.target === m || e.target.closest('.kf-modal-close')) close();
-    });
-    document.addEventListener('keydown', function onEsc(e) {
-      if (e.key === 'Escape') { close(); document.removeEventListener('keydown', onEsc); }
-    });
-    m.querySelector('.kf-modal-close').focus();
-  }
-
-  /* ---------- Мобильная шторка ---------- */
-
-  function openSheet() {
-    var s = document.createElement('div');
-    s.className = 'kf-sheet';
-    s.innerHTML =
-      '<div class="kf-sheet-inner" role="dialog" aria-modal="true" aria-label="Фильтры">' +
-      '<div class="kf-sheet-head"><h3>Фильтры</h3><button class="kf-modal-close" aria-label="Закрыть">×</button></div>' +
-      '<div class="kf-sheet-body">' +
-      FACETS.map(function (f) {
-        return '<div class="kf-sheet-group"><span class="kf-pop-title">' + esc(f.label) + '</span>' + groupHtml(f.key) + '</div>';
-      }).join('') +
-      '</div>' +
-      '<div class="kf-sheet-foot">' +
-      '<button class="btn btn-ghost" data-sheet-reset>Сбросить</button>' +
-      '<button class="btn btn-dark" data-sheet-apply>Показать <span data-sheet-n></span></button>' +
-      '</div></div>';
-
-    document.body.appendChild(s);
-    document.body.style.overflow = 'hidden';
-
-    var refreshSheet = function () {
-      var body = s.querySelector('.kf-sheet-body');
-      body.innerHTML = FACETS.map(function (f) {
-        return '<div class="kf-sheet-group"><span class="kf-pop-title">' + esc(f.label) + '</span>' + groupHtml(f.key) + '</div>';
-      }).join('');
-      s.querySelector('[data-sheet-n]').textContent = '· ' + results().length;
-    };
-    refreshSheet();
-
-    var close = function () { s.remove(); document.body.style.overflow = ''; draw(); };
-
-    s.addEventListener('click', function (e) {
-      if (e.target === s || e.target.closest('.kf-modal-close') || e.target.closest('[data-sheet-apply]')) { close(); return; }
-      if (e.target.closest('[data-sheet-reset]')) { resetAll(false); refreshSheet(); return; }
-      if (handleOption(e)) refreshSheet();
-    });
-    s.addEventListener('input', function (e) { if (handleRange(e)) refreshSheet(); });
-  }
-
-  /* ---------- Обработчики выбора ---------- */
-
-  function handleOption(e) {
-    var opt = e.target.closest('.kf-opt[data-key]');
-    if (opt) {
-      var k = opt.dataset.key, v = opt.dataset.val;
-      var arr = state.sel[k], i = arr.indexOf(v);
-      if (i === -1) arr.push(v); else arr.splice(i, 1);
-      return true;
-    }
-    if (e.target.closest('[data-pending]')) { state.pending = !state.pending; return true; }
-    var q = e.target.closest('[data-rake-quick]');
-    if (q) { state.min = parseInt(q.dataset.rakeQuick, 10); return true; }
-    return false;
-  }
-
-  function handleRange(e) {
-    if (e.target.matches('[data-rake]')) {
-      state.min = parseInt(e.target.value, 10);
-      var out = e.target.closest('.kf-group').querySelector('[data-rake-out]');
-      if (out) out.textContent = state.min + '%';
-      return true;
-    }
-    return false;
-  }
-
-  function resetAll(redraw) {
-    state.min = 0;
-    state.pending = true;
-    Object.keys(state.sel).forEach(function (k) { state.sel[k] = []; });
-    qpSelection = { games:null, limits:null, countries:null };
-    renderQuickpick();
-    if (redraw !== false) draw();
-  }
-
-  /* ---------- Быстрый подбор ---------- */
-
-  var qpSelection = { games:null, limits:null, countries:null };
-
-  var QP = [
-    { key:'games',     el:'kf-qp-games',     vals:['cash','mtt','spins','plo'] },
-    { key:'limits',    el:'kf-qp-limits',    vals:['NL10','NL50','NL100','NL200'] },
-    { key:'countries', el:'kf-qp-countries', vals:null }
-  ];
-
-  function renderQuickpick() {
-    QP.forEach(function (g) {
-      var box = $(g.el);
-      if (!box) return;
-      var vals = g.vals;
-      if (!vals) {
-        vals = optionsFor(g.key).map(function (o) { return o.value; }).slice(0, 4);
-      }
-      box.innerHTML = vals.map(function (v) {
-        var on = qpSelection[g.key] === v;
-        var flag = g.key === 'countries' ? flagHtml(v) + ' ' : '';
-        return '<button class="kf-qp-opt" data-qp="' + g.key + '" data-val="' + esc(v) + '" aria-pressed="' + on + '">' +
-          flag + esc(labelOf(g.key, v)) + '</button>';
-      }).join('');
-    });
-  }
-
-  function applyQuickpick() {
-    Object.keys(qpSelection).forEach(function (k) {
-      if (qpSelection[k]) state.sel[k] = [qpSelection[k]];
-    });
-    // синхронизируем лимит с калькулятором Kozyr Match, если он есть
-    try {
-      if (qpSelection.limits) {
-        var b = document.querySelector('.limit-btn[data-limit="' + qpSelection.limits + '"]');
-        if (b) b.click();
-      }
-    } catch (err) {}
-    draw();
-    var wrap = state.view === 'table' ? $('kf-table-wrap') : $('kf-cards');
-    if (wrap && !wrap.hidden && typeof wrap.scrollIntoView === 'function') wrap.scrollIntoView({ behavior:'smooth', block:'start' });
-  }
-
-  /* ---------- Инициализация ---------- */
-
-  function init() {
-    if (!$('kf-tbody')) return;
-    try { $('kf-demo-flag').hidden = !KOZYR_DEMO; } catch (e) {}
-
-    /* Каждый шаг инициализации изолирован: сбой в одном не должен
-       помешать отрисовке каталога. draw() вызываем в любом случае. */
-    try { readUrl(); } catch (e) {}
-    try { renderQuickpick(); } catch (e) {}
-    draw();
-
-    /* Каталог успешно отрисован интерактивной версией — прячем
-       статический fallback-каталог (нужен только роботам и при сбое JS).
-       Ставим флаг ТОЛЬКО после успешного draw(), чтобы при падении рендера
-       статический блок остался виден пользователю. */
-    try { document.body.classList.add('kf-js-ready'); } catch (e) {}
-
-    /* Плашка "Принимает вашу страну" на карточках может быть пустой при
-       первом рендере — если гео ещё не пришло. Перерисуем, когда придёт. */
-    if (window.KozyrGeo) {
-      window.KozyrGeo.onReady(function (c) {
-        if (c) draw();
-      });
-    }
-    window.addEventListener('kozyr:geo', function () { draw(); });
-
-    // клики по заголовкам колонок
-    $('kf-thead').addEventListener('click', function (e) {
-      var b = e.target.closest('.kf-col');
-      if (b) openPop(b, b.dataset.col);
-    });
-
-    // взаимодействие внутри поповера
-    document.addEventListener('click', function (e) {
-      if (pop && !pop.contains(e.target) && !e.target.closest('.kf-col')) { closePop(); return; }
-      if (pop && pop.contains(e.target)) {
-        var clear = e.target.closest('[data-clear]');
-        if (clear) {
-          var col = COLUMNS.filter(function (c) { return c.id === clear.dataset.clear; })[0];
-          col.filters.forEach(function (k) {
-            if (k === 'rake') { state.min = 0; state.pending = true; } else state.sel[k] = [];
-          });
-          var btn = popBtn; closePop(); draw();
-          var again = document.querySelector('.kf-col[data-col="' + col.id + '"]');
-          if (again) again.focus();
-          return;
-        }
-        if (handleOption(e)) {
-          var keep = popBtn, colId = keep ? keep.dataset.col : null;
-          draw();
-          if (colId) {
-            var nb = document.querySelector('.kf-col[data-col="' + colId + '"]');
-            if (nb) { popBtn = null; openPop(nb, colId); }
-          }
-        }
-        return;
-      }
-
-      var cmp = e.target.closest('[data-cmp]');
-      if (cmp) { toggleCompare(cmp.dataset.cmp); return; }
-
-      var uncmp = e.target.closest('[data-uncmp]');
-      if (uncmp) { toggleCompare(uncmp.dataset.uncmp); return; }
-
-      var drop = e.target.closest('[data-drop]');
-      if (drop) {
-        var k = drop.dataset.drop;
-        if (k === 'rake') state.min = 0;
-        else state.sel[k].splice(state.sel[k].indexOf(drop.dataset.val), 1);
-        draw();
-        return;
-      }
-
-      var qp = e.target.closest('[data-qp]');
-      if (qp) {
-        var g = qp.dataset.qp;
-        qpSelection[g] = qpSelection[g] === qp.dataset.val ? null : qp.dataset.val;
-        renderQuickpick();
-        return;
-      }
-    });
-
-    document.addEventListener('input', function (e) {
-      if (pop && pop.contains(e.target) && handleRange(e)) {
-        renderHead(); renderActive();
-        var list = results();
-        renderReadout(list);
-        $('kf-empty').hidden = list.length !== 0;
-        $('kf-table-wrap').hidden = list.length === 0 || state.view !== 'table';
-        $('kf-cards').hidden = list.length === 0 || state.view !== 'cards';
-        if (list.length) { if (state.view === 'table') renderRows(list); else renderCards(list); }
-        pushUrl();
-      }
-    });
-
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') closePop();
-    });
-    window.addEventListener('resize', closePop);
-    window.addEventListener('scroll', function () { if (pop && popBtn) place(popBtn); }, { passive:true });
-
-    $('kf-qp-apply').addEventListener('click', applyQuickpick);
-    $('kf-reset').addEventListener('click', function () { resetAll(); });
-    $('kf-empty-reset').addEventListener('click', function () { resetAll(); });
-    $('kf-view-table').addEventListener('click', function () { state.view = 'table'; draw(); });
-    $('kf-view-cards').addEventListener('click', function () { state.view = 'cards'; draw(); });
-    $('kf-sort').addEventListener('change', function (e) { state.sort = e.target.value; draw(); });
-    $('kf-compare-go').addEventListener('click', openCompare);
-    var sheetBtn = $('kf-open-sheet');
-    if (sheetBtn) sheetBtn.addEventListener('click', openSheet);
-
-    // счётчики партнёров в шапке и герое
-    var live = ROOMS.filter(function (r) { return !r.demo; }).length;
-    document.querySelectorAll('[data-partners-count]').forEach(function (el) { el.textContent = ROOMS.length; });
-    document.querySelectorAll('[data-countries-count]').forEach(function (el) {
-      var set = {};
-      ROOMS.forEach(function (r) { r.countries.forEach(function (c) { set[c] = 1; }); });
-      el.textContent = Object.keys(set).length;
-    });
-    void live;
-  }
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
-})();
-</script>
-
-<script>
-// Мобильное меню
-(function () {
-  var b = document.getElementById('nav-burger');
-  var d = document.getElementById('nav-drawer');
-  if (!b || !d) return;
-  b.addEventListener('click', function () {
-    var open = d.classList.toggle('is-open');
-    b.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-  d.addEventListener('click', function (e) {
-    if (e.target.closest('a')) {
-      d.classList.remove('is-open');
-      b.setAttribute('aria-expanded', 'false');
-    }
-  });
-})();
-</script>
-
-<script>
-/* KOZYR v2 — микровзаимодействия: раскрытие на скролле, липкая навигация */
-(function () {
-  'use strict';
-
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* 1. Помечаем секции и ключевые блоки как раскрывающиеся */
-  var revealSelectors = [
-    '.finder .kf-head', '.finder .kf-quickpick', '.finder .kf-bar',
-    '.how-step', '.compare-head', '.compare-wrap', '.match-copy', '.match',
-    '.faq-side', '.faq-list', '.final-inner',
-    '.countries-copy', '.ua-block'
-  ];
-  var nodes = [];
-  revealSelectors.forEach(function (sel) {
-    Array.prototype.forEach.call(document.querySelectorAll(sel), function (el) {
-      el.setAttribute('data-reveal', '');
-      nodes.push(el);
-    });
-  });
-
-  if (reduce || !('IntersectionObserver' in window)) {
-    nodes.forEach(function (el) { el.classList.add('is-in'); });
-  } else {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) {
-          var el = e.target;
-          var sibs = el.parentElement ? el.parentElement.children : [el];
-          var idx = Array.prototype.indexOf.call(sibs, el);
-          el.style.transitionDelay = Math.min(Math.max(idx, 0) * 70, 280) + 'ms';
-          el.classList.add('is-in');
-          io.unobserve(el);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
-    nodes.forEach(function (el) { io.observe(el); });
-  }
-
-  /* 2. Навбар получает тень/границу после прокрутки */
-  var nav = document.querySelector('.nav');
-  if (nav) {
-    var onScroll = function () {
-      nav.classList.toggle('is-stuck', window.scrollY > 8);
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-  }
-
-  /* 3. Лёгкий наклон герой-карты за курсором (только на мыши, без reduce) */
-  var trump = document.querySelector('.trump');
-  if (trump && !reduce && window.matchMedia && window.matchMedia('(pointer:fine)').matches) {
-    var frame = null;
-    trump.addEventListener('mousemove', function (e) {
-      if (frame) return;
-      frame = requestAnimationFrame(function () {
-        var r = trump.getBoundingClientRect();
-        var dx = (e.clientX - r.left) / r.width - 0.5;
-        var dy = (e.clientY - r.top) / r.height - 0.5;
-        trump.style.transform = 'rotate(-1deg) translateY(-4px) rotateX(' + (-dy * 5).toFixed(2) + 'deg) rotateY(' + (dx * 6).toFixed(2) + 'deg)';
-        frame = null;
-      });
-    });
-    trump.addEventListener('mouseleave', function () {
-      trump.style.transform = '';
-    });
-  }
-})();
-</script>
-
-<div class="geo-banner" id="geo-banner" role="alert" aria-live="polite">
-  <svg class="geo-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2C20 17.5 12 22 12 22z"/><circle cx="12" cy="10" r="3"/></svg>
-  <div class="geo-banner-text">
-    <strong>Ты не из Украины?</strong> Наши партнёры адаптированы под украинский рынок. Проверь легальность и доступность рум-платформ в своей стране.
-  </div>
-  <div class="geo-banner-actions">
-    <a href="/" class="geo-banner-btn" id="geo-banner-cta">Сменить регион</a>
-    <button class="geo-banner-close" id="geo-banner-close" aria-label="Закрыть">×</button>
-  </div>
-</div>
-
-<script>
-// Гео-баннер для не-UA посетителей
-(async function checkGeo() {
-  // Не показываем если пользователь уже закрыл или явно выбрал этот регион
-  if (localStorage.getItem('kozyr_geo_dismissed') === '1') return;
-  if (localStorage.getItem('kozyr_geo_confirmed') === 'UA') return;
-
-  try {
-    const response = await fetch('https://ipapi.co/json/', {
-      method: 'GET',
-      headers: { 'Accept': 'application/json' }
-    });
-    if (!response.ok) return;
-    const data = await response.json();
-    const countryCode = data.country_code;
-
-    if (countryCode && countryCode !== 'UA') {
-      const banner = document.getElementById('geo-banner');
-      banner.classList.add('visible');
-    } else if (countryCode === 'UA') {
-      // Запоминаем, что пользователь из UA — больше не проверяем
-      localStorage.setItem('kozyr_geo_confirmed', 'UA');
-    }
-  } catch (e) {}
-})();
-
-document.getElementById('geo-banner-close').addEventListener('click', () => {
-  document.getElementById('geo-banner').classList.remove('visible');
-  try { localStorage.setItem('kozyr_geo_dismissed', '1'); } catch (e) {}
-});
-</script>
-
-  <script defer src="/assets/kozyr-geo.js?v=20260829"></script>
-  <script defer src="/assets/kozyr-enhance.js?v=4cf18d99"></script>
-
-<script>
-/* Kozyr P4/P5 — счётчики гидов + «Лучшие в категории». Источник: window.KOZYR_PARTNERS. */
-(function(){
-  "use strict";
-  var L = {"plural":["партнёр","партнёра","партнёров"],"upto":"до","review":"Обзор","access":{"direct":"Прямая ссылка","club":"Клуб","telegram":"Telegram"},"pay1":"до 1 часа","payH":"до {n} ч","payD":"до {n} сут","aTag":"● Лучшие в категории","aLead":"Победители по ключевым метрикам — оценка, рейкбек, скорость выплат, крипта. Пересчитывается из каталога автоматически.","aNote":"Победитель в каждой категории определяется по данным партнёров и обновляется автоматически. Полное сравнение с фильтрами — в каталоге выше.","aScoreName":"Выбор редакции","aScoreWhy":"Высшая оценка Kozyr Score в каталоге.","aRakeName":"Максимальный рейкбек","aRakeWhy":"Самый большой возврат рейка среди партнёров.","aCryptoName":"Крипта и Telegram","aCryptoWhy":"Игра без карт и лишней верификации.","aPayoutName":"Быстрые выплаты","aPayoutWhy":"Самый быстрый вывод средств."};
-  function ready(fn){document.readyState!=='loading'?fn():document.addEventListener('DOMContentLoaded',fn);}
-  function partners(){return (window.KOZYR_PARTNERS||[]).slice();}
-  function has(a,v){return Array.isArray(a)&&a.indexOf(v)!==-1;}
-  function rakeNum(p){var v=p&&p.rake;return typeof v==='number'&&v>0?v:null;}
-  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-  function lab(g,v){return (L[g]&&L[g][v])||v;}
-  function logoImgOf(p){return (p.card&&p.card.logoImg)||p.logoImg||(p.logo&&p.logo.img)||null;}
-  function payoutTxt(h){if(h==null)return '\u2014';if(h<=1)return L.pay1;if(h<24)return L.payH.replace('{n}',h);return L.payD.replace('{n}',Math.round(h/24));}
-
-  /* P4 counts = тот же фильтр, что и landing-страница гида */
-  var SLUG=['na-grivnu','dlya-novichkov','mobilnye'];
-  function guideKey(href){for(var i=0;i<SLUG.length;i++){if(href.indexOf('/'+SLUG[i]+'/')!==-1)return SLUG[i];}return null;}
-  var GUIDE_FILTER={'na-grivnu':'currency:UAH','dlya-novichkov':'limit:NL10','mobilnye':'soft:ios'};
-  var KEY_ALIAS={limit:'limits',game:'games',payment:'payments',soft:'software',bonuses:'bonus'};
-  function matchFilter(p,filter){
-    if(!p.card)return false;
-    return (filter||'').split(';').map(function(s){return s.trim();}).filter(Boolean).every(function(cond){
-      var parts=cond.split(':'),key=(parts[0]||'').trim(),want=(parts[1]||'').trim();
-      if(!key||!want)return true;key=KEY_ALIAS[key]||key;var val=p[key];
-      if(Array.isArray(val))return val.some(function(x){return String(x).toLowerCase()===want.toLowerCase();});
-      return String(val==null?'':val).toLowerCase()===want.toLowerCase();
-    });
-  }
-  function gmatch(k,p){var f=GUIDE_FILTER[k];return f?matchFilter(p,f):false;}
-  function plural(n){var f=L.plural,a=n%100,b=n%10;if(a>10&&a<20)return f[2];if(b===1)return f[0];if(b>=2&&b<=4)return f[1];return f[2];}
-  function counts(P){
-    var cards=document.querySelectorAll('.topic-card');
-    for(var i=0;i<cards.length;i++){
-      var card=cards[i],k=guideKey(card.getAttribute('href')||'');if(!k)continue;
-      var n=P.filter(function(p){return gmatch(k,p);}).length;
-      var el=card.querySelector('.topic-card-count');
-      if(el)el.innerHTML='<b>'+n+'</b> <span>'+plural(n)+'</span>';
-      if(n===0)card.setAttribute('data-empty','');else card.removeAttribute('data-empty');
-    }
-  }
-
-  /* P5 «Лучшие в категории» */
-  var ICON={
-    crown:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 8l3.5 3L12 5l5.5 6L21 8l-1.6 10.5H4.6L3 8z"/></svg>',
-    percent:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="7.5" cy="7.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/><path d="M18 6L6 18"/></svg>',
-    bolt:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>',
-    coin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><ellipse cx="12" cy="6.5" rx="7" ry="3"/><path d="M5 6.5v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5M5 11.5v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5"/></svg>'
-  };
-  function logoAward(p){var src=logoImgOf(p);if(src)return '<span class="kza-logo"><img src="'+esc(src)+'" alt="'+esc(p.name)+'" width="44" height="44" loading="lazy"></span>';var g=p.logo||{};return '<span class="kza-logo mono" style="background:linear-gradient(135deg,'+esc(g.from||'#2668FF')+','+esc(g.to||'#1E52D9')+')">'+esc(g.text||p.name.slice(0,2))+'</span>';}
-  function byMax(arr,val){var best=null;arr.forEach(function(p){var v=val(p);if(v==null)return;if(best==null||v>val(best))best=p;});return best;}
-  function byMin(arr,val){var best=null;arr.forEach(function(p){var v=val(p);if(v==null)return;if(best==null||v<val(best))best=p;});return best;}
-
-  function renderAwards(P){
-    var wrap=document.getElementById('kozyr-compare-wrap');
-    if(!wrap||!P.length)return;
-    var sec=document.getElementById('compare');
-    var oldsum=sec&&sec.querySelector('.kzc-sum');if(oldsum)oldsum.parentNode.removeChild(oldsum);
-
-    var CATS=[
-      {cls:'c-score',icon:ICON.crown,name:L.aScoreName,why:L.aScoreWhy,winner:byMax(P,function(p){return p.score;}),stat:function(p){return (p.score||0).toFixed(1);}},
-      {cls:'c-rake',icon:ICON.percent,name:L.aRakeName,why:L.aRakeWhy,winner:byMax(P,function(p){return rakeNum(p);}),stat:function(p){return L.upto+' '+rakeNum(p)+'%';}},
-      {cls:'c-crypto',icon:ICON.coin,name:L.aCryptoName,why:L.aCryptoWhy,winner:byMax(P.filter(function(p){return has(p.payments,'crypto')||p.access==='telegram';}),function(p){return p.score;}),stat:function(p){return (p.currency||'')+' \u00b7 '+lab('access',p.access);}},
-      {cls:'c-payout',icon:ICON.bolt,name:L.aPayoutName,why:L.aPayoutWhy,winner:byMin(P,function(p){return p.payoutHours;}),stat:function(p){return payoutTxt(p.payoutHours);}}
-    ];
-
-    var hero=CATS[0], cards=CATS.slice(1).filter(function(c){return c.winner;});
-    var heroHtml='';
-    if(hero.winner){
-      var hp=hero.winner;
-      heroHtml='<div class="kza-hero">'+
-        '<div class="kza-hero-badge">'+ICON.crown+esc(hero.name)+'</div>'+
-        '<div class="kza-hero-body">'+
-          '<div class="kza-hero-trophy">'+ICON.crown+'</div>'+
-          '<div class="kza-hero-main">'+heroLogo(hp)+
-            '<div><div class="kza-hero-name">'+esc(hp.name)+'</div><div class="kza-hero-why">'+esc(hero.why)+'</div></div>'+
-          '</div>'+
-          '<div class="kza-hero-side">'+
-            '<div class="kza-hero-score"><span class="num">'+(hp.score||0).toFixed(1)+'</span><span class="lbl">Kozyr Score</span></div>'+
-            '<a class="kza-hero-cta" href="'+esc(hp.url||'#partners')+'">'+esc(L.review)+' \u2192</a>'+
-          '</div>'+
-        '</div>'+
-      '</div>';
-    }
-    var cardsHtml=cards.map(function(c){
-      var p=c.winner;
-      return '<div class="kza-card '+c.cls+'">'+
-        '<div class="kza-card-top"><span class="kza-medal">'+c.icon+'</span><span class="kza-cat">'+esc(c.name)+'</span></div>'+
-        '<div class="kza-stat-big">'+esc(c.stat(p))+'</div>'+
-        '<div class="kza-winner">'+logoAward(p)+'<span class="kza-name">'+esc(p.name)+'</span></div>'+
-        '<p class="kza-why">'+esc(c.why)+'</p>'+
-        '<a class="kza-cta" href="'+esc(p.url||'#partners')+'">'+esc(L.review)+' \u2192</a>'+
-      '</div>';
-    }).join('');
-
-    wrap.innerHTML='<div class="kza-showcase kza-anim">'+heroHtml+'<div class="kza-row">'+cardsHtml+'</div></div>';
-
-    var show=wrap.querySelector('.kza-showcase');
-    if(show){
-      if('IntersectionObserver' in window){
-        var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){show.classList.add('is-in');io.disconnect();}});},{threshold:0.15});
-        io.observe(show);
-        setTimeout(function(){show.classList.add('is-in');},2500);
-      } else { show.classList.add('is-in'); }
-    }
-
-    var tag=sec.querySelector('.section-tag span');if(tag)tag.textContent=L.aTag;
-    var lead=sec.querySelector('.compare-lead');if(lead)lead.textContent=L.aLead;
-    var note=sec.querySelector('.compare-note');if(note)note.textContent=L.aNote;
-  }
-  function heroLogo(p){var src=logoImgOf(p);if(src)return '<span class="kza-hero-logo"><img src="'+esc(src)+'" alt="'+esc(p.name)+'" width="62" height="62" loading="lazy"></span>';var g=p.logo||{};return '<span class="kza-hero-logo" style="background:linear-gradient(135deg,'+esc(g.from||'#2668FF')+','+esc(g.to||'#1E52D9')+')"><span style="color:#fff;font-family:var(--f-display);font-weight:700;font-size:20px">'+esc(g.text||p.name.slice(0,2))+'</span></span>';}
-
-  ready(function(){var P=partners();try{counts(P);}catch(e){}try{renderAwards(P);}catch(e){}});
-})();
-</script>
 </body>
 </html>
