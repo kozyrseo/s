@@ -149,7 +149,7 @@ _PAY_LABELS = {
 }
 
 
-def build_static_catalog_html(partners: list, country: str = "ua") -> str:
+def build_static_catalog_html(partners: list, country: str = "ua", lang: str = "ru") -> str:
     """HTML статического каталога (SEO + fallback без JS) из данных партнёров.
 
     Простой семантический блок: лого, название, рейкбек, валюта, заметка,
@@ -157,7 +157,15 @@ def build_static_catalog_html(partners: list, country: str = "ua") -> str:
     интерактивный финдер и НЕ содержит runtime-зависимостей (гео и т.п.).
     Фильтрует партнёров по стране (по полю countries), чтобы работать и для
     новых гео. Порядок — по убыванию рейкбека (как логичный дефолт).
+
+    lang задаёт язык подписей ("ru" по умолчанию, "uk" — украинский).
     """
+    # Подписи каталога по языку (видимый текст → должен быть на языке страницы).
+    L = {
+        "ru": {"no_rake": "Без рейкбека", "payout": "Вывод", "open": "Открыть обзор"},
+        "uk": {"no_rake": "Без рейкбеку", "payout": "Виведення", "open": "Відкрити огляд"},
+    }.get(lang, None) or {"no_rake": "Без рейкбека", "payout": "Вывод", "open": "Открыть обзор"}
+
     # Фильтр по стране: партнёр показывается, если обслуживает эту страну
     # (или помечен 'all'/'*'), либо если поле не задано.
     def serves(p):
@@ -203,7 +211,7 @@ def build_static_catalog_html(partners: list, country: str = "ua") -> str:
                          f'<span class="kf-static-rake__pct">%</span></span>')
         else:
             rake_html = ('<span class="kf-static-rake kf-static-rake--none">'
-                         '<span class="kf-static-rake__num">Без рейкбека</span></span>')
+                         f'<span class="kf-static-rake__num">{L["no_rake"]}</span></span>')
 
         # Факты: лимиты (первые 3), платёжки, выплата
         facts = []
@@ -216,7 +224,7 @@ def build_static_catalog_html(partners: list, country: str = "ua") -> str:
             facts.append(f'<span class="kf-static-fact">{_esc(pay_txt)}</span>')
         payout = p.get("payoutLabel")
         if payout:
-            facts.append(f'<span class="kf-static-fact">Вывод: {_esc(payout)}</span>')
+            facts.append(f'<span class="kf-static-fact">{L["payout"]}: {_esc(payout)}</span>')
         facts_html = "".join(facts)
 
         card = (
@@ -231,7 +239,7 @@ def build_static_catalog_html(partners: list, country: str = "ua") -> str:
             f'<div>{rake_html}</div>'
             + (f'<p class="kf-static-item__note">{note}</p>' if note else '')
             + (f'<div class="kf-static-item__facts">{facts_html}</div>' if facts_html else '')
-            + f'<a class="kf-static-item__go" href="{url}">Открыть обзор'
+            + f'<a class="kf-static-item__go" href="{url}">{L["open"]}'
               '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">'
               '<path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a>'
             '</article>'
@@ -267,6 +275,7 @@ def inject_static_catalog(html_path: Path, partners: list, country: str = "ua") 
 
     Маркеры: <!-- KOZYR:STATIC_CATALOG:START --> ... :END -->.
     Возвращает True если файл изменён. Идемпотентно (можно гонять многократно).
+    Язык подписей определяется по пути: /uk/ → украинский, иначе русский.
     """
     if not html_path.exists():
         return False
@@ -276,7 +285,9 @@ def inject_static_catalog(html_path: Path, partners: list, country: str = "ua") 
     if start not in html or end not in html:
         return False
 
-    cards_html = build_static_catalog_html(partners, country)
+    # Язык каталога по пути страницы (украинские страницы — под /uk/).
+    lang = "uk" if "/uk/" in str(html_path).replace("\\", "/") else "ru"
+    cards_html = build_static_catalog_html(partners, country, lang)
     new_block = f"{start}\n        {cards_html}\n        {end}"
 
     pattern = re.compile(re.escape(start) + r".*?" + re.escape(end), re.S)

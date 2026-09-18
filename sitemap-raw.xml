@@ -648,4 +648,11 @@
     <xhtml:link rel="alternate" hreflang="ru-UA"     href="https://kozyr.club/ua/about/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://kozyr.club/ua/about/"/>
   </url>
+  <url>
+    <loc>https://kozyr.club/ua/uk/about/</loc>
+    <lastmod>2026-09-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="uk-UA"     href="https://kozyr.club/ua/uk/about/"/>
+  </url>
 </urlset>
