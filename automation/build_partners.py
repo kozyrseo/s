@@ -187,7 +187,11 @@ def build_static_catalog_html(partners: list, country: str = "ua", lang: str = "
         name = _esc(p.get("name", ""))
         url = _esc(p.get("url", "#"))
         cur = _esc(p.get("currency", ""))
-        note = _esc(p.get("note", ""))
+        # Описание партнёра на языке страницы. На украинских страницах берём
+        # note_uk (если задан), иначе — общий note (русский) как fallback,
+        # чтобы старые партнёры без перевода не ломали каталог.
+        note_raw = (p.get("note_uk") if lang == "uk" else None) or p.get("note", "")
+        note = _esc(note_raw)
 
         # Логотип: картинка или градиентные инициалы
         logo = p.get("logo") or {}
