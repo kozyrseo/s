@@ -3135,6 +3135,58 @@ body::before {
 .trump-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(10,17,40,0.36); }
 .trump-cta svg { width: 15px; height: 15px; }
 
+/* ===== METHODOLOGY NOTE CARDS (light) ===== */
+.mnote-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 34px;
+}
+.mnote-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+  padding: 26px 24px 24px;
+  box-shadow: 0 1px 2px rgba(10,17,40,0.04);
+  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+}
+.mnote-card:hover {
+  box-shadow: 0 8px 24px rgba(10,17,40,0.07);
+  border-color: var(--border-2);
+  transform: translateY(-2px);
+}
+.mnote-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--accent-tint);
+  color: var(--accent);
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 16px;
+}
+.mnote-title {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 0 0 9px;
+}
+.mnote-text {
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0;
+}
+@media (max-width: 900px){
+  .mnote-grid { grid-template-columns: 1fr; gap: 14px; }
+}
+
 </style>
 <script src="/analytics.js?v=26efe35f" defer></script>
   <link rel="stylesheet" href="/assets/kozyr-enhance.css?v=20260829">
@@ -3642,10 +3694,10 @@ fill="#000000" stroke="none"><path d="M5208 7202 l-137 -127 0 -870 0 -870 70 -59
 
   <section class="wrap about-section">
     <div class="about-section-head"><div class="about-eyebrow">Чесно</div><h2 class="about-h2">Що варто знати про оцінку</h2></div>
-    <div class="about-trust-grid" style="margin-top:32px">
-      <div class="about-trust-item"><div class="about-trust-num">①</div><h3 class="about-trust-title">Дані — від партнерів, перевірка — наша</h3><p class="about-trust-text">Kozyr Score рахується з даних, які надають партнери. Ми звіряємо їх з агентами й операторами, перш ніж враховувати в оцінці.</p></div>
-      <div class="about-trust-item"><div class="about-trust-num">②</div><h3 class="about-trust-title">Суб'єктивне — позначено чесно</h3><p class="about-trust-text">Частина факторів (надійність, м'якість поля) оцінюється за непрямими ознаками. Ми не видаємо припущення за факт і відкрито це вказуємо.</p></div>
-      <div class="about-trust-item"><div class="about-trust-num">③</div><h3 class="about-trust-title">Методологія розвивається</h3><p class="about-trust-text">У міру зростання числа румів і накопичення даних ми уточнюємо ваги і критерії, щоб оцінка ставала точнішою.</p></div>
+    <div class="mnote-grid">
+      <div class="mnote-card"><div class="mnote-num">1</div><h3 class="mnote-title">Дані — від партнерів, перевірка — наша</h3><p class="mnote-text">Kozyr Score рахується з даних, які надають партнери. Ми звіряємо їх з агентами й операторами, перш ніж враховувати в оцінці.</p></div>
+      <div class="mnote-card"><div class="mnote-num">2</div><h3 class="mnote-title">Суб'єктивне — позначено чесно</h3><p class="mnote-text">Частина факторів (надійність, м'якість поля) оцінюється за непрямими ознаками. Ми не видаємо припущення за факт і відкрито це вказуємо.</p></div>
+      <div class="mnote-card"><div class="mnote-num">3</div><h3 class="mnote-title">Методологія розвивається</h3><p class="mnote-text">У міру зростання числа румів і накопичення даних ми уточнюємо ваги і критерії, щоб оцінка ставала точнішою.</p></div>
     </div>
   </section>
 
